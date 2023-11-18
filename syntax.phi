@@ -1,0 +1,66 @@
+# gloabal functions (constants)
+# disp() - prints the value to the console
+# now() - takes in no arguements and returns current time as a float
+# wait(x) - halts the program for a x amount of seconds
+# type() - returns the type of a variable
+# root(r, i) - returns r under root i
+
+# gloabl variables (constants)
+# _ - null/nil/none
+# T - True
+# F - False
+
+
+# declare constants and variables
+var foo = 50 / 2
+const a = 3
+
+# declare function for following object
+fn sub(x, y){
+    var res = x - y
+
+    res
+}
+
+# declare object with properties
+var obj = {
+    x:100,
+    y:a,
+    complex : {
+        bar:1
+    },
+    func : sub
+}
+
+# access properties of object
+var f = obj.complex.bar
+foo = obj.x() + 1
+foo = obj.func(2, 2)
+
+disp(45 / 2 + x * 2^1 % 4 + 4.2)
+
+# function declare
+fn add(x, y) {
+    var result = x + y
+
+    result
+}
+
+# call functions
+var res = add(5, 3)
+disp(res)
+
+# closures are possible
+fn outer(){
+    fn inner(x, y){
+        var res = x + y
+
+        res
+    }
+
+    inner
+}
+
+# assign functions to other variables
+var i = outer()
+disp(i)

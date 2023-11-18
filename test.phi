@@ -1,0 +1,15 @@
+# fn add(x, y) {
+#     var res = x + y
+# 
+#     res
+# }
+# 
+# const obj = {
+#     x : 100,
+#     y : add
+# }
+# 
+# disp(obj.y(5, 3))
+
+
+disp("hello, world")
