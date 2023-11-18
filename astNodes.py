@@ -1,4 +1,4 @@
-
+from values import *
 
 class identifierNode:
     def __init__(self, symbol: str) -> None:
@@ -70,6 +70,23 @@ class binaryExpressionNode:
             'left': self.left,
             'operand': self.operand,
             'right': self.right
+        })
+
+class ifStatementNode:
+    def __init__(self, conditionLeft, operand, conditionRight, body) -> None:
+        self.kind = 'ifstatement'
+        self.conditionLeft = conditionLeft
+        self.operand = operand
+        self.conditionRight = conditionRight
+        self.body = body
+
+    def __repr__(self) -> str:
+        return str({
+            'kind':self.kind,
+            'conditionLeft':self.conditionLeft,
+            'operand':self.operand,
+            'conditionRight':self.conditionRight,
+            'body': self.body
         })
 
 

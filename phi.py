@@ -23,5 +23,4 @@ with open('test.phi', 'r') as f:
 
 
 
-#! if statments under statments where check if it's a constant or a var or a function
 #todo fix this : obj.prop.prop doesn't work becuase the interpreter only check if the obj.prop is a symbol

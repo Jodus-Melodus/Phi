@@ -105,6 +105,45 @@ class interpreter:
         obj: objectValue = env.lookup(member.object.symbol)
 
         return obj.properties[member.property.symbol]
+    
+    def evaluateIfStatement(self, astNode:ifStatementNode, env:environment):
+        left :RuntimeValue = self.evaluate(astNode.conditionLeft, env)
+        if not isinstance(astNode.conditionRight, nullValue):
+            right :RuntimeValue = self.evaluate(astNode.conditionRight, env)
+        else:
+            right = nullValue()
+
+        res = False
+        if isinstance(right, nullValue):
+            if isinstance(left, numberValue):
+                if left.value != 0:
+                    res = booleanValue(True)
+                else:
+                    res = booleanValue(False)
+            elif isinstance(left, booleanValue):
+                res = booleanValue(left.value)
+        else:
+            if isinstance(left, numberValue) and isinstance(right, numberValue):
+                res = nullValue
+                match astNode.operand:
+                    case '==':
+                        res = left.value == right.value
+                    case '>':
+                        res = left.value > right.value
+                    case '<':
+                        res = left.value < right.value
+            elif isinstance(left, booleanValue) and isinstance(right, booleanValue):
+                res = nullValue
+                match astNode.operand:
+                    case '&':
+                        res = left.value and right.value
+                    case '|':
+                        res = left.value or right.value
+
+        if res:
+            for statement in astNode.body:
+                res = self.evaluate(statement, env)
+        return res
 
     def evaluate(self, astNode, env: environment) -> None:
         match astNode.kind:
@@ -126,6 +165,8 @@ class interpreter:
                 return self.evaluateCallExpression(astNode, env)
             case 'memberexpression':
                 return self.evaluateMemberExpression(astNode, env)
+            case 'ifstatement':
+                return self.evaluateIfStatement(astNode, env)
 
             case 'numericLiteral':
                 return numberValue(astNode.value)

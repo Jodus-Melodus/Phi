@@ -39,11 +39,43 @@ class Parser:
                 return self.parseVariableDeclaration()
             case TT.fn:
                 return self.parseFunctionDeclaration()
+            case TT._if:
+                return self.parseIfStatement()
             case _:
                 return self.parseExpression()
 
     def parseExpression(self) -> None:
         return self.parseAssignmentExpression()
+    
+    def parseIfStatement(self) -> None:
+        self.eat()
+
+        operand = ''
+        if self.get().type == TT.openParenthesis:
+            self.eat()
+            conditionLeft = self.parseExpression()
+            if self.get().type in (TT.equal, TT.greaterThan, TT.lessThan, TT._and, TT._or):
+                operand = self.eat().value
+                conditionRight = self.parseExpression()
+            else:
+                conditionRight = nullValue()
+
+            if self.get().type == TT.closeParenthesis:
+                self.eat()
+                if self.get().type == TT.openBrace:
+                    self.eat()
+                    body = []
+                    while self.get().type != TT.closeBrace:
+                        statement = self.parseStatement()
+                        if statement:
+                            body.append(statement)
+                        if self.get().type == TT.eof:
+                            syntaxError("Expected a '}'", self.get().column, self.get().line)
+                    self.eat()
+                else:
+                    syntaxError("Expected a '{'", self.get().column, self.get().line)
+
+        return ifStatementNode(conditionLeft, operand, conditionRight, body)
     
     def parseFunctionDeclaration(self) -> None:
         self.eat()
@@ -97,7 +129,7 @@ class Parser:
     def parseAssignmentExpression(self) -> None:
         left = self.parseObjectExpression()
 
-        if self.get().type in (TT.equal, TT.assignmentBinaryOperation):
+        if self.get().type == TT.assignmentOperator:
             self.eat()
             value = self.parseAssignmentExpression()
             return assignmentExpressionNode(left, value)

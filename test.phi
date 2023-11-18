@@ -12,4 +12,18 @@
 # disp(obj.y(5, 3))
 
 
-disp("hello, world")
+if (1 + 2 == 3) {
+    disp(1)
+}
+
+if (T){
+    disp(2)
+}
+
+if (T & T){
+    disp(3)
+}
+
+if (T | F){
+    disp(4)
+}

@@ -9,7 +9,13 @@ class TokenType:
 
         self.binaryOperation = 'binaryoperation'
         self.assignmentBinaryOperation = 'assignmentbinaryoperation'
+        self.assignmentOperator = 'assignmentoperator'
+
         self.equal = 'equal'
+        self.greaterThan = 'greaterthan'
+        self.lessThan = 'lessthan'
+        self._and = 'and'
+        self._or = 'or'
 
         self.lineend = 'lineend'
         self.eof = 'eof'
@@ -32,6 +38,7 @@ class TokenType:
         self.var = 'var'
         self.const = 'const'
         self.fn = 'fn'
+        self._if = 'if'
 
 
 TT = TokenType()
@@ -102,8 +109,12 @@ class Lexer:
                     tokens.append(Token(TT.closeBracket, char, self.index, self.column, self.line))
                     self.eat()
                 case '=':
-                    tokens.append(Token(TT.equal, char, self.index, self.column, self.line))
                     self.eat()
+                    if self.get() == '=':
+                        tokens.append(Token(TT.equal, '==', self.index, self.column, self.line))
+                        self.eat()
+                    else:
+                        tokens.append(Token(TT.assignmentOperator, char, self.index, self.column, self.line))
                 case ':':
                     tokens.append(Token(TT.colon, char, self.index, self.column, self.line))
                     self.eat()
@@ -124,6 +135,12 @@ class Lexer:
                         self.eat()
                     self.eat()
                     tokens.append(Token(TT.string, string, self.index, self.column, self.line))
+                case '&':
+                    tokens.append(Token(TT._and, char, self.index, self.column, self.line))
+                    self.eat()
+                case '|':
+                    tokens.append(Token(TT._or, char, self.index, self.column, self.line))
+                    self.eat()
                 case _:
 
                     if char in DIGITS:
@@ -167,6 +184,8 @@ class Lexer:
                                 tokens.append(Token(TT.const, name, self.index, self.column, self.line))
                             case 'fn':
                                 tokens.append(Token(TT.fn, name, self.index, self.column, self.line))
+                            case 'if':
+                                tokens.append(Token(TT._if, name, self.index, self.column, self.line))
                             case _:
                                 tokens.append(Token(TT.identifier, name, self.index, self.column, self.line))
                     else:
