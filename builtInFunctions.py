@@ -1,23 +1,27 @@
 from values import *
 from time import time, sleep
+import sys
 
 
-def disp(arg, result='') -> str:
+def out(arg) -> str:
 
-    if isinstance(arg, (numberValue, nullValue)):
-        result += f'{arg.value}'
+    if isinstance(arg, (numberValue, stringValue, booleanValue, nullValue)):
+        return arg.value
     elif isinstance(arg, objectValue):
-        temp = '{'
+        res = ''
         for prop in arg.properties:
-            temp += f"{prop} : {disp(arg.properties[prop], result)}, "
-        result += temp + '}'
+            res += f"{out(prop.key)}:{out(prop.value)},"
+        return res
     elif isinstance(arg, function):
-        parameters = (parameter.symbol for parameter in arg.parameters)
-        result += f'fn {arg.name}{tuple(parameters)}'
-    elif isinstance(arg, booleanValue):
-        result += 'T' if arg.value == True else 'F'
+        return f"fn {function.name}()"
+    else:
+        return arg
 
-    return result
+
+
+def in_(arg:stringValue) -> stringValue:
+    sys.stdout.write(arg.value)
+    return stringValue(sys.stdin.readline().strip())
 
 def now() -> numberValue:
     return numberValue(time())
@@ -45,4 +49,5 @@ def wait(seconds) -> None:
 def root(radicand, index) -> numberValue:
     return numberValue(float(float(radicand.value))**(1/float(index.value)))
 
-        
+def length() -> numberValue:
+    return numberValue(1)

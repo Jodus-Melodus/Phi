@@ -80,3 +80,29 @@ if (T & T){
 if (T | F){
     disp(4)
 }
+
+
+# ---------------------------------------------------
+
+fn makeLen(){
+    fn length(){
+
+        var res = 1
+
+        if (res == 3){
+            res = 5
+        }
+        res
+    }
+
+    length
+}
+
+
+var a = {
+    a:3,
+    b:2,
+    c:makeLen()
+}
+
+out(a.c())

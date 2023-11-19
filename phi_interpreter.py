@@ -24,7 +24,7 @@ class interpreter:
             return self.evaluateNumericBinaryExpression(left, right, binaryOperation.operand, env)
         else:
             return nullValue
-
+        
     def evaluateNumericBinaryExpression(self, left, right, operand, env: environment) -> numberValue | nullValue:
         match operand:
             case '+':
@@ -104,10 +104,13 @@ class interpreter:
     def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
         obj: objectValue = env.lookup(member.object.symbol)
 
-        if member.property.symbol not in obj.properties:
-            keyError(member.property.symbol, member.object.symbol)
+        if isinstance(member.property, identifierNode):
+            if member.property.symbol not in obj.properties:
+                keyError(member.property.symbol, member.object.symbol)
 
-        return obj.properties[member.property.symbol]
+            return obj.properties[member.property.symbol]
+        else:
+            keyError(keyError(member.property.symbol, member.object.symbol))
     
     def evaluateIfStatement(self, astNode:ifStatementNode, env:environment):
         left :RuntimeValue = self.evaluate(astNode.conditionLeft, env)
@@ -175,5 +178,7 @@ class interpreter:
                 return numberValue(astNode.value)
             case 'nullLiteral':
                 return nullValue
+            case 'stringLiteral':
+                return stringValue(astNode.value)
             case _:
                 notImplementedError(astNode)

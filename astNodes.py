@@ -23,6 +23,16 @@ class numericLiteralNode:
             'value': self.value
         })
 
+class stringLiteralNode:
+    def __init__(self, value) -> None:
+        self.kind = 'stringLiteral'
+        self.value = value
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'value': self.value
+        })
 
 class nullLiteralNode:
     def __init__(self) -> None:
@@ -169,7 +179,7 @@ class memberExpressionNode:
         return str({
             'kind': self.kind,
             'object': self.object,
-            'property': str(self.property)
+            'property': self.property
         })
 
 class callExpression:

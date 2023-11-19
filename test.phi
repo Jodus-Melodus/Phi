@@ -1,8 +1,12 @@
 
 
+const q = {
+    a:4,
+    b:2,
+    c:9,
+    d:3,
+    e:7
+}
 
-var b = 3
-
-var a = [1, 2, { hi : 2}, [1, 2, 3], b]
-disp(a[1])
-
+out(q.length)
+q.a = 8

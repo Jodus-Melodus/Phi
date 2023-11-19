@@ -127,7 +127,7 @@ class Parser:
                 return variableDeclarationExpressionNode(identifier, self.parseExpression(), True)
 
     def parseAssignmentExpression(self) -> None:
-        left = self.parseArrayExpression() # change this form object to array
+        left = self.parseObjectExpression()
 
         if self.get().type == TT.assignmentOperator:
             self.eat()
@@ -167,6 +167,7 @@ class Parser:
             else:
                 syntaxError('Something went wrong', self.get().column, self.get().line)
         self.eat()
+        properties.append(propertyLiteralNode('length', numericLiteralNode(len(properties))))
         return objectLiteralNode(properties)
 
     def parseAdditiveExpression(self) -> None:
@@ -256,6 +257,8 @@ class Parser:
         match self.get().type:
             case TT.int | TT.real:
                 return numericLiteralNode(float(self.eat().value))
+            case TT.string:
+                return stringLiteralNode(self.eat().value)
             case TT.identifier:
                 return identifierNode(self.eat().value)
             case TT.openParenthesis:

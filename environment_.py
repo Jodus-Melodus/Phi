@@ -1,6 +1,7 @@
 from errors import nameError, syntaxError
 from values import *
 import builtInFunctions as bif
+import sys
 
 class environment:
     def __init__(self, parent=None) -> None:
@@ -55,7 +56,8 @@ class environment:
 def createGlobalEnvironment() -> environment:
     env = environment()
     # functions
-    env.declareVariable('disp', nativeFunction(lambda args, scope : print(bif.disp(args[0]))), True)
+    env.declareVariable('out', nativeFunction(lambda args, scope : sys.stdout.write(str(bif.out(args[0])) + '\n')), True)
+    env.declareVariable('in', nativeFunction(lambda args, scope : bif.in_(args[0])), True)
     env.declareVariable('now', nativeFunction(lambda args, scope : bif.now()), True)
     env.declareVariable('wait', nativeFunction(lambda args, scope : bif.wait(args[0])), True)
     env.declareVariable('type', nativeFunction(lambda args, scope : bif.type_(args[0])), True)
@@ -65,5 +67,8 @@ def createGlobalEnvironment() -> environment:
     env.declareVariable('_', nullValue(), True)
     env.declareVariable('T', booleanValue(True), True)
     env.declareVariable('F', booleanValue(False), True)
+
+
+    env.declareVariable('array', objectValue({'length':lambda : bif.length()}))
     
     return env

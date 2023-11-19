@@ -1,6 +1,9 @@
 
-def syntaxError(msg: str, column:int, line:int) -> None:
-    print(f"Syntax error : {msg} on line {line} in column {column}")
+def syntaxError(msg: str, column:int=-1, line:int=-1) -> None:
+    if column == -1:
+        print(f"Syntax error : {msg}")
+    else:
+        print(f"Syntax error : {msg} on line {line} in column {column}")
     exit()
 
 
@@ -18,5 +21,5 @@ def notImplementedError(msg) -> None:
     exit()
 
 def keyError(key, obj) -> None:
-    print(f"Key Error : '{key}' is not in {obj}")
+    print(f"Key Error : '{key}' is not in '{obj}'")
     exit()

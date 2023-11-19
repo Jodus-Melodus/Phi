@@ -63,18 +63,6 @@ class objectValue(RuntimeValue):
         })
 
 
-class arrayValue(RuntimeValue):
-    def __init__(self, items:dict) -> None:
-        self.type = 'arrayValue'
-        self.items = items
-
-    def __repr__(self) -> str:
-        return str({
-            'type': self.type,
-            'items': self.items
-        })
-
-
 class nativeFunction(RuntimeValue):
     def __init__(self, call) -> None:
         self.type = 'nativeFunctionValue'
