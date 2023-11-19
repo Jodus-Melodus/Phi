@@ -1,11 +1,16 @@
 import phi_lexer
 import phi_parser
 import phi_interpreter
-import environment_
+import phi_environment
 
-environment = environment_.createGlobalEnvironment()
+environment = phi_environment.createGlobalEnvironment()
 
-with open('test.phi', 'r') as f:
+while True:
+    filePath = input('> ')
+    if filePath:
+        break
+
+with open(filePath, 'r') as f:
     sourceCode = ''.join(f.readlines())
 
     lexer = phi_lexer.Lexer(sourceCode)

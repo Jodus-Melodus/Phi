@@ -12,6 +12,7 @@ class TokenType:
         self.assignmentOperator = 'assignmentoperator'
 
         self.equal = 'equal'
+        self.notequal = 'notequal'
         self.greaterThan = 'greaterthan'
         self.lessThan = 'lessthan'
         self._and = 'and'
@@ -141,6 +142,13 @@ class Lexer:
                 case '|':
                     tokens.append(Token(TT._or, char, self.index, self.column, self.line))
                     self.eat()
+                case '!':
+                    self.eat()
+                    if self.get() == '=':
+                        tokens.append(Token(TT.notequal, char, self.index, self.column, self.line))
+                        self.eat()
+                    else:
+                        invalidCharacterError(char, self.column, self.line)
                 case _:
 
                     if char in DIGITS:

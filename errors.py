@@ -6,7 +6,6 @@ def syntaxError(msg: str, column:int=-1, line:int=-1) -> None:
         print(f"Syntax error : {msg} on line {line} in column {column}")
     exit()
 
-
 def nameError(name: str) -> None:
     print(f"'{name}' is undefined.")
     exit()

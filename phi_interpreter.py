@@ -1,7 +1,7 @@
 from values import *
 from astNodes import *
 from errors import *
-from environment_ import environment
+from phi_environment import environment
 
 
 class interpreter:
@@ -128,6 +128,8 @@ class interpreter:
                     res = booleanValue(False)
             elif isinstance(left, booleanValue):
                 res = booleanValue(left.value)
+            elif isinstance(left, stringValue):
+                res = left.value != ''
         else:
             if isinstance(left, numberValue) and isinstance(right, numberValue):
                 res = nullValue
@@ -145,7 +147,11 @@ class interpreter:
                         res = left.value and right.value
                     case '|':
                         res = left.value or right.value
-
+            elif isinstance(left, stringValue) and isinstance(right, stringValue):
+                res = nullValue
+                match astNode.operand:
+                    case '==':
+                        res = left.value == right.value
         if res:
             for statement in astNode.body:
                 res = self.evaluate(statement, env)

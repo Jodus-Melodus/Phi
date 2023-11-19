@@ -1,17 +1,4 @@
 
-
-var q = {
-    a:4,
-    b:2,
-    c:9,
-    d:3,
-    e:7
+if ("hello" == "hello"){
+    out("yes")
 }
-
-out(q)
-q.f = 1
-out(q)
-
-var x = length(q)
-
-out(x)

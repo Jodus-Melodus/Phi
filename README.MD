@@ -16,6 +16,7 @@ Phi is a dynamic OOP scripting language.
     - {a : 123, b : "apple", c : 2.3, d : {z : "zebra"}}
     
 # Important Symbols
+- Assignment =
 - Plus/Addition +
 - Minus/Subtraction -
 - Multiplication *
@@ -23,14 +24,15 @@ Phi is a dynamic OOP scripting language.
 - Modulus %
 - Power of ^
 - Comments #
+- Or - |
+- And - &
+- Equal - ==
+- Not Equal - !=
 
 # Built-in Constants
 - null/nil/none - _
 - True - T
 - False - F
-- Or - |
-- And - &
-- Equals - ==
 
 # Keywords
 - _var_
@@ -75,6 +77,7 @@ Phi is a dynamic OOP scripting language.
         - T
         - F
         - 4 == 3
+        - "hello" == "hello"
 
 
 *user defined
