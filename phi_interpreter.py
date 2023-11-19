@@ -150,7 +150,7 @@ class interpreter:
         item : itemLiteralNode
 
         for item in array.items:
-            items[item.index] = item.value
+            items[item.index] = self.evaluate(item.value, env)
 
         return arrayValue(items)
 

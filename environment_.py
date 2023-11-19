@@ -55,7 +55,7 @@ class environment:
 def createGlobalEnvironment() -> environment:
     env = environment()
     # functions
-    env.declareVariable('disp', nativeFunction(lambda args, scope : print(bif.disp(args))), True)
+    env.declareVariable('disp', nativeFunction(lambda args, scope : print(bif.disp(args[0]))), True)
     env.declareVariable('now', nativeFunction(lambda args, scope : bif.now()), True)
     env.declareVariable('wait', nativeFunction(lambda args, scope : bif.wait(args[0])), True)
     env.declareVariable('type', nativeFunction(lambda args, scope : bif.type_(args[0])), True)

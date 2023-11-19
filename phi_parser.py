@@ -151,9 +151,9 @@ class Parser:
             elif self.get().type == TT.lineend:
                 self.eat()
                 continue
-            elif self.get().type in (TT.identifier, TT.int, TT.real, TT.string):
+            elif self.get().type in (TT.identifier, TT.int, TT.real, TT.string, TT.openBrace, TT.openBracket):
                 index += 1
-                items.append(itemLiteralNode(self.parseObjectExpression(), index))
+                items.append(itemLiteralNode(self.parseArrayExpression(), index))
                 if self.get().type in (TT.comma, TT.lineend):
                     self.eat()
                 elif self.get().type == TT.closeBracket:

@@ -2,27 +2,26 @@ from values import *
 from time import time, sleep
 
 
-def disp(args) -> str:
-    result = ''
+def disp(arg, result='') -> str:
 
-    for arg in args:
-        if isinstance(arg, (numberValue, nullValue)):
-            result += f'{arg.value}'
-        elif isinstance(arg, objectValue):
-            temp = '{'
-            for prop in arg.properties:
-                temp += f"{prop} : {arg.properties[prop].value},"
-            result += temp + '}'
-        elif isinstance(arg, function):
-            parameters = (parameter.symbol for parameter in arg.parameters)
-            result += f'fn {arg.name}{tuple(parameters)}'
-        elif isinstance(arg, booleanValue):
-            result += 'T' if arg.value == True else 'F'
-        elif isinstance(arg, arrayValue):
-            res = '['
-            for item in arg.items:
-                res += f'{arg.items[item].value}, '
-            result += res[:-2] + ']'
+    if isinstance(arg, (numberValue, nullValue)):
+        result += f'{arg.value}'
+    elif isinstance(arg, objectValue):
+        temp = '{'
+        for prop in arg.properties:
+            temp += f"{prop} : {disp(arg.properties[prop], result)},"
+        result += temp + '}'
+    elif isinstance(arg, function):
+        parameters = (parameter.symbol for parameter in arg.parameters)
+        result += f'fn {arg.name}{tuple(parameters)}'
+    elif isinstance(arg, booleanValue):
+        result += 'T' if arg.value == True else 'F'
+    elif isinstance(arg, arrayValue):
+        res = '['
+        for item in arg.items:
+            res += f'{disp(arg.items[item], result)}, '
+        result += res[:-2] + ']'
+
     return result
 
 def now() -> numberValue:
