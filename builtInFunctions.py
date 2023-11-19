@@ -18,6 +18,11 @@ def disp(args) -> str:
             result += f'fn {arg.name}{tuple(parameters)}'
         elif isinstance(arg, booleanValue):
             result += 'T' if arg.value == True else 'F'
+        elif isinstance(arg, arrayValue):
+            res = '['
+            for item in arg.items:
+                res += f'{arg.items[item].value}, '
+            result += res[:-2] + ']'
     return result
 
 def now() -> numberValue:

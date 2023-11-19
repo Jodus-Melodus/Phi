@@ -144,6 +144,15 @@ class interpreter:
             for statement in astNode.body:
                 res = self.evaluate(statement, env)
         return res
+    
+    def evaluateArrayExpression(self, array:arrayLiteralNode, env:environment) -> None:
+        items = {}
+        item : itemLiteralNode
+
+        for item in array.items:
+            items[item.index] = item.value
+
+        return arrayValue(items)
 
     def evaluate(self, astNode, env: environment) -> None:
         match astNode.kind:
@@ -167,6 +176,8 @@ class interpreter:
                 return self.evaluateMemberExpression(astNode, env)
             case 'ifstatement':
                 return self.evaluateIfStatement(astNode, env)
+            case 'arrayliteral':
+                return self.evaluateArrayExpression(astNode, env)
 
             case 'numericLiteral':
                 return numberValue(astNode.value)

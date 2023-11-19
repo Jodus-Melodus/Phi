@@ -23,4 +23,4 @@ with open('test.phi', 'r') as f:
 
 
 
-#todo fix this : obj.prop.prop doesn't work becuase the interpreter only check if the obj.prop is a symbol
+#todo fix : obj.prop.prop doesn't work becuase the interpreter only check if the obj.prop is a symbol

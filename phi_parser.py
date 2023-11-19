@@ -127,7 +127,7 @@ class Parser:
                 return variableDeclarationExpressionNode(identifier, self.parseExpression(), True)
 
     def parseAssignmentExpression(self) -> None:
-        left = self.parseObjectExpression()
+        left = self.parseArrayExpression() # change this form object to array
 
         if self.get().type == TT.assignmentOperator:
             self.eat()
@@ -135,6 +135,36 @@ class Parser:
             return assignmentExpressionNode(left, value)
         else:
             return left
+        
+    def parseArrayExpression(self) -> None:
+        if self.get().type != TT.openBracket:
+            return self.parseObjectExpression()
+        else:
+            self.eat()
+
+        items = []
+        index = -1
+
+        while self.get().type != TT.eof:
+            if self.get().type == TT.closeBracket:
+                break
+            elif self.get().type == TT.lineend:
+                self.eat()
+                continue
+            elif self.get().type in (TT.identifier, TT.int, TT.real, TT.string):
+                index += 1
+                items.append(itemLiteralNode(self.parseObjectExpression(), index))
+                if self.get().type in (TT.comma, TT.lineend):
+                    self.eat()
+                elif self.get().type == TT.closeBracket:
+                    break
+                else:
+                    syntaxError("Expected a ',' or a ']'", self.get().column, self.get().line)
+            else:
+                syntaxError("Expected a value", self.get().column, self.get().line)
+        
+        self.eat()
+        return arrayLiteralNode(items)
 
     def parseObjectExpression(self) -> None:
         if self.get().type != TT.openBrace:
