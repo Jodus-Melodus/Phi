@@ -1,1 +1,111 @@
-{"kind": "program", "body": [{"kind": "ifstatement", "conditionLeft": {"kind": "stringLiteral", "value": "hello"}, "operand": "==", "conditionRight": {"kind": "stringLiteral", "value": "hello"}, "body": [{"kind": "callexpression", "arguements": [{"kind": "stringLiteral", "value": "yes"}], "caller": {"kind": "identifier", "symbol": "out"}}]}]}
+{
+    "kind": "program",
+    "body": [
+        {
+            "kind": "variableDeclarationExpression",
+            "identifier": "list",
+            "value": {
+                "kind": "objectliteral",
+                "properties": [
+                    {
+                        "kind": "propertyliteral",
+                        "key": "a",
+                        "value": {
+                            "kind": "numericLiteral",
+                            "value": 1.0
+                        }
+                    },
+                    {
+                        "kind": "propertyliteral",
+                        "key": "b",
+                        "value": {
+                            "kind": "numericLiteral",
+                            "value": 2.0
+                        }
+                    },
+                    {
+                        "kind": "propertyliteral",
+                        "key": "c",
+                        "value": {
+                            "kind": "numericLiteral",
+                            "value": 3.0
+                        }
+                    }
+                ]
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "functionDeclaration",
+            "name": "append",
+            "parameters": [
+                {
+                    "kind": "identifier",
+                    "symbol": "obj"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "item"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "value"
+                }
+            ],
+            "body": [
+                {
+                    "kind": "assignmentExpression",
+                    "assigne": {
+                        "kind": "memberexpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "obj"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "item"
+                        }
+                    },
+                    "value": {
+                        "kind": "identifier",
+                        "symbol": "value"
+                    }
+                }
+            ]
+        },
+        {
+            "kind": "callexpression",
+            "arguements": [
+                {
+                    "kind": "identifier",
+                    "symbol": "list"
+                },
+                {
+                    "kind": "stringLiteral",
+                    "value": "d"
+                },
+                {
+                    "kind": "numericLiteral",
+                    "value": 4.0
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "append"
+            }
+        },
+        {
+            "kind": "callexpression",
+            "arguements": [
+                {
+                    "kind": "identifier",
+                    "symbol": "list"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "out"
+            }
+        }
+    ]
+}

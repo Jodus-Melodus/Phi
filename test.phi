@@ -1,4 +1,1 @@
 
-if ("hello" == "hello"){
-    out("yes")
-}

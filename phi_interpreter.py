@@ -108,6 +108,8 @@ class interpreter:
             if member.property.symbol not in obj.properties:
                 keyError(member.property.symbol, member.object.symbol)
 
+            if isinstance(member.property, stringValue):
+                return obj.properties[member.property.value]
             return obj.properties[member.property.symbol]
         else:
             keyError(keyError(member.property.symbol, member.object.symbol))
@@ -140,6 +142,8 @@ class interpreter:
                         res = left.value > right.value
                     case '<':
                         res = left.value < right.value
+                    case '!=':
+                        res = left.value != right.value
             elif isinstance(left, booleanValue) and isinstance(right, booleanValue):
                 res = nullValue
                 match astNode.operand:
@@ -147,11 +151,15 @@ class interpreter:
                         res = left.value and right.value
                     case '|':
                         res = left.value or right.value
+                    case '!=':
+                        res = left.value != right.value
             elif isinstance(left, stringValue) and isinstance(right, stringValue):
                 res = nullValue
                 match astNode.operand:
                     case '==':
                         res = left.value == right.value
+                    case '!=':
+                        res = left.value != right.value
         if res:
             for statement in astNode.body:
                 res = self.evaluate(statement, env)

@@ -169,7 +169,7 @@ class propertyLiteralNode:
         })
     
 class memberExpressionNode:
-    def __init__(self, object, property, computed:bool) -> None:
+    def __init__(self, object, property:RuntimeValue, computed:bool) -> None:
         self.kind = 'memberexpression'
         self.object = object
         self.property = property
