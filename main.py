@@ -1,9 +1,9 @@
-import phi_lexer
-import phi_parser
-import phi_interpreter
-import phi_environment
+from frontend.phi_lexer import *
+from frontend.phi_parser import *
+from backend.phi_interpreter import *
+from backend.phi_environment import *
 
-environment = phi_environment.createGlobalEnvironment()
+environment = createGlobalEnvironment()
 
 while True:
     filePath = input('> ')
@@ -13,15 +13,15 @@ while True:
 with open(filePath, 'r') as f:
     sourceCode = ''.join(f.readlines())
 
-    lexer = phi_lexer.Lexer(sourceCode)
+    lexer = Lexer(sourceCode)
     tokens = lexer.tokenize()
-    parser = phi_parser.Parser(tokens)
+    parser = Parser(tokens)
     ast = parser.genAST()
 
     with open('ast.json', 'w') as f:
         f.write(str(ast).replace("'", '"'))
 
-    interpreter = phi_interpreter.interpreter()
+    interpreter = interpreter()
     interpreter.evaluate(ast, environment)
 
 
