@@ -144,30 +144,6 @@ class objectLiteralNode:
             'kind': self.kind,
             'properties': self.properties
         })
-
-class arrayLiteralNode:
-    def __init__(self, items: list) -> None:
-        self.kind = 'arrayliteral'
-        self.items = items
-
-    def __repr__(self) -> str:
-        return str({
-            'kind': self.kind,
-            'items': self.items
-        })
-    
-class itemLiteralNode:
-    def __init__(self, value, index) -> None:
-        self.kind = 'propertyliteral'
-        self.value = value
-        self.index = index
-
-    def __repr__(self) -> str:
-        return str({
-            'kind': self.kind,
-            'value': self.value,
-            'index': self.index
-        })
     
 class propertyLiteralNode:
     def __init__(self, key, value) -> None:

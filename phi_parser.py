@@ -135,36 +135,6 @@ class Parser:
             return assignmentExpressionNode(left, value)
         else:
             return left
-        
-    def parseArrayExpression(self) -> None:
-        if self.get().type != TT.openBracket:
-            return self.parseObjectExpression()
-        else:
-            self.eat()
-
-        items = []
-        index = -1
-
-        while self.get().type != TT.eof:
-            if self.get().type == TT.closeBracket:
-                break
-            elif self.get().type == TT.lineend:
-                self.eat()
-                continue
-            elif self.get().type in (TT.identifier, TT.int, TT.real, TT.string, TT.openBrace, TT.openBracket):
-                index += 1
-                items.append(itemLiteralNode(self.parseArrayExpression(), index))
-                if self.get().type in (TT.comma, TT.lineend):
-                    self.eat()
-                elif self.get().type == TT.closeBracket:
-                    break
-                else:
-                    syntaxError("Expected a ',' or a ']'", self.get().column, self.get().line)
-            else:
-                syntaxError("Expected a value", self.get().column, self.get().line)
-        
-        self.eat()
-        return arrayLiteralNode(items)
 
     def parseObjectExpression(self) -> None:
         if self.get().type != TT.openBrace:
@@ -269,13 +239,15 @@ class Parser:
             if operand.type == TT.period:
                 computed = False
                 prop = self.parsePrimaryExpression()
-                if prop.kind != 'identifier':
+                if prop.kind != ('identifier'):
                     syntaxError("invalid syntax", self.get().column, self.get().line)
             else:
                 computed = True
                 prop = self.parseExpression()
-                if self.get().type == TT.closeBracket:
+                if self.get().type != TT.closeBracket:
                     syntaxError("Expected ']'", self.get().column, self.get().line)
+                else:
+                    self.eat()
 
             obj = memberExpressionNode(obj, prop, computed)
         return obj

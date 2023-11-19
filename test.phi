@@ -4,5 +4,5 @@
 var b = 3
 
 var a = [1, 2, { hi : 2}, [1, 2, 3], b]
-disp(a)
+disp(a[1])
 

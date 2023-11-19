@@ -9,18 +9,13 @@ def disp(arg, result='') -> str:
     elif isinstance(arg, objectValue):
         temp = '{'
         for prop in arg.properties:
-            temp += f"{prop} : {disp(arg.properties[prop], result)},"
+            temp += f"{prop} : {disp(arg.properties[prop], result)}, "
         result += temp + '}'
     elif isinstance(arg, function):
         parameters = (parameter.symbol for parameter in arg.parameters)
         result += f'fn {arg.name}{tuple(parameters)}'
     elif isinstance(arg, booleanValue):
         result += 'T' if arg.value == True else 'F'
-    elif isinstance(arg, arrayValue):
-        res = '['
-        for item in arg.items:
-            res += f'{disp(arg.items[item], result)}, '
-        result += res[:-2] + ']'
 
     return result
 
