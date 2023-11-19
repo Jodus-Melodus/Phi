@@ -1,5 +1,5 @@
 # gloabal functions (constants)
-# disp() - prints the value to the console
+# out() - prints the value to the console
 # now() - takes in no arguements and returns current time as a float
 # wait(x) - halts the program for a x amount of seconds
 # type() - returns the type of a variable
@@ -36,8 +36,9 @@ var obj = {
 var f = obj.complex.bar
 foo = obj.x + 1
 foo = obj.func(2, 2)
+out(obj.length)
 
-disp(45 / 2 + x * 2^1 % 4 + 4.2)
+out(45 / 2 + x * 2^1 % 4 + 4.2)
 
 # function declare
 fn add(x, y) {
@@ -48,7 +49,7 @@ fn add(x, y) {
 
 # call functions
 var res = add(5, 3)
-disp(res)
+out(res)
 
 # closures are possible
 fn outer(){
@@ -63,22 +64,22 @@ fn outer(){
 
 # assign functions to other variables
 var i = outer()
-disp(i)
+out(i)
 
 if (1 + 2 == 3) {
-    disp(1)
+    out(1)
 }
 
 if (T){
-    disp(2)
+    out(2)
 }
 
 if (T & T){
-    disp(3)
+    out(3)
 }
 
 if (T | F){
-    disp(4)
+    out(4)
 }
 
 
@@ -106,3 +107,6 @@ var a = {
 }
 
 out(a.c())
+
+var x = in("> ")
+out(x)

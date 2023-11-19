@@ -50,11 +50,11 @@ class interpreter:
             varName = assignmentExpression.assigne.symbol
             return env.assignVariable(varName, self.evaluate(assignmentExpression.value, env))
         elif isinstance(assignmentExpression.assigne, memberExpressionNode):
-            member: memberExpressionNode = assignmentExpression.assigne
+            member : memberExpressionNode = assignmentExpression.assigne
             varName = member.object.symbol
             prop = member.property.symbol
             currentValue: dict = env.lookup(varName)
-            currentValue.properties[prop] = assignmentExpression.value
+            currentValue.properties[prop] = self.evaluate(assignmentExpression.value, env)
             return env.assignVariable(varName, currentValue)
         else:
             syntaxError('Expected an identifier.')

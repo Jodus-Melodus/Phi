@@ -20,7 +20,4 @@ with open('test.phi', 'r') as f:
     interpreter.evaluate(ast, environment)
 
 
-
-
-
 #todo fix : obj.prop.prop doesn't work becuase the interpreter only check if the obj.prop is a symbol

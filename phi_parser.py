@@ -167,7 +167,6 @@ class Parser:
             else:
                 syntaxError('Something went wrong', self.get().column, self.get().line)
         self.eat()
-        properties.append(propertyLiteralNode('length', numericLiteralNode(len(properties))))
         return objectLiteralNode(properties)
 
     def parseAdditiveExpression(self) -> None:

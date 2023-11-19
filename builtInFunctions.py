@@ -8,16 +8,17 @@ def out(arg) -> str:
     if isinstance(arg, (numberValue, stringValue, booleanValue, nullValue)):
         return arg.value
     elif isinstance(arg, objectValue):
-        res = ''
+        res = '{'
         for prop in arg.properties:
-            res += f"{out(prop.key)}:{out(prop.value)},"
-        return res
+            res += f"{out(prop)} : {out(arg.properties[prop])}, "
+        return res + '}'
     elif isinstance(arg, function):
         return f"fn {function.name}()"
     else:
         return arg
 
-
+def length(arg:objectValue) -> numberValue:
+    return numberValue(len(arg.properties))
 
 def in_(arg:stringValue) -> stringValue:
     sys.stdout.write(arg.value)
@@ -48,6 +49,3 @@ def wait(seconds) -> None:
 
 def root(radicand, index) -> numberValue:
     return numberValue(float(float(radicand.value))**(1/float(index.value)))
-
-def length() -> numberValue:
-    return numberValue(1)

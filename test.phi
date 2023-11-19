@@ -1,6 +1,6 @@
 
 
-const q = {
+var q = {
     a:4,
     b:2,
     c:9,
@@ -8,5 +8,10 @@ const q = {
     e:7
 }
 
-out(q.length)
-q.a = 8
+out(q)
+q.f = 1
+out(q)
+
+var x = length(q)
+
+out(x)
