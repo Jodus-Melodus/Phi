@@ -2,9 +2,7 @@ from values import *
 from time import time, sleep
 import sys
 
-
 def out(arg) -> str:
-
     if isinstance(arg, (numberValue, stringValue, booleanValue, nullValue)):
         return arg.value
     elif isinstance(arg, objectValue):
