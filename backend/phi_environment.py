@@ -1,6 +1,6 @@
-from errors import nameError, syntaxError
-from values import *
-import builtInFunctions as bif
+from frontend.errors import nameError, syntaxError
+from backend.values import *
+import backend.builtInFunctions as bif
 import sys
 
 class environment:

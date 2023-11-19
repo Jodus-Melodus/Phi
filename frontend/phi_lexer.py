@@ -1,4 +1,4 @@
-from errors import *
+from frontend.errors import *
 
 
 class TokenType:

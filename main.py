@@ -2,6 +2,7 @@ from frontend.phi_lexer import *
 from frontend.phi_parser import *
 from backend.phi_interpreter import *
 from backend.phi_environment import *
+from time import time
 
 environment = createGlobalEnvironment()
 

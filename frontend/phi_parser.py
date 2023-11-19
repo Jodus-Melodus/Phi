@@ -1,6 +1,6 @@
-from phi_lexer import Lexer, Token, TT
-from astNodes import *
-from errors import *
+from frontend.phi_lexer import Lexer, Token, TT
+from frontend.astNodes import *
+from frontend.errors import *
 
 # prescidence orders
 # assignment
@@ -74,7 +74,8 @@ class Parser:
                     self.eat()
                 else:
                     syntaxError("Expected a '{'", self.get().column, self.get().line)
-
+        else:
+            syntaxError("Expected a '('", self.get().column, self.get().line)
         return ifStatementNode(conditionLeft, operand, conditionRight, body)
     
     def parseFunctionDeclaration(self) -> None:

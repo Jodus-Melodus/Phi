@@ -1,7 +1,7 @@
-from values import *
-from astNodes import *
-from errors import *
-from phi_environment import environment
+from backend.values import *
+from frontend.astNodes import *
+from frontend.errors import *
+from backend.phi_environment import environment
 
 
 class interpreter:

@@ -1,1 +1,10 @@
 
+
+var obj = {
+    a : 1,
+    b : {
+        c:1
+    }
+}
+
+out(obj.b.c)
