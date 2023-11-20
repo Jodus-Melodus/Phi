@@ -4,7 +4,7 @@ from frontend.errors import *
 from backend.phi_environment import environment
 
 
-class interpreter:
+class Interpreter:
     def __init__(self) -> None:
         pass
 
