@@ -43,7 +43,7 @@ class environment:
         else:
             return env.variables[varName]
 
-    def resolve(self, varName: str) -> self:
+    def resolve(self, varName: str) -> None:
         if varName in self.variables:
             return self
         elif varName in self.constants:
