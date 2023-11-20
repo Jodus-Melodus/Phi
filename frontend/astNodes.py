@@ -99,7 +99,23 @@ class ifStatementNode:
             'body': self.body
         })
 
+class whileStatementNode:
+    def __init__(self, conditionLeft, operand, conditionRight, body) -> None:
+        self.kind = 'whilestatement'
+        self.conditionLeft = conditionLeft
+        self.operand = operand
+        self.conditionRight = conditionRight
+        self.body = body
 
+    def __repr__(self) -> str:
+        return str({
+            'kind':self.kind,
+            'conditionLeft':self.conditionLeft,
+            'operand':self.operand,
+            'conditionRight':self.conditionRight,
+            'body': self.body
+        })
+    
 class assignmentExpressionNode:
     def __init__(self, assigne: expressionNode, value: expressionNode) -> None:
         self.kind = 'assignmentExpression'

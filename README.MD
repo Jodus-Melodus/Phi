@@ -2,17 +2,17 @@
 Phi is a dynamic OOP scripting language.
 
 # Data Structures/Types
-- _Integer_ - All positive and negative numbers without decimal
+- Integer - All positive and negative numbers without decimal
     - 123, -321
 
-- _Real_ - All positive and negative numbers with decimal
+- Real - All positive and negative numbers with decimal
     - 123.456, -3583.2
 
-- _Boolean_ - True or False
+- Boolean - True or False
     - T, F
-- _String_ - All the characters of the alphabet
+- String - All the characters of the alphabet
     - "Hello", "John", "testing123"
-- _Object_ - A collection of properties accessed with a key
+- Object - A collection of properties accessed with a key
     - {a : 123, b : "apple", c : 2.3, d : {z : "zebra"}}
     
 # Important Symbols
@@ -35,40 +35,39 @@ Phi is a dynamic OOP scripting language.
 - False - F
 
 # Keywords
-- _var_
+### var
     - Initializes a variable that can be changed throughout the program
     - var name* = value*
-- _const_
+### const
     - Initializes a variable that can not be changed throughout the program
     - const name* = value*
-- _fn_
+### fn
     - Initializes a function
     - Automatically returns last evaluation
     - fn name*(parameters*){body*}
 
 # Built-in Functions
-- _out("Hello, World")_
+### out("Hello, World")
     - Takes 1 positional arguement
     - Displays the output in the console
-- _in("> ")_
+### in("> ")
     - Takes 1 positional arguement of type string
     - Reads the user input from the cosole and returns a string
-- _now()_
+### now()
     - Takes 0 positional arguements
     - Returns the current time as a real value
-- _length(object)_
+### length(object)
     - Takes 1 positional arguement
     - Returns the length of a object's properties as a integer
-- _wait(seconds)_
+### wait(seconds)
     - Takes 1 positional arguement as a real
     - Halts the program for the amount of seconds specified
-- _root(radicand, index)_
+### root(radicand, index)
     - Takes 2 positional arguements both real
     - Returns the index root of the randicand
 
-
 # Flow Control Statements
-- _If statement_
+### If
     - Check if a condition is met and then execute a code block
     - if (condition*){code block/body*}
     - Condition
@@ -78,6 +77,10 @@ Phi is a dynamic OOP scripting language.
         - F
         - 4 == 3
         - "hello" == "hello"
+### While
+    - Run code repeatedly until a condition is false
+    - while (condition*){code block/body*}
+    - Condition is same as [If statement](#if)
 
 
 *user defined

@@ -40,6 +40,7 @@ class TokenType:
         self.const = 'const'
         self.fn = 'fn'
         self._if = 'if'
+        self._while = 'while'
 
 
 TT = TokenType()
@@ -149,6 +150,12 @@ class Lexer:
                         self.eat()
                     else:
                         invalidCharacterError(char, self.column, self.line)
+                case '<':
+                    tokens.append(Token(TT.lessThan, char, self.index, self.column, self.line))
+                    self.eat()
+                case '>':
+                    tokens.append(Token(TT.greaterThan, char ,self.index, self.column, self.line))
+                    self.eat()
                 case _:
 
                     if char in DIGITS:
@@ -194,6 +201,8 @@ class Lexer:
                                 tokens.append(Token(TT.fn, name, self.index, self.column, self.line))
                             case 'if':
                                 tokens.append(Token(TT._if, name, self.index, self.column, self.line))
+                            case 'while':
+                                tokens.append(Token(TT._while, name, self.index, self.column, self.line))
                             case _:
                                 tokens.append(Token(TT.identifier, name, self.index, self.column, self.line))
                     else:

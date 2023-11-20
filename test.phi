@@ -1,10 +1,7 @@
 
+var a = 0
 
-var obj = {
-    a : 1,
-    b : {
-        c:1
-    }
+while (a < 3){
+    out(a)
+    a = a + 1
 }
-
-out(obj.b.c)

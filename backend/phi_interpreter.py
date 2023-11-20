@@ -164,6 +164,59 @@ class interpreter:
             for statement in astNode.body:
                 res = self.evaluate(statement, env)
         return res
+    
+    def evaluateWhileStatement(self, astNode:whileStatementNode, env:environment):
+        while True:
+            left :RuntimeValue = self.evaluate(astNode.conditionLeft, env)
+            if not isinstance(astNode.conditionRight, nullValue):
+                right :RuntimeValue = self.evaluate(astNode.conditionRight, env)
+            else:
+                right = nullValue()
+            res = False
+            if isinstance(right, nullValue):
+                if isinstance(left, numberValue):
+                    if left.value != 0:
+                        res = booleanValue(True)
+                    else:
+                        res = booleanValue(False)
+                elif isinstance(left, booleanValue):
+                    res = booleanValue(left.value)
+                elif isinstance(left, stringValue):
+                    res = left.value != ''
+            else:
+                if isinstance(left, numberValue) and isinstance(right, numberValue):
+                    res = nullValue
+                    match astNode.operand:
+                        case '==':
+                            res = left.value == right.value
+                        case '>':
+                            res = left.value > right.value
+                        case '<':
+                            res = left.value < right.value
+                        case '!=':
+                            res = left.value != right.value
+                elif isinstance(left, booleanValue) and isinstance(right, booleanValue):
+                    res = nullValue
+                    match astNode.operand:
+                        case '&':
+                            res = left.value and right.value
+                        case '|':
+                            res = left.value or right.value
+                        case '!=':
+                            res = left.value != right.value
+                elif isinstance(left, stringValue) and isinstance(right, stringValue):
+                    res = nullValue
+                    match astNode.operand:
+                        case '==':
+                            res = left.value == right.value
+                        case '!=':
+                            res = left.value != right.value
+            if res:
+                for statement in astNode.body:
+                    res = self.evaluate(statement, env)
+            else:
+                break
+        return res
 
     def evaluate(self, astNode, env: environment) -> None:
         match astNode.kind:
@@ -187,6 +240,8 @@ class interpreter:
                 return self.evaluateMemberExpression(astNode, env)
             case 'ifstatement':
                 return self.evaluateIfStatement(astNode, env)
+            case 'whilestatement':
+                return self.evaluateWhileStatement(astNode, env)
 
             case 'numericLiteral':
                 return numberValue(astNode.value)
