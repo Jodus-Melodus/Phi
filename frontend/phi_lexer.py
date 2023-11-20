@@ -49,7 +49,7 @@ ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-'
 
 
 class Token:
-    def __init__(self, type:TT, value:str, index:int, column:int, line:int) -> None:
+    def __init__(self, type:str, value:str|int|float, index:int, column:int, line:int) -> None:
         self.type = type
         self.value = value
         self.index = index + len(str(value))

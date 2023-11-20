@@ -2,20 +2,28 @@
 Phi is a dynamic OOP scripting language.
 
 ## Data Structures/Types
-### Integer - All positive and negative numbers without decimal
+### Integer
     var e.g. = 123
     var e.g. = -321
-### Real - All positive and negative numbers with decimal
+- All positive and negative numbers without decimal
+### Real
     var e.g. = 123.456
     var e.g. = -3583.2
-### Boolean - True or False
+- All positive and negative numbers with decimal
+### Boolean
     var e.g. = T
     var e.g. = F
-### String - All the characters of the alphabet
+- True or False
+### String
     var e.g. = "Hello"
     var e.g. = "John"
     var e.g. = "testing123"
-### Object - A collection of properties accessed with a key
+- All the characters of the alphabet
+### Array
+    var e.g. = [1, 2, 3, 4, 5]
+    var e.g. = ["hello", 2, 123.2, {a:1, b:2}]
+- A list/collection of values
+### Object
     var e.g. = {
         a : 123,
         b : "apple",
@@ -24,6 +32,7 @@ Phi is a dynamic OOP scripting language.
             z : "zebra"
             }
         }
+- A collection of properties accessed with a key
     
 ## Important Symbols
 - Assignment =

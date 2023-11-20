@@ -1,28 +1,10 @@
 
-const b = 3
-var a = 0
 
-while (a < 100){
-    out(a)
 
-    a = a + 1
+var a = {
+    b:1,
+    c:[5, 3, 9]
 }
 
-fn add(x, y){
-    var res = x + y
-}
 
-const obj = {
-    a:1,
-    b:b,
-    c:{
-        d:"hello",
-        e:"world"
-    }
-}
-
-var x = in("> ")
-
-if (a == b) {
-    out("a = b")
-}
+out(a.c)

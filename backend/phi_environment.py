@@ -43,15 +43,16 @@ class environment:
         else:
             return env.variables[varName]
 
-    def resolve(self, varName: str) -> None:
+    def resolve(self, varName: str) -> self:
         if varName in self.variables:
             return self
         elif varName in self.constants:
             return self
+        
         if self.parent == None:
             nameError(varName)
-
-        return self.parent.resolve(varName)
+        else:
+            return self.parent.resolve(varName)
 
 def createGlobalEnvironment() -> environment:
     env = environment()
@@ -68,7 +69,5 @@ def createGlobalEnvironment() -> environment:
     env.declareVariable('_', nullValue(), True)
     env.declareVariable('T', booleanValue(True), True)
     env.declareVariable('F', booleanValue(False), True)
-
-    env.declareVariable('array', objectValue({'length':lambda : bif.length()}))
     
     return env

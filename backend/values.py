@@ -17,7 +17,7 @@ class nullValue(RuntimeValue):
 
 
 class numberValue(RuntimeValue):
-    def __init__(self, value=nullValue) -> None:
+    def __init__(self, value) -> None:
         self.type = 'numberValue'
         self.value = value
 
@@ -50,9 +50,20 @@ class booleanValue(RuntimeValue):
             'value': self.value
         })
 
+class arrayValue(RuntimeValue):
+    def __init__(self, items:dict) -> None:
+        self.type = 'arrayValue'
+        self.items = items
+
+    def __repr__(self) -> str:
+        return str({
+            'type':self.type,
+            'items':self.items
+        })
+    
 
 class objectValue(RuntimeValue):
-    def __init__(self, properties: dict) -> None:
+    def __init__(self, properties:dict) -> None:
         self.type = 'objectValue'
         self.properties = properties
 

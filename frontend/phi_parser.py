@@ -23,7 +23,7 @@ class Parser:
     def get(self) -> Token:
         return self.tokens[0]
 
-    def genAST(self) -> None:
+    def genAST(self) -> programNode:
         while self.get().type != TT.eof:
             statement = self.parseStatement()
             if statement:
@@ -138,7 +138,7 @@ class Parser:
 
         self.eat()
 
-        return functionDeclarationExpressionNode(name, parameters, body)
+        return functionDeclarationExpressionNode(str(name), parameters, body)
 
     def parseVariableDeclaration(self) -> None:
         if self.get().type == TT.var:
@@ -159,6 +159,8 @@ class Parser:
             else:
                 self.eat()
                 return variableDeclarationExpressionNode(identifier, self.parseExpression(), True)
+        else:
+            syntaxError("Expected 'var' or 'const'", self.get().column, self.get().line)
 
     def parseAssignmentExpression(self) -> None:
         left = self.parseObjectExpression()
@@ -172,7 +174,7 @@ class Parser:
 
     def parseObjectExpression(self) -> None:
         if self.get().type != TT.openBrace:
-            return self.parseAdditiveExpression()
+            return self.parseArrayExpression()
         else:
             self.eat()
 
@@ -203,13 +205,41 @@ class Parser:
         self.eat()
         return objectLiteralNode(properties)
 
+    def parseArrayExpression(self) -> None:
+        if self.get().type != TT.openBracket:
+            return self.parseAdditiveExpression()
+        else:
+            self.eat()
+
+        items = []
+        index = -1
+
+        while self.get().type != TT.eof:
+            if self.get().type == TT.closeBracket:
+                break
+            elif self.get().type == TT.lineend:
+                self.eat()
+                continue
+            else:
+                index += 1
+                value = self.parseExpression()
+                items.append(itemLiteralNode(index, value))
+                if self.get().type in (TT.comma, TT.lineend):
+                    self.eat()
+                elif self.get().type == TT.closeBracket:
+                    break
+                else:
+                    syntaxError("Expected a ',' or a ']'", self.get().column, self.get().line)
+        self.eat()
+        return arrayLiteralNode(items)
+
     def parseAdditiveExpression(self) -> None:
         left = self.parseMultiplicativeExpression()
 
         while self.get().value in ['+', '-',]:
             operand = self.eat().value
             right = self.parseMultiplicativeExpression()
-            left = binaryExpressionNode(left, operand, right)
+            left = binaryExpressionNode(left, str(operand), right)
 
         return left
 
@@ -219,7 +249,7 @@ class Parser:
         while self.get().value in ['*', '/', '^', '%']:
             operand = self.eat().value
             right = self.parseCallMemberExpression()
-            left = binaryExpressionNode(left, operand, right)
+            left = binaryExpressionNode(left, str(operand), right)
 
         return left
 
@@ -293,7 +323,7 @@ class Parser:
             case TT.string:
                 return stringLiteralNode(self.eat().value)
             case TT.identifier:
-                return identifierNode(self.eat().value)
+                return identifierNode(str(self.eat().value))
             case TT.openParenthesis:
                 self.eat()  # open paren
                 value = self.parseExpression()
@@ -301,3 +331,5 @@ class Parser:
                 return value
             case TT.lineend:
                 self.eat()
+            case _:
+                exit()

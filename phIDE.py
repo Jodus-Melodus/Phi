@@ -19,11 +19,23 @@ openEditors = {}
 
 class TerminalRedirect:
     def __init__(self, textWidget:ctk.CTkTextbox) -> None:
-        self.wiget = textWidget
+        self.widget = textWidget
 
     def write(self, message) -> None:
-        self.wiget.insert('end', message)
-        self.wiget.yview_moveto(1)
+        self.widget.insert('end', message)
+        self.widget.yview_moveto(1)
+
+    def readline(self, prompt="") -> str:
+        self.widget.insert('end', prompt)
+        self.widget.mark_set("input_start", "end-1c")
+        self.widget.mark_set("input_end", "end-1c + 1l")
+        line = self.widget.get("input_start", "input_end")
+        self.widget.delete("input_start", "input_end")
+        return line
+
+
+def clearOutput() -> None:
+    output.delete('0.0', 'end')
 
 window = ctk.CTk()
 window.title("phIDE")
@@ -38,36 +50,41 @@ centerTabWindow = ctk.CTkTabview(centerPanel)
 bottomTabWindow = ctk.CTkTabview(bottomPanel)
 
 outputTab = bottomTabWindow.add('Output')
-output = ctk.CTkTextbox(outputTab)
-sys.stdout = TerminalRedirect(output)
+output = ctk.CTkTextbox(outputTab, font=font)
+btnClearOutput = ctk.CTkButton(outputTab, command=clearOutput, text='x', width=10, height=10)
+
+btnClearOutput.pack(anchor='ne')
 output.pack(expand=True, fill='both')
 
-btnHideLeftPanel = ctk.CTkButton(leftPanel)
+sys.stdout = TerminalRedirect(output)
+sys.stdin = TerminalRedirect(output)
 
-def currentTab() -> ctk.CTkTextbox:
+def currentTab() -> ctk.CTkTextbox|None:
     tabName = centerTabWindow.get()
     if tabName != '':
         return openEditors[tabName]
+    
 
 def updateSyntax(e) -> None:
     editor = currentTab()
-    ypos = editor.yview()[0]
-    cursorPos = editor.index(ctk.INSERT)
-    text = editor.get('0.0', 'end')
-    matches = [(match.start(), match.end()) for match in re.finditer(languageSyntaxPatterns[currentLanguage], text)]
-    editor.delete("1.0", 'end')
+    if editor:
+        ypos = editor.yview()[0]
+        cursorPos = editor.index(ctk.INSERT)
+        text = editor.get('0.0', 'end')
+        matches = [(match.start(), match.end()) for match in re.finditer(languageSyntaxPatterns[currentLanguage], text)]
+        editor.delete("1.0", 'end')
 
-    prev_end = 0
-    for start, end in matches:
-        unmatched_text_before = text[prev_end:start]
-        editor.insert('end', unmatched_text_before)
-        matched_text = text[start:end]
-        editor.insert('end', matched_text, 'keyword')
-        prev_end = end
-    unmatched_text_after = text[prev_end:]
-    editor.insert('end', unmatched_text_after[:-1])
-    editor.yview_moveto(ypos)
-    editor.mark_set(ctk.INSERT, cursorPos)
+        prev_end = 0
+        for start, end in matches:
+            unmatched_text_before = text[prev_end:start]
+            editor.insert('end', unmatched_text_before)
+            matched_text = text[start:end]
+            editor.insert('end', matched_text, 'keyword')
+            prev_end = end
+        unmatched_text_after = text[prev_end:]
+        editor.insert('end', unmatched_text_after[:-1])
+        editor.yview_moveto(ypos)
+        editor.mark_set(ctk.INSERT, cursorPos)
 
 def addTab(path:str) -> None:
     global currentLanguage
@@ -93,16 +110,18 @@ def openFile(e) -> None:
 
 def run(e) -> None:
     editor = currentTab()
-    sourceCode = editor.get('0.0', 'end')
-    main.run(sourceCode)
+    if editor:
+        sourceCode = editor.get('0.0', 'end')
+        main.run(sourceCode)
 
 def commentLine(e) -> None:
     print('hi')
     editor = currentTab()
-    cursor_position = editor.index(ctk.CURRENT)
-    line_number = cursor_position.split('.')[0]
-    start_position = f"{line_number}.0"
-    editor.insert(start_position, '# ')
+    if editor:
+        cursor_position = editor.index(ctk.CURRENT)
+        line_number = cursor_position.split('.')[0]
+        start_position = f"{line_number}.0"
+        editor.insert(start_position, '# ')
 
 leftPanel.grid(sticky='nesw', row=0, column=0, rowspan=2)
 rightPanel.grid(sticky='nesw', row=0, column=2, rowspan=2)

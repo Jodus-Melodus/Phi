@@ -8,7 +8,7 @@ class Interpreter:
     def __init__(self) -> None:
         pass
 
-    def evaluateProgram(self, program: programNode, env: environment) -> None:
+    def evaluateProgram(self, program: programNode, env: environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
         lastEvaluated = nullValue()
 
         for statement in program.body:
@@ -16,7 +16,7 @@ class Interpreter:
 
         return lastEvaluated
 
-    def evaluateBinaryExpression(self, binaryOperation: binaryExpressionNode, env: environment) -> numberValue | nullValue:
+    def evaluateBinaryExpression(self, binaryOperation: binaryExpressionNode, env: environment) -> numberValue|nullValue:
         left = self.evaluate(binaryOperation.left, env)
         right = self.evaluate(binaryOperation.right, env)
 
@@ -25,7 +25,7 @@ class Interpreter:
         else:
             return nullValue
         
-    def evaluateNumericBinaryExpression(self, left, right, operand, env: environment) -> numberValue | nullValue:
+    def evaluateNumericBinaryExpression(self, left, right, operand, env: environment) -> numberValue|nullValue:
         match operand:
             case '+':
                 return numberValue(left.value + right.value)
@@ -68,16 +68,24 @@ class Interpreter:
 
         return env.declareVariable(declaration.name, fn)
 
-    def evaluateObjectExpression(self, obj: objectLiteralNode, env: environment) -> None:
+    def evaluateObjectExpression(self, object: objectLiteralNode, env: environment) -> objectValue:
         properties = {}
 
-        for prop in obj.properties:
+        for prop in object.properties:
             a = self.evaluate(prop.value, env)
             properties[prop.key] = a
         obj = objectValue(properties)
         return obj
+    
+    def evaluateArrayExpression(self, array:arrayLiteralNode, env:environment) -> arrayValue:
+        items = {}
 
-    def evaluateCallExpression(self, callExpr: callExpression, env: environment) -> None:
+        for item in array.items:
+            items[item.index] = self.evaluate(item.value, env)
+        arr = arrayValue(items)
+        return arr
+
+    def evaluateCallExpression(self, callExpr: callExpression, env: environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
         args = [self.evaluate(x, env) for x in callExpr.arguements]
         fn: nativeFunction = self.evaluate(callExpr.caller, env)
 
@@ -102,19 +110,27 @@ class Interpreter:
             syntaxError(f"'{fn}' isn't a function", 0, 0)
 
     def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
-        obj: objectValue = env.lookup(member.object.symbol)
+        obj = env.lookup(member.object.symbol)
 
-        if isinstance(member.property, identifierNode):
-            if member.property.symbol not in obj.properties:
-                keyError(member.property.symbol, member.object.symbol)
+        if isinstance(obj, objectValue):
+            if isinstance(member.property, identifierNode):
+                if member.property.symbol not in obj.properties:
+                    keyError(member.property.symbol, member.object.symbol)
 
-            if isinstance(member.property, stringValue):
-                return obj.properties[member.property.value]
-            return obj.properties[member.property.symbol]
+                if isinstance(member.property, stringValue):
+                    return obj.properties[member.property.value]
+                return obj.properties[member.property.symbol]
+        elif isinstance(obj, arrayValue):
+            if isinstance(member.property, numericLiteralNode):
+                if member.property.value not in obj.items:
+                    keyError(member.property.value, member.object.symbol)
+                
+                if isinstance(member.property, numericLiteralNode):
+                    return obj.items[member.property.value]
         else:
-            keyError(keyError(member.property.symbol, member.object.symbol))
+            keyError(member.property, member.object.symbol)
     
-    def evaluateIfStatement(self, astNode:ifStatementNode, env:environment):
+    def evaluateIfStatement(self, astNode:ifStatementNode, env:environment) -> None:
         left :RuntimeValue = self.evaluate(astNode.conditionLeft, env)
         if not isinstance(astNode.conditionRight, nullValue):
             right :RuntimeValue = self.evaluate(astNode.conditionRight, env)
@@ -165,7 +181,7 @@ class Interpreter:
                 res = self.evaluate(statement, env)
         return res
     
-    def evaluateWhileStatement(self, astNode:whileStatementNode, env:environment):
+    def evaluateWhileStatement(self, astNode:whileStatementNode, env:environment) -> bool:
         while True:
             left :RuntimeValue = self.evaluate(astNode.conditionLeft, env)
             if not isinstance(astNode.conditionRight, nullValue):
@@ -218,7 +234,7 @@ class Interpreter:
                 break
         return res
 
-    def evaluate(self, astNode, env: environment) -> None:
+    def evaluate(self, astNode, env: environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
         match astNode.kind:
             case 'program':
                 return self.evaluateProgram(astNode, env)
@@ -242,11 +258,13 @@ class Interpreter:
                 return self.evaluateIfStatement(astNode, env)
             case 'whilestatement':
                 return self.evaluateWhileStatement(astNode, env)
+            case 'arrayliteral':
+                return self.evaluateArrayExpression(astNode, env)
 
             case 'numericLiteral':
                 return numberValue(astNode.value)
             case 'nullLiteral':
-                return nullValue
+                return nullValue()
             case 'stringLiteral':
                 return stringValue(astNode.value)
             case _:

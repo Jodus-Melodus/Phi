@@ -2,7 +2,7 @@ from backend.values import *
 from time import time, sleep
 import sys
 
-def out(arg) -> str:
+def out(arg) -> str|bool:
     if isinstance(arg, (numberValue, stringValue, booleanValue, nullValue)):
         return arg.value
     elif isinstance(arg, objectValue):
@@ -10,6 +10,11 @@ def out(arg) -> str:
         for prop in arg.properties:
             res += f"{out(prop)} : {out(arg.properties[prop])}, "
         return res + '}'
+    elif isinstance(arg, arrayValue):
+        res = '['
+        for item in arg.items:
+            res += str(out(item)) + ', '
+        return res + ']'
     elif isinstance(arg, function):
         return f"fn {function.name}()"
     else:
@@ -25,22 +30,8 @@ def in_(arg:stringValue) -> stringValue:
 def now() -> numberValue:
     return numberValue(time())
 
-def type_(arg) -> RuntimeValue:
-    print(arg)
-    if isinstance(arg, booleanValue):
-        return booleanValue
-    elif isinstance(arg, nullValue):
-        return nullValue
-    elif isinstance(arg, numberValue):
-        return numberValue
-    elif isinstance(arg, objectValue):
-        return objectValue
-    elif isinstance(arg, nativeFunction):
-        return nativeFunction
-    elif isinstance(arg, function):
-        return function
-    else:
-        return type(arg)
+def type_(arg:RuntimeValue) -> str:
+    return arg.type
     
 def wait(seconds) -> None:
     sleep(int(seconds.value))
