@@ -20,8 +20,11 @@ def out(arg) -> str|bool:
     else:
         return arg
 
-def length(arg:objectValue) -> numberValue:
-    return numberValue(len(arg.properties))
+def length(arg) -> numberValue:
+    if isinstance(arg, objectValue):
+        return numberValue(len(arg.properties))
+    elif isinstance(arg, arrayValue):
+        return numberValue(len(arg.items))
 
 def in_(arg:stringValue) -> stringValue:
     sys.stdout.write(arg.value)

@@ -28,3 +28,8 @@ if __name__ == '__main__':
 
     run(sourceCode)
 #todo fix : obj.prop.prop doesn't work becuase the interpreter only check if the obj.prop is a symbol
+
+
+# <  
+# use this to return value
+
