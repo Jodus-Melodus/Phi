@@ -41,7 +41,7 @@ class App(ctk.CTk):
                     r'(?<!\w)(in|out|while|if|var|const|now|length|wait|root|fn)(?!\w)',
                     ['in', 'out', 'while', 'if', 'var', 'const', 'now', 'length', 'wait', 'root', 'fn']
                 ],
-                'symbols':[r'(==|<|>|!=|\+|-|\*|\/|%|^|\[|\]|\(|\)|\{|\})', []],
+                'symbols':[r'(==|<|>|!=|\+|-|\*|\/|%|^|\[|\]|\(|\)|\{|\}|<-)', []],
                 'numbers':[r'\d+', []],
                 'strings':[r'\"(.*?)\"', []],
                 'comments':[r'#.*', []]
@@ -58,6 +58,7 @@ class App(ctk.CTk):
         self.tabNamesPaths = {}
         self.line = 1
         self.column = 1
+        self.clipboard = ''
         # Frames
         self.leftPanel = ctk.CTkFrame(self, width=200)
         self.rightPanel = ctk.CTkFrame(self, width=200)
@@ -72,7 +73,7 @@ class App(ctk.CTk):
         self.console = ctk.CTkTextbox(self.consoleTab, font=self.font)
         # Buttons
         self.clearConsoleButton = ctk.CTkButton(self.consoleTab, text='Clear', font=('courier', 12), command=self.clearConsole, width=50, height=15)
-        self.findAndReplaceButton = ctk.CTkButton(self.findAndReplacePanel, text='Find & Replace', command=self.findAndReplace)
+        self.findAndReplaceButton = ctk.CTkButton(self.findAndReplacePanel, command=self.findAndReplace, text='Find & Replace')
         # Labels
         self.statusbar = ctk.CTkLabel(self, text='', compound='left', height=20)
         # Entries
@@ -82,14 +83,14 @@ class App(ctk.CTk):
         sys.stdin = TerminalRedirect(self.console)
         sys.stdout = TerminalRedirect(self.console)
 
-        self.find.pack(padx=self.padx, pady=self.pady)
-        self.replace.pack(padx=self.padx, pady=self.pady)
-        self.findAndReplaceButton.pack(padx=self.padx, pady=self.pady)
-        self.statusbar.pack(padx=self.padx, pady=self.pady, side=ctk.BOTTOM, anchor='se')
+        self.find.pack(padx=self.padx, pady=self.pady, side='top', expand=True)
+        self.replace.pack(padx=self.padx, pady=self.pady, expand=True)
+        self.findAndReplaceButton.pack(padx=self.padx, pady=self.pady, side='bottom')
+        self.statusbar.pack(padx=self.padx, pady=self.pady, side=ctk.BOTTOM, anchor='se', expand=True)
         self.clearConsoleButton.pack(padx=self.padx, pady=self.pady, side=ctk.RIGHT, anchor='n')
-        self.console.pack(padx=self.padx, pady=self.pady, fill='both')
-        self.rightPanel.pack(padx=self.padx, pady=self.pady, fill='y', expand=True, side=ctk.RIGHT, anchor='e')
-        self.leftPanel.pack(padx=self.padx, pady=self.pady, fill='y', expand=True, side=ctk.LEFT, anchor='w')
+        self.console.pack(padx=self.padx, pady=self.pady, fill='both', expand=True)
+        self.rightPanel.pack(padx=self.padx, pady=self.pady, fill='both', expand=True, side=ctk.RIGHT, anchor='e')
+        self.leftPanel.pack(padx=self.padx, pady=self.pady, fill='both', expand=True, side=ctk.LEFT, anchor='w')
         self.centerPanel.pack(padx=self.padx, pady=self.pady, fill='both', expand=True)
         self.bottomPanel.pack(padx=self.padx, pady=self.pady, fill='both', expand=True, anchor='s')
         self.centerTabview.pack(padx=self.padx, pady=self.pady, expand=True, fill='both')
@@ -109,8 +110,32 @@ class App(ctk.CTk):
         self.bind('<Control-F4>', self.closeTab)
         self.bind('<Return>', self.enterInsertIntelliSense)
         self.bind('<Control-h>', self.toggleFindAndReplace)
+        self.bind('<Control-z>', self.undo)
+        self.bind('<Control-Shift-z>', self.redo)
+        self.bind('<Control-c>', self.copy)
+        self.bind('<Control-p>', self.paste)
 
         self.mainloop()
+
+    def copy(self, e='') -> None:
+        editor = self.currentTab
+        if editor:
+            self.clipboard = editor.selection_get()
+
+    def paste(self, e='') -> None:
+        editor = self.currentTab
+        if editor:
+            editor.insert('insert', self.clipboard)
+
+    def undo(self, e='') -> None:
+        editor = self.currentTab
+        if editor:
+            editor.event_generate('<<Undo>>')
+    
+    def redo(self, e='') -> None:
+        editor = self.currentTab
+        if editor:
+            editor.event_generate('<<Redo>>')
 
     def findAndReplace(self) -> None:
         find = self.find.get()
@@ -127,8 +152,8 @@ class App(ctk.CTk):
                     else:
                         new.append(word)
                 new.append('\n')
-        editor.delete('0.0', 'end')
-        editor.insert('0.0', ''.join(new))
+            editor.delete('0.0', 'end')
+            editor.insert('0.0', ''.join(new))
 
     def toggleFindAndReplace(self, e='') -> None:
         if self.findAndReplacePanel.winfo_ismapped():
@@ -144,20 +169,23 @@ class App(ctk.CTk):
         self.updateSyntax()
         self.intelliSense()
 
-    def intelliSense (self, e='') -> None:
+    def intelliSense(self, e='') -> None:
         editor = self.currentTab
         if editor:
+            self.intelliSenseBox.place_forget()
             intelliSenseWords = self.languageSyntaxPatterns[self.currentLanguage]['keyword'][1]
             x, y, _, _ = editor.bbox(editor.index('insert'))
-            self.intelliSenseBox.place(x=x, y=y+30)
             currentIndex = editor.index('insert')
             wordStart = editor.search(r'\s', currentIndex, backwards=True, regexp=True)
             word = editor.get(wordStart, currentIndex).strip(' \n')
-            words = []
-            for w in intelliSenseWords:
-                if word in w:
-                    words.append(w)
-            self.intelliSenseBox.configure(values=words)
+            if word:
+                words = []
+                for w in intelliSenseWords:
+                    if word in w:
+                        words.append(w)
+                if len(words) > 0:
+                    self.intelliSenseBox.place(x=x, y=y+30)
+                    self.intelliSenseBox.configure(values=words)
             
     def enterInsertIntelliSense(self, e='') -> None:
         if self.intelliSenseBox.winfo_ismapped():
