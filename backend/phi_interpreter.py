@@ -63,8 +63,7 @@ class Interpreter:
         return env.declareVariable(declaration.identifier, self.evaluate(declaration.value, env), declaration.constant)
 
     def evaluateFunctionDeclaration(self, declaration: functionDeclarationExpressionNode, env: environment) -> None:
-        fn = function(declaration.name, declaration.parameters,
-                      env, declaration.body)
+        fn = function(declaration.name, declaration.parameters, env, declaration.body)
 
         return env.declareVariable(declaration.name, fn)
 
@@ -89,10 +88,10 @@ class Interpreter:
         args = [self.evaluate(x, env) for x in callExpr.arguements]
         fn: nativeFunction = self.evaluate(callExpr.caller, env)
 
-        if fn.type == 'nativeFunctionValue':
+        if isinstance(fn, nativeFunction):
             result = fn.call(args, env)
             return result
-        elif fn.type == 'FunctionValue':
+        elif isinstance(fn, function):
             func: function = fn
             scope = environment(func.declarationEnvironment)
 
@@ -104,7 +103,10 @@ class Interpreter:
 
             result = nullValue()
             for statement in func.body:
-                result = self.evaluate(statement, scope)
+                if isinstance(statement, returnNode):
+                    result = self.evaluate(statement, scope)
+                else:
+                    self.evaluate(statement, scope)
             return result
         else:
             syntaxError(f"'{fn}' isn't a function", 0, 0)
@@ -233,6 +235,9 @@ class Interpreter:
             else:
                 break
         return res
+    
+    def evaluateReturnExpression(self, returnExpr:returnNode, env:environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
+        return self.evaluate(returnExpr.value, env)
 
     def evaluate(self, astNode, env: environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
         match astNode.kind:
@@ -248,18 +253,20 @@ class Interpreter:
                 return self.evaluateVariableDeclarationExpression(astNode, env)
             case 'functionDeclaration':
                 return self.evaluateFunctionDeclaration(astNode, env)
-            case 'objectliteral':
+            case 'objectLiteral':
                 return self.evaluateObjectExpression(astNode, env)
-            case 'callexpression':
+            case 'callExpression':
                 return self.evaluateCallExpression(astNode, env)
-            case 'memberexpression':
+            case 'memberExpression':
                 return self.evaluateMemberExpression(astNode, env)
-            case 'ifstatement':
+            case 'ifStatement':
                 return self.evaluateIfStatement(astNode, env)
-            case 'whilestatement':
+            case 'whileStatement':
                 return self.evaluateWhileStatement(astNode, env)
-            case 'arrayliteral':
+            case 'arrayLiteral':
                 return self.evaluateArrayExpression(astNode, env)
+            case 'returnExpression':
+                return self.evaluateReturnExpression(astNode, env)
 
             case 'numericLiteral':
                 return numberValue(astNode.value)

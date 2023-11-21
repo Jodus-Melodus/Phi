@@ -32,6 +32,7 @@ class TokenType:
         self.period = 'period'
         self.singleQuote = 'singlequote'
         self.doubleQuote = 'doublequote'
+        self._return = 'return'
 
         self.identifier = 'identifier'
 
@@ -151,8 +152,12 @@ class Lexer:
                     else:
                         invalidCharacterError(char, self.column, self.line)
                 case '<':
-                    tokens.append(Token(TT.lessThan, char, self.index, self.column, self.line))
                     self.eat()
+                    if self.get() == '-':
+                        self.eat()
+                        tokens.append(Token(TT._return, char, self.index, self.column, self.line))
+                    else:
+                        tokens.append(Token(TT.lessThan, char, self.index, self.column, self.line))
                 case '>':
                     tokens.append(Token(TT.greaterThan, char ,self.index, self.column, self.line))
                     self.eat()

@@ -47,6 +47,7 @@ Phi is a dynamic OOP scripting language.
 - And - &
 - Equal - ==
 - Not Equal - !=
+- Return - <-
 
 ## Built-in Constants
 - null/nil/none - _
@@ -63,15 +64,16 @@ Phi is a dynamic OOP scripting language.
 
 ## Keywords
 ### var
-    - Initializes a variable that can be changed throughout the program
-    - var name* = value*
+    var name* = value*
+- Can be changed throughout the program
 ### const
-    - Initializes a variable that can not be changed throughout the program
-    - const name* = value*
+    const name* = value*
+- Can not be changed throughout the program
 ### fn
-    - Initializes a function
-    - Automatically returns last evaluation
-    - fn name*(parameters*){body*}
+    fn name*(parameters*) {
+        body*
+        <- returnvalue*
+    }
 
 ## Built-in Functions
 ### out()

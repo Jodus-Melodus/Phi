@@ -89,7 +89,7 @@ class binaryExpressionNode:
 
 class ifStatementNode:
     def __init__(self, conditionLeft, operand, conditionRight, body) -> None:
-        self.kind = 'ifstatement'
+        self.kind = 'ifStatement'
         self.conditionLeft = conditionLeft
         self.operand = operand
         self.conditionRight = conditionRight
@@ -107,7 +107,7 @@ class ifStatementNode:
 
 class whileStatementNode:
     def __init__(self, conditionLeft, operand, conditionRight, body) -> None:
-        self.kind = 'whilestatement'
+        self.kind = 'whileStatement'
         self.conditionLeft = conditionLeft
         self.operand = operand
         self.conditionRight = conditionRight
@@ -171,7 +171,7 @@ class functionDeclarationExpressionNode:
 
 class objectLiteralNode:
     def __init__(self, properties: list) -> None:
-        self.kind = 'objectliteral'
+        self.kind = 'objectlLiteral'
         self.properties = properties
 
     def __repr__(self) -> str:
@@ -183,7 +183,7 @@ class objectLiteralNode:
 
 class propertyLiteralNode:
     def __init__(self, key, value) -> None:
-        self.kind = 'propertyliteral'
+        self.kind = 'propertyLiteral'
         self.key = key
         self.value = value
 
@@ -197,7 +197,7 @@ class propertyLiteralNode:
 
 class arrayLiteralNode:
     def __init__(self, items: list) -> None:
-        self.kind = 'arrayliteral'
+        self.kind = 'arrayLiteral'
         self.items = items
 
     def __repr__(self) -> str:
@@ -209,7 +209,7 @@ class arrayLiteralNode:
 
 class itemLiteralNode:
     def __init__(self, index, value) -> None:
-        self.kind = 'itemliteral'
+        self.kind = 'itemLiteral'
         self.index = index
         self.value = value
 
@@ -223,7 +223,7 @@ class itemLiteralNode:
 
 class memberExpressionNode:
     def __init__(self, object, property, computed: bool) -> None:
-        self.kind = 'memberexpression'
+        self.kind = 'memberExpression'
         self.object = object
         self.property = property
         self.computed = computed
@@ -238,7 +238,7 @@ class memberExpressionNode:
 
 class callExpression:
     def __init__(self, caller, arguements: list) -> None:
-        self.kind = 'callexpression'
+        self.kind = 'callExpression'
         self.caller = caller
         self.arguements = arguements
 
@@ -249,3 +249,15 @@ class callExpression:
             'caller': self.caller
         })
 
+
+class returnNode:
+    def __init__(self, value) -> None:
+        self.kind = 'returnExpression'
+        self.value = value
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'value': self.value
+        })
+    

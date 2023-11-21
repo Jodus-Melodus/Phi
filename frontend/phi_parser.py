@@ -331,5 +331,8 @@ class Parser:
                 return value
             case TT.lineend:
                 self.eat()
+            case TT._return:
+                self.eat()
+                return returnNode(self.parseStatement())
             case _:
                 exit()
