@@ -35,24 +35,24 @@ Phi is a dynamic OOP scripting language.
 - A collection of properties accessed with a key
     
 ## Important Symbols
-- Assignment =
-- Plus/Addition +
-- Minus/Subtraction -
-- Multiplication *
-- Division /
-- Modulus %
-- Power of ^
-- Comments #
-- Or - |
-- And - &
-- Equal - ==
-- Not Equal - !=
-- Return - <-
+- Assignment (=)
+- Plus/Addition (+)
+- Minus/Subtraction (-)
+- Multiplication (*)
+- Division (/)
+- Modulus (%)
+- Powers (^)
+- Comments (#)
+- Or (|)
+- And (&)
+- Equal (==)
+- Not Equal (!=)
+- Return (<-)
 
 ## Built-in Constants
-- null/nil/none - _
-- True - T
-- False - F
+- null/nil/none (_)
+- True (T)
+- False (F)
 
 ## Conditions
     (T | F)
@@ -74,7 +74,6 @@ Phi is a dynamic OOP scripting language.
         body*
         <- returnvalue*
     }
-
 ## Built-in Functions
 ### out()
     out("Hello, world")
@@ -109,16 +108,15 @@ Phi is a dynamic OOP scripting language.
 ## Flow Control Statements
 ### If
     if (condition*) {
-        code block/body*
+        body*
     }
 - Check if a condition is met and then execute a code block
 - [Conditions](#conditions)
 ### While
     while (condition*) {
-        code block/body*
+        body*
     }
 - Run code repeatedly until a condition is false
 - [Conditions](#conditions)
-
 
 *user defined
