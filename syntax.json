@@ -1,0 +1,41 @@
+{
+    "phi": {
+        "keywords": [
+            "#6666ff",
+            "(?<!\\w)(in|out|while|if|var|const|now|length|wait|root|fn)(?!\\w)",
+            [
+                "in",
+                "out",
+                "while",
+                "if",
+                "var",
+                "const",
+                "now",
+                "length",
+                "wait",
+                "root",
+                "fn"
+            ]
+        ],
+        "symbols": [
+            "#ffcc00",
+            "(==|<|>|!=|\\+|-|\\*|\/|%|^|\\[|\\]|\\(|\\)|\\{|\\}|<-)",
+            []
+        ],
+        "numbers": [
+            "#ff1a75",
+            "\\d+",
+            []
+        ],
+        "strings": [
+            "#00ff99",
+            "\"(.*?)\"",
+            []
+        ],
+        "comments": [
+            "#6b6b6b",
+            "#.*",
+            []
+        ]
+    }
+}

@@ -1,3 +1,4 @@
+import json
 import customtkinter as ctk
 import sys
 import re
@@ -34,32 +35,6 @@ class App(ctk.CTk):
         self.pady = 5
         self.currentPath = ''
         self.currentLanguage = ''
-        self.languageSyntaxPatterns = {
-            'txt': {
-                'keywords':[r'', []],
-                'symbols':[r'', []],
-                'numbers':[r'', []],
-                'strings':[r'', []],
-                'comments':[r'', []]
-            },
-            'phi': {
-                'keywords':[
-                    r'(?<!\w)(in|out|while|if|var|const|now|length|wait|root|fn)(?!\w)',
-                    ['in', 'out', 'while', 'if', 'var', 'const', 'now', 'length', 'wait', 'root', 'fn']
-                ],
-                'symbols':[r'(==|<|>|!=|\+|-|\*|\/|%|^|\[|\]|\(|\)|\{|\}|<-)', []],
-                'numbers':[r'\d+', []],
-                'strings':[r'\"(.*?)\"', []],
-                'comments':[r'#.*', []]
-                }
-        }
-        self.editorTags = {
-            'keywords': '#6666ff',
-            'symbols': '#ffcc00',
-            'numbers': '#ff1a75',
-            'strings': '#00ff99',
-            'comments': '#6b6b6b'
-        }
         self.openEditors = {}
         self.tabNamesPaths = {}
         self.line = 1
@@ -67,6 +42,7 @@ class App(ctk.CTk):
         self.clipboard = ''
         self.menuOpen = False
         self.rightMenuOpen = False
+        self.loadLanguageSyntax()
         # Frames
         self.leftPanel = ctk.CTkFrame(self, width=200)
         self.rightPanel = ctk.CTkFrame(self, width=200)
@@ -142,6 +118,12 @@ class App(ctk.CTk):
         self.bind('<Button-3>', self.rightClickMenuClick)
 
         self.mainloop()
+
+    def loadLanguageSyntax(self) -> None:
+        with open('syntax.json', 'r') as f:
+            dictData = json.load(f)
+        
+        self.languageSyntaxPatterns = dictData
 
     def rightClickMenuClick(self, e=None) -> None:
         self.rightClickPopup.set('')
@@ -244,8 +226,9 @@ class App(ctk.CTk):
             for line in text:
                 words = re.findall(r'\S+|\s', line)
                 for word in words:
-                    if word == find:
-                        new.append(replace)
+                    w = word
+                    if find in word:
+                        new.append(w.replace(find, replace))
                     else:
                         new.append(word)
                 new.append('\n')
@@ -255,8 +238,12 @@ class App(ctk.CTk):
     def toggleFindAndReplace(self, e=None) -> None:
         if self.findAndReplacePanel.winfo_ismapped():
             self.findAndReplacePanel.pack_forget()
+            editor = self.currentTab
+            if editor:
+                editor.focus_set()
         else:
             self.findAndReplacePanel.pack()
+            self.find.focus_set()
 
     def keyPressUpdate(self, e=None) -> None:
         self.currentLanguage = self.currentLanguageCombo.get()
@@ -271,7 +258,7 @@ class App(ctk.CTk):
         editor = self.currentTab
         if editor:
             self.intelliSenseBox.place_forget()
-            intelliSenseWords = self.languageSyntaxPatterns[self.currentLanguage]['keywords'][1]
+            intelliSenseWords = self.languageSyntaxPatterns[self.currentLanguage]['keywords'][2]
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
             wordStart = editor.search(r'\s', currentIndex, backwards=True, regexp=True)
@@ -345,8 +332,8 @@ class App(ctk.CTk):
     def updateSyntax(self, line:str=None, lnIndex:int=None) -> None:
         editor = self.currentTab
         if editor:
-            for tag in self.editorTags:
-                pattern = self.languageSyntaxPatterns[self.currentLanguage][tag][0]
+            for tag in self.languageSyntaxPatterns[self.currentLanguage]:
+                pattern = self.languageSyntaxPatterns[self.currentLanguage][tag][1]
                 if not line:
                     currLineEnd = editor.index('insert lineend')
                     currLine = currLineEnd.split('.')[0]
@@ -367,8 +354,8 @@ class App(ctk.CTk):
         tab = self.centerTabview.add(tabName)
         editor = ctk.CTkTextbox(tab, font=self.textBoxFont)
         editor.configure(tabs=40)
-        for tag in self.editorTags:
-            editor.tag_config(tag, foreground=self.editorTags[tag])
+        for tag in self.languageSyntaxPatterns[self.currentLanguage]:
+            editor.tag_config(tag, foreground=self.languageSyntaxPatterns[self.currentLanguage][tag][0])
         editor.pack(expand=True, fill='both')
         self.intelliSenseBox = ctk.CTkSegmentedButton(editor, command=self.insertIntelliSense, width=100)
 
