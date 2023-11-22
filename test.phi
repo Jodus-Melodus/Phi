@@ -1,11 +1,14 @@
 
 
+var array = [
+    1,[1, 2]
+]
 
-fn add(x, y) {
-    var result = x + y
+out(array[0])
 
-    result
-}
 
-out(add(5, 9))
+out(array[9])
+
+
+
 

@@ -2,8 +2,7 @@ import customtkinter as ctk
 import sys
 import re
 from customtkinter import filedialog
-from tkinter import colorchooser
-import main
+import main, time
 
 class TerminalRedirect:
     def __init__(self, textWidget:ctk.CTkTextbox) -> None:
@@ -38,6 +37,10 @@ class App(ctk.CTk):
         self.languageSyntaxPatterns = {
             'txt': {
                 'keywords':[r'', []],
+                'symbols':[r'', []],
+                'numbers':[r'', []],
+                'strings':[r'', []],
+                'comments':[r'', []]
             },
             'phi': {
                 'keywords':[
@@ -98,6 +101,7 @@ class App(ctk.CTk):
         # Other
         sys.stdin = TerminalRedirect(self.console)
         sys.stdout = TerminalRedirect(self.console)
+        sys.stderr = TerminalRedirect(self.console)
 
         self.menuBar.pack(padx=self.padx, pady=self.pady, anchor='w')
         self.currentLanguageCombo.pack(padx=self.padx, pady=self.pady, expand=True, anchor='e', side='right')
@@ -294,13 +298,11 @@ class App(ctk.CTk):
                     currentIndex = editor.index('insert')
                     wordStart = editor.search(r'\s|^.', currentIndex, backwards=True, regexp=True)
                     column = editor.index('insert').split('.')[1]
-                    if column == '1':
-                        editor.delete(wordStart, currentIndex)
-                    else:
-                        editor.delete(wordStart + '+1c', currentIndex)
+                    editor.delete(wordStart, currentIndex)
                     editor.insert('current', word)
                     editor.mark_set('insert', 'current')
                     self.intelliSenseBox.place_forget()
+                    self.updateSyntax()
                     editor.focus_force()
 
     def insertIntelliSense(self, selected) -> None:
@@ -360,6 +362,7 @@ class App(ctk.CTk):
     def addTab(self, path:str) -> None:
         self.currentPath = path
         self.currentLanguage = path.split('/')[-1].split('.')[-1]
+        self.currentLanguageCombo.set(self.currentLanguage)
         tabName = path.split('/')[-1]
         tab = self.centerTabview.add(tabName)
         editor = ctk.CTkTextbox(tab, font=self.textBoxFont)
@@ -401,7 +404,12 @@ class App(ctk.CTk):
         if self.currentPath != '':
             with open(self.currentPath, 'r') as f:
                 sourceCode = ''.join(f.readlines())
+            start = time.time()
+            self.console['state'] = 'normal'
             main.run(sourceCode)
+            self.console['state'] = 'disabled'
+            end = time.time()
+            print(f"\nProcess finished in {end - start} seconds.")
 
     def SCCommentLine(self, e=None) -> None:
         editor = self.currentTab

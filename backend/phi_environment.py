@@ -19,15 +19,15 @@ class environment:
         if varName in self.variables:
             self.variables[varName] = varValue
         elif varName in self.constants:
-            syntaxError("Can't assign a new value to a constant")
+            return syntaxError("Can't assign a new value to a constant")
         else:
-            nameError(varName)
+            return nameError(varName)
 
         return varValue
 
     def declareVariable(self, varName: str, varValue, constant:bool=False) -> None:
         if (varName in self.variables) or (varName in self.constants):
-            syntaxError(f"Variable {varName} already defined.")
+            return syntaxError(f"Variable {varName} already defined.")
         else:
             if constant:
                 self.constants[varName] = varValue
@@ -50,7 +50,7 @@ class environment:
             return self
         
         if self.parent == None:
-            nameError(varName)
+            return nameError(varName)
         else:
             return self.parent.resolve(varName)
 

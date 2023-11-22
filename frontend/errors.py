@@ -1,24 +1,19 @@
 
 def syntaxError(msg: str, column:int=-1, line:int=-1) -> None:
     if column == -1:
-        print(f"Syntax error : {msg}")
+        return f"Syntax error : {msg}"
     else:
-        print(f"Syntax error : {msg} on line {line} in column {column}")
-    exit()
+        return f"Syntax error : {msg} on line {line} in column {column}"
 
 def nameError(name: str) -> None:
-    print(f"'{name}' is undefined.")
-    exit()
+    return f"'{name}' is undefined."
 
 def invalidCharacterError(character:str, column:int, line:int) -> None:
-    print(f"Invalid Character Errror : Invalid character '{character}' on line {line} in column {column}")
-    exit()
+    return f"Invalid Character Errror : Invalid character '{character}' on line {line} in column {column}"
 
 
 def notImplementedError(msg) -> None:
-    print(f"'{msg}' is not implemented.")
-    exit()
+    return f"'{msg}' is not implemented."
 
 def keyError(key, obj) -> None:
-    print(f"Key Error : '{key}' is not in '{obj}'")
-    exit()
+    return f"Key Error : '{key}' is not in '{obj}'"

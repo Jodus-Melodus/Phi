@@ -117,7 +117,7 @@ class Interpreter:
         if isinstance(obj, objectValue):
             if isinstance(member.property, identifierNode):
                 if member.property.symbol not in obj.properties:
-                    keyError(member.property.symbol, member.object.symbol)
+                    return keyError(member.property.symbol, member.object.symbol)
 
                 if isinstance(member.property, stringValue):
                     return obj.properties[member.property.value]
@@ -125,12 +125,12 @@ class Interpreter:
         elif isinstance(obj, arrayValue):
             if isinstance(member.property, numericLiteralNode):
                 if member.property.value not in obj.items:
-                    keyError(member.property.value, member.object.symbol)
+                    return keyError(member.property.value, member.object.symbol)
                 
                 if isinstance(member.property, numericLiteralNode):
                     return obj.items[member.property.value]
         else:
-            keyError(member.property, member.object.symbol)
+            return keyError(member.property, member.object.symbol)
     
     def evaluateIfStatement(self, astNode:ifStatementNode, env:environment) -> None:
         left :RuntimeValue = self.evaluate(astNode.conditionLeft, env)
