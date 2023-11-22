@@ -4,7 +4,8 @@
 fn add(x, y) {
     var result = x + y
 
-    <- result
+    result
 }
 
 out(add(5, 9))
+
