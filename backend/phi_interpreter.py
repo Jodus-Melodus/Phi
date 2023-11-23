@@ -105,9 +105,9 @@ class Interpreter:
 
             result = nullValue()
             for statement in fn.body:
-                if isinstance(statement, returnNode):
-                    return result.value
                 result = self.evaluate(statement, scope)
+                if isinstance(statement, returnNode):
+                    return self.evaluate(result.value, env)
         else:
             syntaxError(f"'{fn}' isn't a function", 0, 0)
 
@@ -241,7 +241,7 @@ class Interpreter:
         return self.evaluate(returnExpression.value, env)
 
     def evaluate(self, astNode, env: environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
-        if isinstance(astNode, str):
+        if isinstance(astNode, (str, float, int)):
             return astNode
         match astNode.kind:
             case 'program':

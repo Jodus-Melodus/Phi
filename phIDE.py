@@ -10,8 +10,10 @@ class TerminalRedirect:
         self.widget = textWidget
 
     def write(self, message) -> None:
+        self.widget.configure(state='normal')
         self.widget.insert('end', message)
         self.widget.yview_moveto(1)
+        self.widget.configure(state='disabled')
 
     def readline(self, prompt="") -> str:
         self.widget.insert('end', prompt)
@@ -55,7 +57,7 @@ class App(ctk.CTk):
         self.bottomTabview = ctk.CTkTabview(self.bottomPanel, width=self.width*self.screenRatio)
         self.consoleTab = self.bottomTabview.add('Console')
         # Textboxes
-        self.console = ctk.CTkTextbox(self.consoleTab, font=self.textBoxFont)
+        self.console = ctk.CTkTextbox(self.consoleTab, font=self.textBoxFont, state='disabled')
         # Buttons
         self.clearConsoleButton = ctk.CTkButton(self.consoleTab, text='Clear', command=self.clearConsole, width=50, height=20, font=self.buttonFont)
         self.findAndReplaceButton = ctk.CTkButton(self.findAndReplacePanel, command=self.findAndReplace, text='Find & Replace', font=self.buttonFont)
@@ -108,7 +110,7 @@ class App(ctk.CTk):
         self.bind('<Control-n>', self.SCNewFile)
         self.bind('<Control-F4>', self.SCCloseFile)
         self.bind('<Control-c>', self.copy)
-        self.bind('<Control-p>', self.paste)
+        self.bind('<Control-v>', self.paste)
         self.bind('<Control-z>', self.undo)
         self.bind('<Control-Shift-z>', self.redo)
         self.bind('<Control-h>', self.toggleFindAndReplace)
@@ -117,8 +119,32 @@ class App(ctk.CTk):
         self.bind('<{>', self.autoBrace)
         self.bind('<Button-3>', self.rightClickMenuClick)
         self.bind('<Button-1>', self.updateLine)
+        self.bind('<F1>', self.showHelp)
 
         self.mainloop()
+
+    def showHelp(self, e=None) -> None:
+        helpWindow = ctk.CTkToplevel()
+        helpWindow.title('phIDE - Help')
+        helpText = ctk.CTkTextbox(helpWindow, font=self.textBoxFont)
+        helpText.pack(expand=True, fill='both')
+        text = """        F1 -                Show this menu
+        F5 -                Run current file
+        Enter -             Select first intellisense word
+        Ctrl + Backspace -  Deletes entire word
+        Ctrl + Space -      Manually open intellisense
+        Ctrl + / -          Comment current line
+        Ctrl + O -          Open file
+        Ctrl + S -          Save current file
+        Ctrl + N -          Creates a new file
+        Ctrl + F4 -         Close current tab
+        Ctrl + C -          Copy selected text
+        Ctrl + V -          Paste last copied word
+        Ctrl + Z -          Undo action
+        Ctrl + Shift + Z -  Redo action
+        Ctrl + H -          Open and closes find and replace panel"""
+        helpText.insert('0.0', text)
+        helpText.configure(wrap='none', state='disabled')
 
     def updateLine(self, e=None) -> None:
         editor = self.currentTab
@@ -336,7 +362,9 @@ class App(ctk.CTk):
             return self.openEditors[tabName]
         
     def clearConsole(self) -> None:
+        self.console.configure(state='normal')
         self.console.delete('0.0', 'end')
+        self.console.configure(state='disabled')
 
     def updateSyntax(self, line:str=None, lnIndex:int=None) -> None:
         editor = self.currentTab
@@ -357,7 +385,7 @@ class App(ctk.CTk):
 
     def addTab(self, path:str) -> None:
         self.currentPath = path
-        self.currentLanguage = path.split('/')[-1].split('.')[-1]
+        self.currentLanguage = '.' + path.split('/')[-1].split('.')[-1]
         self.currentLanguageCombo.set(self.currentLanguage)
         tabName = path.split('/')[-1]
         tab = self.centerTabview.add(tabName)

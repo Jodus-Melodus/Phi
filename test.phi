@@ -1,9 +1,10 @@
 
 
-fn isPrime(number){
-    var a = if (number % 2 == 0){<- number}
-    <- a
+
+fn minus(a, b){
+    <- a - b
 }
 
+out(minus(3, 2))
 
-out(isPrime(4))
+

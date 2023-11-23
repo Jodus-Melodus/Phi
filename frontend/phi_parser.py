@@ -340,6 +340,6 @@ class Parser:
                 self.eat()
             case TT._return:
                 self.eat()
-                return returnNode(self.parseStatement())
+                return returnNode(self.parseExpression())
             case _:
                 return syntaxError('Invalid token found', self.get().column, self.get().line)
