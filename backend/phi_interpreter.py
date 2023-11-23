@@ -178,9 +178,9 @@ class Interpreter:
         if res:
             result = nullValue()
             for statement in astNode.body:
+                result = self.evaluate(statement, env)
                 if isinstance(statement, returnNode):
                     return result.value
-                result = self.evaluate(statement, env)
         return nullValue()
     
     def evaluateWhileStatement(self, astNode:whileStatementNode, env:environment) -> bool:
@@ -237,6 +237,9 @@ class Interpreter:
                 break
         return nullValue()
 
+    def evaluateReturnExpression(self, returnExpression:returnNode, env:environment):
+        return self.evaluate(returnExpression.value, env)
+
     def evaluate(self, astNode, env: environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
         if isinstance(astNode, str):
             return astNode
@@ -265,6 +268,8 @@ class Interpreter:
                 return self.evaluateWhileStatement(astNode, env)
             case 'arrayLiteral':
                 return self.evaluateArrayExpression(astNode, env)
+            case 'returnExpression':
+                return self.evaluateReturnExpression(astNode, env)
 
             case 'numericLiteral':
                 return numberValue(astNode.value)

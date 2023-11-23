@@ -110,6 +110,8 @@ Phi is a dynamic OOP scripting language.
     if (condition*) {
         body*
     }
+
+    var x = if (a == b){<-a}
 - Check if a condition is met and then execute a code block
 - [Conditions](#conditions)
 ### While
