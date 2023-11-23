@@ -8,6 +8,49 @@ class Interpreter:
     def __init__(self) -> None:
         pass
 
+    def checkCondition(self, left:RuntimeValue, operand:str, right:RuntimeValue) -> bool:
+        res = False
+        if isinstance(right, nullValue):
+            if isinstance(left, numberValue):
+                if left.value != 0:
+                    res = booleanValue('T')
+                else:
+                    res = booleanValue('F')
+            elif isinstance(left, booleanValue):
+                res = booleanValue(left.value)
+            elif isinstance(left, stringValue):
+                res = left.value != ''
+        else:
+            if isinstance(left, numberValue) and isinstance(right, numberValue):
+                match operand:
+                    case '==':
+                        res = left.value == right.value
+                    case '>':
+                        res = left.value > right.value
+                    case '<':
+                        res = left.value < right.value
+                    case '>=':
+                        res = left.value >= right.value
+                    case '<=':
+                        res = left.value <= right.value
+                    case '!=':
+                        res = left.value != right.value
+            elif isinstance(left, booleanValue) and isinstance(right, booleanValue):
+                match operand:
+                    case '&':
+                        res = left.value and right.value
+                    case '|':
+                        res = left.value or right.value
+                    case '!=':
+                        res = left.value != right.value
+            elif isinstance(left, stringValue) and isinstance(right, stringValue):
+                match operand:
+                    case '==':
+                        res = left.value == right.value
+                    case '!=':
+                        res = left.value != right.value
+        return res
+    
     def evaluateProgram(self, program: programNode, env: environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
         lastEvaluated = nullValue()
 
@@ -140,41 +183,7 @@ class Interpreter:
             right = nullValue()
 
         res = False
-        if isinstance(right, nullValue):
-            if isinstance(left, numberValue):
-                if left.value != 0:
-                    res = booleanValue('T')
-                else:
-                    res = booleanValue('F')
-            elif isinstance(left, booleanValue):
-                res = booleanValue(left.value)
-            elif isinstance(left, stringValue):
-                res = left.value != ''
-        else:
-            if isinstance(left, numberValue) and isinstance(right, numberValue):
-                match astNode.operand:
-                    case '==':
-                        res = left.value == right.value
-                    case '>':
-                        res = left.value > right.value
-                    case '<':
-                        res = left.value < right.value
-                    case '!=':
-                        res = left.value != right.value
-            elif isinstance(left, booleanValue) and isinstance(right, booleanValue):
-                match astNode.operand:
-                    case '&':
-                        res = left.value and right.value
-                    case '|':
-                        res = left.value or right.value
-                    case '!=':
-                        res = left.value != right.value
-            elif isinstance(left, stringValue) and isinstance(right, stringValue):
-                match astNode.operand:
-                    case '==':
-                        res = left.value == right.value
-                    case '!=':
-                        res = left.value != right.value
+        res = self.checkCondition(left, astNode.operand, right)
         if res:
             result = nullValue()
             for statement in astNode.body:
@@ -192,41 +201,7 @@ class Interpreter:
                 right = nullValue()
 
             res = False
-            if isinstance(right, nullValue):
-                if isinstance(left, numberValue):
-                    if left.value != 0:
-                        res = booleanValue(True)
-                    else:
-                        res = booleanValue(False)
-                elif isinstance(left, booleanValue):
-                    res = booleanValue(left.value)
-                elif isinstance(left, stringValue):
-                    res = left.value != ''
-            else:
-                if isinstance(left, numberValue) and isinstance(right, numberValue):
-                    match astNode.operand:
-                        case '==':
-                            res = left.value == right.value
-                        case '>':
-                            res = left.value > right.value
-                        case '<':
-                            res = left.value < right.value
-                        case '!=':
-                            res = left.value != right.value
-                elif isinstance(left, booleanValue) and isinstance(right, booleanValue):
-                    match astNode.operand:
-                        case '&':
-                            res = left.value and right.value
-                        case '|':
-                            res = left.value or right.value
-                        case '!=':
-                            res = left.value != right.value
-                elif isinstance(left, stringValue) and isinstance(right, stringValue):
-                    match astNode.operand:
-                        case '==':
-                            res = left.value == right.value
-                        case '!=':
-                            res = left.value != right.value
+            res = self.checkCondition(left, astNode.operand, right)
             if res:
                 result = nullValue()
                 for statement in astNode.body:
@@ -237,8 +212,34 @@ class Interpreter:
                 break
         return nullValue()
 
+    def evaluateDoWhileStatement(self, doWhile:doWhileStatementNode, env:environment) -> None:
+        res = True
+        while True:
+            if res:
+                result = nullValue()
+                for statement in doWhile.body:
+                    if isinstance(statement, returnNode):
+                        return result
+                    result = self.evaluate(statement, env)
+
+                left :RuntimeValue = self.evaluate(doWhile.conditionLeft, env)
+                if not isinstance(doWhile.conditionRight, nullValue):
+                    right :RuntimeValue = self.evaluate(doWhile.conditionRight, env)
+                else:
+                    right = nullValue()
+
+                res = self.checkCondition(left, doWhile.operand, right)
+            else:
+                break
+        return nullValue()
+
     def evaluateReturnExpression(self, returnExpression:returnNode, env:environment):
         return self.evaluate(returnExpression.value, env)
+    
+    def evaluateAssignmentBinaryExpression(self, expr:assignmentBinaryExpressionNode, env:environment) -> None:
+        currentValue = env.lookup(expr.assigne.symbol)
+        newValue = self.evaluateBinaryExpression(binaryExpressionNode(numericLiteralNode(currentValue.value), expr.operand[0], expr.value), env)
+        return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, numericLiteralNode(newValue.value)), env)
 
     def evaluate(self, astNode, env: environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
         if isinstance(astNode, (str, float, int)):
@@ -266,10 +267,14 @@ class Interpreter:
                 return self.evaluateIfStatement(astNode, env)
             case 'whileStatement':
                 return self.evaluateWhileStatement(astNode, env)
+            case 'doWhileStatement':
+                return self.evaluateDoWhileStatement(astNode, env)
             case 'arrayLiteral':
                 return self.evaluateArrayExpression(astNode, env)
             case 'returnExpression':
                 return self.evaluateReturnExpression(astNode, env)
+            case 'assignmentBinaryExpression':
+                return self.evaluateAssignmentBinaryExpression(astNode, env)
 
             case 'numericLiteral':
                 return numberValue(astNode.value)

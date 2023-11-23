@@ -18,10 +18,12 @@ def run(sourceCode:str) -> None:
 
 if __name__ == '__main__':
 
-    while True:
-        filePath = input('> ')
-        if filePath:
-            break
+    # while True:
+    #     filePath = input('> ')
+    #     if filePath:
+    #         break
+
+    filePath = 'test.phi'
 
     with open(filePath, 'r') as f:
         sourceCode = ''.join(f.readlines())

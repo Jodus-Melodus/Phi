@@ -1,10 +1,17 @@
 
 
 
-fn minus(a, b){
-    <- a - b
-}
+var a = 4
 
-out(minus(3, 2))
+a -= 1
+out(a)
+a += 3
+out(a)
+a /= 2
+out(a)
+a ^= 3
+out(a)
+a %= 4
+out(a)
 
 

@@ -1,4 +1,4 @@
-from frontend.phi_lexer import Lexer, Token, TT
+from frontend.phi_lexer import Token, TT
 from frontend.astNodes import *
 from frontend.errors import *
 
@@ -16,6 +16,7 @@ class Parser:
     def __init__(self, tokens: list) -> None:
         self.tokens = tokens
         self.program = programNode([])
+        self.conditionalOperators = (TT.equal, TT.notequal, TT.greaterThan, TT.lessThan, TT.greaterThanEqual, TT.lessThanEqual, TT._and, TT._or)
 
     def eat(self) -> Token:
         return self.tokens.pop(0)
@@ -47,12 +48,51 @@ class Parser:
                 return self.parseIfStatement()
             case TT._while:
                 return self.parseWhileStatement()
+            case TT.do:
+                return self.parseDoWhileStatement()
             case _:
                 return self.parseExpression()
 
     def parseExpression(self) -> None:
         return self.parseAssignmentExpression()
     
+    def parseDoWhileStatement(self) -> None:
+        self.eat()
+        
+        if self.get().type == TT.openBrace:
+            self.eat()
+            body = []
+            while self.get().type != TT.closeBrace:
+                statement = self.parseStatement()
+                if statement:
+                    body.append(statement)
+                if self.get().type == TT.eof:
+                    return syntaxError("Expected a '}'", self.get().column, self.get().line)
+            self.eat()
+            if self.get().type == TT._while:
+                self.eat()
+                if self.get().type == TT.openParenthesis:
+                    self.eat()
+                    conditionLeft = self.parseExpression()
+                    if self.get().type in self.conditionalOperators:
+                        operand = self.eat().value
+                        conditionRight = self.parseExpression()
+                    else:
+                        conditionRight = nullValue()
+                    if self.get().type == TT.closeParenthesis:
+                        self.eat()
+                    else:
+                        return syntaxError("Expected a ')'", self.get().column, self.get().line)
+                else:
+                    return syntaxError("Expected a '('", self.get().column, self.get().line)
+            else:
+                return syntaxError("Expected a 'while'", self.get().column, self.get().line)
+        else:
+            return syntaxError("Expected a '{'")
+
+
+        return doWhileStatementNode(body, conditionLeft, operand, conditionRight)
+
     def parseWhileStatement(self) -> None:
         self.eat()
 
@@ -60,7 +100,7 @@ class Parser:
         if self.get().type == TT.openParenthesis:
             self.eat()
             conditionLeft = self.parseExpression()
-            if self.get().type in (TT.equal, TT.greaterThan, TT.lessThan, TT._and, TT._or, TT.notequal):
+            if self.get().type in self.conditionalOperators:
                 operand = self.eat().value
                 conditionRight = self.parseExpression()
             else:
@@ -91,7 +131,7 @@ class Parser:
         if self.get().type == TT.openParenthesis:
             self.eat()
             conditionLeft = self.parseExpression()
-            if self.get().type in (TT.equal, TT.greaterThan, TT.lessThan, TT._and, TT._or, TT.notequal):
+            if self.get().type in self.conditionalOperators:
                 operand = self.eat().value
                 conditionRight = self.parseExpression()
             else:
@@ -176,6 +216,10 @@ class Parser:
             self.eat()
             value = self.parseAssignmentExpression()
             return assignmentExpressionNode(left, value)
+        elif self.get().type == TT.assignmentBinaryOperation:
+            operand = self.eat().value
+            value = self.parsePrimaryExpression()
+            return assignmentBinaryExpressionNode(left, operand, value)
         else:
             return left
 

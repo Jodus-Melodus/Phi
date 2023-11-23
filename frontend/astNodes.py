@@ -122,6 +122,22 @@ class whileStatementNode:
             'body': self.body
         })
 
+class doWhileStatementNode:
+    def __init__(self, body, conditionLeft, operand, conditionRight) -> None:
+        self.kind = 'doWhileStatement'
+        self.body = body
+        self.conditionLeft = conditionLeft
+        self.operand = operand
+        self.conditionRight = conditionRight
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'body': self.body,
+            'conditionLeft': self.conditionLeft,
+            'operand': self.operand,
+            'conditionRight': self.conditionRight
+        })
 
 class assignmentExpressionNode:
     def __init__(self, assigne, value) -> None:
@@ -133,6 +149,21 @@ class assignmentExpressionNode:
         return str({
             'kind': self.kind,
             'assigne': self.assigne,
+            'value': self.value
+        })
+
+class assignmentBinaryExpressionNode:
+    def __init__(self, assigne, operand, value) -> None:
+        self.kind = 'assignmentBinaryExpression'
+        self.assigne = assigne
+        self.operand = operand
+        self.value = value
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'assigne': self.assigne,
+            'operand':self.operand,
             'value': self.value
         })
 

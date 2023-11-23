@@ -14,7 +14,9 @@ class TokenType:
         self.equal = 'equal'
         self.notequal = 'notequal'
         self.greaterThan = 'greaterthan'
+        self.greaterThanEqual = 'greaterthanequal'
         self.lessThan = 'lessthan'
+        self.lessThanEqual = 'lessthanequal'
         self._and = 'and'
         self._or = 'or'
 
@@ -42,6 +44,7 @@ class TokenType:
         self.fn = 'fn'
         self._if = 'if'
         self._while = 'while'
+        self.do = 'do'
 
 
 TT = TokenType()
@@ -88,8 +91,12 @@ class Lexer:
                 case ' ' | '\t':
                     self.eat()
                 case '+' | '/' | '*' | '-' | '^' | '%':
-                    tokens.append(Token(TT.binaryOperation, char, self.index, self.column, self.line))
                     self.eat()
+                    if self.get() == '=':
+                        tokens.append(Token(TT.assignmentBinaryOperation, char+'=', self.index, self.column, self.line))
+                        self.eat()
+                    else:
+                        tokens.append(Token(TT.binaryOperation, char, self.index, self.column, self.line))
                 case '\n':
                     tokens.append(Token(TT.lineend, char, self.index, self.column, self.line))
                     self.eat()
@@ -156,11 +163,18 @@ class Lexer:
                     if self.get() == '-':
                         self.eat()
                         tokens.append(Token(TT._return, char, self.index, self.column, self.line))
+                    elif self.get() == '=':
+                        self.eat()
+                        tokens.append(Token(TT.lessThanEqual, char+'=', self.index, self.column, self.line))
                     else:
                         tokens.append(Token(TT.lessThan, char, self.index, self.column, self.line))
                 case '>':
-                    tokens.append(Token(TT.greaterThan, char ,self.index, self.column, self.line))
                     self.eat()
+                    if self.get() == '=':
+                        self.eat()
+                        tokens.append(Token(TT.greaterThanEqual, char+'=', self.index, self.column, self.line))
+                    else:
+                        tokens.append(Token(TT.greaterThan, char ,self.index, self.column, self.line))
                 case _:
 
                     if char in DIGITS:
@@ -206,6 +220,8 @@ class Lexer:
                                 tokens.append(Token(TT.fn, name, self.index, self.column, self.line))
                             case 'if':
                                 tokens.append(Token(TT._if, name, self.index, self.column, self.line))
+                            case 'do':
+                                tokens.append(Token(TT.do, name, self.index, self.column, self.line))
                             case 'while':
                                 tokens.append(Token(TT._while, name, self.index, self.column, self.line))
                             case _:
