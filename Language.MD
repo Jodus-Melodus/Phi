@@ -47,6 +47,10 @@ Phi is a dynamic OOP scripting language.
 - And (&)
 - Equal (==)
 - Not Equal (!=)
+- Greater than (>)
+- Less than (<)
+- Greater than or equal to (>=)
+- Less than or eqaul to (<=)
 - Return (<-)
 
 ## Built-in Constants
@@ -55,25 +59,26 @@ Phi is a dynamic OOP scripting language.
 - False (F)
 
 ## Conditions
-    (T | F)
+### True
     (T)
-    (F)
     (3 == 3)
-    (3 != 2)
-    ("hello" & "hi")
+    ("hello" != "hi")
+    (3 > 2)
+    (9 >= 2)
+### False
+    (F)
+    (4 < 2)
+    (3 <= 2)
+    (F | F)
+    (4 == 2)
 
-## Keywords
+## Expressions
 ### var
     var name* = value*
 - Can be changed throughout the program
 ### const
     const name* = value*
 - Can not be changed throughout the program
-### fn
-    fn name*(parameters*) {
-        body*
-        <- returnvalue*
-    }
 ## Built-in Functions
 ### out()
     out("Hello, world")
@@ -105,7 +110,12 @@ Phi is a dynamic OOP scripting language.
     - real | integer (index)
 - Returns the index root of the randicand
 
-## Flow Control Statements
+## Statements
+### fn
+    fn name*(parameters*) {
+        body*
+        <- returnvalue*
+    }
 ### If
     if (condition*) {
         body*
@@ -119,6 +129,12 @@ Phi is a dynamic OOP scripting language.
         body*
     }
 - Run code repeatedly until a condition is false
+- [Conditions](#conditions)
+### Do-While
+    do {
+        body*
+    } while (condition*)
+- Run code once then repeatedly until a condition is false
 - [Conditions](#conditions)
 
 *user defined
