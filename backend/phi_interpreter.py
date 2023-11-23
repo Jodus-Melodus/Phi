@@ -143,9 +143,9 @@ class Interpreter:
         if isinstance(right, nullValue):
             if isinstance(left, numberValue):
                 if left.value != 0:
-                    res = booleanValue(True)
+                    res = booleanValue('T')
                 else:
-                    res = booleanValue(False)
+                    res = booleanValue('F')
             elif isinstance(left, booleanValue):
                 res = booleanValue(left.value)
             elif isinstance(left, stringValue):
@@ -180,7 +180,7 @@ class Interpreter:
             for statement in astNode.body:
                 result = self.evaluate(statement, env)
                 if isinstance(statement, returnNode):
-                    return result.value
+                    return result
         return nullValue()
     
     def evaluateWhileStatement(self, astNode:whileStatementNode, env:environment) -> bool:
@@ -231,7 +231,7 @@ class Interpreter:
                 result = nullValue()
                 for statement in astNode.body:
                     if isinstance(statement, returnNode):
-                        return result.value
+                        return result
                     result = self.evaluate(statement, env)
             else:
                 break

@@ -69,7 +69,7 @@ def createGlobalEnvironment(parent=None) -> environment:
 
     # variables
     env.declareVariable('_', nullValue(), True)
-    env.declareVariable('T', booleanValue(True), True)
-    env.declareVariable('F', booleanValue(False), True)
+    env.declareVariable('T', booleanValue("T"), True)
+    env.declareVariable('F', booleanValue("F"), True)
     
     return env

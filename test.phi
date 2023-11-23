@@ -1,15 +1,9 @@
 
 
-fn add(a, b){
-    
-    var x = if (a == b){<-a}
-
-    out(x)
+fn isPrime(number){
+    var a = if (number % 2 == 0){<- number}
+    <- a
 }
 
 
-add(4, 3)
-
-
-
-
+out(isPrime(4))

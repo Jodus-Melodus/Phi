@@ -25,9 +25,13 @@ class Parser:
 
     def genAST(self) -> programNode:
         while self.get().type != TT.eof:
-            statement = self.parseStatement()
-            if statement:
-                self.program.body.append(statement)
+            if self.get().type == TT.lineend:
+                self.eat()
+                continue
+            else:
+                statement = self.parseStatement()
+                if statement:
+                    self.program.body.append(statement)
 
         return self.program
 
@@ -113,7 +117,10 @@ class Parser:
     
     def parseFunctionDeclaration(self) -> None:
         self.eat()
-        name = self.eat().value
+        if self.get().type == TT.identifier:
+            name = self.eat().value
+        else:
+            return syntaxError('Expected a name', self.get().column, self.get().line)
         
         args = self.parseArguements()
         parameters = []

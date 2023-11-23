@@ -18,12 +18,10 @@ def run(sourceCode:str) -> None:
 
 if __name__ == '__main__':
 
-    # while True:
-    #     filePath = input('> ')
-    #     if filePath:
-    #         break
-
-    filePath = 'test.phi'
+    while True:
+        filePath = input('> ')
+        if filePath:
+            break
 
     with open(filePath, 'r') as f:
         sourceCode = ''.join(f.readlines())
@@ -31,6 +29,3 @@ if __name__ == '__main__':
     run(sourceCode)
     
 #todo fix : obj.prop.prop doesn't work becuase the interpreter only check if the obj.prop is a symbol
-
-
-# return value??
