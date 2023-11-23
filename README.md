@@ -5,4 +5,4 @@ This repository includes an IDE and the phi language itself.
 [phi](Language.MD)
 
 ## IDE
-[phIDE](phIDE.MD)
+[phIDE](phIDE.md)
