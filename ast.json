@@ -1,1 +1,62 @@
-{"kind": "program", "body": [{"kind": "functionDeclaration", "name": "minus", "parameters": [{"kind": "identifier", "symbol": "a"}, {"kind": "identifier", "symbol": "b"}], "body": [{"kind": "returnExpression", "value": {"kind": "binaryExpression", "left": {"kind": "identifier", "symbol": "a"}, "operand": "-", "right": {"kind": "identifier", "symbol": "b"}}}]}, {"kind": "callExpression", "arguements": [{"kind": "callExpression", "arguements": [{"kind": "numericLiteral", "value": 3.0}, {"kind": "numericLiteral", "value": 2.0}], "caller": {"kind": "identifier", "symbol": "minus"}}], "caller": {"kind": "identifier", "symbol": "out"}}]}
+{
+    "kind": "program",
+    "body": [
+        {
+            "kind": "functionDeclaration",
+            "name": "minus",
+            "parameters": [
+                {
+                    "kind": "identifier",
+                    "symbol": "a"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "b"
+                }
+            ],
+            "body": [
+                {
+                    "kind": "returnExpression",
+                    "value": {
+                        "kind": "binaryExpression",
+                        "left": {
+                            "kind": "identifier",
+                            "symbol": "a"
+                        },
+                        "operand": "-",
+                        "right": {
+                            "kind": "identifier",
+                            "symbol": "b"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "kind": "callExpression",
+            "arguements": [
+                {
+                    "kind": "callExpression",
+                    "arguements": [
+                        {
+                            "kind": "numericLiteral",
+                            "value": 3.0
+                        },
+                        {
+                            "kind": "numericLiteral",
+                            "value": 2.0
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "minus"
+                    }
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "out"
+            }
+        }
+    ]
+}
