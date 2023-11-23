@@ -1,13 +1,14 @@
 
 
-var array = [
-    1,[1, 2]
-]
+fn add(a, b){
+    
+    var x = if (a == b){<-a}
 
-out(array[0])
+    out(x)
+}
 
 
-out(array[9])
+add(4, 4)
 
 
 

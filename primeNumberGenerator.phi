@@ -1,0 +1,16 @@
+
+
+fn getFactors(n) {
+	var x = 2
+
+	while (x != n) {
+		if (n % x == 0){
+		<- x
+		}
+		x = x + 1
+	}
+}
+
+var n = 10
+
+out(getFactors(n))

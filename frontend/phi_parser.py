@@ -56,7 +56,7 @@ class Parser:
         if self.get().type == TT.openParenthesis:
             self.eat()
             conditionLeft = self.parseExpression()
-            if self.get().type in (TT.equal, TT.greaterThan, TT.lessThan, TT._and, TT._or):
+            if self.get().type in (TT.equal, TT.greaterThan, TT.lessThan, TT._and, TT._or, TT.notequal):
                 operand = self.eat().value
                 conditionRight = self.parseExpression()
             else:
@@ -87,7 +87,7 @@ class Parser:
         if self.get().type == TT.openParenthesis:
             self.eat()
             conditionLeft = self.parseExpression()
-            if self.get().type in (TT.equal, TT.greaterThan, TT.lessThan, TT._and, TT._or):
+            if self.get().type in (TT.equal, TT.greaterThan, TT.lessThan, TT._and, TT._or, TT.notequal):
                 operand = self.eat().value
                 conditionRight = self.parseExpression()
             else:
@@ -149,7 +149,7 @@ class Parser:
                 return variableDeclarationExpressionNode(identifier, nullLiteralNode())
             else:
                 self.eat()
-                return variableDeclarationExpressionNode(identifier, self.parseExpression())
+                return variableDeclarationExpressionNode(identifier, self.parseStatement())
         elif self.get().type == TT.const:
             self.eat()
             identifier = self.eat().value
@@ -158,7 +158,7 @@ class Parser:
                 return variableDeclarationExpressionNode(identifier, nullLiteralNode(), True)
             else:
                 self.eat()
-                return variableDeclarationExpressionNode(identifier, self.parseExpression(), True)
+                return variableDeclarationExpressionNode(identifier, self.parseStatement(), True)
         else:
             return syntaxError("Expected 'var' or 'const'", self.get().column, self.get().line)
 

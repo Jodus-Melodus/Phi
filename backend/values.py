@@ -85,7 +85,6 @@ class nativeFunction(RuntimeValue):
             'call': self.call
         })
 
-
 class function(RuntimeValue):
     def __init__(self, name, parameters: list, declarationEnvironment, body: list) -> None:
         self.type = 'FunctionValue'

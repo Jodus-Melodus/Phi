@@ -1,1 +1,77 @@
-{"kind": "program", "body": [{"kind": "variableDeclarationExpression", "identifier": "array", "value": {"kind": "arrayLiteral", "items": [{"kind": "itemLiteral", "index": 0, "value": {"kind": "numericLiteral", "value": 1.0}}, {"kind": "itemLiteral", "index": 1, "value": {"kind": "arrayLiteral", "items": [{"kind": "itemLiteral", "index": 0, "value": {"kind": "numericLiteral", "value": 1.0}}, {"kind": "itemLiteral", "index": 1, "value": {"kind": "numericLiteral", "value": 2.0}}]}}]}, "constant": "False"}, {"kind": "callExpression", "arguements": [{"kind": "memberExpression", "object": {"kind": "identifier", "symbol": "array"}, "property": {"kind": "numericLiteral", "value": 0.0}}], "caller": {"kind": "identifier", "symbol": "out"}}, {"kind": "callExpression", "arguements": [{"kind": "memberExpression", "object": {"kind": "identifier", "symbol": "array"}, "property": {"kind": "numericLiteral", "value": 9.0}}], "caller": {"kind": "identifier", "symbol": "out"}}]}
+{
+    "kind": "program",
+    "body": [
+        {
+            "kind": "functionDeclaration",
+            "name": "add",
+            "parameters": [
+                {
+                    "kind": "identifier",
+                    "symbol": "a"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "b"
+                }
+            ],
+            "body": [
+                {
+                    "kind": "variableDeclarationExpression",
+                    "identifier": "x",
+                    "value": {
+                        "kind": "ifStatement",
+                        "conditionLeft": {
+                            "kind": "identifier",
+                            "symbol": "a"
+                        },
+                        "operand": "==",
+                        "conditionRight": {
+                            "kind": "identifier",
+                            "symbol": "b"
+                        },
+                        "body": [
+                            {
+                                "kind": "returnExpression",
+                                "value": {
+                                    "kind": "identifier",
+                                    "symbol": "a"
+                                }
+                            }
+                        ]
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "callExpression",
+                    "arguements": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "x"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "out"
+                    }
+                }
+            ]
+        },
+        {
+            "kind": "callExpression",
+            "arguements": [
+                {
+                    "kind": "numericLiteral",
+                    "value": 4.0
+                },
+                {
+                    "kind": "numericLiteral",
+                    "value": 4.0
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "add"
+            }
+        }
+    ]
+}

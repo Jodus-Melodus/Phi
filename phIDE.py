@@ -116,14 +116,22 @@ class App(ctk.CTk):
         self.bind('<[>', self.autoBracket)
         self.bind('<{>', self.autoBrace)
         self.bind('<Button-3>', self.rightClickMenuClick)
+        self.bind('<Button-1>', self.updateLine)
 
         self.mainloop()
 
+    def updateLine(self, e=None) -> None:
+        editor = self.currentTab
+        if editor:
+            editor.tag_remove('CurrentLine', '0.0', 'end')
+            line = editor.index(ctk.INSERT).split('.')[0]
+            editor.tag_add('CurrentLine', line + '.0', line + '.end')
+
     def loadLanguageSyntax(self) -> None:
         with open('syntax.json', 'r') as f:
-            dictData = json.load(f)
+            languagePatterns = json.load(f)
         
-        self.languageSyntaxPatterns = dictData
+        self.languageSyntaxPatterns = languagePatterns
 
     def rightClickMenuClick(self, e=None) -> None:
         self.rightClickPopup.set('')
@@ -246,6 +254,7 @@ class App(ctk.CTk):
             self.find.focus_set()
 
     def keyPressUpdate(self, e=None) -> None:
+        self.updateLine()
         self.currentLanguage = self.currentLanguageCombo.get()
         editor = self.currentTab
         if editor:
@@ -356,6 +365,8 @@ class App(ctk.CTk):
         editor.configure(tabs=40)
         for tag in self.languageSyntaxPatterns[self.currentLanguage]:
             editor.tag_config(tag, foreground=self.languageSyntaxPatterns[self.currentLanguage][tag][0])
+        editor.tag_config('CurrentLine', background='#262626')
+        editor.configure(wrap='none')
         editor.pack(expand=True, fill='both')
         self.intelliSenseBox = ctk.CTkSegmentedButton(editor, command=self.insertIntelliSense, width=100)
 

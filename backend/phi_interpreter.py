@@ -1,7 +1,7 @@
 from backend.values import *
 from frontend.astNodes import *
 from frontend.errors import *
-from backend.phi_environment import environment
+from backend.phi_environment import environment, createGlobalEnvironment
 
 
 class Interpreter:
@@ -23,7 +23,7 @@ class Interpreter:
         if isinstance(left, numberValue) and isinstance(right, numberValue):
             return self.evaluateNumericBinaryExpression(left, right, binaryOperation.operand, env)
         else:
-            return nullValue
+            return nullValue()
         
     def evaluateNumericBinaryExpression(self, left, right, operand, env: environment) -> numberValue|nullValue:
         match operand:
@@ -40,7 +40,7 @@ class Interpreter:
             case '%':
                 return numberValue(left.value % right.value)
             case _:
-                return nullValue
+                return nullValue()
 
     def evaluateIdentifierExpression(self, identifier: identifierNode, env: environment) -> None:
         return env.lookup(identifier.symbol)
@@ -60,7 +60,8 @@ class Interpreter:
             syntaxError('Expected an identifier.')
 
     def evaluateVariableDeclarationExpression(self, declaration: variableDeclarationExpressionNode, env: environment) -> None:
-        return env.declareVariable(declaration.identifier, self.evaluate(declaration.value, env), declaration.constant)
+        value = self.evaluate(declaration.value, env)
+        return env.declareVariable(declaration.identifier, value, declaration.constant)
 
     def evaluateFunctionDeclaration(self, declaration: functionDeclarationExpressionNode, env: environment) -> None:
         fn = function(declaration.name, declaration.parameters, env, declaration.body)
@@ -86,28 +87,27 @@ class Interpreter:
 
     def evaluateCallExpression(self, callExpr: callExpression, env: environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
         args = [self.evaluate(x, env) for x in callExpr.arguements]
-        fn: nativeFunction = self.evaluate(callExpr.caller, env)
+        fn: nativeFunction|function = self.evaluate(callExpr.caller, env)
 
         if isinstance(fn, nativeFunction):
             result = fn.call(args, env)
             return result
         elif isinstance(fn, function):
-            func: function = fn
-            scope = environment(func.declarationEnvironment)
+            scope = createGlobalEnvironment(fn.declarationEnvironment)
 
-            if len(func.parameters) == len(args):
-                for i in range(len(func.parameters)):
-                    scope.declareVariable(func.parameters[i].symbol, args[i])
+            if len(fn.parameters) == len(args):
+                for i in range(len(fn.parameters)):
+                    scope.declareVariable(fn.parameters[i].symbol, args[i])
+            elif len(fn.parameters) > len(args):
+                syntaxError(f'Too many arguements. Expected {len(fn.parameters)}')
             else:
-                syntaxError("Too many or little arguements.")
+                syntaxError(f'Too little arguements. Expected {len(fn.parameters)}')
 
             result = nullValue()
-            for statement in func.body:
+            for statement in fn.body:
                 if isinstance(statement, returnNode):
-                    result = self.evaluate(statement, scope)
-                else:
-                    self.evaluate(statement, scope)
-            return result
+                    return result.value
+                result = self.evaluate(statement, scope)
         else:
             syntaxError(f"'{fn}' isn't a function", 0, 0)
 
@@ -152,7 +152,6 @@ class Interpreter:
                 res = left.value != ''
         else:
             if isinstance(left, numberValue) and isinstance(right, numberValue):
-                res = nullValue
                 match astNode.operand:
                     case '==':
                         res = left.value == right.value
@@ -163,7 +162,6 @@ class Interpreter:
                     case '!=':
                         res = left.value != right.value
             elif isinstance(left, booleanValue) and isinstance(right, booleanValue):
-                res = nullValue
                 match astNode.operand:
                     case '&':
                         res = left.value and right.value
@@ -172,16 +170,18 @@ class Interpreter:
                     case '!=':
                         res = left.value != right.value
             elif isinstance(left, stringValue) and isinstance(right, stringValue):
-                res = nullValue
                 match astNode.operand:
                     case '==':
                         res = left.value == right.value
                     case '!=':
                         res = left.value != right.value
         if res:
+            result = nullValue()
             for statement in astNode.body:
-                res = self.evaluate(statement, env)
-        return res
+                if isinstance(statement, returnNode):
+                    return result.value
+                result = self.evaluate(statement, env)
+        return nullValue()
     
     def evaluateWhileStatement(self, astNode:whileStatementNode, env:environment) -> bool:
         while True:
@@ -190,6 +190,7 @@ class Interpreter:
                 right :RuntimeValue = self.evaluate(astNode.conditionRight, env)
             else:
                 right = nullValue()
+
             res = False
             if isinstance(right, nullValue):
                 if isinstance(left, numberValue):
@@ -203,7 +204,6 @@ class Interpreter:
                     res = left.value != ''
             else:
                 if isinstance(left, numberValue) and isinstance(right, numberValue):
-                    res = nullValue
                     match astNode.operand:
                         case '==':
                             res = left.value == right.value
@@ -214,7 +214,6 @@ class Interpreter:
                         case '!=':
                             res = left.value != right.value
                 elif isinstance(left, booleanValue) and isinstance(right, booleanValue):
-                    res = nullValue
                     match astNode.operand:
                         case '&':
                             res = left.value and right.value
@@ -223,23 +222,24 @@ class Interpreter:
                         case '!=':
                             res = left.value != right.value
                 elif isinstance(left, stringValue) and isinstance(right, stringValue):
-                    res = nullValue
                     match astNode.operand:
                         case '==':
                             res = left.value == right.value
                         case '!=':
                             res = left.value != right.value
             if res:
+                result = nullValue()
                 for statement in astNode.body:
-                    res = self.evaluate(statement, env)
+                    if isinstance(statement, returnNode):
+                        return result.value
+                    result = self.evaluate(statement, env)
             else:
                 break
-        return res
-    
-    def evaluateReturnExpression(self, returnExpr:returnNode, env:environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
-        return self.evaluate(returnExpr.value, env)
+        return nullValue()
 
     def evaluate(self, astNode, env: environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
+        if isinstance(astNode, str):
+            return astNode
         match astNode.kind:
             case 'program':
                 return self.evaluateProgram(astNode, env)
@@ -265,8 +265,6 @@ class Interpreter:
                 return self.evaluateWhileStatement(astNode, env)
             case 'arrayLiteral':
                 return self.evaluateArrayExpression(astNode, env)
-            case 'returnExpression':
-                return self.evaluateReturnExpression(astNode, env)
 
             case 'numericLiteral':
                 return numberValue(astNode.value)

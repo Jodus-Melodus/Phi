@@ -40,8 +40,10 @@ class environment:
         env = self.resolve(varName)
         if varName in self.constants:
             return env.constants[varName]
-        else:
+        elif varName in self.variables:
             return env.variables[varName]
+        else:
+            return nameError(varName)
 
     def resolve(self, varName: str) -> None:
         if varName in self.variables:
@@ -54,8 +56,8 @@ class environment:
         else:
             return self.parent.resolve(varName)
 
-def createGlobalEnvironment() -> environment:
-    env = environment()
+def createGlobalEnvironment(parent=None) -> environment:
+    env = environment(parent)
     # functions
     env.declareVariable('out', nativeFunction(lambda args, scope : sys.stdout.write(str(bif.out(args[0])) + '\n')), True)
     env.declareVariable('in', nativeFunction(lambda args, scope : bif.in_(args[0])), True)

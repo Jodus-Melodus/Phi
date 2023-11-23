@@ -147,7 +147,7 @@ class Lexer:
                 case '!':
                     self.eat()
                     if self.get() == '=':
-                        tokens.append(Token(TT.notequal, char, self.index, self.column, self.line))
+                        tokens.append(Token(TT.notequal, char+'=', self.index, self.column, self.line))
                         self.eat()
                     else:
                         return invalidCharacterError(char, self.column, self.line)
