@@ -101,7 +101,7 @@ class App(ctk.CTk):
         # Bindings
         self.bind('<F5>', self.SCRun)
         self.bind('<KeyPress>', self.keyPressUpdate)
-        self.bind('<Return>', self.enterInsertIntelliSense)
+        self.bind('<Return>', self.enterCommands)
         self.bind('<Control-BackSpace>', self.SCBackspaceWord)
         self.bind('<Control-space>', self.intelliSense)
         self.bind('<Control-/>', self.SCCommentLine)
@@ -120,8 +120,66 @@ class App(ctk.CTk):
         self.bind('<Button-3>', self.rightClickMenuClick)
         self.bind('<Button-1>', self.updateLine)
         self.bind('<F1>', self.showHelp)
+        self.bind('<Control-;>', self.showSnippets)
 
         self.mainloop()
+
+    def enterCommands(self, e=None) -> None:
+        self.enterInsertIntelliSense()
+        self.enterSnippets()
+
+    def enterSnippets(self) -> None:
+        if self.snippetMenu.winfo_ismapped():
+            if len(self.snippetMenu._value_list) > 0:
+                editor = self.currentTab
+                if editor:
+                    line, column = editor.index('insert').split('.')
+                    editor.mark_set('insert', f'{int(line) - 1}.end')
+                    editor.delete('insert', f'{line}.{column}')
+
+                    snippetName = self.snippetMenu._value_list[0]
+                    currentIndex = editor.index('insert')
+                    wordStart = editor.search(r'\s|^.', currentIndex, backwards=True, regexp=True)
+                    column = editor.index('insert').split('.')[1]
+                    editor.delete(wordStart, currentIndex)
+                    editor.insert('current', self.snippets[snippetName])
+                    editor.mark_set('insert', 'current')
+                    self.snippetMenu.place_forget()
+                    self.updateSyntax()
+                    editor.focus_force()
+
+    def insertSnippet(self, snippetName:str) -> None:
+        editor = self.currentTab
+        if editor:
+            currentIndex = editor.index('insert')
+            wordStart = editor.search(r'\s', currentIndex, backwards=True, regexp=True)
+            editor.delete(wordStart, currentIndex)
+            editor.insert('insert', self.snippets[snippetName])
+            self.snippetMenu.place_forget()
+            editor.focus_force()
+
+    def showSnippets(self, e=None) -> None:
+        editor = self.currentTab
+        if editor:
+            self.snippetMenu.place_forget()
+            x, y, _, _ = editor.bbox(editor.index('insert'))
+            currentIndex = editor.index('insert')
+            wordStart = editor.search(r'\s', currentIndex, backwards=True, regexp=True)
+            word = editor.get(wordStart, currentIndex).strip(' \n')
+            if word:
+                words = []
+                for w in self.snippets:
+                    if word in w:
+                        words.append(w)
+                if len(words) > 0:
+                    if self.intelliSenseBox.winfo_ismapped():
+                        self.intelliSenseBox.place_forget()
+                    self.snippetMenu.place(x=x, y=y+30)
+                    self.snippetMenu.configure(values=words)
+
+    def loadSnippets(self) -> None:
+        with open(f'snippets/{self.currentLanguage[1:]}.json') as f:
+            self.snippets = json.load(f)
 
     def showHelp(self, e=None) -> None:
         helpWindow = ctk.CTkToplevel()
@@ -133,6 +191,7 @@ class App(ctk.CTk):
         Enter -             Select first intellisense word
         Ctrl + Backspace -  Deletes entire word
         Ctrl + Space -      Manually open intellisense
+        Ctrl + ; -          Show Snippet menu
         Ctrl + / -          Comment current line
         Ctrl + O -          Open file
         Ctrl + S -          Save current file
@@ -155,9 +214,7 @@ class App(ctk.CTk):
 
     def loadLanguageSyntax(self) -> None:
         with open('syntax.json', 'r') as f:
-            languagePatterns = json.load(f)
-        
-        self.languageSyntaxPatterns = languagePatterns
+            self.languageSyntaxPatterns = json.load(f)
 
     def rightClickMenuClick(self, e=None) -> None:
         self.rightClickPopup.set('')
@@ -304,6 +361,8 @@ class App(ctk.CTk):
                     if word in w:
                         words.append(w)
                 if len(words) > 0:
+                    if self.snippetMenu.winfo_ismapped():
+                        self.snippetMenu.place_forget()
                     self.intelliSenseBox.place(x=x, y=y+30)
                     self.intelliSenseBox.configure(values=words)
             
@@ -396,7 +455,8 @@ class App(ctk.CTk):
         editor.tag_config('CurrentLine', background='#262626')
         editor.configure(wrap='none')
         editor.pack(expand=True, fill='both')
-        self.intelliSenseBox = ctk.CTkSegmentedButton(editor, command=self.insertIntelliSense, width=100)
+        self.intelliSenseBox = ctk.CTkSegmentedButton(editor, command=self.insertIntelliSense, width=100, bg_color='#9908aa')
+        self.snippetMenu = ctk.CTkSegmentedButton(editor, command=self.insertSnippet, width=20, bg_color='#3366ff')
 
         self.openEditors[tabName] = editor
         self.tabNamesPaths[tabName] = path
@@ -406,6 +466,7 @@ class App(ctk.CTk):
                 length += 1
                 editor.insert('end', line)
                 self.updateSyntax(line, length)
+        self.loadSnippets()
 
     def SCCloseFile(self, e=None) -> None:
         self.SCSaveFile()

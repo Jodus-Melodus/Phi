@@ -1,0 +1,5 @@
+{
+    "fn":"fn name(parameters){\n\t}",
+    "if":"if (condition){\n\t}",
+    "while":"while (condition){\n\t}"
+}
