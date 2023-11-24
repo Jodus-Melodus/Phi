@@ -5,7 +5,6 @@ from backend.phi_interpreter import *
 from backend.phi_environment import *
 
 def run(sourceCode:str) -> None:
-    sourceCodeList = sourceCode.split('\n')
     environment = createGlobalEnvironment()
     lexer = Lexer(sourceCode)
     tokens = lexer.tokenize()
@@ -34,6 +33,6 @@ if __name__ == '__main__':
     with open(filePath, 'r') as f:
         sourceCode = ''.join(f.readlines())
 
-    run(sourceCode)
-    
-#todo fix : obj.prop.prop doesn't work becuase the interpreter only check if the obj.prop is a symbol
+    res = run(sourceCode)
+    if res:
+        print(res)

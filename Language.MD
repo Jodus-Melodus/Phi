@@ -1,6 +1,8 @@
 # PHI
 Phi is a dynamic OOP scripting language.
 
+`Please report any unwanted behaviour as soon as you encouter it, with a screenshot and a good description.`
+
 ## Data Structures/Types
 ### Integer
     var e.g. = 123
@@ -157,20 +159,18 @@ Phi is a dynamic OOP scripting language.
     } else {
         if (condition*) {
             body*
-        } else {
-            if (condition*) {
-                body*
-            } else {
-                body*
-            }
         }
     }
-    #---------------------------------------
-    var x = if (a == b){<-a}
 - Check if a condition is met and then execute a code block
 - [Conditions](#conditions)
 ### While
     while (condition*) {
+        body*
+    }
+    #---------------------------------------
+    while (condition*) {
+        body*
+    } else {
         body*
     }
 - Run code repeatedly until a condition is false
@@ -182,4 +182,8 @@ Phi is a dynamic OOP scripting language.
 - Run code once then repeatedly until a condition is false
 - [Conditions](#conditions)
 
-*user defined
+## Notes
+- \* = user defined
+- Everything returns null by default.
+- Variables can be assigned to any statement.
+- Functions are called by using the function's name followed by parentheses. The parameters inside of these parentheses should match what was declared in the function.
