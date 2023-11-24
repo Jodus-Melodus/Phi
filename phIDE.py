@@ -207,7 +207,7 @@ class App(ctk.CTk):
             if word:
                 words = []
                 for w in self.snippets:
-                    if word in w:
+                    if w.startswith(word):
                         words.append(w)
                 if len(words) > 0:
                     if self.intelliSenseBox.winfo_ismapped():
@@ -386,6 +386,7 @@ class App(ctk.CTk):
         self.updateSyntax()
         self.intelliSense()
 
+
     def intelliSense(self, e=None) -> None:
         editor = self.currentTab
         if editor:
@@ -398,7 +399,7 @@ class App(ctk.CTk):
             if word:
                 words = []
                 for w in intelliSenseWords:
-                    if word in w:
+                    if w.startswith(word):
                         words.append(w)
                 if len(words) > 0:
                     if self.snippetMenu.winfo_ismapped():
@@ -483,6 +484,7 @@ class App(ctk.CTk):
                 matches = [(match.start(), match.end()) for match in re.finditer(pattern, text)]
                 for start, end in matches:
                     editor.tag_add(tag, f'{currLine}.{start}', f'{currLine}.{end}')
+                    editor.tag_remove('error', f'{currLine}.0', f'{currLine}.end')
 
     def addTab(self, path:str) -> None:
         self.currentPath = path
@@ -492,9 +494,12 @@ class App(ctk.CTk):
         tab = self.centerTabview.add(tabName)
         editor = ctk.CTkTextbox(tab, font=self.textBoxFont)
         editor.configure(tabs=40)
+        
         for tag in self.languageSyntaxPatterns[self.currentLanguage]:
             editor.tag_config(tag, foreground=self.languageSyntaxPatterns[self.currentLanguage][tag][0])
         editor.tag_config('CurrentLine', background='#262626')
+        editor.tag_config('error', background='#990000')
+
         editor.configure(wrap='none')
         editor.pack(expand=True, fill='both')
         self.intelliSenseBox = ctk.CTkSegmentedButton(editor, command=self.insertIntelliSense, width=100, bg_color='#9908aa')
@@ -537,10 +542,17 @@ class App(ctk.CTk):
             self.console['state'] = 'normal'
             error = main.run(sourceCode)
             if error:
-                ... #handle errors
+                editor = self.currentTab
+                if editor:
+                    line = error.line
+                    editor.tag_add('error', f'{line}.0', f'{line}.end')
+                    text = editor.get(f'{line}.0', f'{line}.end')
+                    print(text)
+                    print(error)
             self.console['state'] = 'disabled'
             end = time.time()
             print(f"\nProcess finished in {end - start} seconds.")
+            print('-'*60+'\n')
 
     def SCCommentLine(self, e=None) -> None:
         editor = self.currentTab
