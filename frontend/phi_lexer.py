@@ -190,7 +190,7 @@ class Lexer:
                                     number += char
                                     decimal += 1
                                 else:
-                                    return syntaxError("Found two '.' ")
+                                    return syntaxError("Found two '.' ", self.column, self.line)
                             else:
                                 break
                             self.eat()

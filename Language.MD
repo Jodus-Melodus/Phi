@@ -111,12 +111,12 @@ Phi is a dynamic OOP scripting language.
 ## Built-in Functions
 ### out()
     out("Hello, world")
-- Arguements
+- Arguments
     - string
 - Displays the output in the console
 ### in()
     in("> ")
-- Arguements
+- Arguments
     - string
 - Reads the user input from the cosole and returns a string
 ### now()
@@ -124,17 +124,17 @@ Phi is a dynamic OOP scripting language.
 - Returns the current time as a real value
 ### length()
     length(object)
-- Arguements
+- Arguments
     - object
 - Returns the length of a object's properties as a integer
 ### wait()
     wait(5)
-- Arguements
+- Arguments
     - real | integer
 - Halts the program for the amount of seconds specified
 ### root()
     root(5, 2)
-- Arguements
+- Arguments
     - real | integer (radicand)
     - real | integer (index)
 - Returns the index root of the randicand
