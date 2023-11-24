@@ -1,4 +1,4 @@
-from frontend.errors import error
+from frontend.errors import *
 from backend.values import *
 import backend.builtInFunctions as bif
 import sys
@@ -8,6 +8,9 @@ class environment:
         self.parent = parent
         self.variables = {}
         self.constants = {}
+
+    def __str__(self) -> str:
+        return 'Environment'
 
     def __repr__(self) -> str:
         return str({
@@ -19,15 +22,15 @@ class environment:
         if varName in self.variables:
             self.variables[varName] = varValue
         elif varName in self.constants:
-            return error.syntaxError("Can't assign a new value to a constant")
+            return syntaxError(self, "Can't assign a new value to a constant")
         else:
-            return error.nameError(varName)
+            return nameError(self, varName)
 
         return varValue
 
     def declareVariable(self, varName: str, varValue, constant:bool=False) -> None:
         if (varName in self.variables) or (varName in self.constants):
-            return error.syntaxError(f"Variable {varName} already defined.")
+            return syntaxError(self, f"Variable '{varName}' already defined.")
         else:
             if constant:
                 self.constants[varName] = varValue
@@ -43,7 +46,7 @@ class environment:
         elif varName in self.variables:
             return env.variables[varName]
         else:
-            return error.nameError(varName)
+            return nameError(self, varName)
 
     def resolve(self, varName: str) -> None:
         if varName in self.variables:
@@ -52,7 +55,7 @@ class environment:
             return self
         
         if self.parent == None:
-            return error.nameError(varName)
+            return nameError(self, varName)
         else:
             return self.parent.resolve(varName)
 

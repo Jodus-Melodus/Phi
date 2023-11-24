@@ -1,10 +1,11 @@
 
-var a = 7
+var a = 3
 
-var obj = {
-    a:1,
-    b:2,
-    c:3
+while (a > 0) {
+    a = if (a == 3){<- 3}
+    out(a)
+    <-
+    a -= 1
+} else {
+    out("Finished")
 }
-
-out(obj.d)

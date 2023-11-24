@@ -72,6 +72,9 @@ class Lexer:
         self.line = 1
         self.column = 1
 
+    def __str__(self) -> str:
+        return 'Lexer'
+
     def eat(self) -> None:
         self.index += 1
         self.column += 1
@@ -158,7 +161,7 @@ class Lexer:
                         tokens.append(Token(TT.notequal, char+'=', self.index, self.column, self.line))
                         self.eat()
                     else:
-                        return invalidCharacterError(char, self.column, self.line)
+                        return invalidCharacterError(self, char, self.column, self.line)
                 case '<':
                     self.eat()
                     if self.get() == '-':
@@ -191,7 +194,7 @@ class Lexer:
                                     number += char
                                     decimal += 1
                                 else:
-                                    return syntaxError("Found two '.' ", self.column, self.line)
+                                    return syntaxError(self, "Found two '.' ", self.column, self.line)
                             else:
                                 break
                             self.eat()
@@ -230,7 +233,7 @@ class Lexer:
                             case _:
                                 tokens.append(Token(TT.identifier, name, self.index, self.column, self.line))
                     else:
-                        return invalidCharacterError(char, self.column, self.line)
+                        return invalidCharacterError(self, char, self.column, self.line)
                         
 
         tokens.append(Token(TT.eof, 'eof', self.index + 1, self.column + 1, self.line))

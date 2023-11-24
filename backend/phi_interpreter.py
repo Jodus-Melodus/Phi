@@ -8,6 +8,9 @@ class Interpreter:
     def __init__(self) -> None:
         pass
 
+    def __str__(self) -> str:
+        return 'Interpreter'
+
     def checkCondition(self, left: RuntimeValue, operand: str, right: RuntimeValue) -> bool:
         res = False
         if isinstance(right, nullValue):
@@ -107,7 +110,7 @@ class Interpreter:
                 assignmentExpression.value, env)
             return env.assignVariable(varName, currentValue)
         else:
-            return syntaxError('Expected an identifier.', assignmentExpression.assigne.column, assignmentExpression.assigne.line)
+            return syntaxError(self, 'Expected an identifier.', assignmentExpression.assigne.column, assignmentExpression.assigne.line)
 
     def evaluateVariableDeclarationExpression(self, declaration: variableDeclarationExpressionNode, env: environment) -> None:
         value = self.evaluate(declaration.value, env)
@@ -161,9 +164,9 @@ class Interpreter:
                 for i in range(len(fn.parameters)):
                     scope.declareVariable(fn.parameters[i].symbol, args[i])
             elif len(fn.parameters) > len(args):
-                return syntaxError(f'Too many arguments. Expected {len(fn.parameters)}', fn.parameters[-1].column, fn.parameters[-1].line)
+                return syntaxError(self, f'Too many arguments. Expected {len(fn.parameters)}', fn.parameters[-1].column, fn.parameters[-1].line)
             else:
-                return syntaxError(f'Too little arguments. Expected {len(fn.parameters)}', fn.parameters[-1].column, fn.parameters[-1].line)
+                return syntaxError(self, f'Too little arguments. Expected {len(fn.parameters)}', fn.parameters[-1].column, fn.parameters[-1].line)
 
             result = nullValue()
             for statement in fn.body:
@@ -173,7 +176,7 @@ class Interpreter:
                 if isinstance(statement, returnNode):
                     return self.evaluate(result.value, env)
         else:
-            return syntaxError(f"'{fn}' isn't a function")
+            return syntaxError(self, f"'{fn}' isn't a function")
 
     def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
         obj = env.lookup(member.object.symbol)
@@ -181,7 +184,7 @@ class Interpreter:
         if isinstance(obj, objectValue):
             if isinstance(member.property, identifierNode):
                 if member.property.symbol not in obj.properties:
-                    return keyError(member.property.symbol, member.object.symbol, member.property.column, member.property.line)
+                    return keyError(self, member.property.symbol, member.object.symbol, member.property.column, member.property.line)
 
                 if isinstance(member.property, stringValue):
                     return obj.properties[member.property.value]
@@ -189,12 +192,12 @@ class Interpreter:
         elif isinstance(obj, arrayValue):
             if isinstance(member.property, numericLiteralNode):
                 if member.property.value not in obj.items:
-                    return keyError(member.property.value, member.object.symbol, member.property.column, member.property.line)
+                    return keyError(self, member.property.value, member.object.symbol, member.property.column, member.property.line)
 
                 if isinstance(member.property, numericLiteralNode):
                     return obj.items[member.property.value]
         else:
-            return keyError(member.property, member.object.symbol, member.property.column, member.property.line)
+            return keyError(self, member.property, member.object.symbol, member.property.column, member.property.line)
 
     def evaluateIfStatement(self, ifStatement: ifStatementNode, env: environment) -> None:
         left: RuntimeValue = self.evaluate(ifStatement.conditionLeft, env)
@@ -218,39 +221,48 @@ class Interpreter:
                 if isinstance(statement, returnNode):
                     return result
         else:
-            result = nullValue()
-            for statement in ifStatement.elseBody:
-                result = self.evaluate(statement, env)
-                if isinstance(result, error):
-                    return result
-                if isinstance(statement, returnNode):
-                    return result
+            if ifStatement.elseBody != []:
+                result = nullValue()
+                for statement in ifStatement.elseBody:
+                    result = self.evaluate(statement, env)
+                    if isinstance(result, error):
+                        return result
+                    if isinstance(statement, returnNode):
+                        return result
         return nullValue()
 
-    def evaluateWhileStatement(self, astNode: whileStatementNode, env: environment) -> bool:
+    def evaluateWhileStatement(self, whileStatement: whileStatementNode, env: environment) -> bool:
         while True:
-            left: RuntimeValue = self.evaluate(astNode.conditionLeft, env)
+            left: RuntimeValue = self.evaluate(whileStatement.conditionLeft, env)
             if isinstance(left, error):
                 return left
-            if not isinstance(astNode.conditionRight, nullValue):
+            if not isinstance(whileStatement.conditionRight, nullValue):
                 right: RuntimeValue = self.evaluate(
-                    astNode.conditionRight, env)
+                    whileStatement.conditionRight, env)
                 if isinstance(right, error):
                     return right
             else:
                 right = nullValue()
 
             res = False
-            res = self.checkCondition(left, astNode.operand, right)
+            res = self.checkCondition(left, whileStatement.operand, right)
             if res:
                 result = nullValue()
-                for statement in astNode.body:
+                for statement in whileStatement.body:
                     if isinstance(statement, returnNode):
                         return result
                     result = self.evaluate(statement, env)
                     if isinstance(result, error):
                         return result
             else:
+                if whileStatement.elseBody != []:
+                    result = nullValue()
+                    for statement in whileStatement.elseBody:
+                        result = self.evaluate(statement, env)
+                        if isinstance(result, error):
+                            return result
+                        if isinstance(statement, returnNode):
+                            return result
                 break
         return nullValue()
 
@@ -287,9 +299,8 @@ class Interpreter:
 
     def evaluateAssignmentBinaryExpression(self, expr: assignmentBinaryExpressionNode, env: environment) -> None:
         currentValue = env.lookup(expr.assigne.symbol)
-        newValue = self.evaluateBinaryExpression(binaryExpressionNode(
-            numericLiteralNode(currentValue.value), expr.operand[0], expr.value), env)
-        return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, numericLiteralNode(newValue.value)), env)
+        newValue = self.evaluateBinaryExpression(binaryExpressionNode(numericLiteralNode(currentValue.value, 0, 0), expr.operand[0], expr.value), env)
+        return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, numericLiteralNode(newValue.value, 0, 0)), env)
 
     def evaluate(self, astNode, env: environment) -> nullValue | numberValue | objectValue | arrayValue | stringValue | bool | None:
         if isinstance(astNode, (str, float, int)):
@@ -333,4 +344,4 @@ class Interpreter:
             case 'stringLiteral':
                 return stringValue(astNode.value)
             case _:
-                return notImplementedError(astNode)
+                return notImplementedError(self, astNode)
