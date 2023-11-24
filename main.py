@@ -5,23 +5,26 @@ from backend.phi_interpreter import *
 from backend.phi_environment import *
 
 def run(sourceCode:str) -> None:
+    sourceCodeList = sourceCode.split('\n')
     environment = createGlobalEnvironment()
     lexer = Lexer(sourceCode)
     tokens = lexer.tokenize()
     if isinstance(tokens, error):
-        print(tokens)
-        return
+        # print(sourceCodeList[tokens.line-1])
+        return tokens
     parser = Parser(tokens)
     ast = parser.genAST()
     if isinstance(ast, error):
-        print(ast)
-        return
+        # print(sourceCodeList[ast.line-1])
+        return ast
 
     with open('ast.json', 'w') as f:
         f.write(str(ast).replace("'", '"'))
 
     interpreter = Interpreter()
-    interpreter.evaluate(ast, environment)
+    res = interpreter.evaluate(ast, environment)
+    if isinstance(res, error):
+        return res
 
 if __name__ == '__main__':
 

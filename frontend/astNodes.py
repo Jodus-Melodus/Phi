@@ -2,9 +2,11 @@ from backend.values import *
 
 
 class identifierNode:
-    def __init__(self, symbol: str) -> None:
+    def __init__(self, symbol: str, column:int, line:int) -> None:
         self.kind = 'identifier'
         self.symbol = symbol
+        self.column = column
+        self.line = line
 
     def __repr__(self) -> str:
         return str({
@@ -14,9 +16,11 @@ class identifierNode:
 
 
 class numericLiteralNode:
-    def __init__(self, value) -> None:
+    def __init__(self, value, column:int, line:int) -> None:
         self.kind = 'numericLiteral'
         self.value = value
+        self.column = column
+        self.line = line
 
     def __repr__(self) -> str:
         return str({
@@ -26,9 +30,11 @@ class numericLiteralNode:
 
 
 class stringLiteralNode:
-    def __init__(self, value) -> None:
+    def __init__(self, value, column:int, line:int) -> None:
         self.kind = 'stringLiteral'
         self.value = value
+        self.column = column
+        self.line = line
 
     def __repr__(self) -> str:
         return str({
@@ -38,9 +44,11 @@ class stringLiteralNode:
 
 
 class nullLiteralNode:
-    def __init__(self) -> None:
+    def __init__(self, column:int, line:int) -> None:
         self.kind = 'nullLiteral'
         self.value = 'null'
+        self.column = column
+        self.line = line
 
     def __repr__(self) -> str:
         return str({
@@ -185,7 +193,7 @@ class variableDeclarationExpressionNode:
 
 
 class functionDeclarationExpressionNode:
-    def __init__(self, name: str, parameters: list = [], body: list = []) -> None:
+    def __init__(self, name:str, parameters: list = [], body: list = []) -> None:
         self.kind = 'functionDeclaration'
         self.name = name
         self.parameters = parameters
@@ -202,7 +210,7 @@ class functionDeclarationExpressionNode:
 
 class objectLiteralNode:
     def __init__(self, properties: list) -> None:
-        self.kind = 'objectlLiteral'
+        self.kind = 'objectLiteral'
         self.properties = properties
 
     def __repr__(self) -> str:
@@ -268,15 +276,15 @@ class memberExpressionNode:
 
 
 class callExpression:
-    def __init__(self, caller, arguements: list) -> None:
+    def __init__(self, caller, arguments: list) -> None:
         self.kind = 'callExpression'
         self.caller = caller
-        self.arguements = arguements
+        self.arguments = arguments
 
     def __repr__(self) -> str:
         return str({
             'kind': self.kind,
-            'arguements': self.arguements,
+            'arguments': self.arguments,
             'caller': self.caller
         })
 

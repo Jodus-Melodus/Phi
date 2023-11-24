@@ -1,6 +1,9 @@
 
 
+var obj = {
+    a:1,
+    b:2,
+    c:3
+}
 
-do {
-    out("hello world")
-} while (T)
+out(obj.d)
