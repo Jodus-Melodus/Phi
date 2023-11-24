@@ -43,6 +43,7 @@ class TokenType:
         self.const = 'const'
         self.fn = 'fn'
         self._if = 'if'
+        self._else = 'else'
         self._while = 'while'
         self.do = 'do'
 
@@ -220,6 +221,8 @@ class Lexer:
                                 tokens.append(Token(TT.fn, name, self.index, self.column, self.line))
                             case 'if':
                                 tokens.append(Token(TT._if, name, self.index, self.column, self.line))
+                            case 'else':
+                                tokens.append(Token(TT._else, name, self.index, self.column, self.line))
                             case 'do':
                                 tokens.append(Token(TT.do, name, self.index, self.column, self.line))
                             case 'while':

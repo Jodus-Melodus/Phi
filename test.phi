@@ -1,9 +1,8 @@
 
+var a = 7
 
-var obj = {
-    a:1,
-    b:2,
-    c:3
+if (4 < a){
+    out("a is larger than 4")
+} else {
+    out("a is smaller than 4")
 }
-
-out(obj.d)

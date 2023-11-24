@@ -196,22 +196,30 @@ class Interpreter:
         else:
             return keyError(member.property, member.object.symbol, member.property.column, member.property.line)
 
-    def evaluateIfStatement(self, astNode: ifStatementNode, env: environment) -> None:
-        left: RuntimeValue = self.evaluate(astNode.conditionLeft, env)
+    def evaluateIfStatement(self, ifStatement: ifStatementNode, env: environment) -> None:
+        left: RuntimeValue = self.evaluate(ifStatement.conditionLeft, env)
         if isinstance(left, error):
             return left
-        if not isinstance(astNode.conditionRight, nullValue):
-            right: RuntimeValue = self.evaluate(astNode.conditionRight, env)
+        if not isinstance(ifStatement.conditionRight, nullValue):
+            right: RuntimeValue = self.evaluate(ifStatement.conditionRight, env)
             if isinstance(right, error):
                 return right
         else:
             right = nullValue()
 
         res = False
-        res = self.checkCondition(left, astNode.operand, right)
+        res = self.checkCondition(left, ifStatement.operand, right)
         if res:
             result = nullValue()
-            for statement in astNode.body:
+            for statement in ifStatement.body:
+                result = self.evaluate(statement, env)
+                if isinstance(result, error):
+                    return result
+                if isinstance(statement, returnNode):
+                    return result
+        else:
+            result = nullValue()
+            for statement in ifStatement.elseBody:
                 result = self.evaluate(statement, env)
                 if isinstance(result, error):
                     return result
