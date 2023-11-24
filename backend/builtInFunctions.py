@@ -16,7 +16,7 @@ def out(arg) -> str|bool:
             res += str(out(item)) + ', '
         return res + ']'
     elif isinstance(arg, function):
-        return f"fn {function.name}()"
+        return f"fn {arg.name}()"
     else:
         return arg
 

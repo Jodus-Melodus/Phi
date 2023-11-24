@@ -1,0 +1,33 @@
+# Phi supports closures. All of these approaches are valid
+
+fn One() {
+    fn makeAdd() {
+        fn add(a, b) {
+            <- a + b
+        }
+        <- add
+    }
+
+    var x = makeAdd()
+    out(x(3, 2))
+}
+
+fn Two() {
+    fn makeAdd() {
+        <- fn add(a, b) {
+            <- a + b
+        }
+    }
+
+    var x = makeAdd()
+    out(x(3, 2))
+}
+
+fn Three() {
+    var x = fn add(a, b){<- a + b}
+    out(x(3, 2))
+}
+
+One()
+Two()
+Three()

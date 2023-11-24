@@ -2,7 +2,7 @@ from backend.values import *
 
 
 class identifierNode:
-    def __init__(self, symbol: str, column:int, line:int) -> None:
+    def __init__(self, symbol: str, column: int, line: int) -> None:
         self.kind = 'identifier'
         self.symbol = symbol
         self.column = column
@@ -16,7 +16,7 @@ class identifierNode:
 
 
 class numericLiteralNode:
-    def __init__(self, value, column:int, line:int) -> None:
+    def __init__(self, value, column: int, line: int) -> None:
         self.kind = 'numericLiteral'
         self.value = value
         self.column = column
@@ -30,7 +30,7 @@ class numericLiteralNode:
 
 
 class stringLiteralNode:
-    def __init__(self, value, column:int, line:int) -> None:
+    def __init__(self, value, column: int, line: int) -> None:
         self.kind = 'stringLiteral'
         self.value = value
         self.column = column
@@ -44,7 +44,7 @@ class stringLiteralNode:
 
 
 class nullLiteralNode:
-    def __init__(self, column:int, line:int) -> None:
+    def __init__(self, column: int, line: int) -> None:
         self.kind = 'nullLiteral'
         self.value = 'null'
         self.column = column
@@ -111,7 +111,7 @@ class ifStatementNode:
             'operand': self.operand,
             'conditionRight': self.conditionRight,
             'body': self.body,
-            'elsebody':self.elseBody
+            'elsebody': self.elseBody
         })
 
 
@@ -131,8 +131,9 @@ class whileStatementNode:
             'operand': self.operand,
             'conditionRight': self.conditionRight,
             'body': self.body,
-            'elsebody':self.elseBody
+            'elsebody': self.elseBody
         })
+
 
 class doWhileStatementNode:
     def __init__(self, body, conditionLeft, operand, conditionRight) -> None:
@@ -151,6 +152,7 @@ class doWhileStatementNode:
             'conditionRight': self.conditionRight
         })
 
+
 class assignmentExpressionNode:
     def __init__(self, assigne, value) -> None:
         self.kind = 'assignmentExpression'
@@ -164,6 +166,7 @@ class assignmentExpressionNode:
             'value': self.value
         })
 
+
 class assignmentBinaryExpressionNode:
     def __init__(self, assigne, operand, value) -> None:
         self.kind = 'assignmentBinaryExpression'
@@ -175,7 +178,7 @@ class assignmentBinaryExpressionNode:
         return str({
             'kind': self.kind,
             'assigne': self.assigne,
-            'operand':self.operand,
+            'operand': self.operand,
             'value': self.value
         })
 
@@ -197,7 +200,7 @@ class variableDeclarationExpressionNode:
 
 
 class functionDeclarationExpressionNode:
-    def __init__(self, name:str, parameters: list = [], body: list = []) -> None:
+    def __init__(self, name: str, parameters: list = [], body: list = []) -> None:
         self.kind = 'functionDeclaration'
         self.name = name
         self.parameters = parameters
@@ -303,4 +306,3 @@ class returnNode:
             'kind': self.kind,
             'value': self.value
         })
-    
