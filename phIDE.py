@@ -121,8 +121,44 @@ class App(ctk.CTk):
         self.bind('<Button-1>', self.updateLine)
         self.bind('<F1>', self.showHelp)
         self.bind('<Control-;>', self.showSnippets)
+        self.bind('<Control-[>', self.dedent)
+        self.bind('<Control-]>', self.indent)
 
         self.mainloop()
+
+    def indent(self, e=None) -> None:
+        editor = self.currentTab
+        if editor:
+            selected = editor.tag_ranges('sel')
+            if selected:
+                startPosition, endPosition = selected[0].string, selected[1].string
+                startLine = int(startPosition.split('.')[0])
+                endLine = int(endPosition.split('.')[0])
+                while startLine != endLine:
+                    editor.insert(f'{startLine}.0', '\t')
+                    startLine += 1
+            else:
+                line = editor.index('insert').split('.')[0]
+                editor.insert(f'{line}.0', '\t')
+
+    def dedent(self, e=None) -> None:
+        editor = self.currentTab
+        if editor:
+            selected = editor.tag_ranges('sel')
+            if selected:
+                startPosition, endPosition = selected[0].string, selected[1].string
+                startLine = int(startPosition.split('.')[0])
+                endLine = int(endPosition.split('.')[0])
+                while startLine != endLine:
+                    curr = editor.get(str(startLine)+'.0', str(startLine)+'.1')
+                    if curr == '\t':
+                        editor.delete(str(startLine) + '.0', str(startLine)+'.1')
+                    startLine += 1
+            else:
+                line = editor.index('insert').split('.')[0]
+                curr = editor.get(line+'.0', line+'.1')
+                if curr == '\t':
+                    editor.delete(line + '.0', line+'.1')
 
     def enterCommands(self, e=None) -> None:
         self.enterInsertIntelliSense()
@@ -147,6 +183,7 @@ class App(ctk.CTk):
                     self.snippetMenu.place_forget()
                     self.updateSyntax()
                     editor.focus_force()
+                    self.updateSyntax()
 
     def insertSnippet(self, snippetName:str) -> None:
         editor = self.currentTab
@@ -157,6 +194,7 @@ class App(ctk.CTk):
             editor.insert('insert', self.snippets[snippetName])
             self.snippetMenu.place_forget()
             editor.focus_force()
+            self.updateSyntax()
 
     def showSnippets(self, e=None) -> None:
         editor = self.currentTab
@@ -385,6 +423,7 @@ class App(ctk.CTk):
                     self.intelliSenseBox.place_forget()
                     self.updateSyntax()
                     editor.focus_force()
+                    self.updateSyntax()
 
     def insertIntelliSense(self, selected) -> None:
         editor = self.currentTab
@@ -395,6 +434,7 @@ class App(ctk.CTk):
             editor.insert('insert', selected)
             self.intelliSenseBox.place_forget()
             editor.focus_force()
+            self.updateSyntax()
 
     def autoParenthesis(self, e=None) -> None:
         editor = self.currentTab
@@ -501,10 +541,17 @@ class App(ctk.CTk):
     def SCCommentLine(self, e=None) -> None:
         editor = self.currentTab
         if editor:
-            cursor_position = editor.index('current')
+            cursor_position = editor.index('insert')
             line_number = cursor_position.split('.')[0]
-            start_position = f"{line_number}.0"
-            editor.insert(start_position, '# ')
+            startPosition = f"{line_number}.0"
+            endPosition = f'{line_number}.2'
+            commented = editor.get(startPosition, endPosition)
+            if commented == '# ':
+                editor.delete(startPosition, endPosition)
+            else:
+                editor.insert(startPosition, '# ')
+            editor.tag_remove('sel', '0.0', 'end')
+            self.updateSyntax()
 
     def SCSaveFile(self, e=None) -> None:
         if not self.currentPath:
