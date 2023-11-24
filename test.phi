@@ -1,17 +1,6 @@
 
 
 
-var a = 4
-
-a -= 1
-out(a)
-a += 3
-out(a)
-a /= 2
-out(a)
-a ^= 3
-out(a)
-a %= 4
-out(a)
-
-
+do {
+    out("hello world")
+} while (T)

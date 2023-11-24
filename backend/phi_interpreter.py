@@ -56,12 +56,18 @@ class Interpreter:
 
         for statement in program.body:
             lastEvaluated = self.evaluate(statement, env)
+            if isinstance(lastEvaluated, error):
+                return lastEvaluated
 
         return lastEvaluated
 
     def evaluateBinaryExpression(self, binaryOperation: binaryExpressionNode, env: environment) -> numberValue|nullValue:
         left = self.evaluate(binaryOperation.left, env)
+        if isinstance(left, error):
+            return left
         right = self.evaluate(binaryOperation.right, env)
+        if isinstance(right, error):
+            return right
 
         if isinstance(left, numberValue) and isinstance(right, numberValue):
             return self.evaluateNumericBinaryExpression(left, right, binaryOperation.operand, env)
@@ -100,10 +106,12 @@ class Interpreter:
             currentValue.properties[prop] = self.evaluate(assignmentExpression.value, env)
             return env.assignVariable(varName, currentValue)
         else:
-            syntaxError('Expected an identifier.')
+            return syntaxError('Expected an identifier.')
 
     def evaluateVariableDeclarationExpression(self, declaration: variableDeclarationExpressionNode, env: environment) -> None:
         value = self.evaluate(declaration.value, env)
+        if isinstance(value, error):
+            return value
         return env.declareVariable(declaration.identifier, value, declaration.constant)
 
     def evaluateFunctionDeclaration(self, declaration: functionDeclarationExpressionNode, env: environment) -> None:
@@ -116,6 +124,8 @@ class Interpreter:
 
         for prop in object.properties:
             a = self.evaluate(prop.value, env)
+            if isinstance(a, error):
+                return a
             properties[prop.key] = a
         obj = objectValue(properties)
         return obj
@@ -131,6 +141,8 @@ class Interpreter:
     def evaluateCallExpression(self, callExpr: callExpression, env: environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
         args = [self.evaluate(x, env) for x in callExpr.arguements]
         fn: nativeFunction|function = self.evaluate(callExpr.caller, env)
+        if isinstance(fn, error):
+            return fn
 
         if isinstance(fn, nativeFunction):
             result = fn.call(args, env)
@@ -142,17 +154,19 @@ class Interpreter:
                 for i in range(len(fn.parameters)):
                     scope.declareVariable(fn.parameters[i].symbol, args[i])
             elif len(fn.parameters) > len(args):
-                syntaxError(f'Too many arguements. Expected {len(fn.parameters)}')
+                return syntaxError(f'Too many arguements. Expected {len(fn.parameters)}')
             else:
-                syntaxError(f'Too little arguements. Expected {len(fn.parameters)}')
+                return syntaxError(f'Too little arguements. Expected {len(fn.parameters)}')
 
             result = nullValue()
             for statement in fn.body:
                 result = self.evaluate(statement, scope)
+                if isinstance(result, error):
+                    return result
                 if isinstance(statement, returnNode):
                     return self.evaluate(result.value, env)
         else:
-            syntaxError(f"'{fn}' isn't a function", 0, 0)
+            return syntaxError(f"'{fn}' isn't a function", 0, 0)
 
     def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
         obj = env.lookup(member.object.symbol)
@@ -177,8 +191,12 @@ class Interpreter:
     
     def evaluateIfStatement(self, astNode:ifStatementNode, env:environment) -> None:
         left :RuntimeValue = self.evaluate(astNode.conditionLeft, env)
+        if isinstance(left, error):
+            return left
         if not isinstance(astNode.conditionRight, nullValue):
             right :RuntimeValue = self.evaluate(astNode.conditionRight, env)
+            if isinstance(right, error):
+                return right
         else:
             right = nullValue()
 
@@ -188,6 +206,8 @@ class Interpreter:
             result = nullValue()
             for statement in astNode.body:
                 result = self.evaluate(statement, env)
+                if isinstance(result, error):
+                    return result
                 if isinstance(statement, returnNode):
                     return result
         return nullValue()
@@ -195,8 +215,12 @@ class Interpreter:
     def evaluateWhileStatement(self, astNode:whileStatementNode, env:environment) -> bool:
         while True:
             left :RuntimeValue = self.evaluate(astNode.conditionLeft, env)
+            if isinstance(left, error):
+                return left
             if not isinstance(astNode.conditionRight, nullValue):
                 right :RuntimeValue = self.evaluate(astNode.conditionRight, env)
+                if isinstance(right, error):
+                    return right
             else:
                 right = nullValue()
 
@@ -208,6 +232,8 @@ class Interpreter:
                     if isinstance(statement, returnNode):
                         return result
                     result = self.evaluate(statement, env)
+                    if isinstance(result, error):
+                        return result
             else:
                 break
         return nullValue()
@@ -221,10 +247,16 @@ class Interpreter:
                     if isinstance(statement, returnNode):
                         return result
                     result = self.evaluate(statement, env)
+                    if isinstance(result, error):
+                        return result
 
                 left :RuntimeValue = self.evaluate(doWhile.conditionLeft, env)
+                if isinstance(left, error):
+                    return result
                 if not isinstance(doWhile.conditionRight, nullValue):
                     right :RuntimeValue = self.evaluate(doWhile.conditionRight, env)
+                    if isinstance(right, error):
+                        return result
                 else:
                     right = nullValue()
 
@@ -283,4 +315,4 @@ class Interpreter:
             case 'stringLiteral':
                 return stringValue(astNode.value)
             case _:
-                notImplementedError(astNode)
+                return notImplementedError(astNode)
