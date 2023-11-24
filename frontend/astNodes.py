@@ -96,12 +96,13 @@ class binaryExpressionNode:
 
 
 class ifStatementNode:
-    def __init__(self, conditionLeft, operand, conditionRight, body) -> None:
+    def __init__(self, conditionLeft, operand, conditionRight, body, elseBody) -> None:
         self.kind = 'ifStatement'
         self.conditionLeft = conditionLeft
         self.operand = operand
         self.conditionRight = conditionRight
         self.body = body
+        self.elseBody = elseBody
 
     def __repr__(self) -> str:
         return str({
@@ -109,7 +110,8 @@ class ifStatementNode:
             'conditionLeft': self.conditionLeft,
             'operand': self.operand,
             'conditionRight': self.conditionRight,
-            'body': self.body
+            'body': self.body,
+            'elsebody':self.elseBody
         })
 
 

@@ -10,12 +10,10 @@ def run(sourceCode:str) -> None:
     lexer = Lexer(sourceCode)
     tokens = lexer.tokenize()
     if isinstance(tokens, error):
-        # print(sourceCodeList[tokens.line-1])
         return tokens
     parser = Parser(tokens)
     ast = parser.genAST()
     if isinstance(ast, error):
-        # print(sourceCodeList[ast.line-1])
         return ast
 
     with open('ast.json', 'w') as f:

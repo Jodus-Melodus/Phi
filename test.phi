@@ -1,4 +1,5 @@
 
+var a = 7
 
 var obj = {
     a:1,

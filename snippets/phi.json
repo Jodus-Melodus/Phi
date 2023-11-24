@@ -1,6 +1,6 @@
 {
     "fn":"fn name(parameters){\n\t}",
-    "if":"if (condition){\n\t}",
+    "if":"if (condition){\n\t} else {\n\t}",
     "while":"while (condition){\n\t}",
     "do":"do {\n} while ()"
 }

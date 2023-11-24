@@ -174,11 +174,29 @@ class Parser:
                         if self.get().type == TT.eof:
                             return syntaxError("Expected a '}'", self.column, self.line)
                     self.eat()
+                    if self.get().type == TT._else:
+                        self.eat()
+                        if self.get().type == TT.openBrace:
+                            self.eat()
+                            elseBody = []
+                            while self.get().type != TT.closeBrace:
+                                statement = self.parseStatement()
+                                if isinstance(statement, error):
+                                    return statement
+                                if statement:
+                                    elseBody.append(statement)
+                                if self.get().type == TT.eof:
+                                    return syntaxError("Expected a '}'", self.column, self.line)
+                            self.eat()
+                        else:
+                            return syntaxError("Expected a '{'", self.column, self.line)
+                    else:
+                        return syntaxError("Expected an 'else'", self.column, self.line)
                 else:
                     return syntaxError("Expected a '{'", self.column, self.line)
         else:
             return syntaxError("Expected a '('", self.column, self.line)
-        return ifStatementNode(conditionLeft, operand, conditionRight, body)
+        return ifStatementNode(conditionLeft, operand, conditionRight, body, elseBody)
     
     def parseFunctionDeclaration(self) -> None:
         self.eat()
