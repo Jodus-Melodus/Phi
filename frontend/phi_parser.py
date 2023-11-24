@@ -31,6 +31,8 @@ class Parser:
                 continue
             else:
                 statement = self.parseStatement()
+                if isinstance(statement, error):
+                    return statement
                 if statement:
                     self.program.body.append(statement)
 
@@ -59,11 +61,14 @@ class Parser:
     def parseDoWhileStatement(self) -> None:
         self.eat()
         
+        operand = ''
         if self.get().type == TT.openBrace:
             self.eat()
             body = []
             while self.get().type != TT.closeBrace:
                 statement = self.parseStatement()
+                if isinstance(statement, error):
+                    return statement
                 if statement:
                     body.append(statement)
                 if self.get().type == TT.eof:
@@ -74,9 +79,13 @@ class Parser:
                 if self.get().type == TT.openParenthesis:
                     self.eat()
                     conditionLeft = self.parseExpression()
+                    if isinstance(conditionLeft, error):
+                        return conditionLeft
                     if self.get().type in self.conditionalOperators:
                         operand = self.eat().value
                         conditionRight = self.parseExpression()
+                        if isinstance(conditionRight, error):
+                            return conditionRight
                     else:
                         conditionRight = nullValue()
                     if self.get().type == TT.closeParenthesis:
@@ -100,9 +109,13 @@ class Parser:
         if self.get().type == TT.openParenthesis:
             self.eat()
             conditionLeft = self.parseExpression()
+            if isinstance(conditionLeft, error):
+                return conditionLeft
             if self.get().type in self.conditionalOperators:
                 operand = self.eat().value
                 conditionRight = self.parseExpression()
+                if isinstance(conditionRight, error):
+                    return conditionRight
             else:
                 conditionRight = nullValue()
 
@@ -113,6 +126,8 @@ class Parser:
                     body = []
                     while self.get().type != TT.closeBrace:
                         statement = self.parseStatement()
+                        if isinstance(statement, error):
+                            return statement
                         if statement:
                             body.append(statement)
                         if self.get().type == TT.eof:
@@ -131,9 +146,13 @@ class Parser:
         if self.get().type == TT.openParenthesis:
             self.eat()
             conditionLeft = self.parseExpression()
+            if isinstance(conditionLeft, error):
+                return conditionLeft
             if self.get().type in self.conditionalOperators:
                 operand = self.eat().value
                 conditionRight = self.parseExpression()
+                if isinstance(conditionRight, error):
+                    return conditionRight
             else:
                 conditionRight = nullValue()
 
@@ -144,6 +163,8 @@ class Parser:
                     body = []
                     while self.get().type != TT.closeBrace:
                         statement = self.parseStatement()
+                        if isinstance(statement, error):
+                            return statement
                         if statement:
                             body.append(statement)
                         if self.get().type == TT.eof:
@@ -163,6 +184,8 @@ class Parser:
             return syntaxError('Expected a name', self.get().column, self.get().line)
         
         args = self.parseArguements()
+        if isinstance(args, error):
+            return args
         parameters = []
         for parameter in args:
             if parameter.kind == 'identifier':
@@ -178,6 +201,8 @@ class Parser:
         body = []
         while self.get().type != TT.closeBrace:
             statement = self.parseStatement()
+            if isinstance(statement, error):
+                return statement
             if statement:
                 body.append(statement)
             if self.get().type == TT.eof:
@@ -196,7 +221,10 @@ class Parser:
                 return variableDeclarationExpressionNode(identifier, nullLiteralNode())
             else:
                 self.eat()
-                return variableDeclarationExpressionNode(identifier, self.parseStatement())
+                statement = self.parseStatement()
+                if isinstance(statement, error):
+                    return statement
+                return variableDeclarationExpressionNode(identifier, statement)
         elif self.get().type == TT.const:
             self.eat()
             identifier = self.eat().value
@@ -205,27 +233,39 @@ class Parser:
                 return variableDeclarationExpressionNode(identifier, nullLiteralNode(), True)
             else:
                 self.eat()
-                return variableDeclarationExpressionNode(identifier, self.parseStatement(), True)
+                statement = self.parseStatement()
+                if isinstance(statement, error):
+                    return statement
+                return variableDeclarationExpressionNode(identifier, statement, True)
         else:
             return syntaxError("Expected 'var' or 'const'", self.get().column, self.get().line)
 
     def parseAssignmentExpression(self) -> None:
         left = self.parseObjectExpression()
+        if isinstance(left, error):
+            return left
 
         if self.get().type == TT.assignmentOperator:
             self.eat()
             value = self.parseAssignmentExpression()
+            if isinstance(value, error):
+                return value
             return assignmentExpressionNode(left, value)
         elif self.get().type == TT.assignmentBinaryOperation:
             operand = self.eat().value
             value = self.parsePrimaryExpression()
+            if isinstance(value, error):
+                return value
             return assignmentBinaryExpressionNode(left, operand, value)
         else:
             return left
 
     def parseObjectExpression(self) -> None:
         if self.get().type != TT.openBrace:
-            return self.parseArrayExpression()
+            value = self.parseArrayExpression()
+            if isinstance(value, error):
+                return value
+            return value
         else:
             self.eat()
 
@@ -242,6 +282,8 @@ class Parser:
                 if self.get().type == TT.colon:
                     self.eat()
                     value = self.parseExpression()
+                    if isinstance(value, error):
+                        return value
                     properties.append(propertyLiteralNode(key, value))
                     if self.get().type in (TT.comma, TT.lineend):
                         self.eat()
@@ -258,7 +300,10 @@ class Parser:
 
     def parseArrayExpression(self) -> None:
         if self.get().type != TT.openBracket:
-            return self.parseAdditiveExpression()
+            value = self.parseAdditiveExpression()
+            if isinstance(value, error):
+                return value
+            return value
         else:
             self.eat()
 
@@ -274,6 +319,8 @@ class Parser:
             else:
                 index += 1
                 value = self.parseExpression()
+                if isinstance(value, error):
+                    return value
                 items.append(itemLiteralNode(index, value))
                 if self.get().type in (TT.comma, TT.lineend):
                     self.eat()
@@ -286,37 +333,55 @@ class Parser:
 
     def parseAdditiveExpression(self) -> None:
         left = self.parseMultiplicativeExpression()
+        if isinstance(left, error):
+            return left
 
         while self.get().value in ['+', '-',]:
             operand = self.eat().value
             right = self.parseMultiplicativeExpression()
+            if isinstance(right, error):
+                return right
             left = binaryExpressionNode(left, str(operand), right)
 
         return left
 
     def parseMultiplicativeExpression(self) -> None:
         left = self.parseCallMemberExpression()
+        if isinstance(left, error):
+            return left
 
         while self.get().value in ['*', '/', '^', '%']:
             operand = self.eat().value
             right = self.parseCallMemberExpression()
+            if isinstance(right, error):
+                return right
             left = binaryExpressionNode(left, str(operand), right)
 
         return left
 
     def parseCallMemberExpression(self) -> None:
         member = self.parseMemberExpression()
+        if isinstance(member, error):
+            return member
 
         if self.get().type == TT.openParenthesis:
-            return self.parseCallExpression(member)
+            value = self.parseCallExpression(member)
+            if isinstance(value, error):
+                return value
+            return value
 
         return member
 
     def parseCallExpression(self, caller) -> None:
-        callExpr = callExpression(caller, self.parseArguements())
+        value = self.parseArguements()
+        if isinstance(value, error):
+            return value
+        callExpr = callExpression(caller, value)
 
         if self.get().type == TT.openParenthesis:
             callExpr = self.parseCallExpression(callExpr)
+            if isinstance(callExpr, error):
+                return callExpr
 
         return callExpr
 
@@ -329,6 +394,8 @@ class Parser:
                 return []
             else:
                 args = self.parseArguementsList()
+                if isinstance(args, error):
+                    return args
         if self.get().type == TT.closeParenthesis:
             self.eat()
         else:
@@ -338,15 +405,22 @@ class Parser:
 
     def parseArguementsList(self) -> None:
         args = [self.parseAssignmentExpression()]
+        if isinstance(args[0], error):
+            return args[0]
 
         while (self.get().type == TT.comma):
             self.eat()
-            args.append(self.parseAssignmentExpression())
+            value = self.parseAssignmentExpression()
+            if isinstance(value, error):
+                return value
+            args.append(value)
 
         return args
 
     def parseMemberExpression(self) -> None:
         obj = self.parsePrimaryExpression()
+        if isinstance(obj, error):
+            return obj
 
         while (self.get().type == TT.period) or (self.get().type == TT.openBracket):
             operand = self.eat()
@@ -354,11 +428,15 @@ class Parser:
             if operand.type == TT.period:
                 computed = False
                 prop = self.parsePrimaryExpression()
+                if isinstance(prop, error):
+                    return prop
                 if prop.kind != ('identifier'):
                     return syntaxError("invalid syntax", self.get().column, self.get().line)
             else:
                 computed = True
                 prop = self.parseExpression()
+                if isinstance(prop, error):
+                    return prop
                 if self.get().type != TT.closeBracket:
                     return syntaxError("Expected ']'", self.get().column, self.get().line)
                 else:
@@ -378,12 +456,17 @@ class Parser:
             case TT.openParenthesis:
                 self.eat()  # open paren
                 value = self.parseExpression()
+                if isinstance(value, error):
+                    return value
                 self.eat()  # close paren
                 return value
             case TT.lineend:
                 self.eat()
             case TT._return:
                 self.eat()
-                return returnNode(self.parseExpression())
+                value = self.parseExpression()
+                if isinstance(value, error):
+                    return value
+                return returnNode(value)
             case _:
                 return syntaxError('Invalid token found', self.get().column, self.get().line)

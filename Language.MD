@@ -35,23 +35,52 @@ Phi is a dynamic OOP scripting language.
 - A collection of properties accessed with a key
     
 ## Important Symbols
-- Assignment (=)
-- Plus/Addition (+)
-- Minus/Subtraction (-)
-- Multiplication (*)
-- Division (/)
-- Modulus (%)
-- Powers (^)
-- Comments (#)
-- Or (|)
-- And (&)
-- Equal (==)
-- Not Equal (!=)
-- Greater than (>)
-- Less than (<)
-- Greater than or equal to (>=)
-- Less than or eqaul to (<=)
-- Return (<-)
+- Assignment 
+    - =
+- Plus/Addition 
+    - +
+- Minus/Subtraction 
+    - -
+- Multiplication 
+    - *
+- Division 
+    - /
+- Modulus 
+    - %
+- Powers 
+    - ^
+- Comments 
+    - #
+- Or 
+    - |
+- And 
+    - &
+- Equal 
+    - ==
+- Not Equal 
+    - !=
+- Greater than 
+    - \>
+- Less than 
+    - <
+- Greater than or equal to 
+    - \>=
+- Less than or eqaul to 
+    - <=
+- Return 
+    - <-
+- Add-assign(increment) 
+    - +=
+- Subtract-assign(decrement)
+    - -=
+- Multiply-assign
+    - *=
+- Divide-assign
+    - /=
+- Modulus-assign
+    - %=
+- Power-assign
+    - ^=
 
 ## Built-in Constants
 - null/nil/none (_)

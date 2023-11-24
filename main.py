@@ -1,3 +1,4 @@
+from frontend.errors import error
 from frontend.phi_lexer import *
 from frontend.phi_parser import *
 from backend.phi_interpreter import *
@@ -7,8 +8,14 @@ def run(sourceCode:str) -> None:
     environment = createGlobalEnvironment()
     lexer = Lexer(sourceCode)
     tokens = lexer.tokenize()
+    if isinstance(tokens, error):
+        print(tokens)
+        return
     parser = Parser(tokens)
     ast = parser.genAST()
+    if isinstance(ast, error):
+        print(ast)
+        return
 
     with open('ast.json', 'w') as f:
         f.write(str(ast).replace("'", '"'))
@@ -18,12 +25,10 @@ def run(sourceCode:str) -> None:
 
 if __name__ == '__main__':
 
-    # while True:
-    #     filePath = input('> ')
-    #     if filePath:
-    #         break
-
-    filePath = 'test.phi'
+    while True:
+        filePath = input('> ')
+        if filePath:
+            break
 
     with open(filePath, 'r') as f:
         sourceCode = ''.join(f.readlines())
