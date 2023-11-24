@@ -8,7 +8,7 @@ class Interpreter:
     def __init__(self) -> None:
         pass
 
-    def checkCondition(self, left:RuntimeValue, operand:str, right:RuntimeValue) -> bool:
+    def checkCondition(self, left: RuntimeValue, operand: str, right: RuntimeValue) -> bool:
         res = False
         if isinstance(right, nullValue):
             if isinstance(left, numberValue):
@@ -50,8 +50,8 @@ class Interpreter:
                     case '!=':
                         res = left.value != right.value
         return res
-    
-    def evaluateProgram(self, program: programNode, env: environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
+
+    def evaluateProgram(self, program: programNode, env: environment) -> nullValue | numberValue | objectValue | arrayValue | stringValue | bool | None:
         lastEvaluated = nullValue()
 
         for statement in program.body:
@@ -61,7 +61,7 @@ class Interpreter:
 
         return lastEvaluated
 
-    def evaluateBinaryExpression(self, binaryOperation: binaryExpressionNode, env: environment) -> numberValue|nullValue:
+    def evaluateBinaryExpression(self, binaryOperation: binaryExpressionNode, env: environment) -> numberValue | nullValue:
         left = self.evaluate(binaryOperation.left, env)
         if isinstance(left, error):
             return left
@@ -73,8 +73,8 @@ class Interpreter:
             return self.evaluateNumericBinaryExpression(left, right, binaryOperation.operand, env)
         else:
             return nullValue()
-        
-    def evaluateNumericBinaryExpression(self, left, right, operand, env: environment) -> numberValue|nullValue:
+
+    def evaluateNumericBinaryExpression(self, left, right, operand, env: environment) -> numberValue | nullValue:
         match operand:
             case '+':
                 return numberValue(left.value + right.value)
@@ -99,11 +99,12 @@ class Interpreter:
             varName = assignmentExpression.assigne.symbol
             return env.assignVariable(varName, self.evaluate(assignmentExpression.value, env))
         elif isinstance(assignmentExpression.assigne, memberExpressionNode):
-            member : memberExpressionNode = assignmentExpression.assigne
+            member: memberExpressionNode = assignmentExpression.assigne
             varName = member.object.symbol
             prop = member.property.symbol
             currentValue: dict = env.lookup(varName)
-            currentValue.properties[prop] = self.evaluate(assignmentExpression.value, env)
+            currentValue.properties[prop] = self.evaluate(
+                assignmentExpression.value, env)
             return env.assignVariable(varName, currentValue)
         else:
             return syntaxError('Expected an identifier.', assignmentExpression.assigne.column, assignmentExpression.assigne.line)
@@ -115,7 +116,8 @@ class Interpreter:
         return env.declareVariable(declaration.identifier, value, declaration.constant)
 
     def evaluateFunctionDeclaration(self, declaration: functionDeclarationExpressionNode, env: environment) -> None:
-        fn = function(declaration.name, declaration.parameters, env, declaration.body)
+        fn = function(declaration.name, declaration.parameters,
+                      env, declaration.body)
 
         return env.declareVariable(declaration.name, fn)
 
@@ -129,8 +131,8 @@ class Interpreter:
             properties[prop.key] = a
         obj = objectValue(properties)
         return obj
-    
-    def evaluateArrayExpression(self, array:arrayLiteralNode, env:environment) -> arrayValue:
+
+    def evaluateArrayExpression(self, array: arrayLiteralNode, env: environment) -> arrayValue:
         items = {}
 
         for item in array.items:
@@ -138,9 +140,14 @@ class Interpreter:
         arr = arrayValue(items)
         return arr
 
-    def evaluateCallExpression(self, callExpr: callExpression, env: environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
-        args = [self.evaluate(x, env) for x in callExpr.arguements]
-        fn: nativeFunction|function = self.evaluate(callExpr.caller, env)
+    def evaluateCallExpression(self, callExpr: callExpression, env: environment) -> nullValue | numberValue | objectValue | arrayValue | stringValue | bool | None:
+        args = []
+        for arg in callExpr.arguments:
+            a = self.evaluate(arg, env)
+            if isinstance(a, error):
+                return a
+            args.append(a)
+        fn: nativeFunction | function = self.evaluate(callExpr.caller, env)
         if isinstance(fn, error):
             return fn
 
@@ -154,9 +161,9 @@ class Interpreter:
                 for i in range(len(fn.parameters)):
                     scope.declareVariable(fn.parameters[i].symbol, args[i])
             elif len(fn.parameters) > len(args):
-                return syntaxError(f'Too many arguements. Expected {len(fn.parameters)}', fn.parameters[-1].column, fn.parameters[-1].line)
+                return syntaxError(f'Too many arguments. Expected {len(fn.parameters)}', fn.parameters[-1].column, fn.parameters[-1].line)
             else:
-                return syntaxError(f'Too little arguements. Expected {len(fn.parameters)}', fn.parameters[-1].column, fn.parameters[-1].line)
+                return syntaxError(f'Too little arguments. Expected {len(fn.parameters)}', fn.parameters[-1].column, fn.parameters[-1].line)
 
             result = nullValue()
             for statement in fn.body:
@@ -183,18 +190,18 @@ class Interpreter:
             if isinstance(member.property, numericLiteralNode):
                 if member.property.value not in obj.items:
                     return keyError(member.property.value, member.object.symbol, member.property.column, member.property.line)
-                
+
                 if isinstance(member.property, numericLiteralNode):
                     return obj.items[member.property.value]
         else:
             return keyError(member.property, member.object.symbol, member.property.column, member.property.line)
-    
-    def evaluateIfStatement(self, astNode:ifStatementNode, env:environment) -> None:
-        left :RuntimeValue = self.evaluate(astNode.conditionLeft, env)
+
+    def evaluateIfStatement(self, astNode: ifStatementNode, env: environment) -> None:
+        left: RuntimeValue = self.evaluate(astNode.conditionLeft, env)
         if isinstance(left, error):
             return left
         if not isinstance(astNode.conditionRight, nullValue):
-            right :RuntimeValue = self.evaluate(astNode.conditionRight, env)
+            right: RuntimeValue = self.evaluate(astNode.conditionRight, env)
             if isinstance(right, error):
                 return right
         else:
@@ -211,14 +218,15 @@ class Interpreter:
                 if isinstance(statement, returnNode):
                     return result
         return nullValue()
-    
-    def evaluateWhileStatement(self, astNode:whileStatementNode, env:environment) -> bool:
+
+    def evaluateWhileStatement(self, astNode: whileStatementNode, env: environment) -> bool:
         while True:
-            left :RuntimeValue = self.evaluate(astNode.conditionLeft, env)
+            left: RuntimeValue = self.evaluate(astNode.conditionLeft, env)
             if isinstance(left, error):
                 return left
             if not isinstance(astNode.conditionRight, nullValue):
-                right :RuntimeValue = self.evaluate(astNode.conditionRight, env)
+                right: RuntimeValue = self.evaluate(
+                    astNode.conditionRight, env)
                 if isinstance(right, error):
                     return right
             else:
@@ -238,7 +246,7 @@ class Interpreter:
                 break
         return nullValue()
 
-    def evaluateDoWhileStatement(self, doWhile:doWhileStatementNode, env:environment) -> None:
+    def evaluateDoWhileStatement(self, doWhile: doWhileStatementNode, env: environment) -> None:
         res = True
         while True:
             if res:
@@ -250,11 +258,12 @@ class Interpreter:
                     if isinstance(result, error):
                         return result
 
-                left :RuntimeValue = self.evaluate(doWhile.conditionLeft, env)
+                left: RuntimeValue = self.evaluate(doWhile.conditionLeft, env)
                 if isinstance(left, error):
                     return result
                 if not isinstance(doWhile.conditionRight, nullValue):
-                    right :RuntimeValue = self.evaluate(doWhile.conditionRight, env)
+                    right: RuntimeValue = self.evaluate(
+                        doWhile.conditionRight, env)
                     if isinstance(right, error):
                         return result
                 else:
@@ -265,15 +274,16 @@ class Interpreter:
                 break
         return nullValue()
 
-    def evaluateReturnExpression(self, returnExpression:returnNode, env:environment):
+    def evaluateReturnExpression(self, returnExpression: returnNode, env: environment):
         return self.evaluate(returnExpression.value, env)
-    
-    def evaluateAssignmentBinaryExpression(self, expr:assignmentBinaryExpressionNode, env:environment) -> None:
+
+    def evaluateAssignmentBinaryExpression(self, expr: assignmentBinaryExpressionNode, env: environment) -> None:
         currentValue = env.lookup(expr.assigne.symbol)
-        newValue = self.evaluateBinaryExpression(binaryExpressionNode(numericLiteralNode(currentValue.value), expr.operand[0], expr.value), env)
+        newValue = self.evaluateBinaryExpression(binaryExpressionNode(
+            numericLiteralNode(currentValue.value), expr.operand[0], expr.value), env)
         return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, numericLiteralNode(newValue.value)), env)
 
-    def evaluate(self, astNode, env: environment) -> nullValue|numberValue|objectValue|arrayValue|stringValue|bool|None:
+    def evaluate(self, astNode, env: environment) -> nullValue | numberValue | objectValue | arrayValue | stringValue | bool | None:
         if isinstance(astNode, (str, float, int)):
             return astNode
         match astNode.kind:

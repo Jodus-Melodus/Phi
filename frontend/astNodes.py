@@ -276,15 +276,15 @@ class memberExpressionNode:
 
 
 class callExpression:
-    def __init__(self, caller, arguements: list) -> None:
+    def __init__(self, caller, arguments: list) -> None:
         self.kind = 'callExpression'
         self.caller = caller
-        self.arguements = arguements
+        self.arguments = arguments
 
     def __repr__(self) -> str:
         return str({
             'kind': self.kind,
-            'arguements': self.arguements,
+            'arguments': self.arguments,
             'caller': self.caller
         })
 

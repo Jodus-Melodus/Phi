@@ -187,7 +187,7 @@ class Parser:
         else:
             return syntaxError('Expected a name', self.column, self.line)
         
-        args = self.parseArguements()
+        args = self.parseArguments()
         if isinstance(args, error):
             return args
         parameters = []
@@ -377,7 +377,7 @@ class Parser:
         return member
 
     def parseCallExpression(self, caller) -> None:
-        value = self.parseArguements()
+        value = self.parseArguments()
         if isinstance(value, error):
             return value
         callExpr = callExpression(caller, value)
@@ -389,7 +389,7 @@ class Parser:
 
         return callExpr
 
-    def parseArguements(self) -> None:
+    def parseArguments(self) -> None:
         if self.get().type == TT.openParenthesis:
             self.eat()
             if self.get().type == TT.closeParenthesis:
@@ -397,7 +397,7 @@ class Parser:
                 args = []
                 return []
             else:
-                args = self.parseArguementsList()
+                args = self.parseArgumentsList()
                 if isinstance(args, error):
                     return args
         if self.get().type == TT.closeParenthesis:
@@ -407,7 +407,7 @@ class Parser:
 
         return args
 
-    def parseArguementsList(self) -> None:
+    def parseArgumentsList(self) -> None:
         args = [self.parseAssignmentExpression()]
         if isinstance(args[0], error):
             return args[0]

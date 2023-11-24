@@ -535,7 +535,9 @@ class App(ctk.CTk):
                 sourceCode = ''.join(f.readlines())
             start = time.time()
             self.console['state'] = 'normal'
-            main.run(sourceCode)
+            error = main.run(sourceCode)
+            if error:
+                ... #handle errors
             self.console['state'] = 'disabled'
             end = time.time()
             print(f"\nProcess finished in {end - start} seconds.")
