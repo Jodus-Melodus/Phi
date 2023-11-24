@@ -106,7 +106,7 @@ class Interpreter:
             currentValue.properties[prop] = self.evaluate(assignmentExpression.value, env)
             return env.assignVariable(varName, currentValue)
         else:
-            return syntaxError('Expected an identifier.')
+            return syntaxError('Expected an identifier.', assignmentExpression.assigne.column, assignmentExpression.assigne.line)
 
     def evaluateVariableDeclarationExpression(self, declaration: variableDeclarationExpressionNode, env: environment) -> None:
         value = self.evaluate(declaration.value, env)
@@ -154,9 +154,9 @@ class Interpreter:
                 for i in range(len(fn.parameters)):
                     scope.declareVariable(fn.parameters[i].symbol, args[i])
             elif len(fn.parameters) > len(args):
-                return syntaxError(f'Too many arguements. Expected {len(fn.parameters)}')
+                return syntaxError(f'Too many arguements. Expected {len(fn.parameters)}', fn.parameters[-1].column, fn.parameters[-1].line)
             else:
-                return syntaxError(f'Too little arguements. Expected {len(fn.parameters)}')
+                return syntaxError(f'Too little arguements. Expected {len(fn.parameters)}', fn.parameters[-1].column, fn.parameters[-1].line)
 
             result = nullValue()
             for statement in fn.body:
@@ -166,7 +166,7 @@ class Interpreter:
                 if isinstance(statement, returnNode):
                     return self.evaluate(result.value, env)
         else:
-            return syntaxError(f"'{fn}' isn't a function", 0, 0)
+            return syntaxError(f"'{fn}' isn't a function")
 
     def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
         obj = env.lookup(member.object.symbol)
@@ -174,7 +174,7 @@ class Interpreter:
         if isinstance(obj, objectValue):
             if isinstance(member.property, identifierNode):
                 if member.property.symbol not in obj.properties:
-                    return keyError(member.property.symbol, member.object.symbol)
+                    return keyError(member.property.symbol, member.object.symbol, member.property.column, member.property.line)
 
                 if isinstance(member.property, stringValue):
                     return obj.properties[member.property.value]
@@ -182,12 +182,12 @@ class Interpreter:
         elif isinstance(obj, arrayValue):
             if isinstance(member.property, numericLiteralNode):
                 if member.property.value not in obj.items:
-                    return keyError(member.property.value, member.object.symbol)
+                    return keyError(member.property.value, member.object.symbol, member.property.column, member.property.line)
                 
                 if isinstance(member.property, numericLiteralNode):
                     return obj.items[member.property.value]
         else:
-            return keyError(member.property, member.object.symbol)
+            return keyError(member.property, member.object.symbol, member.property.column, member.property.line)
     
     def evaluateIfStatement(self, astNode:ifStatementNode, env:environment) -> None:
         left :RuntimeValue = self.evaluate(astNode.conditionLeft, env)

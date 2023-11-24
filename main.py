@@ -5,15 +5,18 @@ from backend.phi_interpreter import *
 from backend.phi_environment import *
 
 def run(sourceCode:str) -> None:
+    sourceCodeList = sourceCode.split('\n')
     environment = createGlobalEnvironment()
     lexer = Lexer(sourceCode)
     tokens = lexer.tokenize()
     if isinstance(tokens, error):
+        print(sourceCodeList[tokens.line-1])
         print(tokens)
         return
     parser = Parser(tokens)
     ast = parser.genAST()
     if isinstance(ast, error):
+        print(sourceCodeList[ast.line-1])
         print(ast)
         return
 

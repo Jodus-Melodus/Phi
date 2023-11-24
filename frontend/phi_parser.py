@@ -17,8 +17,12 @@ class Parser:
         self.tokens = tokens
         self.program = programNode([])
         self.conditionalOperators = (TT.equal, TT.notequal, TT.greaterThan, TT.lessThan, TT.greaterThanEqual, TT.lessThanEqual, TT._and, TT._or)
+        self.column = 0
+        self.line = 0
 
     def eat(self) -> Token:
+        self.column = self.tokens[0].column
+        self.line = self.tokens[0].line
         return self.tokens.pop(0)
 
     def get(self) -> Token:
@@ -72,7 +76,7 @@ class Parser:
                 if statement:
                     body.append(statement)
                 if self.get().type == TT.eof:
-                    return syntaxError("Expected a '}'", self.get().column, self.get().line)
+                    return syntaxError("Expected a '}'", self.column, self.line)
             self.eat()
             if self.get().type == TT._while:
                 self.eat()
@@ -91,13 +95,13 @@ class Parser:
                     if self.get().type == TT.closeParenthesis:
                         self.eat()
                     else:
-                        return syntaxError("Expected a ')'", self.get().column, self.get().line)
+                        return syntaxError("Expected a ')'", self.column, self.line)
                 else:
-                    return syntaxError("Expected a '('", self.get().column, self.get().line)
+                    return syntaxError("Expected a '('", self.column, self.line)
             else:
-                return syntaxError("Expected a 'while'", self.get().column, self.get().line)
+                return syntaxError("Expected a 'while'", self.column, self.line)
         else:
-            return syntaxError("Expected a '{'")
+            return syntaxError("Expected a '{'", self.column, self.line)
 
 
         return doWhileStatementNode(body, conditionLeft, operand, conditionRight)
@@ -131,12 +135,12 @@ class Parser:
                         if statement:
                             body.append(statement)
                         if self.get().type == TT.eof:
-                            return syntaxError("Expected a '}'", self.get().column, self.get().line)
+                            return syntaxError("Expected a '}'", self.column, self.line)
                     self.eat()
                 else:
-                    return syntaxError("Expected a '{'", self.get().column, self.get().line)
+                    return syntaxError("Expected a '{'", self.column, self.line)
         else:
-            return syntaxError("Expected a '('", self.get().column, self.get().line)
+            return syntaxError("Expected a '('", self.column, self.line)
         return whileStatementNode(conditionLeft, operand, conditionRight, body)
     
     def parseIfStatement(self) -> None:
@@ -168,12 +172,12 @@ class Parser:
                         if statement:
                             body.append(statement)
                         if self.get().type == TT.eof:
-                            return syntaxError("Expected a '}'", self.get().column, self.get().line)
+                            return syntaxError("Expected a '}'", self.column, self.line)
                     self.eat()
                 else:
-                    return syntaxError("Expected a '{'", self.get().column, self.get().line)
+                    return syntaxError("Expected a '{'", self.column, self.line)
         else:
-            return syntaxError("Expected a '('", self.get().column, self.get().line)
+            return syntaxError("Expected a '('", self.column, self.line)
         return ifStatementNode(conditionLeft, operand, conditionRight, body)
     
     def parseFunctionDeclaration(self) -> None:
@@ -181,7 +185,7 @@ class Parser:
         if self.get().type == TT.identifier:
             name = self.eat().value
         else:
-            return syntaxError('Expected a name', self.get().column, self.get().line)
+            return syntaxError('Expected a name', self.column, self.line)
         
         args = self.parseArguements()
         if isinstance(args, error):
@@ -191,12 +195,12 @@ class Parser:
             if parameter.kind == 'identifier':
                 parameters.append(parameter)
             else:
-                return syntaxError("Expected parameters to be of string type.", self.get().column, self.get().line)
+                return syntaxError("Expected parameters to be of string type.", self.column, self.line)
 
         if self.get().type == TT.openBrace:
             self.eat()
         else:
-            return syntaxError("Expected a '{'", self.get().column, self.get().line)
+            return syntaxError("Expected a '{'", self.column, self.line)
 
         body = []
         while self.get().type != TT.closeBrace:
@@ -206,7 +210,7 @@ class Parser:
             if statement:
                 body.append(statement)
             if self.get().type == TT.eof:
-                return syntaxError("Expected a '}'", self.get().column, self.get().line)
+                return syntaxError("Expected a '}'", self.column, self.line)
 
         self.eat()
 
@@ -238,7 +242,7 @@ class Parser:
                     return statement
                 return variableDeclarationExpressionNode(identifier, statement, True)
         else:
-            return syntaxError("Expected 'var' or 'const'", self.get().column, self.get().line)
+            return syntaxError("Expected 'var' or 'const'", self.column, self.line)
 
     def parseAssignmentExpression(self) -> None:
         left = self.parseObjectExpression()
@@ -290,11 +294,11 @@ class Parser:
                     elif self.get().type == TT.closeBrace:
                         break
                     else:
-                        return syntaxError("Expected a ',' or a '}'", self.get().column, self.get().line)
+                        return syntaxError("Expected a ',' or a '}'", self.column, self.line)
                 else:
-                    return syntaxError("Expected a value", self.get().column, self.get().line)
+                    return syntaxError("Expected a value", self.column, self.line)
             else:
-                return syntaxError('Something went wrong', self.get().column, self.get().line)
+                return syntaxError('Something went wrong', self.column, self.line)
         self.eat()
         return objectLiteralNode(properties)
 
@@ -327,7 +331,7 @@ class Parser:
                 elif self.get().type == TT.closeBracket:
                     break
                 else:
-                    return syntaxError("Expected a ',' or a ']'", self.get().column, self.get().line)
+                    return syntaxError("Expected a ',' or a ']'", self.column, self.line)
         self.eat()
         return arrayLiteralNode(items)
 
@@ -399,7 +403,7 @@ class Parser:
         if self.get().type == TT.closeParenthesis:
             self.eat()
         else:
-            return syntaxError("Expected a ')'", self.get().column, self.get().line)
+            return syntaxError("Expected a ')'", self.column, self.line)
 
         return args
 
@@ -431,14 +435,14 @@ class Parser:
                 if isinstance(prop, error):
                     return prop
                 if prop.kind != ('identifier'):
-                    return syntaxError("invalid syntax", self.get().column, self.get().line)
+                    return syntaxError("invalid syntax", self.column, self.line)
             else:
                 computed = True
                 prop = self.parseExpression()
                 if isinstance(prop, error):
                     return prop
                 if self.get().type != TT.closeBracket:
-                    return syntaxError("Expected ']'", self.get().column, self.get().line)
+                    return syntaxError("Expected ']'", self.column, self.line)
                 else:
                     self.eat()
 
@@ -448,11 +452,11 @@ class Parser:
     def parsePrimaryExpression(self) -> None:
         match self.get().type:
             case TT.int | TT.real:
-                return numericLiteralNode(float(self.eat().value))
+                return numericLiteralNode(float(self.eat().value), self.column, self.line)
             case TT.string:
-                return stringLiteralNode(self.eat().value)
+                return stringLiteralNode(self.eat().value, self.column, self.line)
             case TT.identifier:
-                return identifierNode(str(self.eat().value))
+                return identifierNode(str(self.eat().value), self.column, self.line)
             case TT.openParenthesis:
                 self.eat()  # open paren
                 value = self.parseExpression()
@@ -469,4 +473,4 @@ class Parser:
                     return value
                 return returnNode(value)
             case _:
-                return syntaxError('Invalid token found', self.get().column, self.get().line)
+                return syntaxError('Invalid token found', self.column, self.line)
