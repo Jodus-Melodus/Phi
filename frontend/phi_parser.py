@@ -393,7 +393,7 @@ class Parser:
         if isinstance(left, error):
             return left
 
-        while self.get().value in ['*', '/', '^', '%']:
+        while self.get().value in ['*', '/', '^', '%', '//']:
             operand = self.eat().value
             right = self.parseCallMemberExpression()
             if isinstance(right, error):

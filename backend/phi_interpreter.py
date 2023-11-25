@@ -91,6 +91,8 @@ class Interpreter:
                 return numberValue(left.value ** right.value)
             case '%':
                 return numberValue(left.value % right.value)
+            case '//':
+                return numberValue(left.value // right.value)
             case _:
                 return nullValue()
 

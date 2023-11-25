@@ -99,6 +99,9 @@ class Lexer:
                     if self.get() == '=':
                         tokens.append(Token(TT.assignmentBinaryOperation, char+'=', self.index, self.column, self.line))
                         self.eat()
+                    elif (char == '/') and (self.get() == '/'):
+                        tokens.append(Token(TT.binaryOperation, char + '/', self.index, self.column, self.line))
+                        self.eat()
                     else:
                         tokens.append(Token(TT.binaryOperation, char, self.index, self.column, self.line))
                 case '\n':
