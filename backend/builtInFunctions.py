@@ -13,7 +13,7 @@ def out(arg) -> str|bool:
     elif isinstance(arg, arrayValue):
         res = '['
         for item in arg.items:
-            res += str(out(item)) + ', '
+            res += str(out(arg.items[item])) + ', '
         return res + ']'
     elif isinstance(arg, function):
         return f"fn {arg.name}()"
