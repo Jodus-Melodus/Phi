@@ -150,6 +150,8 @@ Phi is a dynamic OOP scripting language.
 ### If
     if (condition*) {
         body*
+    } else {
+        body*
     }
     #---------------------------------------
     if (condition*) {

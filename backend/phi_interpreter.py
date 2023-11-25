@@ -91,6 +91,8 @@ class Interpreter:
                 return numberValue(left.value ** right.value)
             case '%':
                 return numberValue(left.value % right.value)
+            case '//':
+                return numberValue(left.value // right.value)
             case _:
                 return nullValue()
 
@@ -119,9 +121,7 @@ class Interpreter:
         return env.declareVariable(declaration.identifier, value, declaration.constant)
 
     def evaluateFunctionDeclaration(self, declaration: functionDeclarationExpressionNode, env: environment) -> None:
-        fn = function(declaration.name, declaration.parameters,
-                      env, declaration.body)
-
+        fn = function(declaration.name, declaration.parameters, env, declaration.body)
         return env.declareVariable(declaration.name, fn)
 
     def evaluateObjectExpression(self, object: objectLiteralNode, env: environment) -> objectValue:
@@ -164,9 +164,17 @@ class Interpreter:
                 for i in range(len(fn.parameters)):
                     scope.declareVariable(fn.parameters[i].symbol, args[i])
             elif len(fn.parameters) > len(args):
-                return syntaxError(self, f'Too many arguments. Expected {len(fn.parameters)}', fn.parameters[-1].column, fn.parameters[-1].line)
+                column = fn.parameters[-1].column
+                line = fn.parameters[-1].line
+                return syntaxError(self, f'Too many arguments. Expected {len(fn.parameters)}', column, line)
             else:
-                return syntaxError(self, f'Too little arguments. Expected {len(fn.parameters)}', fn.parameters[-1].column, fn.parameters[-1].line)
+                if len(fn.parameters) > 0:
+                    column = fn.parameters[-1].column
+                    line = fn.parameters[-1].line
+                else:
+                    column = 0
+                    line = 0
+                return syntaxError(self, f'Too little arguments. Expected {len(fn.parameters)}', column, line)
 
             result = nullValue()
             for statement in fn.body:
@@ -174,7 +182,7 @@ class Interpreter:
                 if isinstance(result, error):
                     return result
                 if isinstance(statement, returnNode):
-                    return self.evaluate(result.value, env)
+                    return result
         else:
             return syntaxError(self, f"'{fn}' isn't a function")
 
@@ -204,7 +212,8 @@ class Interpreter:
         if isinstance(left, error):
             return left
         if not isinstance(ifStatement.conditionRight, nullValue):
-            right: RuntimeValue = self.evaluate(ifStatement.conditionRight, env)
+            right: RuntimeValue = self.evaluate(
+                ifStatement.conditionRight, env)
             if isinstance(right, error):
                 return right
         else:
@@ -233,7 +242,8 @@ class Interpreter:
 
     def evaluateWhileStatement(self, whileStatement: whileStatementNode, env: environment) -> bool:
         while True:
-            left: RuntimeValue = self.evaluate(whileStatement.conditionLeft, env)
+            left: RuntimeValue = self.evaluate(
+                whileStatement.conditionLeft, env)
             if isinstance(left, error):
                 return left
             if not isinstance(whileStatement.conditionRight, nullValue):
@@ -299,7 +309,8 @@ class Interpreter:
 
     def evaluateAssignmentBinaryExpression(self, expr: assignmentBinaryExpressionNode, env: environment) -> None:
         currentValue = env.lookup(expr.assigne.symbol)
-        newValue = self.evaluateBinaryExpression(binaryExpressionNode(numericLiteralNode(currentValue.value, 0, 0), expr.operand[0], expr.value), env)
+        newValue = self.evaluateBinaryExpression(binaryExpressionNode(
+            numericLiteralNode(currentValue.value, 0, 0), expr.operand[0], expr.value), env)
         return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, numericLiteralNode(newValue.value, 0, 0)), env)
 
     def evaluate(self, astNode, env: environment) -> nullValue | numberValue | objectValue | arrayValue | stringValue | bool | None:

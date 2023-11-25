@@ -118,13 +118,33 @@ class App(ctk.CTk):
         self.bind('<[>', self.autoBracket)
         self.bind('<{>', self.autoBrace)
         self.bind('<Button-3>', self.rightClickMenuClick)
-        self.bind('<Button-1>', self.updateLine)
         self.bind('<F1>', self.showHelp)
         self.bind('<Control-;>', self.showSnippets)
         self.bind('<Control-[>', self.dedent)
         self.bind('<Control-]>', self.indent)
+        self.bind('<ButtonRelease-1>', self.highlightSelected)
+        self.bind('<Button-1>', self.mouseClickUpdate)
 
         self.mainloop()
+
+    def mouseClickUpdate(self, e=None) -> None:
+        editor = self.currentTab
+        if editor:
+            editor.tag_remove('similar', '0.0', 'end')
+
+    def highlightSelected(self, e=None) -> None:
+        esc = '.^$*+?()[{\|'
+        editor = self.currentTab
+        if editor:
+            text = editor.get('0.0', 'end').split('\n')
+            if editor.tag_ranges('sel'):
+                w = editor.get(ctk.SEL_FIRST, ctk.SEL_LAST)
+                word = rf'({"/" if w in esc else ""}{w})'
+                for ln, line in enumerate(text):
+                    matches = [(match.start(), match.end()) for match in re.finditer(word, line)]
+                    for start, end in matches:
+                        editor.tag_add('similar', f'{ln+1}.{start}', f'{ln+1}.{end}')
+                        editor.tag_remove('error', f'{ln}.0', f'{ln}.end')
 
     def indent(self, e=None) -> None:
         editor = self.currentTab
@@ -244,13 +264,6 @@ class App(ctk.CTk):
         Ctrl + ] -          Indent line or selected text"""
         helpText.insert('0.0', text)
         helpText.configure(wrap='none', state='disabled')
-
-    def updateLine(self, e=None) -> None:
-        editor = self.currentTab
-        if editor:
-            editor.tag_remove('CurrentLine', '0.0', 'end')
-            line = editor.index(ctk.INSERT).split('.')[0]
-            editor.tag_add('CurrentLine', line + '.0', line + '.end')
 
     def loadLanguageSyntax(self) -> None:
         with open('syntax.json', 'r') as f:
@@ -377,7 +390,6 @@ class App(ctk.CTk):
             self.find.focus_set()
 
     def keyPressUpdate(self, e=None) -> None:
-        self.updateLine()
         self.currentLanguage = self.currentLanguageCombo.get()
         editor = self.currentTab
         if editor:
@@ -497,8 +509,8 @@ class App(ctk.CTk):
         
         for tag in self.languageSyntaxPatterns[self.currentLanguage]:
             editor.tag_config(tag, foreground=self.languageSyntaxPatterns[self.currentLanguage][tag][0])
-        editor.tag_config('CurrentLine', background='#262626')
         editor.tag_config('error', background='#990000')
+        editor.tag_config('similar', background='#595959')
 
         editor.configure(wrap='none')
         editor.pack(expand=True, fill='both')
