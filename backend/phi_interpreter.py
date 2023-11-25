@@ -224,23 +224,30 @@ class Interpreter:
             return syntaxError(self, f"'{fn}' isn't a function")
 
     def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
-        obj = env.lookup(member.object.symbol)
+        obj:objectValue = env.lookup(member.object.symbol)
 
         if isinstance(obj, objectValue):
             if isinstance(member.property, identifierNode):
                 if member.property.symbol not in obj.properties:
                     return keyError(self, member.property.symbol, member.object.symbol, member.property.column, member.property.line)
 
-                if isinstance(member.property, stringValue):
+                elif isinstance(member.property, stringValue):
                     return obj.properties[member.property.value]
                 return obj.properties[member.property.symbol]
-        elif isinstance(obj, arrayValue):
+        elif isinstance(obj, (arrayValue, stringValue)):
             if isinstance(member.property, numericLiteralNode):
                 if member.property.value not in obj.items:
                     return keyError(self, member.property.value, member.object.symbol, member.property.column, member.property.line)
 
-                if isinstance(member.property, numericLiteralNode):
+                elif isinstance(member.property, numericLiteralNode):
                     return obj.items[member.property.value]
+            elif isinstance(member.property, identifierNode):
+                if member.property.symbol in obj.methods:
+                    return obj.methods[member.property.symbol]
+                else:
+                    return syntaxError(self, f"'{member.property.symbol}' is not a valid method.")
+            else:
+                return syntaxError(self, f"'{member.property.symbol}' is not valid.")
         else:
             return keyError(self, member.property, member.object.symbol, member.property.column, member.property.line)
 

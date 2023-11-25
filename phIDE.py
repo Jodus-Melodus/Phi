@@ -222,7 +222,7 @@ class App(ctk.CTk):
             self.snippetMenu.place_forget()
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
-            wordStart = editor.search(r'\s', currentIndex, backwards=True, regexp=True)
+            wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\})', currentIndex, backwards=True, regexp=True)
             word = editor.get(wordStart, currentIndex).strip(' \n')
             if word:
                 words = []
@@ -406,7 +406,7 @@ class App(ctk.CTk):
             intelliSenseWords = self.languageSyntaxPatterns[self.currentLanguage]['keywords'][2]
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
-            wordStart = editor.search(r'\s', currentIndex, backwards=True, regexp=True)
+            wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\})', currentIndex, backwards=True, regexp=True)
             word = editor.get(wordStart, currentIndex).strip(' \n')
             if word:
                 words = []
