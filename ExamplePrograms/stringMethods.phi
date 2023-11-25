@@ -1,0 +1,6 @@
+# These methods are built in to Phi
+
+var string = "Hello, world"
+
+var len = string.length()
+out(len)

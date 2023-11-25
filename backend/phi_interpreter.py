@@ -234,7 +234,7 @@ class Interpreter:
                 elif isinstance(member.property, stringValue):
                     return obj.properties[member.property.value]
                 return obj.properties[member.property.symbol]
-        elif isinstance(obj, arrayValue):
+        elif isinstance(obj, (arrayValue, stringValue)):
             if isinstance(member.property, numericLiteralNode):
                 if member.property.value not in obj.items:
                     return keyError(self, member.property.value, member.object.symbol, member.property.column, member.property.line)

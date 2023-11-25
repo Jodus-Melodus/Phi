@@ -29,8 +29,12 @@ class numberValue(RuntimeValue):
     
 class stringValue(RuntimeValue):
     def __init__(self, value) -> None:
+        import backend.builtInMethods as bim
         self.type = 'stringValue'
         self.value = value
+        self.methods = {
+            'length':nativeFunction(lambda arg, scope : bim.stringLength(self))
+        }
 
     def __repr__(self) -> str:
         return str({
@@ -57,7 +61,7 @@ class arrayValue(RuntimeValue):
         self.items = items
         self.methods = {
             'append':nativeFunction(lambda arg, scope : bim.append(self, arg[0])),
-            'length':nativeFunction(lambda arg, scope : bim.length(self))
+            'length':nativeFunction(lambda arg, scope : bim.arrayLength(self))
         }
 
     def __repr__(self) -> str:
