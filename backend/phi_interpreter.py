@@ -73,11 +73,38 @@ class Interpreter:
             return right
 
         if isinstance(left, numberValue) and isinstance(right, numberValue):
-            return self.evaluateNumericBinaryExpression(left, right, binaryOperation.operand, env)
+            return self.evaluateNumericBinaryExpression(left, right, binaryOperation.operand)
+        elif isinstance(left, stringValue) and isinstance(right, stringValue):
+            return self.evaluateStringBinaryExpression(left, right, binaryOperation.operand)
+        elif isinstance(left, arrayValue) and isinstance(right, arrayValue):
+            return self.evaluateArrayBinaryExpression(left, right, binaryOperation.operand)
+        elif isinstance(left, objectValue) and isinstance(right, objectValue):
+            return self.evaluateObjectBinaryExpression(left, right, binaryOperation.operand)
         else:
-            return nullValue()
+            return syntaxError(self, "Cannot preform this operation.")
+        
+    def evaluateObjectBinaryExpression(self, left:objectValue, right:objectValue, operand:str) -> objectValue:
+        match operand:
+            case '+':
+                return objectValue(left.properties.update(right.properties))
+            case _:
+                return syntaxError(self, "Cannot preform this operation on objects.")
 
-    def evaluateNumericBinaryExpression(self, left, right, operand, env: environment) -> numberValue | nullValue:
+    def evaluateArrayBinaryExpression(self, left:arrayValue, right:arrayValue, operand:str) -> arrayValue:
+        match operand:
+            case '+':
+                return arrayValue(left.items + right.items)
+            case _:
+                return syntaxError(self, "Cannot preform this operation on arrays.")
+
+    def evaluateStringBinaryExpression(self, left:stringValue, right:stringValue, operand:str) -> stringValue:
+        match operand:
+            case '+':
+                return stringValue(left.value + right.value)
+            case _:
+                return syntaxError(self, "Cannot preform this operation on strings.")
+
+    def evaluateNumericBinaryExpression(self, left:numberValue, right:numberValue, operand:str) -> numberValue:
         match operand:
             case '+':
                 return numberValue(left.value + right.value)
@@ -94,7 +121,9 @@ class Interpreter:
             case '//':
                 return numberValue(left.value // right.value)
             case _:
-                return nullValue()
+                return syntaxError(self, "Cannot preform this operation on numbers")
+
+# --------------------------------------------------------------------------------------------------------------------------------
 
     def evaluateIdentifierExpression(self, identifier: identifierNode, env: environment) -> None:
         return env.lookup(identifier.symbol)
