@@ -40,7 +40,7 @@ class stringValue(RuntimeValue):
     
     
 class booleanValue(RuntimeValue):
-    def __init__(self, value=False) -> None:
+    def __init__(self, value='F') -> None:
         self.type = 'booleanValue'
         self.value = value
 

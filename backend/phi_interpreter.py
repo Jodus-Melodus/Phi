@@ -64,7 +64,7 @@ class Interpreter:
 
         return lastEvaluated
 
-    def evaluateBinaryExpression(self, binaryOperation: binaryExpressionNode, env: environment) -> numberValue | nullValue:
+    def evaluateBinaryExpression(self, binaryOperation:binaryExpressionNode, env: environment) -> numberValue | nullValue:
         left = self.evaluate(binaryOperation.left, env)
         if isinstance(left, error):
             return left
@@ -74,14 +74,22 @@ class Interpreter:
 
         if isinstance(left, numberValue) and isinstance(right, numberValue):
             return self.evaluateNumericBinaryExpression(left, right, binaryOperation.operand)
-        elif isinstance(left, stringValue) and isinstance(right, stringValue):
+        elif isinstance(left, stringValue) and isinstance(right, (stringValue, numberValue)):
             return self.evaluateStringBinaryExpression(left, right, binaryOperation.operand)
-        elif isinstance(left, arrayValue) and isinstance(right, arrayValue):
-            return self.evaluateArrayBinaryExpression(left, right, binaryOperation.operand)
-        elif isinstance(left, objectValue) and isinstance(right, objectValue):
-            return self.evaluateObjectBinaryExpression(left, right, binaryOperation.operand)
+        
+        elif isinstance(left, arrayValue):
+            return self.evaluateArrayAppendBinaryExpression(left, right, binaryOperation.operand)
         else:
             return syntaxError(self, "Cannot preform this operation.")
+        
+    def evaluateArrayAppendBinaryExpression(self, left:arrayValue, right, operand:str) -> arrayValue:
+        match operand:
+            case '+':
+                index = len(left.items)
+                left.items[index] = right
+                return arrayValue(left.items)
+            case _:
+                return syntaxError(self, "Cannot preform this operation on arrays.")
         
     def evaluateObjectBinaryExpression(self, left:objectValue, right:objectValue, operand:str) -> objectValue:
         match operand:
@@ -97,7 +105,7 @@ class Interpreter:
             case _:
                 return syntaxError(self, "Cannot preform this operation on arrays.")
 
-    def evaluateStringBinaryExpression(self, left:stringValue, right:stringValue, operand:str) -> stringValue:
+    def evaluateStringBinaryExpression(self, left:stringValue, right:stringValue|numberValue, operand:str) -> stringValue:
         match operand:
             case '+':
                 return stringValue(left.value + right.value)
@@ -342,7 +350,7 @@ class Interpreter:
             numericLiteralNode(currentValue.value, 0, 0), expr.operand[0], expr.value), env)
         return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, numericLiteralNode(newValue.value, 0, 0)), env)
 
-    def evaluate(self, astNode, env: environment) -> nullValue | numberValue | objectValue | arrayValue | stringValue | bool | None:
+    def evaluate(self, astNode, env: environment) -> nullValue | numberValue | objectValue | arrayValue | stringValue | None:
         if isinstance(astNode, (str, float, int)):
             return astNode
         match astNode.kind:

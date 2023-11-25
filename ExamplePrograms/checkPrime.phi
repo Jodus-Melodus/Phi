@@ -1,4 +1,4 @@
-
+# How to check primes.
 
 fn isPrime(number) {
     var factors = []
@@ -19,4 +19,3 @@ fn isPrime(number) {
 }
 
 out(isPrime(8))
-
