@@ -21,14 +21,6 @@ def out(arg) -> str|bool:
     else:
         return arg
 
-def length(arg) -> numberValue|nullValue:
-    if isinstance(arg, objectValue):
-        return numberValue(len(arg.properties))
-    elif isinstance(arg, arrayValue):
-        return numberValue(len(arg.items))
-    else:
-        return nullValue()
-
 def in_(arg:stringValue) -> stringValue:
     sys.stdout.write(arg.value)
     return stringValue(sys.stdin.readline().strip())

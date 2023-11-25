@@ -1,22 +1,13 @@
 
 
-fn isPrime(number) {
-    var factors = []
-    var i = 2
 
-    while (i < number){
-        if (number % i == 0){
-            factors = factors + i
-        }
-        i += 1
-    }
-    
-    <- if (length(factors) == 0){
-        <- T
-    } else {
-        <- F
-    }
-}
+var arr = [1, 2, 3, 4]
 
-out(isPrime(97))
+arr.append([5, 6, 7])
+var x = arr.length()
+
+out(arr)
+out(x)
+
+
 
