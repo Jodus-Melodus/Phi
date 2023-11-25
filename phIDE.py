@@ -133,15 +133,17 @@ class App(ctk.CTk):
             editor.tag_remove('similar', '0.0', 'end')
 
     def highlightSelected(self, e=None) -> None:
+        esc = '.^$*+?()[{\|'
         editor = self.currentTab
         if editor:
             text = editor.get('0.0', 'end').split('\n')
             if editor.tag_ranges('sel'):
-                word = editor.get(ctk.SEL_FIRST, ctk.SEL_LAST)
+                w = editor.get(ctk.SEL_FIRST, ctk.SEL_LAST)
+                word = rf'({"/" if w in esc else ""}{w})'
                 for ln, line in enumerate(text):
                     matches = [(match.start(), match.end()) for match in re.finditer(word, line)]
                     for start, end in matches:
-                        editor.tag_add('similar', f'{ln}.{start}', f'{ln}.{end}')
+                        editor.tag_add('similar', f'{ln+1}.{start}', f'{ln+1}.{end}')
                         editor.tag_remove('error', f'{ln}.0', f'{ln}.end')
 
     def indent(self, e=None) -> None:
@@ -508,7 +510,7 @@ class App(ctk.CTk):
         for tag in self.languageSyntaxPatterns[self.currentLanguage]:
             editor.tag_config(tag, foreground=self.languageSyntaxPatterns[self.currentLanguage][tag][0])
         editor.tag_config('error', background='#990000')
-        editor.tag_config('similar', background='#0000ff')
+        editor.tag_config('similar', background='#595959')
 
         editor.configure(wrap='none')
         editor.pack(expand=True, fill='both')
