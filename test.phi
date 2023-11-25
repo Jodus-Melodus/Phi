@@ -11,12 +11,12 @@ fn isPrime(number) {
         i += 1
     }
     
-    <- if (length(factors) == 1){
+    <- if (length(factors) == 0){
         <- T
     } else {
         <- F
     }
 }
 
-out(isPrime(8))
+out(isPrime(97))
 
