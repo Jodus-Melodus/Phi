@@ -1,8 +1,22 @@
 
 
+fn isPrime(number) {
+    var factors = []
+    var i = 2
 
-var s = "hello world"
+    while (i < number){
+        if (number % i == 0){
+            factors = factors + i
+        }
+        i += 1
+    }
+    
+    <- if (length(factors) == 0){
+        <- T
+    } else {
+        <- F
+    }
+}
 
-var len = s.length()
+out(isPrime(97))
 
-out(len)
