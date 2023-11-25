@@ -3,7 +3,6 @@
 
 var s = "hello world"
 
-out(s.length())
+var len = s.length()
 
-
-
+out(len)
