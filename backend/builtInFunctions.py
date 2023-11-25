@@ -1,6 +1,7 @@
 from backend.values import *
 from time import time, sleep
 import sys
+from frontend.errors import *
 
 def out(arg) -> str|bool:
     if isinstance(arg, (numberValue, stringValue, booleanValue, nullValue)):
@@ -20,11 +21,13 @@ def out(arg) -> str|bool:
     else:
         return arg
 
-def length(arg) -> numberValue:
+def length(arg) -> numberValue|nullValue:
     if isinstance(arg, objectValue):
         return numberValue(len(arg.properties))
     elif isinstance(arg, arrayValue):
         return numberValue(len(arg.items))
+    else:
+        return nullValue()
 
 def in_(arg:stringValue) -> stringValue:
     sys.stdout.write(arg.value)

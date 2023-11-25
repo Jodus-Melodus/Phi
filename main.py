@@ -4,7 +4,7 @@ from frontend.phi_parser import *
 from backend.phi_interpreter import *
 from backend.phi_environment import *
 
-def run(sourceCode:str) -> None:
+def run(sourceCode:str) -> None|error:
     environment = createGlobalEnvironment()
     lexer = Lexer(sourceCode)
     tokens = lexer.tokenize()

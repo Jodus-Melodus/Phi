@@ -1,5 +1,5 @@
 
-def errorArrows(column:int) -> None:
+def errorArrows(column:int) -> str:
     out = ''
     while column-1 > 0:
         out += ' '
@@ -13,6 +13,7 @@ class error:
 
 class syntaxError(error):
     def __init__(self, stage, msg: str, column:int=-1, line:int=-1) -> None:
+        super().__init__()
         self.stage = stage
         self.msg = msg
         self.column = column
@@ -26,6 +27,7 @@ class syntaxError(error):
 
 class nameError(error):
     def __init__(self, stage, name: str, column:int, line:int) -> None:
+        super().__init__()
         self.stage = stage
         self.name = name
         self.column = column
@@ -36,6 +38,7 @@ class nameError(error):
 
 class invalidCharacterError(error):
     def __init__(self, stage, character:str, column:int, line:int) -> None:
+        super().__init__()
         self.stage = stage
         self.character = character
         self.column = column
@@ -46,6 +49,7 @@ class invalidCharacterError(error):
 
 class notImplementedError(error):
     def __init__(self, stage, msg, column:int=-1, line:int=-1) -> None:
+        super().__init__()
         self.stage = stage
         self.msg = msg
         self.column = column
@@ -56,6 +60,7 @@ class notImplementedError(error):
 
 class keyError(error):
     def __init__(self, stage, key, obj, column:int, line:int) -> None:
+        super().__init__()
         self.stage = stage
         self.key = key
         self.obj = obj

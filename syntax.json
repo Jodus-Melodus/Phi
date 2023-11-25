@@ -2,7 +2,7 @@
     ".phi": {
         "keywords": [
             "#6666ff",
-            "(?<!\\w)(in|out|while|if|var|const|now|length|wait|root|fn|do)(?!\\w)",
+            "(?<!\\w)(in|out|while|if|var|const|now|length|wait|root|fn|do|else)(?!\\w)",
             [
                 "in",
                 "out",
@@ -15,7 +15,8 @@
                 "wait",
                 "root",
                 "fn",
-                "do-while"
+                "do",
+                "else"
             ]
         ],
         "symbols": [
