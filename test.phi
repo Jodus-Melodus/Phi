@@ -1,22 +1,12 @@
 
 
-fn isPrime(number) {
-    var factors = []
-    var i = 2
 
-    while (i < number){
-        if (number % i == 0){
-            factors = factors + i
-        }
-        i += 1
-    }
-    
-    <- if (length(factors) == 0){
-        <- T
-    } else {
-        <- F
-    }
+
+var obj = {
+	a:1,
+	b:2
 }
 
-out(isPrime(97))
+obj.a = fn name(){<- "hi"}
 
+out(obj)
