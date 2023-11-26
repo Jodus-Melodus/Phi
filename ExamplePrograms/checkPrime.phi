@@ -11,7 +11,7 @@ fn isPrime(number) {
         i += 1
     }
 
-    <- if (length(factors) == 0){
+    <- if (factors.length() == 0){
         <- T
     } else {
         <- F

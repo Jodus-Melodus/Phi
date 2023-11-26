@@ -4,6 +4,7 @@ import re
 import main, time
 import customtkinter as ctk
 from customtkinter import filedialog
+import os
 
 class TerminalRedirect:
     def __init__(self, textWidget:ctk.CTkTextbox) -> None:
@@ -511,29 +512,30 @@ class App(ctk.CTk):
         self.currentLanguage = '.' + path.split('/')[-1].split('.')[-1]
         self.currentLanguageCombo.set(self.currentLanguage)
         tabName = path.split('/')[-1]
-        tab = self.centerTabview.add(tabName)
-        editor = ctk.CTkTextbox(tab, font=self.textBoxFont)
-        editor.configure(tabs=40)
-        
-        for tag in self.languageSyntaxPatterns[self.currentLanguage]:
-            editor.tag_config(tag, foreground=self.languageSyntaxPatterns[self.currentLanguage][tag][0])
-        editor.tag_config('error', background='#990000')
-        editor.tag_config('similar', background='#595959')
+        if tabName not in self.centerTabview._tab_dict:
+            tab = self.centerTabview.add(tabName)
+            editor = ctk.CTkTextbox(tab, font=self.textBoxFont)
+            editor.configure(tabs=40)
+            
+            for tag in self.languageSyntaxPatterns[self.currentLanguage]:
+                editor.tag_config(tag, foreground=self.languageSyntaxPatterns[self.currentLanguage][tag][0])
+            editor.tag_config('error', background='#990000')
+            editor.tag_config('similar', background='#595959')
 
-        editor.configure(wrap='none')
-        editor.pack(expand=True, fill='both')
-        self.intelliSenseBox = ctk.CTkSegmentedButton(editor, command=self.insertIntelliSense, width=100, bg_color='#9908aa')
-        self.snippetMenu = ctk.CTkSegmentedButton(editor, command=self.insertSnippet, width=20, bg_color='#3366ff')
+            editor.configure(wrap='none')
+            editor.pack(expand=True, fill='both')
+            self.intelliSenseBox = ctk.CTkSegmentedButton(editor, command=self.insertIntelliSense, width=100, bg_color='#9908aa')
+            self.snippetMenu = ctk.CTkSegmentedButton(editor, command=self.insertSnippet, width=20, bg_color='#3366ff')
 
-        self.openEditors[tabName] = editor
-        self.tabNamesPaths[tabName] = path
-        length = 0
-        with open(path, 'r') as f:
-            for line in f.readlines():
-                length += 1
-                editor.insert('end', line)
-                self.updateSyntax(line, length)
-        self.loadSnippets()
+            self.openEditors[tabName] = editor
+            self.tabNamesPaths[tabName] = path
+            length = 0
+            with open(path, 'r') as f:
+                for line in f.readlines():
+                    length += 1
+                    editor.insert('end', line)
+                    self.updateSyntax(line, length)
+            self.loadSnippets()
 
     def SCCloseFile(self, e=None) -> None:
         self.SCSaveFile()
@@ -541,10 +543,11 @@ class App(ctk.CTk):
         self.centerTabview.delete(tabName)
 
     def SCOpenFile(self, e=None) -> None:
-        filePaths = filedialog.askopenfilenames(title='Select a file', filetypes=[('Phi File', '*.phi'), ('All Files', '*.*')])
-        if filePaths:
-            for file in filePaths:
-                self.addTab(file)
+        dirPath = filedialog.askdirectory(title='Select a folder')
+        files = [os.path.join(root, file) for root, dirs, files in os.walk(dirPath) for file in files]
+        if files:
+            for file in files:
+                self.addTab(file.replace('\\', '/'))
 
     def SCBackspaceWord(self, e=None) -> None:
         editor = self.currentTab

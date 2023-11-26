@@ -1,6 +1,21 @@
-# These methods are built in to Phi
+# How to check primes.
 
-var string = "Hello, world"
+fn isPrime(number) {
+    var factors = []
+    var i = 2
 
-var len = string.length()
-out(len)
+    while (i < number){
+        if (number % i == 0){
+            factors = factors + i
+        }
+        i += 1
+    }
+
+    <- if (length(factors) == 0){
+        <- T
+    } else {
+        <- F
+    }
+}
+
+out(isPrime(97))
