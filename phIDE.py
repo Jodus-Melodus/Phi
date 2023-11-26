@@ -1,9 +1,9 @@
 import json
-import customtkinter as ctk
 import sys
 import re
-from customtkinter import filedialog
 import main, time
+import customtkinter as ctk
+from customtkinter import filedialog
 
 class TerminalRedirect:
     def __init__(self, textWidget:ctk.CTkTextbox) -> None:
@@ -26,6 +26,7 @@ class TerminalRedirect:
 class App(ctk.CTk):
     def __init__(self) -> None:
         super().__init__()
+        ctk.set_default_color_theme('phi-theme.json')
         self.title('phIDE')
         self.state('zoomed')
         self.textBoxFont = ctk.CTkFont(family='Courier New', size=16, weight='bold')
