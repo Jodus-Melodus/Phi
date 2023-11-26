@@ -324,7 +324,7 @@ class Parser:
                 key = self.eat().value
                 if self.get().type == TT.colon:
                     self.eat()
-                    value = self.parseExpression()
+                    value = self.parseStatement()
                     if isinstance(value, error):
                         return value
                     properties.append(propertyLiteralNode(key, value))

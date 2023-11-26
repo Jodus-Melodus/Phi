@@ -1,18 +1,19 @@
 # Phi supports objects/hashmaps/dictionaries.
 
-var func = fn add(a, b){<- a + b} # Please see closures.phi first to understand this.
-
 var obj = {
     a:1,
     b:[1, 2, 3],
     c:{
         d:"hello"
     }
-    e:func
+    e:fn add(a, b) {
+		<- a + b
+	}
 }
 
 out(obj.a)
 out(obj.b)
 out(obj.c)
 out(obj.e(4, 3))
+
 
