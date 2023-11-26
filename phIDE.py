@@ -4,6 +4,7 @@ import re
 import main, time
 import customtkinter as ctk
 from customtkinter import filedialog
+from PIL import Image, ImageTk
 
 class TerminalRedirect:
     def __init__(self, textWidget:ctk.CTkTextbox) -> None:
