@@ -117,6 +117,7 @@ class App(ctk.CTk):
         self.bind('<(>', self.autoParenthesis)
         self.bind('<[>', self.autoBracket)
         self.bind('<{>', self.autoBrace)
+        self.bind('<">', self.doubleQuote)
         self.bind('<Button-3>', self.rightClickMenuClick)
         self.bind('<F1>', self.showHelp)
         self.bind('<Control-;>', self.showSnippets)
@@ -450,6 +451,12 @@ class App(ctk.CTk):
             self.intelliSenseBox.place_forget()
             editor.focus_force()
             self.updateSyntax()
+
+    def doubleQuote(self, e=None) -> None:
+        editor = self.currentTab
+        if editor:
+            editor.insert('insert', '"')
+            editor.mark_set('insert', 'insert -1c')
 
     def autoParenthesis(self, e=None) -> None:
         editor = self.currentTab

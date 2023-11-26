@@ -4,12 +4,9 @@
 
 var obj = {
 	a:1,
-	b: fn a(str){
-		out(str)
-	}
+	b:2
 }
 
+obj.a = fn name(){<- "hi"}
 
-
-obj.b("hello")
-
+out(obj)
