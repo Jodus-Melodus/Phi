@@ -1,12 +1,5 @@
 
 
 
+a = 4
 
-var obj = {
-	a:1,
-	b:2
-}
-
-obj.a = fn name(){<- "hi"}
-
-out(obj)
