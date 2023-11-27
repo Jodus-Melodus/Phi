@@ -138,18 +138,13 @@ class App(ctk.CTk):
             editor.tag_remove('similar', '0.0', 'end')
 
     def highlightSelected(self, e=None) -> None:
-        esc = '.^$*+?(<[{\|'
+        esc = '.^$*+?]})(<[{\|'
         editor = self.currentTab
         if editor:
             text = editor.get('0.0', 'end').split('\n')
             if editor.tag_ranges('sel'):
                 w = editor.get(ctk.SEL_FIRST, ctk.SEL_LAST)
-                word = ''
-                for char in w:
-                    if char in esc:
-                        word += f'\{char}'
-                    else:
-                        word += char
+                word = re.escape(w)
                 pattern = f'({word})'
                 for ln, line in enumerate(text):
                     matches = [(match.start(), match.end()) for match in re.finditer(pattern, line)]
@@ -181,9 +176,9 @@ class App(ctk.CTk):
                 startLine = int(startPosition.split('.')[0])
                 endLine = int(endPosition.split('.')[0])
                 while startLine != endLine:
-                    curr = editor.get(str(startLine)+'.0', str(startLine)+'.1')
+                    curr = editor.get(str(startLine) + '.0', str(startLine) + '.1')
                     if curr == '\t':
-                        editor.delete(str(startLine) + '.0', str(startLine)+'.1')
+                        editor.delete(str(startLine) + '.0', str(startLine) + '.1')
                     startLine += 1
             else:
                 line = editor.index('insert').split('.')[0]
