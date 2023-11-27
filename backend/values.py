@@ -33,7 +33,7 @@ class stringValue(RuntimeValue):
         self.type = 'stringValue'
         self.value = value
         self.methods = {
-            'length':nativeFunction(lambda arg, scope : bim.stringLength(self))
+            'length':nativeFunction(lambda args, scope : bim.stringLength(self))
         }
 
     def __repr__(self) -> str:
@@ -60,8 +60,9 @@ class arrayValue(RuntimeValue):
         self.type = 'arrayValue'
         self.items = items
         self.methods = {
-            'append':nativeFunction(lambda arg, scope : bim.append(self, arg[0])),
-            'length':nativeFunction(lambda arg, scope : bim.arrayLength(self))
+            'append':nativeFunction(lambda args, scope : bim.append(self, args[0])),
+            'length':nativeFunction(lambda args, scope : bim.arrayLength(self)),
+            'join':nativeFunction(lambda args, scope : bim.arrayJoin(self, args[0]))
         }
 
     def __repr__(self) -> str:

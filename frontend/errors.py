@@ -69,3 +69,14 @@ class keyError(error):
 
     def __repr__(self) -> str:
         return errorArrows(self.column) + f'[{self.stage}] ' + f"Key Error : '{self.key}' is not in '{self.obj}'"
+    
+class typeError(error):
+    def __init__(self, stage, type, column:int=-1, line:int=-1) -> None:
+        super().__init__()
+        self.stage = stage
+        self.type = type
+        self.column = column
+        self.line = line
+
+    def __repr__(self) -> str:
+        return errorArrows(self.column) + f'[{self.stage}] ' + f"Type Error : '{self.type} is invalid.'"

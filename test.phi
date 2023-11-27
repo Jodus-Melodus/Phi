@@ -1,13 +1,7 @@
 
 
+var arr = ["hello", "world"]
 
-a = 4
+var a = arr.join("|")
 
-var obj = {
-	a:1,
-	b:2
-}
-
-obj.a = fn name(){<- "hi"}
-
-out(obj)
+out(a)

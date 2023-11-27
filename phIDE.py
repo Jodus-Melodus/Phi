@@ -107,6 +107,7 @@ class App(ctk.CTk):
         self.bind('<Control-BackSpace>', self.SCBackspaceWord)
         self.bind('<Control-space>', self.intelliSense)
         self.bind('<Control-/>', self.SCCommentLine)
+        self.bind('<Control-k>', self.SCOpenFolder)
         self.bind('<Control-o>', self.SCOpenFile)
         self.bind('<Control-s>', self.SCSaveFile)
         self.bind('<Control-n>', self.SCNewFile)
@@ -254,6 +255,7 @@ class App(ctk.CTk):
         Ctrl + Space -      Manually open intellisense
         Ctrl + ; -          Show Snippet menu
         Ctrl + / -          Comment current line
+        Ctrl + K -          Open folder
         Ctrl + O -          Open file
         Ctrl + S -          Save current file
         Ctrl + N -          Creates a new file
@@ -542,12 +544,18 @@ class App(ctk.CTk):
         tabName = self.centerTabview.get()
         self.centerTabview.delete(tabName)
 
-    def SCOpenFile(self, e=None) -> None:
+    def SCOpenFolder(self, e=None) -> None:
         dirPath = filedialog.askdirectory(title='Select a folder')
         files = [os.path.join(root, file) for root, dirs, files in os.walk(dirPath) for file in files]
         if files:
             for file in files:
                 self.addTab(file.replace('\\', '/'))
+
+    def SCOpenFile(self, e=None) -> None:
+        filePath = filedialog.askopenfiles(title='Select a file', filetypes=[('Phi File', '*.phi'), ('All Files', '*.*')])
+        if filePath:
+            for file in filePath:
+                self.addTab(file)
 
     def SCBackspaceWord(self, e=None) -> None:
         editor = self.currentTab
