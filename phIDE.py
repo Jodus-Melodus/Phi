@@ -5,6 +5,7 @@ import main, time
 import customtkinter as ctk
 from customtkinter import filedialog
 import os
+import keyboard
 
 class TerminalRedirect:
     def __init__(self, textWidget:ctk.CTkTextbox) -> None:
@@ -138,17 +139,23 @@ class App(ctk.CTk):
 
     def highlightSelected(self, e=None) -> None:
         esc = '.^$*+?(<[{\|'
-        # editor = self.currentTab
-        # if editor:
-        #     text = editor.get('0.0', 'end').split('\n')
-        #     if editor.tag_ranges('sel'):
-        #         w = editor.get(ctk.SEL_FIRST, ctk.SEL_LAST)
-        #         word = rf'({"" if w in esc else ""}{w})'
-        #         for ln, line in enumerate(text):
-        #             matches = [(match.start(), match.end()) for match in re.finditer(word, line)]
-        #             for start, end in matches:
-        #                 editor.tag_add('similar', f'{ln+1}.{start}', f'{ln+1}.{end}')
-        #                 editor.tag_remove('error', f'{ln}.0', f'{ln}.end')
+        editor = self.currentTab
+        if editor:
+            text = editor.get('0.0', 'end').split('\n')
+            if editor.tag_ranges('sel'):
+                w = editor.get(ctk.SEL_FIRST, ctk.SEL_LAST)
+                word = ''
+                for char in w:
+                    if char in esc:
+                        word += f'\{char}'
+                    else:
+                        word += char
+                pattern = f'({word})'
+                for ln, line in enumerate(text):
+                    matches = [(match.start(), match.end()) for match in re.finditer(pattern, line)]
+                    for start, end in matches:
+                        editor.tag_add('similar', f'{ln+1}.{start}', f'{ln+1}.{end}')
+                        editor.tag_remove('error', f'{ln}.0', f'{ln}.end')
 
     def indent(self, e=None) -> None:
         editor = self.currentTab
@@ -193,31 +200,33 @@ class App(ctk.CTk):
             if len(self.snippetMenu._value_list) > 0:
                 editor = self.currentTab
                 if editor:
-                    line, column = editor.index('insert').split('.')
-                    editor.mark_set('insert', f'{int(line) - 1}.end')
-                    editor.delete('insert', f'{line}.{column}')
-
                     snippetName = self.snippetMenu._value_list[0]
-                    currentIndex = editor.index('insert')
-                    wordStart = editor.search(r'\s|^.', currentIndex, backwards=True, regexp=True)
-                    column = editor.index('insert').split('.')[1]
-                    editor.delete(wordStart, currentIndex)
-                    editor.insert('current', self.snippets[snippetName])
-                    editor.mark_set('insert', 'current')
+                    startLine, startColumn = map(int, editor.search(r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
+                    if startColumn == 0:
+                        startLine += 1
+                        startPos = f'{startLine}.{startColumn}'
+                    else:
+                        startPos = f'{startLine}.{startColumn + 1}'
+                    editor.delete(startPos, 'insert-1c')
+                    editor.insert(startPos, self.snippets[snippetName] + ' ')
+                    editor.focus_set()
                     self.snippetMenu.place_forget()
-                    self.updateSyntax()
-                    editor.focus_force()
                     self.updateSyntax()
 
     def insertSnippet(self, snippetName:str) -> None:
         editor = self.currentTab
         if editor:
-            currentIndex = editor.index('insert')
-            wordStart = editor.search(r'\s', currentIndex, backwards=True, regexp=True)
-            editor.delete(wordStart, currentIndex)
-            editor.insert('insert', self.snippets[snippetName])
+            snippetName = self.snippetMenu._value_list[0]
+            startLine, startColumn = map(int, editor.search(r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
+            if startColumn == 0:
+                startLine += 1
+                startPos = f'{startLine}.{startColumn}'
+            else:
+                startPos = f'{startLine}.{startColumn + 1}'
+            editor.delete(startPos, 'insert-1c')
+            editor.insert(startPos, self.snippets[snippetName] + ' ')
+            editor.focus_set()
             self.snippetMenu.place_forget()
-            editor.focus_force()
             self.updateSyntax()
 
     def showSnippets(self, e=None) -> None:
@@ -428,32 +437,34 @@ class App(ctk.CTk):
         if self.intelliSenseBox.winfo_ismapped():
             if len(self.intelliSenseBox._value_list) > 0:
                 editor = self.currentTab
-                if editor:
-                    line, column = editor.index('insert').split('.')
-                    editor.mark_set('insert', f'{int(line) - 1}.end')
-                    editor.delete('insert', f'{line}.{column}')
-
-                    word = self.intelliSenseBox._value_list[0]
-                    currentIndex = editor.index('insert')
-                    wordStart = editor.search(r'\s|^.', currentIndex, backwards=True, regexp=True)
-                    column = editor.index('insert').split('.')[1]
-                    editor.delete(wordStart, currentIndex)
-                    editor.insert('current', word)
-                    editor.mark_set('insert', 'current')
+                if editor:           
+                    keyboard.press("Backspace")
+                    selectedWord = self.intelliSenseBox._value_list[0]
+                    startLine, startColumn = map(int, editor.search(r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
+                    if startColumn == 0:
+                        startLine += 1
+                        startPos = f'{startLine}.{startColumn}'
+                    else:
+                        startPos = f'{startLine}.{startColumn + 1}'
+                    editor.delete(startPos, 'insert-1c')
+                    editor.insert(startPos, selectedWord + ' ')
+                    editor.focus_set()
                     self.intelliSenseBox.place_forget()
-                    self.updateSyntax()
-                    editor.focus_force()
                     self.updateSyntax()
 
     def insertIntelliSense(self, selected) -> None:
         editor = self.currentTab
         if editor:
-            currentIndex = editor.index('insert')
-            wordStart = editor.search(r'\s', currentIndex, backwards=True, regexp=True)
-            editor.delete(wordStart, currentIndex)
-            editor.insert('insert', selected)
+            startLine, startColumn = map(int, editor.search(r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
+            if startColumn == 0:
+                startLine += 1
+                startPos = f'{startLine}.{startColumn}'
+            else:
+                startPos = f'{startLine}.{startColumn + 1}'
+            editor.delete(startPos, 'insert-1c')
+            editor.insert(startPos, selected + ' ')
+            editor.focus_set()
             self.intelliSenseBox.place_forget()
-            editor.focus_force()
             self.updateSyntax()
 
     def doubleQuote(self, e=None) -> None:
@@ -552,7 +563,7 @@ class App(ctk.CTk):
                 self.addTab(file.replace('\\', '/'))
 
     def SCOpenFile(self, e=None) -> None:
-        filePath = filedialog.askopenfiles(title='Select a file', filetypes=[('Phi File', '*.phi'), ('All Files', '*.*')])
+        filePath = filedialog.askopenfilenames(title='Select a file', filetypes=[('Phi File', '*.phi'), ('All Files', '*.*')])
         if filePath:
             for file in filePath:
                 self.addTab(file)
