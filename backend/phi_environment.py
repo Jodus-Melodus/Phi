@@ -2,6 +2,7 @@ from frontend.errors import *
 from backend.values import *
 import backend.builtInFunctions as bif
 import sys
+from frontend.astNodes import *
 
 class environment:
     def __init__(self, parent=None) -> None:
@@ -39,14 +40,15 @@ class environment:
 
         return varValue
 
-    def lookup(self, varName: str) -> None:
+    def lookup(self, var:identifierNode) -> None:
+        varName = var.symbol
         env = self.resolve(varName)
         if varName in self.constants:
             return env.constants[varName]
         elif varName in self.variables:
             return env.variables[varName]
         else:
-            return nameError(self, varName, 0, 0)
+            return nameError(self, varName, var.column, var.line)
 
     def resolve(self, varName: str) -> None:
         if varName in self.variables:

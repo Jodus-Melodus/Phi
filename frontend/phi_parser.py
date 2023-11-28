@@ -47,6 +47,8 @@ class Parser:
 
     def parseStatement(self) -> None:
         match self.get().type:
+            case TT.lineend:
+                self.eat()
             case TT.var:
                 return self.parseVariableDeclaration()
             case TT.const:

@@ -134,7 +134,7 @@ class Interpreter:
 # --------------------------------------------------------------------------------------------------------------------------------
 
     def evaluateIdentifierExpression(self, identifier: identifierNode, env: environment) -> None:
-        return env.lookup(identifier.symbol)
+        return env.lookup(identifier)
 
     def evaluateAssignmentExpression(self, assignmentExpression: assignmentExpressionNode, env: environment) -> None:
         if isinstance(assignmentExpression.assigne, identifierNode):

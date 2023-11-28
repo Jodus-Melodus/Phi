@@ -34,7 +34,7 @@ class nameError(error):
         self.line = line
 
     def __repr__(self) -> str:
-        return errorArrows(self.column) + f'[{self.stage}] ' + f"Name Error : '{self.name}' is undefined."
+        return errorArrows(self.column) + f'[{self.stage}] ' + f"Name Error : '{self.name}' on line {self.line} in column {self.column} is undefined."
 
 class invalidCharacterError(error):
     def __init__(self, stage, character:str, column:int, line:int) -> None:
