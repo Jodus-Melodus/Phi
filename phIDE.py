@@ -28,7 +28,6 @@ class TerminalRedirect:
 class App(ctk.CTk):
     def __init__(self) -> None:
         super().__init__()
-        ctk.set_default_color_theme('phi-theme.json')
         self.title('phIDE')
         self.state('zoomed')
         self.textBoxFont = ctk.CTkFont(family='Courier New', size=16, weight='bold')
