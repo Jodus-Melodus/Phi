@@ -169,10 +169,10 @@ class Lexer:
                     self.eat()
                     if self.get() == '-':
                         self.eat()
-                        tokens.append(Token(TT._return, char, self.index, self.column, self.line))
+                        tokens.append(Token(TT._return, char + '-', self.index, self.column, self.line))
                     elif self.get() == '=':
                         self.eat()
-                        tokens.append(Token(TT.lessThanEqual, char+'=', self.index, self.column, self.line))
+                        tokens.append(Token(TT.lessThanEqual, char + '=', self.index, self.column, self.line))
                     else:
                         tokens.append(Token(TT.lessThan, char, self.index, self.column, self.line))
                 case '>':

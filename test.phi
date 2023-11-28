@@ -1,7 +1,0 @@
-
-
-var arr = ["hello", "world"]
-
-var a = arr.join("|")
-
-out(a)
