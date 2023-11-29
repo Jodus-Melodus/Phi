@@ -252,7 +252,11 @@ class Interpreter:
                 if member.property.symbol in obj.methods:
                     return obj.methods[member.property.symbol]
                 else:
-                    return syntaxError(self, f"'{member.property.symbol}' is not a valid method.")
+                    value = self.evaluate(member.property, env).value
+                    if value in obj.items:
+                        return obj.items[value]
+                    else:
+                        return syntaxError(self, f"'{member.property.symbol}' is not a valid method or property.")
             else:
                 return syntaxError(self, f"'{member.property.symbol}' is not valid.")
         else:

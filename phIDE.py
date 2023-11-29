@@ -153,7 +153,6 @@ class App(ctk.CTk):
             editor.tag_remove('similar', '0.0', 'end')
 
     def highlightSelected(self, e=None) -> None:
-        esc = '.^$*+?]})(<[{\|'
         editor = self.currentTab
         if editor:
             text = editor.get('0.0', 'end').split('\n')
@@ -380,12 +379,12 @@ class App(ctk.CTk):
     def undo(self, e=None) -> None:
         editor = self.currentTab
         if editor:
-            editor.event_generate('<<Undo>>')
+            editor.edit_undo()
     
     def redo(self, e=None) -> None:
         editor = self.currentTab
         if editor:
-            editor.event_generate('<<Redo>>')
+            editor.edit_redo()
 
     def findAndReplace(self) -> None:
         find = self.find.get()

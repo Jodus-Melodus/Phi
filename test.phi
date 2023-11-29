@@ -1,11 +1,10 @@
 
-var a = 5
-
-do {
-	out("hello world")
-	a -= 1
-} while (a >= 0) 
+var arr = [2, 1, 89]
 
 
+var a = 0
 
+arr.append(5)
+
+out(arr[a])
 
