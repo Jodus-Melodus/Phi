@@ -80,3 +80,13 @@ class typeError(error):
 
     def __repr__(self) -> str:
         return errorArrows(self.column) + f'[{self.stage}] ' + f"Type Error : '{self.type} is invalid.'"
+
+class zeroDivisionError(error):
+    def __init__(self, stage, column:int=-1, line:int=-1) -> None:
+        super().__init__()
+        self.stage = stage
+        self.column = column
+        self.line = line
+
+    def __repr__(self) -> str:
+        return errorArrows(self.column) + f'[{self.stage}] ' + f"Zero Division Error."

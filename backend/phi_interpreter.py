@@ -121,13 +121,19 @@ class Interpreter:
             case '*':
                 return numberValue(left.value * right.value)
             case '/':
-                return numberValue(left.value / right.value)
+                if right.value != 0:
+                    return numberValue(left.value / right.value)
+                else:
+                    return zeroDivisionError(self)
             case '^':
                 return numberValue(left.value ** right.value)
             case '%':
                 return numberValue(left.value % right.value)
             case '//':
-                return numberValue(left.value // right.value)
+                if right.value != 0:
+                    return numberValue(left.value // right.value)
+                else:
+                    return zeroDivisionError(self)
             case _:
                 return syntaxError(self, "Cannot preform this operation on numbers")
 
