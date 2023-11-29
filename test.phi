@@ -1,14 +1,11 @@
 
 var a = 5
 
-var s = "Hello ~ world ~"
+do {
+	out("hello world")
+	a -= 1
+} while (a >= 0) 
 
 
-
-var k = s.format(a, "hello")
-
-
-
-out(k)
 
 

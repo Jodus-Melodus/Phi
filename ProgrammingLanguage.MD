@@ -42,6 +42,7 @@ The following operators are supported in Phi:
 - `[...]` Array literal
 - `{...}` Object literal
 - `"..."` String literals
+- `~` String format character
 - `<-` Return operator
 # Datatypes
 ## Built-in Constants
@@ -83,6 +84,14 @@ Result:
 ```
 11
 ```
+- ### Format:
+```
+var result = "Hello ~ world ~".format("there", 500)
+```
+Result:
+```
+"Hello there world 500"
+```
 - ### Concatenation:
 ```
 var x = "hello"
@@ -120,6 +129,15 @@ arr += 9.12
 Result:
 ```
 [1, 2, "hello", 9.12]
+```
+- ### Join:
+```
+var arr = [1, 2, "hello"]
+var result = arr.join(", ")
+```
+Result:
+```
+"1, 2, hello"
 ```
 - ### Indexing:
 ```

@@ -476,14 +476,14 @@ class Parser:
                 if isinstance(prop, error):
                     return prop
                 if prop.kind != ('identifier'):
-                    return syntaxError(self, "invalid syntax", self.column, self.line)
+                    return syntaxError(self, "Invalid syntax", self.column, self.line)
             else:
                 computed = True
                 prop = self.parseExpression()
                 if isinstance(prop, error):
                     return prop
                 if self.get().type != TT.closeBracket:
-                    return syntaxError(self, "Expected ']'", self.column, self.line)
+                    return syntaxError(self, "Expected a ']'", self.column, self.line)
                 else:
                     self.eat()
 
@@ -492,18 +492,20 @@ class Parser:
 
     def parsePrimaryExpression(self) -> None:
         match self.get().type:
-            case TT.int | TT.real:
+            case TT.int:
+                return numericLiteralNode(int(self.eat().value), self.column, self.line)
+            case TT.real:
                 return numericLiteralNode(float(self.eat().value), self.column, self.line)
             case TT.string:
                 return stringLiteralNode(self.eat().value, self.column, self.line)
             case TT.identifier:
                 return identifierNode(str(self.eat().value), self.column, self.line)
             case TT.openParenthesis:
-                self.eat()  # open paren
+                self.eat()
                 value = self.parseExpression()
                 if isinstance(value, error):
                     return value
-                self.eat()  # close paren
+                self.eat()
                 return value
             case TT.lineend:
                 self.eat()

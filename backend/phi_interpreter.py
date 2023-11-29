@@ -20,7 +20,7 @@ class Interpreter:
                 else:
                     res = booleanValue('F')
             elif isinstance(left, booleanValue):
-                res = booleanValue(left.value)
+                res = True if left.value == 'T' else False
             elif isinstance(left, stringValue):
                 res = left.value != ''
         else:
@@ -148,7 +148,7 @@ class Interpreter:
             return env.assignVariable(varName, self.evaluate(assignmentExpression.value, env))
         elif isinstance(assignmentExpression.assigne, memberExpressionNode):
             member: memberExpressionNode = assignmentExpression.assigne
-            varName = member.object.symbol
+            varName = member.object
             prop = member.property.symbol
             currentValue: dict = env.lookup(varName)
             currentValue.properties[prop] = self.evaluate(
@@ -359,7 +359,7 @@ class Interpreter:
         return self.evaluate(returnExpression.value, env)
 
     def evaluateAssignmentBinaryExpression(self, expr: assignmentBinaryExpressionNode, env: environment) -> None:
-        currentValue = env.lookup(expr.assigne.symbol)
+        currentValue = env.lookup(expr.assigne)
         newValue = self.evaluateBinaryExpression(binaryExpressionNode(
             numericLiteralNode(currentValue.value, 0, 0), expr.operand[0], expr.value), env)
         return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, numericLiteralNode(newValue.value, 0, 0)), env)
