@@ -24,3 +24,15 @@ def arrayJoin(array:arrayValue, character:stringValue) -> stringValue:
 
 def stringLength(string:stringValue) -> numberValue:
     return len(string.value)
+
+def stringFormat(args, string:stringValue) -> stringValue:
+    output = ''
+    s:str = string.value
+    i = 0
+    for j in s:
+        if j == '~':
+            output += str(args[i].value)
+            i += 1
+        else:
+            output += j
+    return stringValue(output)

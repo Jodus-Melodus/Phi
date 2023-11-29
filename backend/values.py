@@ -33,7 +33,8 @@ class stringValue(RuntimeValue):
         self.type = 'stringValue'
         self.value = value
         self.methods = {
-            'length':nativeFunction(lambda args, scope : bim.stringLength(self))
+            'length':nativeFunction(lambda args, scope : bim.stringLength(self)),
+            'format':nativeFunction(lambda args, scope : bim.stringFormat(args, self))
         }
 
     def __repr__(self) -> str:

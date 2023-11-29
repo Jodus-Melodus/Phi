@@ -231,7 +231,7 @@ class Interpreter:
             return syntaxError(self, f"'{fn}' isn't a function")
 
     def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
-        obj:objectValue = env.lookup(member.object.symbol)
+        obj:objectValue = env.lookup(member.object)
 
         if isinstance(obj, objectValue):
             if isinstance(member.property, identifierNode):
