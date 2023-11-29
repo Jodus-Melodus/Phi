@@ -128,8 +128,24 @@ class App(ctk.CTk):
         self.bind('<Control-]>', self.indent)
         self.bind('<ButtonRelease-1>', self.highlightSelected)
         self.bind('<Button-1>', self.mouseClickUpdate)
+        self.bind('<Control-Tab>', self.nextTab)
+        self.bind('<Control-Shift-Tab>', self.prevTab)
 
         self.mainloop()
+
+    def prevTab(self, e=None) -> None:
+        tabs = list(self.centerTabview._tab_dict.keys())
+        newTabIndex = self.centerTabview.index(self.centerTabview.get()) - 1
+        if newTabIndex >= 0:
+            newTabName = tabs[newTabIndex]
+            self.centerTabview.set(newTabName)
+
+    def nextTab(self, e=None) -> None:
+        tabs = list(self.centerTabview._tab_dict.keys())
+        newTabIndex = self.centerTabview.index(self.centerTabview.get()) + 1
+        if newTabIndex < len(tabs):
+            newTabName = tabs[newTabIndex]
+            self.centerTabview.set(newTabName)
 
     def mouseClickUpdate(self, e=None) -> None:
         editor = self.currentTab
@@ -251,25 +267,28 @@ class App(ctk.CTk):
         helpWindow.title('phIDE - Help')
         helpText = ctk.CTkTextbox(helpWindow, font=self.textBoxFont)
         helpText.pack(expand=True, fill='both')
-        text = """        F1 -                Show this menu
-        F5 -                Run current file
-        Enter -             Select first intellisense word
-        Ctrl + Backspace -  Deletes entire word
-        Ctrl + Space -      Manually open intellisense
-        Ctrl + ; -          Show Snippet menu
-        Ctrl + / -          Comment current line
-        Ctrl + K -          Open folder
-        Ctrl + O -          Open file
-        Ctrl + S -          Save current file
-        Ctrl + N -          Creates a new file
-        Ctrl + F4 -         Close current tab
-        Ctrl + C -          Copy selected text
-        Ctrl + V -          Paste last copied word
-        Ctrl + Z -          Undo action
-        Ctrl + Shift + Z -  Redo action
-        Ctrl + H -          Open and closes find and replace panel
-        Ctrl + [ -          Dedent line or selected text
-        Ctrl + ] -          Indent line or selected text"""
+        text = """        F1 -                    Show this menu
+        F5 -                    Run current file
+        Enter -                 Select first intellisense word
+        Ctrl + Backspace -      Deletes entire word
+        Ctrl + Space -          Manually open intellisense
+        Ctrl + ; -              Show Snippet menu
+        Ctrl + / -              Comment current line
+        Ctrl + K -              Open folder
+        Ctrl + O -              Open file
+        Ctrl + S -              Save current file
+        Ctrl + N -              Creates a new file
+        Ctrl + F4 -             Close current tab
+        Ctrl + C -              Copy selected text
+        Ctrl + V -              Paste last copied word
+        Ctrl + Z -              Undo action
+        Ctrl + Shift + Z -      Redo action
+        Ctrl + H -              Open and closes find and replace panel
+        Ctrl + [ -              Dedent line or selected text
+        Ctrl + ] -              Indent line or selected text
+        Ctrl + Tab -            Next tab
+        Ctrl + Shift + Tab -    Previous Tab
+        """
         helpText.insert('0.0', text)
         helpText.configure(wrap='none', state='disabled')
 
@@ -623,4 +642,3 @@ class App(ctk.CTk):
 
 if __name__ == '__main__':
     app = App()
-
