@@ -52,7 +52,7 @@ class Dropdown:
     def place(self, x, y) -> None:
         self.update()
         for i, item in enumerate(self.items):
-            btn = ctk.CTkButton(self.frame, text=item, command=lambda:self.command(str(item)), font=self.itemFont, height=14, anchor='w', fg_color='#262626' if self.currentSelectedIndex == i else'#333333', hover_color='#262626')
+            btn = ctk.CTkButton(self.frame, text=item, command=lambda item=item: self.command(str(item)), font=self.itemFont, height=14, anchor='w', fg_color='#262626' if self.currentSelectedIndex == i else'#333333', hover_color='#262626')
             btn.pack(fill='both', expand=True, padx=self.itempadx, pady=self.itempady)
         self.frame.place(x=x, y=y)
         self.ismapped = True
@@ -269,7 +269,7 @@ class App(ctk.CTk):
     def insertSnippet(self, snippetName:str) -> None:
         editor = self.currentTab
         if editor:
-            snippetName = self.snippetMenu.items[self.snippetMenu.currentSelectedIndex]
+            snippet = self.snippetMenu.items[snippetName]
             startLine, startColumn = map(int, editor.search(r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
             if startColumn == 0:
                 startLine += 1
@@ -277,7 +277,7 @@ class App(ctk.CTk):
             else:
                 startPos = f'{startLine}.{startColumn + 1}'
             editor.delete(startPos, 'insert')
-            editor.insert(startPos, self.snippets[snippetName] + ' ')
+            editor.insert(startPos, snippet + ' ')
             editor.focus_set()
             self.snippetMenu.place_forget()
             self.updateSyntax()
@@ -567,6 +567,9 @@ class App(ctk.CTk):
     def insertIntelliSense(self, selected) -> None:
         editor = self.currentTab
         if editor:
+
+            print(self.intelliSenseBox.test)
+
             startLine, startColumn = map(int, editor.search(r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
             if startColumn == 0:
                 startLine += 1
