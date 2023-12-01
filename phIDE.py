@@ -25,6 +25,44 @@ class TerminalRedirect:
         self.widget.delete("input_start", "input_end")
         return line
 
+class Dropdown:
+    def __init__(self, master, width:int, height:int, items:list, command, itempadx:int, itempady:int, bg_color:str):
+        self.master = master
+        self.width = width
+        self.height = height
+        self.items = items
+        self.command = command
+        self.itempadx = itempadx
+        self.itempady = itempady
+        self.itemFont = ctk.CTkFont(family='Fira Code', size=12, weight='normal')
+        self.bg_color = bg_color
+
+        self.ismapped = False
+        self.currentSelectedIndex = 0
+
+        self.frame = ctk.CTkFrame(self.master, width=self.width, height=self.height, bg_color=self.bg_color)
+
+    def winfo_ismapped(self) -> bool:
+        return self.ismapped
+    
+    def update(self) -> None:
+        for child in self.frame.winfo_children():
+            child.destroy()
+
+    def place(self, x, y) -> None:
+        self.update()
+        for i, item in enumerate(self.items):
+            btn = ctk.CTkButton(self.frame, text=item, command=lambda:self.command(str(item)), font=self.itemFont, height=14, anchor='w', fg_color='#262626' if self.currentSelectedIndex == i else'#333333', hover_color='#262626')
+            btn.pack(fill='both', expand=True, padx=self.itempadx, pady=self.itempady)
+        self.frame.place(x=x, y=y)
+        self.ismapped = True
+
+    def place_forget(self) -> None:
+        self.update()
+        self.frame.place_forget()
+        self.ismapped = False
+
+
 class App(ctk.CTk):
     def __init__(self) -> None:
         super().__init__()
@@ -130,8 +168,13 @@ class App(ctk.CTk):
         self.bind('<Button-1>', self.mouseClickUpdate)
         self.bind('<Control-Tab>', self.nextTab)
         self.bind('<Control-Shift-Tab>', self.prevTab)
+        self.bind('<Escape>', self.escape)
 
         self.mainloop()
+
+    def escape(self, e=None) -> None:
+        self.intelliSenseBox.place_forget()
+        self.snippetMenu.place_forget()
 
     def prevTab(self, e=None) -> None:
         tabs = list(self.centerTabview._tab_dict.keys())
@@ -206,17 +249,17 @@ class App(ctk.CTk):
 
     def enterSnippets(self) -> None:
         if self.snippetMenu.winfo_ismapped():
-            if len(self.snippetMenu._value_list) > 0:
+            if len(self.snippetMenu.items) > 0:
                 editor = self.currentTab
                 if editor:
-                    snippetName = self.snippetMenu._value_list[0]
+                    snippetName = self.snippetMenu.items[self.snippetMenu.currentSelectedIndex]
                     startLine, startColumn = map(int, editor.search(r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
                     if startColumn == 0:
                         startLine += 1
                         startPos = f'{startLine}.{startColumn}'
                     else:
                         startPos = f'{startLine}.{startColumn + 1}'
-                    editor.delete(startPos, 'insert-1c')
+                    editor.delete(startPos, 'insert')
                     editor.insert(startPos, self.snippets[snippetName] + ' ')
                     editor.focus_set()
                     self.snippetMenu.place_forget()
@@ -225,14 +268,14 @@ class App(ctk.CTk):
     def insertSnippet(self, snippetName:str) -> None:
         editor = self.currentTab
         if editor:
-            snippetName = self.snippetMenu._value_list[0]
+            snippetName = self.snippetMenu.items[self.snippetMenu.currentSelectedIndex]
             startLine, startColumn = map(int, editor.search(r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
             if startColumn == 0:
                 startLine += 1
                 startPos = f'{startLine}.{startColumn}'
             else:
                 startPos = f'{startLine}.{startColumn + 1}'
-            editor.delete(startPos, 'insert-1c')
+            editor.delete(startPos, 'insert')
             editor.insert(startPos, self.snippets[snippetName] + ' ')
             editor.focus_set()
             self.snippetMenu.place_forget()
@@ -244,8 +287,8 @@ class App(ctk.CTk):
             self.snippetMenu.place_forget()
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
-            wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\})', currentIndex, backwards=True, regexp=True)
-            word = editor.get(wordStart, currentIndex).strip(' \n')
+            wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+            word = editor.get(wordStart, currentIndex).strip(' \n\t\r')
             if word:
                 words = []
                 for w in self.snippets:
@@ -254,8 +297,13 @@ class App(ctk.CTk):
                 if len(words) > 0:
                     if self.intelliSenseBox.winfo_ismapped():
                         self.intelliSenseBox.place_forget()
+                    self.snippetMenu.items = words
                     self.snippetMenu.place(x=x, y=y+30)
-                    self.snippetMenu.configure(values=words)
+            else:
+                if self.intelliSenseBox.winfo_ismapped():
+                    self.intelliSenseBox.place_forget()
+                self.snippetMenu.items = self.snippets
+                self.snippetMenu.place(x=x, y=y+30)
 
     def loadSnippets(self) -> None:
         with open(f'snippets/{self.currentLanguage[1:]}.json') as f:
@@ -287,6 +335,7 @@ class App(ctk.CTk):
         Ctrl + ] -              Indent line or selected text
         Ctrl + Tab -            Next tab
         Ctrl + Shift + Tab -    Previous Tab
+        Esc -                   Hide intelliSense
         """
         helpText.insert('0.0', text)
         helpText.configure(wrap='none', state='disabled')
@@ -422,9 +471,54 @@ class App(ctk.CTk):
             self.line, self.column = editor.index('insert').split('.')
             self.statusbar.configure(text=f'Ln {self.line}, Col {self.column}')
         self.updateSyntax()
-        self.intelliSense()
 
+        if hasattr(self, 'intelliSenseBox'):
+            if self.intelliSenseBox.winfo_ismapped():
+                self.intelliSense
+        if hasattr(self, 'snippetMenu'):
+            if self.snippetMenu.winfo_ismapped():
+                self.showSnippets
 
+    def intelliSenseTab(self, e=None) -> None:
+        if self.intelliSenseBox.winfo_ismapped():
+            keyboard.press('Backspace')
+            self.intelliSenseBox.currentSelectedIndex += 1
+            if self.intelliSenseBox.currentSelectedIndex >= len(self.intelliSenseBox.items):
+                self.intelliSenseBox.currentSelectedIndex = 0
+            self.intelliSense()
+        elif self.snippetMenu.winfo_ismapped():
+            keyboard.press('Backspace')
+            self.snippetMenu.currentSelectedIndex += 1
+            if self.snippetMenu.currentSelectedIndex >= len(self.snippetMenu.items):
+                self.snippetMenu.currentSelectedIndex = 0
+            self.showSnippets()
+
+    def intelliSenseUp(self, e=None) -> None:
+        if self.intelliSenseBox.winfo_ismapped():
+            keyboard.press('Up')
+            self.intelliSenseBox.currentSelectedIndex -= 1
+            if self.intelliSenseBox.currentSelectedIndex < 0:
+                self.intelliSenseBox.currentSelectedIndex = len(self.intelliSenseBox.items) - 1
+            self.intelliSense()
+        elif self.snippetMenu.winfo_ismapped():
+            keyboard.press('Up')
+            self.snippetMenu.currentSelectedIndex -= 1
+            if self.snippetMenu.currentSelectedIndex < 0:
+                self.snippetMenu.currentSelectedIndex = len(self.snippetMenu.items) - 1
+            self.showSnippets()
+
+    def intelliSenseDown(self, e=None) -> None:
+        if self.intelliSenseBox.winfo_ismapped():
+            self.intelliSenseBox.currentSelectedIndex += 1
+            if self.intelliSenseBox.currentSelectedIndex >= len(self.intelliSenseBox.items):
+                self.intelliSenseBox.currentSelectedIndex = 0
+            self.intelliSense()
+        elif self.snippetMenu.winfo_ismapped():
+            self.snippetMenu.currentSelectedIndex += 1
+            if self.snippetMenu.currentSelectedIndex >= len(self.snippetMenu.items):
+                self.snippetMenu.currentSelectedIndex = 0
+            self.showSnippets()
+            
     def intelliSense(self, e=None) -> None:
         editor = self.currentTab
         if editor:
@@ -432,8 +526,8 @@ class App(ctk.CTk):
             intelliSenseWords = self.languageSyntaxPatterns[self.currentLanguage]['keywords'][2]
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
-            wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\})', currentIndex, backwards=True, regexp=True)
-            word = editor.get(wordStart, currentIndex).strip(' \n')
+            wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+            word = editor.get(wordStart, currentIndex).strip(' \n\t\r')
             if word:
                 words = []
                 for w in intelliSenseWords:
@@ -442,23 +536,28 @@ class App(ctk.CTk):
                 if len(words) > 0:
                     if self.snippetMenu.winfo_ismapped():
                         self.snippetMenu.place_forget()
+                    self.intelliSenseBox.items = words
                     self.intelliSenseBox.place(x=x, y=y+30)
-                    self.intelliSenseBox.configure(values=words)
-            
+            else:
+                if self.snippetMenu.winfo_ismapped():
+                    self.snippetMenu.place_forget()
+                self.intelliSenseBox.items = intelliSenseWords
+                self.intelliSenseBox.place(x=x, y=y+30)
+
     def enterInsertIntelliSense(self, e=None) -> None:
         if self.intelliSenseBox.winfo_ismapped():
-            if len(self.intelliSenseBox._value_list) > 0:
+            if len(self.intelliSenseBox.items) > 0:
                 editor = self.currentTab
                 if editor:           
-                    keyboard.press("Backspace")
-                    selectedWord = self.intelliSenseBox._value_list[0]
+                    keyboard.press('Backspace')
+                    selectedWord = self.intelliSenseBox.items[self.intelliSenseBox.currentSelectedIndex]
                     startLine, startColumn = map(int, editor.search(r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
                     if startColumn == 0:
                         startLine += 1
                         startPos = f'{startLine}.{startColumn}'
                     else:
                         startPos = f'{startLine}.{startColumn + 1}'
-                    editor.delete(startPos, 'insert-1c')
+                    editor.delete(startPos, 'insert')
                     editor.insert(startPos, selectedWord + ' ')
                     editor.focus_set()
                     self.intelliSenseBox.place_forget()
@@ -473,7 +572,7 @@ class App(ctk.CTk):
                 startPos = f'{startLine}.{startColumn}'
             else:
                 startPos = f'{startLine}.{startColumn + 1}'
-            editor.delete(startPos, 'insert-1c')
+            editor.delete(startPos, 'insert')
             editor.insert(startPos, selected + ' ')
             editor.focus_set()
             self.intelliSenseBox.place_forget()
@@ -549,8 +648,11 @@ class App(ctk.CTk):
 
             editor.configure(wrap='none')
             editor.pack(expand=True, fill='both')
-            self.intelliSenseBox = ctk.CTkSegmentedButton(editor, command=self.insertIntelliSense, width=100, bg_color='#9908aa')
-            self.snippetMenu = ctk.CTkSegmentedButton(editor, command=self.insertSnippet, width=20, bg_color='#3366ff')
+            self.intelliSenseBox = Dropdown(editor, 300, 100, [], self.insertIntelliSense, 2, 2, '#ff00ff')
+            self.snippetMenu = Dropdown(editor, 300, 100, [], lambda:self.insertSnippet, 2, 2, '#3366ff')
+            editor.bind('<Tab>', self.intelliSenseTab)
+            editor.bind('<Up>', self.intelliSenseUp)
+            editor.bind('<Down>', self.intelliSenseDown)
 
             self.openEditors[tabName] = editor
             self.tabNamesPaths[tabName] = path
