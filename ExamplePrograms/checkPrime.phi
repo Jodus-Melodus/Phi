@@ -20,3 +20,4 @@ fn isPrime(number) {
 
 out(isPrime(97))
 
+

@@ -114,6 +114,7 @@ class App(ctk.CTk):
         self.code = ''
         self.centerx = self.width // 2
         self.centery = self.height // 2
+        self.cursors = []
 
         self.loadLanguageSyntax()
         # Frames
@@ -208,13 +209,14 @@ class App(ctk.CTk):
         self.bind('<Control-z>', self.undo)
         self.bind('<Control-h>', self.toggleFindAndReplaceMenu)
         self.bind('<Control-g>', self.toggleGoToMenu)
-        self.bind('<Control-Button-1>', print('hi'))
 # Triple Character Sequence
         self.bind('<Control-Shift-z>', self.redo)
         self.bind('<Control-Shift-Tab>', self.prevTab)
 # Mouse Click
         self.bind('<Button-1>', self.mouseClickUpdate)
         self.bind('<ButtonRelease-1>', self.highlightSelected)
+        self.bind('<Button-2>', self.multiCursor)
+        self.bind('<Control-Button-1>', self.multiCursor)
         self.bind('<Button-3>', self.rightClickMenuClick)
 
         self.mainloop()
@@ -246,6 +248,8 @@ class App(ctk.CTk):
         Ctrl + ] -              Indent line or selected text
         Ctrl + Tab -            Next tab
         Ctrl + Shift + Tab -    Previous Tab
+        Ctrl + Left Click -     Add/remove cursor
+        Middle Click -          Add/remove cursor
         Esc -                   Hide intelliSense
         """
         helpText.insert('0.0', text)
@@ -279,6 +283,7 @@ class App(ctk.CTk):
                 editor.tag_config(tag, foreground=self.languageSyntaxPatterns[self.currentLanguage][tag][0])
             editor.tag_config('error', background='#990000')
             editor.tag_config('similar', background='#595959')
+            editor.tag_config('cursor', background='#444444')
 
             editor.pack(expand=True, fill='both')
 
@@ -305,12 +310,58 @@ class App(ctk.CTk):
             Dialog(self, 'Error', 'Cannot open two files with the same name.', self.centerx, self.centery)
 
 # Updates
+    def incrementIndex(self, cursor:str) -> str:
+        line, char = cursor.split('.')
+        
+        return f'{line}.{str(int(char) + 1)}'
+    
+    def decrementIndex(self, cursor:str) -> str:
+        line, char = cursor.split('.')
+
+        if char == '0':
+            return str(int(line) - 1) + '.lineend'
+        
+        return f'{line}.{str(int(char) - 1)}'
+    
+    def updateMultiCursors(self, e) -> None:
+        editor = self.currentTab
+        if editor:
+
+            editor.tag_remove('cursor', '0.0', 'end')
+
+            for cursor in self.cursors:
+                editor.tag_add('cursor', cursor, cursor + '+1c')
+
+            new = []
+            for index in self.cursors:
+                if index != editor.index('insert'):
+                    key = e.keysym.lower()
+                    if key not in ['control_l', 'control_r', 'shift_L', 'shift_r', 'alt_L', 'alt_r']:
+                        if key == 'left':
+                            new.append(self.decrementIndex(index))
+                        elif key == 'right':
+                            new.append(self.incrementIndex(index))
+                        elif key == 'backspace':
+                            editor.delete(index + '-1c', index)
+                            new.append(self.decrementIndex(index))
+                        elif key == 'space':
+                            editor.insert(index, ' ')
+                            new.append(self.incrementIndex(index))
+                        else:
+                            editor.insert(index, key)
+                            new.append(self.incrementIndex(index))
+
+            self.cursors = new
+            print(self.cursors)
+
     def keyPressUpdate(self, e=None) -> None:
         self.currentLanguage = self.currentLanguageCombo.get()
         editor = self.currentTab
         if editor:
             self.line, self.column = editor.index('insert').split('.')
             self.statusbar.configure(text=f'Ln {self.line}, Col {self.column}')
+
+        self.updateMultiCursors(e)
         self.updateSyntax()
 
         if hasattr(self, 'intelliSenseBox'):
@@ -326,6 +377,7 @@ class App(ctk.CTk):
             if currentCode != self.code:
                 name = self.centerTabview.get()
                 self.title(name if self.saved else name + '*')
+
     def editorPress(self, e=None) -> None:
         self.saved = False
 
@@ -666,6 +718,15 @@ class App(ctk.CTk):
             editor.insert('0.0', ''.join(new))
 
 # Shortcuts
+    def multiCursor(self, e=None) -> None:
+        editor = self.currentTab
+        if editor:
+            index = editor.index('current')
+            if index in self.cursors:
+                self.cursors.remove(index)
+            else:
+                self.cursors.append(editor.index('current'))
+
     def indent(self, e=None) -> None:
         editor = self.currentTab
         if editor:
