@@ -108,7 +108,7 @@ class App(ctk.CTk):
         self.fileMenuPopup = ctk.CTkSegmentedButton(self, values=['New File', 'Open File', 'Save File', 'Close File'], command=self.handleShortCuts, height=20, font=self.buttonFont)
         self.editMenuPopup = ctk.CTkSegmentedButton(self, values=['Undo', 'Redo', 'Copy', 'Paste', 'Replace', 'Comment'], command=self.handleShortCuts, height=20, font=self.buttonFont)
         self.runMenuPopup = ctk.CTkSegmentedButton(self, values=['Run'], command=self.handleShortCuts, height=20, font=self.buttonFont)
-        self.rightClickPopup = ctk.CTkSegmentedButton(self, values=['New File', 'Open File', 'Save File', 'Close File', 'Run', 'Undo', 'Redo', 'Copy', 'Paste', 'Replace', 'Comment'], command=self.handleShortCuts, height=20, font=self.buttonFont)
+        self.rightClickPopup = Dropdown(self, 300, 100, ['New File', 'Open File', 'Save File', 'Close File', 'Run', 'Undo', 'Redo', 'Copy', 'Paste', 'Replace', 'Comment'], self.handleShortCuts, 2, 2, '#ff00ff')
         # Labels
         self.statusbar = ctk.CTkLabel(self, text='', height=20, font=self.buttonFont)
         # Entries
@@ -139,9 +139,7 @@ class App(ctk.CTk):
         self.centerTabview.pack(padx=self.padx, pady=self.pady, expand=True, fill='both')
         self.bottomTabview.pack(padx=self.padx, pady=self.pady, expand=True, fill='both')
         # Bindings
-        self.bind('<F5>', self.SCRun)
         self.bind('<KeyPress>', self.keyPressUpdate)
-        self.bind('<Return>', self.enterCommands)
         self.bind('<Control-BackSpace>', self.SCBackspaceWord)
         self.bind('<Control-space>', self.intelliSense)
         self.bind('<Control-/>', self.SCCommentLine)
@@ -153,22 +151,25 @@ class App(ctk.CTk):
         self.bind('<Control-c>', self.copy)
         self.bind('<Control-v>', self.paste)
         self.bind('<Control-z>', self.undo)
-        self.bind('<Control-Shift-z>', self.redo)
         self.bind('<Control-h>', self.toggleFindAndReplace)
-        self.bind('<(>', self.autoParenthesis)
-        self.bind('<[>', self.autoBracket)
-        self.bind('<{>', self.autoBrace)
-        self.bind('<">', self.doubleQuote)
-        self.bind('<Button-3>', self.rightClickMenuClick)
-        self.bind('<F1>', self.showHelp)
         self.bind('<Control-;>', self.showSnippets)
         self.bind('<Control-[>', self.dedent)
         self.bind('<Control-]>', self.indent)
-        self.bind('<ButtonRelease-1>', self.highlightSelected)
-        self.bind('<Button-1>', self.mouseClickUpdate)
         self.bind('<Control-Tab>', self.nextTab)
+        self.bind('<Control-Shift-z>', self.redo)
         self.bind('<Control-Shift-Tab>', self.prevTab)
+        self.bind('<F1>', self.showHelp)
+        self.bind('<F5>', self.SCRun)
+        self.bind('<Return>', self.enterCommands)
         self.bind('<Escape>', self.escape)
+        self.bind('<(>', self.autoParenthesis)
+        self.bind('<[>', self.autoBracket)
+        self.bind('<{>', self.autoBrace)
+        self.bind('<">', self.autoDoubleQuote)
+        self.bind("<'>", self.autoApostrophe)
+        self.bind('<Button-1>', self.mouseClickUpdate)
+        self.bind('<ButtonRelease-1>', self.highlightSelected)
+        self.bind('<Button-3>', self.rightClickMenuClick)
 
         self.mainloop()
 
@@ -345,7 +346,7 @@ class App(ctk.CTk):
             self.languageSyntaxPatterns = json.load(f)
 
     def rightClickMenuClick(self, e=None) -> None:
-        self.rightClickPopup.set('')
+        # self.rightClickPopup.set('')
         if self.rightMenuOpen:
             self.rightClickPopup.place_forget()
             self.rightMenuOpen = False
@@ -578,7 +579,13 @@ class App(ctk.CTk):
             self.intelliSenseBox.place_forget()
             self.updateSyntax()
 
-    def doubleQuote(self, e=None) -> None:
+    def autoApostrophe(self, e=None) -> None:
+        editor = self.currentTab
+        if editor:
+            editor.insert('insert', "'")
+            editor.mark_set('insert', 'insert -1c')
+
+    def autoDoubleQuote(self, e=None) -> None:
         editor = self.currentTab
         if editor:
             editor.insert('insert', '"')
@@ -649,7 +656,7 @@ class App(ctk.CTk):
             editor.configure(wrap='none')
             editor.pack(expand=True, fill='both')
             self.intelliSenseBox = Dropdown(editor, 300, 100, [], self.insertIntelliSense, 2, 2, '#ff00ff')
-            self.snippetMenu = Dropdown(editor, 300, 100, [], lambda:self.insertSnippet, 2, 2, '#3366ff')
+            self.snippetMenu = Dropdown(editor, 300, 100, [], self.insertSnippet, 2, 2, '#3366ff')
             editor.bind('<Tab>', self.intelliSenseTab)
             editor.bind('<Up>', self.intelliSenseUp)
             editor.bind('<Down>', self.intelliSenseDown)
