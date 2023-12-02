@@ -1,7 +1,7 @@
 {
     ".phi": {
         "keywords": [
-            "#6666ff",
+            "#5a5aff",
             "(?<!\\w)(in|out|while|if|var|const|now|length|wait|root|fn|do|else|append|join|format)(?!\\w)",
             [
                 "in",
@@ -23,17 +23,17 @@
             ]
         ],
         "symbols": [
-            "#ffcc00",
+            "#cc8c01",
             "(==|!=|<-|<=|>=|<|>|{|}|\\[|\\]|\\(|\\)|\\+=|-=|\\*=|\/=|%=|\\^=|\\+|-|\\*|\/|%|\\^|)",
             []
         ],
         "numbers": [
-            "#ff1a75",
+            "#cc018f",
             "\\d+",
             []
         ],
         "strings": [
-            "#00ff99",
+            "#17cc20",
             "\"(.*?)\"",
             []
         ],

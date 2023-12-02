@@ -163,7 +163,8 @@ class App(ctk.CTk):
         sys.stderr = TerminalRedirect(self.console)
 
         self.multiCursorLabel.pack(padx=self.padx, pady=self.pady, side='top', anchor='nw')
-        self.multiCursorText.pack(padx=self.padx, pady=self.pady, expand=True, state='disabled')
+        self.multiCursorText.pack(padx=self.padx, pady=self.pady, expand=True)
+        self.multiCursorText.configure(state='disabled')
         
         self.menuBar.pack(padx=self.padx, pady=self.pady, anchor='w')
         self.currentLanguageCombo.pack(padx=self.padx, pady=self.pady, expand=True, anchor='e', side='right')
@@ -298,9 +299,10 @@ class App(ctk.CTk):
                 editor.tag_config(tag, foreground=self.languageSyntaxPatterns[self.currentLanguage][tag][0])
             editor.tag_config('error', background='#990000')
             editor.tag_config('similar', background='#595959')
-            editor.tag_config('cursor', background='#444444')
+            editor.tag_config('sel', background='#595959')
 
             editor.pack(expand=True, fill='both')
+            print(editor.cget('bg_color'))
 
             self.intelliSenseBox = Dropdown(editor, 300, 100, [], self.intelliSenseClickInsert, 2, 2, '#ff00ff')
             self.snippetMenu = Dropdown(editor, 300, 100, [], self.insertSnippet, 2, 2, '#3366ff')
