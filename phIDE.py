@@ -163,7 +163,7 @@ class App(ctk.CTk):
         sys.stderr = TerminalRedirect(self.console)
 
         self.multiCursorLabel.pack(padx=self.padx, pady=self.pady, side='top', anchor='nw')
-        self.multiCursorText.pack(padx=self.padx, pady=self.pady, expand=True)
+        self.multiCursorText.pack(padx=self.padx, pady=self.pady, expand=True, state='disabled')
         
         self.menuBar.pack(padx=self.padx, pady=self.pady, anchor='w')
         self.currentLanguageCombo.pack(padx=self.padx, pady=self.pady, expand=True, anchor='e', side='right')
@@ -312,12 +312,10 @@ class App(ctk.CTk):
             self.openEditors[tabName] = editor
             self.tabNamesPaths[tabName] = path
 
-            length = 0
             with open(path, 'r') as f:
-                for line in f.readlines():
-                    length += 1
+                for ln, line in enumerate(f.readlines()):
                     editor.insert('end', line)
-                    self.updateSyntax(line, length)
+                    self.updateSyntax(line, ln + 1)
             
             self.code = editor.get('0.0', 'end')
             self.loadSnippets()
@@ -342,10 +340,9 @@ class App(ctk.CTk):
         editor = self.currentTab
         if editor:
 
-            editor.tag_remove('cursor', '0.0', 'end')
-
             for cursor in self.cursors:
-                editor.tag_add('cursor', cursor, cursor + '+1c')
+                editor.delete(cursor)
+                editor.insert(cursor, '|')
 
             new = []
             for index in self.cursors:
@@ -367,8 +364,10 @@ class App(ctk.CTk):
                             new.append(self.incrementIndex(index))
 
             self.cursors = new
+            self.multiCursorText.configure(state='normal')
             self.multiCursorText.delete('0.0', 'end')
             self.multiCursorText.insert('0.0', '\n'.join(self.cursors))
+            self.multiCursorText.configure(state='disabled')
 
     def keyPressUpdate(self, e=None) -> None:
         self.currentLanguage = self.currentLanguageCombo.get()
