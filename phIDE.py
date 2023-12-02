@@ -94,6 +94,7 @@ class App(ctk.CTk):
         super().__init__()
         self.title('phIDE')
         self.state('zoomed')
+        self.iconbitmap('phi.ico')
         self.textBoxFont = ctk.CTkFont(family='Courier New', size=16, weight='bold')
         self.buttonFont = ctk.CTkFont(family='Fira Code', size=12, weight='normal')
         self.screenRatio = 0.65
