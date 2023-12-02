@@ -73,12 +73,12 @@ class Dialog:
         self.height = 250
 
         self.dialog = ctk.CTkFrame(self.master, width=self.width, height=self.height, corner_radius=5)
-        title = ctk.CTkLabel(self.dialog, anchor='nw', text=self.title, font=ctk.CTkFont(family='Fira Code', size=14))
+        title = ctk.CTkLabel(self.dialog, anchor='nw', text=self.title, font=ctk.CTkFont(family='Fira Code', size=14), text_color='#ee0000')
         msg = ctk.CTkTextbox(self.dialog, font=ctk.CTkFont(family='Fira Code', size=12))
         close = ctk.CTkButton(self.dialog, text='Close', command=self._close, font=ctk.CTkFont(family='Fira Code', size=12))
 
         msg.insert('0.0', self.message)
-        msg.configure(wrap='word')
+        msg.configure(wrap='word', state='disabled')
 
         title.pack(fill='both', anchor='nw', padx=10, pady=10)
         msg.pack(fill='both', expand=True, anchor='s', padx=10, pady=10)
@@ -302,7 +302,6 @@ class App(ctk.CTk):
             editor.tag_config('sel', background='#595959')
 
             editor.pack(expand=True, fill='both')
-            print(editor.cget('bg_color'))
 
             self.intelliSenseBox = Dropdown(editor, 300, 100, [], self.intelliSenseClickInsert, 2, 2, '#ff00ff')
             self.snippetMenu = Dropdown(editor, 300, 100, [], self.insertSnippet, 2, 2, '#3366ff')
@@ -401,9 +400,8 @@ class App(ctk.CTk):
         editor = self.currentTab
         if editor:
             currentCode = editor.get('0.0', 'end')
-            if currentCode != self.code:
-                name = self.centerTabview.get()
-                self.title(name if self.saved else name + '*')
+            name = self.centerTabview.get()
+            self.title(name if self.saved else name + '*')
 
     def mouseClickUpdate(self, e=None) -> None:
         editor = self.currentTab

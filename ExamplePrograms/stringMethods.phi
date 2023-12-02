@@ -1,21 +1,12 @@
-# How to check primes.
+# String methods in phi
 
-fn isPrime(number) {
-    var factors = []
-    var i = 2
+var string = "~ world ~ ~"
 
-    while (i < number){
-        if (number % i == 0){
-            factors = factors + i
-        }
-        i += 1
-    }
+var len = string.length()
 
-    <- if (length(factors) == 0){
-        <- T
-    } else {
-        <- F
-    }
-}
+var fmt = string.format("hi", 3, 2.3)
 
-out(isPrime(97))
+
+out(len)
+
+out(fmt)
