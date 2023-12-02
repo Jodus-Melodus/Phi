@@ -70,6 +70,7 @@ def createGlobalEnvironment(parent=None) -> environment:
     env.declareVariable('wait', nativeFunction(lambda args, scope : bif.wait(args[0])), True)
     env.declareVariable('type', nativeFunction(lambda args, scope : bif.type_(args[0])), True)
     env.declareVariable('root', nativeFunction(lambda args, scope : bif.root(args[0], args[1])), True)
+    env.declareVariable('hash', nativeFunction(lambda args, scope : bif.hash(args[0])), True)
 
     # variables
     env.declareVariable('_', nullValue(), True)

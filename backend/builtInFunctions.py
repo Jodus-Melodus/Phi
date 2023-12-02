@@ -1,7 +1,9 @@
 from backend.values import *
-from time import time, sleep
-import sys
 from frontend.errors import *
+
+from time import time, sleep
+from hashlib import *
+import sys
 
 def out(arg) -> str|bool:
     if isinstance(arg, (numberValue, stringValue, booleanValue, nullValue)):
@@ -36,3 +38,7 @@ def wait(seconds) -> None:
 
 def root(radicand, index) -> numberValue:
     return numberValue(float(float(radicand.value))**(1/float(index.value)))
+
+def hash(data:stringValue) -> stringValue:
+    d = data.value.encode('utf-8')
+    return stringValue(sha256(d).hexdigest())

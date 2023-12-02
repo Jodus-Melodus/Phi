@@ -257,6 +257,11 @@ Output:
 ```
 4
 ```
+### `hash`(data)
+Generate hash code for data(sha256)
+```
+var hsh = hash("Hello World!")
+```
 ## User Defined Functions
 Functions are defined using the `fn` keyword followed by its name and parameters in parentheses. The function body is enclosed within curly braces.
 

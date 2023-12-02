@@ -2,9 +2,8 @@
 
 
 
-
-var arr = [1, 2, 3, 3, 9]
-var b = 4
+var hsh = hash("Hello World")
 
 
-out(arr[b])
+out(hsh)
+
