@@ -267,8 +267,7 @@ class Interpreter:
         if isinstance(left, error):
             return left
         if not isinstance(ifStatement.conditionRight, nullValue):
-            right: RuntimeValue = self.evaluate(
-                ifStatement.conditionRight, env)
+            right: RuntimeValue = self.evaluate(ifStatement.conditionRight, env)
             if isinstance(right, error):
                 return right
         else:

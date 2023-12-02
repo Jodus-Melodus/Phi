@@ -7,7 +7,7 @@ def append(array:arrayValue, value:RuntimeValue) -> arrayValue:
     return array
 
 def arrayLength(array:arrayValue) -> numberValue:
-    return len(array.items)
+    return numberValue(len(array.items))
 
 def arrayJoin(array:arrayValue, character:stringValue) -> stringValue:
     if isinstance(character, stringValue):
@@ -23,7 +23,7 @@ def arrayJoin(array:arrayValue, character:stringValue) -> stringValue:
         return typeError('Method', character, character.column, character.line)
 
 def stringLength(string:stringValue) -> numberValue:
-    return len(string.value)
+    return numberValue(len(string.value))
 
 def stringFormat(args, string:stringValue) -> stringValue:
     output = ''
