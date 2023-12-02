@@ -1,23 +1,10 @@
-# How to check primes.
-
-fn isPrime(number) {
-    var factors = []
-    var i = 2
-
-    while (i < number){
-        if (number % i == 0){
-            factors = factors + i
-        }
-        i += 1
-    }
-
-    <- if (factors.length() == 0){
-        <- T
-    } else {
-        <- F
-    }
-}
-
-out(isPrime(6))
 
 
+
+
+
+var arr = [1, 2, 3, 3, 9]
+var b = 4
+
+
+out(arr[b])

@@ -125,6 +125,7 @@ class App(ctk.CTk):
         self.centerPanel = ctk.CTkFrame(self)
         self.findAndReplacePanel = ctk.CTkFrame(self.rightPanel)
         self.gotoPanel = ctk.CTkFrame(self.rightPanel)
+        self.multiCursorPanel = ctk.CTkFrame(self.rightPanel)
         self.menuBar = ctk.CTkFrame(self, height=20)
         # Tabviews
         self.centerTabview = ctk.CTkTabview(self.centerPanel, self.width*self.screenRatio, height=self.height*self.screenRatio)
@@ -132,6 +133,7 @@ class App(ctk.CTk):
         self.consoleTab = self.bottomTabview.add('Console')
         # Textboxes
         self.console = ctk.CTkTextbox(self.consoleTab, font=self.textBoxFont, state='disabled')
+        self.multiCursorText = ctk.CTkTextbox(self.multiCursorPanel, font=self.textBoxFont)
         # Buttons
         self.clearConsoleButton = ctk.CTkButton(self.consoleTab, text='Clear', command=self.clearConsole, width=50, height=20, font=self.buttonFont)
         self.findAndReplaceButton = ctk.CTkButton(self.findAndReplacePanel, command=self.findAndReplaceClick, text='Find & Replace', font=self.buttonFont)
@@ -146,6 +148,9 @@ class App(ctk.CTk):
         self.rightClickPopup = Dropdown(self, 300, 100, ['New File', 'Open File', 'Save File', 'Close File', 'Run', 'Undo', 'Redo', 'Copy', 'Paste', 'Replace', 'Comment'], self.processMenuShortcuts, 2, 2, '#ff00ff')
         # Labels
         self.statusbar = ctk.CTkLabel(self, text='', height=20, font=self.buttonFont)
+        self.multiCursorLabel = ctk.CTkLabel(self.multiCursorPanel, text='Multi-Cursor', font=self.buttonFont, anchor='nw')
+        self.findAdnReplaceLabel = ctk.CTkLabel(self.findAndReplacePanel, text='Find and Replace', font=self.buttonFont, anchor='nw')
+        self.gotoLabel = ctk.CTkLabel(self.gotoPanel, text='Go To', font=self.buttonFont, anchor='nw')
         # Entries
         self.find = ctk.CTkEntry(self.findAndReplacePanel, placeholder_text='Find', font=self.buttonFont)
         self.replace = ctk.CTkEntry(self.findAndReplacePanel, placeholder_text='Replace', font=self.buttonFont)
@@ -157,17 +162,24 @@ class App(ctk.CTk):
         sys.stdout = TerminalRedirect(self.console)
         sys.stderr = TerminalRedirect(self.console)
 
+        self.multiCursorLabel.pack(padx=self.padx, pady=self.pady, side='top', anchor='nw')
+        self.multiCursorText.pack(padx=self.padx, pady=self.pady, expand=True)
+        
         self.menuBar.pack(padx=self.padx, pady=self.pady, anchor='w')
         self.currentLanguageCombo.pack(padx=self.padx, pady=self.pady, expand=True, anchor='e', side='right')
         self.fileMenu.pack(padx=self.padx, pady=self.pady, expand=True, anchor='w', side='left')
         self.editMenu.pack(padx=self.padx, pady=self.pady, expand=True, anchor='w', side='left')
         self.runMenu.pack(padx=self.padx, pady=self.pady, expand=True, anchor='w', side='left')
 
+        self.gotoLabel.pack(padx=self.padx, pady=self.pady, side='top', anchor='nw')
         self.gotoButton.pack(padx=self.padx, pady=self.pady, side='bottom')
         self.gotoEntry.pack(padx=self.padx, pady=self.pady, side='top', expand=True)
+        
+        self.findAdnReplaceLabel.pack(padx=self.padx, pady=self.pady, side='top', anchor='nw')
         self.find.pack(padx=self.padx, pady=self.pady, side='top', expand=True)
         self.replace.pack(padx=self.padx, pady=self.pady, expand=True)
         self.findAndReplaceButton.pack(padx=self.padx, pady=self.pady, side='bottom')
+
         self.statusbar.pack(padx=self.padx, pady=self.pady, side=ctk.BOTTOM, anchor='se', expand=True)
         self.clearConsoleButton.pack(padx=self.padx, pady=self.pady, side=ctk.RIGHT, anchor='n')
         self.console.pack(padx=self.padx, pady=self.pady, fill='both', expand=True)
@@ -210,6 +222,7 @@ class App(ctk.CTk):
         self.bind('<Control-z>', self.undo)
         self.bind('<Control-h>', self.toggleFindAndReplaceMenu)
         self.bind('<Control-g>', self.toggleGoToMenu)
+        self.bind('<Control-m>', self.toggleMulticursorMenu)
 # Triple Character Sequence
         self.bind('<Control-Shift-z>', self.redo)
         self.bind('<Control-Shift-Tab>', self.prevTab)
@@ -243,8 +256,9 @@ class App(ctk.CTk):
         Ctrl + V -              Paste last copied word
         Ctrl + Z -              Undo action
         Ctrl + Shift + Z -      Redo action
-        Ctrl + H -              Open and closes the find and replace panel
-        Ctrl + G -              Open and closes the go to panel
+        Ctrl + H -              Toggle the find and replace panel
+        Ctrl + G -              Toggle the go to panel
+        Ctrl + M -              Toggle the multi-cursor panel
         Ctrl + [ -              Dedent line or selected text
         Ctrl + ] -              Indent line or selected text
         Ctrl + Tab -            Next tab
@@ -353,7 +367,8 @@ class App(ctk.CTk):
                             new.append(self.incrementIndex(index))
 
             self.cursors = new
-            print(self.cursors)
+            self.multiCursorText.delete('0.0', 'end')
+            self.multiCursorText.insert('0.0', '\n'.join(self.cursors))
 
     def keyPressUpdate(self, e=None) -> None:
         self.currentLanguage = self.currentLanguageCombo.get()
@@ -672,6 +687,16 @@ class App(ctk.CTk):
                 self.run()
 
 # Side Menus
+    def toggleMulticursorMenu(self, e=None) -> None:
+        if self.multiCursorPanel.winfo_ismapped():
+            self.multiCursorPanel.pack_forget()
+            editor = self.currentTab
+            if editor:
+                editor.focus_set()
+        else:
+            self.multiCursorPanel.pack(padx=self.padx, pady=self.pady*5)
+            self.find.focus_set()
+
     def toggleGoToMenu(self, e=None) -> None:
         if self.gotoPanel.winfo_ismapped():
             self.gotoPanel.pack_forget()
@@ -679,7 +704,7 @@ class App(ctk.CTk):
             if editor:
                 editor.focus_set()
         else:
-            self.gotoPanel.pack()
+            self.gotoPanel.pack(padx=self.padx, pady=self.pady*5)
             self.find.focus_set()
 
     def toggleFindAndReplaceMenu(self, e=None) -> None:
@@ -689,7 +714,7 @@ class App(ctk.CTk):
             if editor:
                 editor.focus_set()
         else:
-            self.findAndReplacePanel.pack()
+            self.findAndReplacePanel.pack(padx=self.padx, pady=self.pady*5)
             self.find.focus_set()
         
     def gotoClick(self) -> None:
