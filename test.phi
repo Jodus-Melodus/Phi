@@ -1,13 +1,14 @@
 
-
+real value = 324.2
 
 obj a = {
-	b:2,
-	c:9,
-	d:"hello"
+    name: "John Doe",
+    age: 30,
+    city: "New York",
+    property: value,
+    method: fn _(){<-0},
+    newMethod: fn _(){<-"New method"}
 }
 
-obj b = a
 
-out(a)
-out(b)
+out(a.newMethod())

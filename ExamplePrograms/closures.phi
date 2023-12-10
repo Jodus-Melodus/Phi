@@ -8,7 +8,7 @@ fn One() {
         <- add
     }
 
-    var x = makeAdd()
+    lambda x = makeAdd()
     out(x(3, 2))
 }
 
@@ -19,15 +19,16 @@ fn Two() {
         }
     }
 
-    var x = makeAdd()
+    lambda x = makeAdd()
     out(x(3, 2))
 }
 
 fn Three() {
-    var x = fn add(a, b){<- a + b}
+    lambda x = fn add(a, b){<- a + b}
     out(x(3, 2))
 }
 
 One()
 Two()
 Three()
+

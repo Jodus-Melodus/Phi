@@ -45,6 +45,7 @@ class TokenType:
         self.array = 'array'
         self.bool = 'bool'
         self.obj = 'object'
+        self._lambda = 'lambda'
         self.fn = 'fn'
         self._if = 'if'
         self._else = 'else'
@@ -67,7 +68,8 @@ KEYWORDS = {
     'str':TT.string,
     'array':TT.array,
     'bool':TT.bool,
-    'obj':TT.obj
+    'obj':TT.obj,
+    'lambda':TT._lambda
 }
 
 class Token:

@@ -13,7 +13,8 @@ dataTypeTable = {
     'real':realValue,
     'string':stringValue,
     'object':objectValue,
-    'array':arrayValue
+    'array':arrayValue,
+    'lambda':function
 }
 
 class Interpreter:

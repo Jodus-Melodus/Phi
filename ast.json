@@ -3,6 +3,16 @@
     "body": [
         {
             "kind": "variableDeclarationExpression",
+            "datatype": "real",
+            "identifier": "value",
+            "value": {
+                "kind": "realLiteral",
+                "value": 324.2
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "variableDeclarationExpression",
             "datatype": "object",
             "identifier": "a",
             "value": {
@@ -10,26 +20,70 @@
                 "properties": [
                     {
                         "kind": "propertyLiteral",
-                        "key": "b",
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 2
-                        }
-                    },
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "c",
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 9
-                        }
-                    },
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "d",
+                        "key": "name",
                         "value": {
                             "kind": "stringLiteral",
-                            "value": "hello"
+                            "value": "John Doe"
+                        }
+                    },
+                    {
+                        "kind": "propertyLiteral",
+                        "key": "age",
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 30
+                        }
+                    },
+                    {
+                        "kind": "propertyLiteral",
+                        "key": "city",
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "New York"
+                        }
+                    },
+                    {
+                        "kind": "propertyLiteral",
+                        "key": "property",
+                        "value": {
+                            "kind": "identifier",
+                            "symbol": "value"
+                        }
+                    },
+                    {
+                        "kind": "propertyLiteral",
+                        "key": "method",
+                        "value": {
+                            "kind": "functionDeclaration",
+                            "name": "_",
+                            "parameters": [],
+                            "body": [
+                                {
+                                    "kind": "returnExpression",
+                                    "value": {
+                                        "kind": "integerLiteral",
+                                        "value": 0
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "kind": "propertyLiteral",
+                        "key": "newMethod",
+                        "value": {
+                            "kind": "functionDeclaration",
+                            "name": "_",
+                            "parameters": [],
+                            "body": [
+                                {
+                                    "kind": "returnExpression",
+                                    "value": {
+                                        "kind": "stringLiteral",
+                                        "value": "New method"
+                                    }
+                                }
+                            ]
                         }
                     }
                 ]
@@ -37,34 +91,22 @@
             "constant": "False"
         },
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "object",
-            "identifier": "b",
-            "value": {
-                "kind": "identifier",
-                "symbol": "a"
-            },
-            "constant": "False"
-        },
-        {
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "identifier",
-                    "symbol": "a"
-                }
-            ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "out"
-            }
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "identifier",
-                    "symbol": "b"
+                    "kind": "callExpression",
+                    "arguments": [],
+                    "caller": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "a"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "newMethod"
+                        }
+                    }
                 }
             ],
             "caller": {

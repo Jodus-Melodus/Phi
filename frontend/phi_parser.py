@@ -61,6 +61,8 @@ class Parser:
                 return self.parseVariableDeclaration()
             case TT.fn:
                 return self.parseFunctionDeclaration()
+            case TT._lambda:
+                return self.parseVariableDeclaration()
             case TT._if:
                 return self.parseIfStatement()
             case TT._while:

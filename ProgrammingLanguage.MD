@@ -14,6 +14,7 @@ The following keywords are reserved in the Phi programming language:
 - `bool` - Declare a boolean value
 - `obj` - Declare an object value
 - `array` - Declare an array value
+- `lambda` - Used to assign a function
 - `if` - [Conditional statement](#if-else-statements)
 - `else` - Else clause for [conditional statements](#if-else-statements)
 - `while` - [While loops](#while-loops)
