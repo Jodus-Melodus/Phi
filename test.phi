@@ -1,6 +1,11 @@
-fn add(a, b){
-	<- a + b
-}
 
 
-out(add(3, 2))
+
+array a = [2, 7]
+
+a.append(0)
+
+str b = a.join(", ")
+
+out(b)
+out(type(b))

@@ -14,7 +14,7 @@ def out(arg) -> str:
             result += f"{out(prop)}: {out(value)}, "
         return result.rstrip(', ') + '}'
     elif isinstance(arg, arrayValue):
-        res = '[' + ', '.join(map(str, map(out, arg.items))) + ']'
+        res = '[' + ', '.join(map(str, map(out, arg.items.values()))) + ']'
         return res
     elif isinstance(arg, function):
         parameters = [parameter.symbol for parameter in arg.parameters]

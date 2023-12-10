@@ -1,12 +1,13 @@
 # String methods in phi
 
-var string = "~ world ~ ~"
+str string = "~ world ~ ~"
 
-var len = string.length()
+int len = string.length()
 
-var fmt = string.format("hi", 3, 2.3)
+str fmt = string.format("hi", 3, 2.3)
 
 
 out(len)
 
 out(fmt)
+

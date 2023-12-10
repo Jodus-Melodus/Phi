@@ -11,14 +11,8 @@ def arrayLength(array:arrayValue) -> integerValue:
 
 def arrayJoin(array:arrayValue, character:stringValue) -> stringValue:
     if isinstance(character, stringValue):
-        out = ''
-        for value in array.items:
-            v = array.items[value]
-            if isinstance(v, stringValue):
-                out += v.value + character.value
-            else:
-                return typeError('Method', v, v.column, v.line)
-        return stringValue(out)
+        values = [v.value for v in array.items.values()]
+        return stringValue(character.value.join(map(str, values)))
     else:
         return typeError('Method', character, character.column, character.line)
 
