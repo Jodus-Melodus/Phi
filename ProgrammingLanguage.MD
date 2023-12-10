@@ -207,7 +207,7 @@ Result:
 ```
 Hello
 ```
-- ### Adding new properties:
+- ### Adding new Methods:
 ```
 o.newMethod = fn name(){<-"New method"}
 ```
@@ -219,8 +219,38 @@ Result:
     city: "New York",
     property: value,
     method: fn name(){<-},
-    newMethod: fn name()
+    newMethod: fn name(){<-"New method"}
 }
+```
+- ### Getting list of keys:
+```
+array result = o.keys()
+```
+Result:
+```
+[
+    "name",
+    "age",
+    "city",
+    "property",
+    "method",
+    "newMethod"
+]
+```
+- ### Getting list of values:
+```
+array result = o.values()
+```
+Result:
+```
+[
+    "John Doe",
+    30,
+    "New York",
+    value,
+    fn name(){<-},
+    fn name(){<-"New method"}
+]
 ```
 # Statments
 ## Built-in Functions
