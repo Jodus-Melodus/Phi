@@ -381,10 +381,10 @@ class Interpreter:
         return self.evaluate(returnExpression.value, env)
 
     def evaluateAssignmentBinaryExpression(self, expr: assignmentBinaryExpressionNode, env: environment) -> None:
-        currentValue = env.lookup(expr.assigne)
-        newValue = self.evaluateBinaryExpression(binaryExpressionNode(
-            realLiteralNode(currentValue.value, 0, 0), expr.operand[0], expr.value), env)
-        return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, realLiteralNode(newValue.value, 0, 0)), env)
+        currentValue = realLiteralNode(env.lookup(expr.assigne).value, expr.column, expr.line)
+        binexpr = binaryExpressionNode(currentValue, expr.operand[0], expr.value)
+        newValue = self.evaluateBinaryExpression(binexpr, env)
+        return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, integerLiteralNode(newValue.value, 0, 0)), env)
 
     def evaluate(self, astNode, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | None:
         if isinstance(astNode, (str, float, int)):

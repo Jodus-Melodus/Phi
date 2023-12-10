@@ -9,10 +9,10 @@ def out(arg) -> str:
     if isinstance(arg, (integerValue, stringValue, booleanValue, nullValue, realValue)):
         return arg.value
     elif isinstance(arg, objectValue):
-        res = '{'
-        for prop in arg.properties:
-            res += f"{out(prop)} : {out(arg.properties[prop])}, "
-        return res + '}'
+        result = '{'
+        for prop, value in arg.properties.items():
+            result += f"{out(prop)}: {out(value)}, "
+        return result.rstrip(', ') + '}'
     elif isinstance(arg, arrayValue):
         res = '['
         for item in arg.items:

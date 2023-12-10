@@ -3,50 +3,122 @@
     "body": [
         {
             "kind": "variableDeclarationExpression",
-            "datatype": "int",
-            "identifier": "a",
+            "datatype": "array",
+            "identifier": "g",
             "value": {
-                "kind": "callExpression",
-                "arguments": [
+                "kind": "arrayLiteral",
+                "items": [
                     {
-                        "kind": "integerLiteral",
-                        "value": 4
+                        "kind": "itemLiteral",
+                        "index": 0,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 2
+                        }
                     },
                     {
-                        "kind": "integerLiteral",
-                        "value": 3
+                        "kind": "itemLiteral",
+                        "index": 1,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 1
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 2,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 90
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 3,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 82
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 4,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 81
+                        }
                     }
-                ],
-                "caller": {
-                    "kind": "identifier",
-                    "symbol": "root"
-                }
+                ]
             },
             "constant": "False"
         },
         {
-            "kind": "assignmentExpression",
-            "assigne": {
-                "kind": "identifier",
-                "symbol": "a"
-            },
+            "kind": "variableDeclarationExpression",
+            "datatype": "int",
+            "identifier": "i",
             "value": {
-                "kind": "realLiteral",
-                "value": 34.2
-            }
+                "kind": "integerLiteral",
+                "value": 0
+            },
+            "constant": "False"
         },
         {
-            "kind": "callExpression",
-            "arguments": [
+            "kind": "whileStatement",
+            "conditionLeft": {
+                "kind": "identifier",
+                "symbol": "i"
+            },
+            "operand": "<",
+            "conditionRight": {
+                "kind": "callExpression",
+                "arguments": [],
+                "caller": {
+                    "kind": "memberExpression",
+                    "object": {
+                        "kind": "identifier",
+                        "symbol": "g"
+                    },
+                    "property": {
+                        "kind": "identifier",
+                        "symbol": "length"
+                    }
+                }
+            },
+            "body": [
                 {
-                    "kind": "identifier",
-                    "symbol": "a"
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "memberExpression",
+                            "object": {
+                                "kind": "identifier",
+                                "symbol": "g"
+                            },
+                            "property": {
+                                "kind": "identifier",
+                                "symbol": "i"
+                            }
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "out"
+                    }
+                },
+                {
+                    "kind": "assignmentBinaryExpression",
+                    "assigne": {
+                        "kind": "identifier",
+                        "symbol": "i"
+                    },
+                    "operand": "+=",
+                    "value": {
+                        "kind": "integerLiteral",
+                        "value": 1
+                    }
                 }
             ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "out"
-            }
+            "elsebody": []
         }
     ]
 }

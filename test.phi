@@ -1,10 +1,12 @@
 
 
+array g = [2, 1, 90, 82, 81]
+int i = 0
 
-int a = root(4, 3)
-a = 34.2
-
-out(a)
+while (i < g.length()){
+	out(g[i])
+	i += 1
+}
 
 
 

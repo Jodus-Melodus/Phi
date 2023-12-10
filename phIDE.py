@@ -895,7 +895,7 @@ class App(ctk.CTk):
             self.console['state'] = 'disabled'
             end = time.time()
             print(f"\nProcess finished in {end - start} seconds.")
-            print('-'*60+'\n')
+            print('-'*60)
 
     def commentLine(self, e=None) -> None:
         editor = self.currentTab
