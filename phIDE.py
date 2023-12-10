@@ -398,13 +398,6 @@ class App(ctk.CTk):
             if self.snippetMenu.winfo_ismapped():
                 self.showSnippets
 
-        editor = self.currentTab
-        if editor:
-            currentCode = editor.get('0.0', 'end')
-            if currentCode != self.code:
-                name = self.centerTabview.get()
-                self.title(name if self.saved else name + '*')
-
     def editorPress(self, e=None) -> None:
         self.saved = False
 
@@ -412,7 +405,11 @@ class App(ctk.CTk):
         if editor:
             currentCode = editor.get('0.0', 'end')
             name = self.centerTabview.get()
-            self.title(name if self.saved else name + '*')
+            if currentCode != self.code:
+                self.code = currentCode
+                self.title(name + '*')
+            else:
+                self.title(name)
 
     def mouseClickUpdate(self, e=None) -> None:
         editor = self.currentTab
@@ -923,6 +920,8 @@ class App(ctk.CTk):
             text = editor.get('0.0', 'end')
             with open(self.currentPath, 'w') as f:
                 f.write(text)
+            name = self.centerTabview.get()
+            self.title(name)
         self.saved = True
 
     def newFile(self, e=None) -> None:
