@@ -254,7 +254,9 @@ class Interpreter:
 
         if isinstance(obj, objectValue):
             if isinstance(member.property, identifierNode):
-                if member.property.symbol not in obj.properties:
+                if member.property.symbol in obj.methods:
+                    return obj.methods[member.property.symbol]
+                elif member.property.symbol not in obj.properties:
                     return keyError(self, member.property.symbol, member.object.symbol, member.property.column, member.property.line)
 
                 elif isinstance(member.property, stringValue):

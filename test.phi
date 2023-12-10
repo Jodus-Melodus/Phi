@@ -1,14 +1,8 @@
 
 
-array g = [2, 1, 90, 82, 81]
-int i = 0
-
-while (i < g.length()){
-	out(g[i])
-	i += 1
+fn add(a, b){
+	<- a + b
 }
 
-
-
-
+int a = add
 

@@ -4,8 +4,12 @@ Welcome to Phi, a dynamic scripting language designed for flexibility and ease o
 If you encounter any unexpected behavior while using Phi, please report it promptly. Include a screenshot and a detailed description to help us improve.
 # Keywords
 The following keywords are reserved in the Phi programming language:
-- `var` - Declare a variable
-- `const` - Define constant value (read only)
+- `int` - Declare an integer
+- `real` - Declare a floating-point number
+- `str` - Declare a string value
+- `bool` - Declare a boolean value
+- `obj` - Declare an object value
+- `array` - Declare an array value
 - `if` - [Conditional statement](#if-else-statements)
 - `else` - Else clause for [conditional statements](#if-else-statements)
 - `while` - [While loops](#while-loops)
@@ -51,34 +55,34 @@ The following constants are built into the system:
 * `T` / `F`: Boolean values representing true/false conditions.
 ## Integer/Real
 ```
-var x = 2
-const y = 2.1
+int x = 2
+real y = 2.1
 ```
 - ### Operations:
 ```
-var int = 2 + 4 / 2 * 9 - 5 % 3^2
-int += 3
-int -= 4
-int *= 5
-int /= 6
-int %= 7
-int ^= 2
+int x = 2 + 4 / 2 * 9 - 5 % 3^2
+x += 3
+x -= 4
+x *= 5
+x /= 6
+x %= 7
+x ^= 2
 ```
 ## Booleans
 ```
-var x = T
-const y = F
+bool x = T
+bool y = F
 ```
 ## Strings
 ```
-var x = "Hello, world"
-var y = "123 - 2"
-var z = "Testing 123"
+str x = "Hello, world"
+str y = "123 - 2"
+str z = "Testing 123"
 ```
 - ### Length:
 ```
-var x = "hello world"
-var result = x.length()
+str x = "hello world"
+int result = x.length()
 ```
 Result: 
 ```
@@ -86,7 +90,7 @@ Result:
 ```
 - ### Format:
 ```
-var result = "Hello ~ world ~".format("there", 500)
+str result = "Hello ~ world ~".format("there", 500)
 ```
 Result:
 ```
@@ -94,10 +98,10 @@ Result:
 ```
 - ### Concatenation:
 ```
-var x = "hello"
-var y = " world"
-var result = x + y
-result += " !"
+str x = "hello"
+str y = " world"
+str result = x + y
+str += " !"
 ```
 Result:
 ```
@@ -105,13 +109,13 @@ Result:
 ```
 ## Arrays
 ```
-var arr = [1, 2, 3]
-const array = ["hello", 12, ["world", 9.2]]
+array a = [1, 2, 3]
+array b = ["hello", 12, ["world", 9.2]]
 ```
 - ### Length:
 ```
-var arr = [1, 4, "hello"]
-var result = arr.length()
+array a = [1, 4, "hello"]
+int result = a.length()
 ```
 Result:
 ```
@@ -119,12 +123,12 @@ Result:
 ```
 - ### Append:
 ```
-var arr = [1, 2, "hello"]
-arr.append(9.12)
+array a = [1, 2, "hello"]
+a.append(9.12)
 # OR
-arr = arr.append(9.12)
+a = a.append(9.12)
 # OR
-arr += 9.12
+a += 9.12
 ```
 Result:
 ```
@@ -132,8 +136,8 @@ Result:
 ```
 - ### Join:
 ```
-var arr = [1, 2, "hello"]
-var result = arr.join(", ")
+array arr = [1, 2, "hello"]
+str result = arr.join(", ")
 ```
 Result:
 ```
@@ -141,8 +145,8 @@ Result:
 ```
 - ### Indexing:
 ```
-var arr = [1, 5, 90]
-var result = arr[2]
+array arr = [1, 5, 90]
+int result = arr[2]
 ```
 Result:
 ```
@@ -151,7 +155,7 @@ Result:
 ## Objects
 See [Functions](#user-defined-functions)
 ```
-var obj = {
+obj o = {
     name: "John Doe",
     age: 30,
     city: "New York",
@@ -161,7 +165,7 @@ var obj = {
 ```
 - ### Accessing properties:
 ```
-var result = obj.age
+int result = o.age
 ```
 Result:
 ```
@@ -169,7 +173,7 @@ Result:
 ```
 - ### Adding new properties:
 ```
-obj.newProperty = "I am a new property"
+o.newProperty = "I am a new property"
 ```
 Result:
 ```
@@ -184,7 +188,7 @@ Result:
 ```
 - ### Accessing methods:
 ```
-var result = obj.method()
+IDK result = o.method()
 ```
 Result:
 ```
@@ -192,7 +196,7 @@ Hello
 ```
 - ### Adding new properties:
 ```
-obj.newMethod = fn name(){<-"New method"}
+o.newMethod = fn name(){<-"New method"}
 ```
 Result:
 ```
@@ -221,7 +225,7 @@ hello world
 Reads input from user and returns it as string.
 Example usage:
 ```
-var input = in("> ")
+str input = in("> ")
 ```
 Input (user):
 ```
@@ -235,7 +239,7 @@ Output:
 Returns current date and time as a real value.
 Example usage:
 ```
-var today = now()
+int today = now()
 ```
 Output:
 ```
@@ -260,7 +264,7 @@ Output:
 ### `hash`(data)
 Generate hash code for data(sha256)
 ```
-var hsh = hash("Hello World!")
+str hsh = hash("Hello World!")
 ```
 ## User Defined Functions
 Functions are defined using the `fn` keyword followed by its name and parameters in parentheses. The function body is enclosed within curly braces.
@@ -273,7 +277,7 @@ fn add(x, y){
 ```
 - ### Calling functions:
 ```
-result = add(2, 5)
+int result = add(2, 5)
 ```
 Result:
 ```
@@ -331,7 +335,7 @@ Second True
 Conditions are the same as [if statements](#if-else-statements)
 - ### Looping until a condition is met.
 ```
-var a = 0
+int a = 0
 while (a < 2) {
     out(a)
     a += 1
@@ -344,7 +348,7 @@ Result:
 ```
 - ### Infinite loop example.
 ```
-var b = 0
+int b = 0
 while (T) {
     out(b)
     b += 1
@@ -355,7 +359,7 @@ This will run forever, as the while loop's condition always evaluates to true (`
 The do-while loop works similarly to the while loop, but it runs at least once before checking the condition.
 - ### Example of a do-while loop.
 ```
-var c = 0
+int c = 0
 do {
     out(c)
     c += 1

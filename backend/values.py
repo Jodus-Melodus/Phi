@@ -99,8 +99,12 @@ class arrayValue(RuntimeValue):
 class objectValue(RuntimeValue):
     def __init__(self, properties: dict, line:int=-1, column:int=-1) -> None:
         super().__init__(line, column)
+        import backend.builtInMethods as bim
         self.type = 'objectValue'
         self.properties = properties
+        self.methods = {
+            'items': nativeFunction(lambda args, scope: bim.objItems(self))
+        }
 
     def __repr__(self) -> str:
         return str({

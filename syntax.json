@@ -2,7 +2,7 @@
     ".phi": {
         "keywords": [
             "#3d81ff",
-            "(?<!\\w)(in|out|while|if|int|real|obj|array|str|now|length|wait|hash|root|fn|do|else|append|join|format)(?!\\w)",
+            "(?<!\\w)(in|out|while|if|int|real|obj|array|str|items|now|length|wait|hash|root|fn|do|else|append|join|format)(?!\\w)",
             [
                 "in",
                 "out",
@@ -23,7 +23,8 @@
                 ".length",
                 ".append",
                 ".join",
-                ".format"
+                ".format",
+                ".items"
             ]
         ],
         "symbols": [
