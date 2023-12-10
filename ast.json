@@ -2,45 +2,51 @@
     "kind": "program",
     "body": [
         {
-            "kind": "functionDeclaration",
-            "name": "add",
-            "parameters": [
-                {
-                    "kind": "identifier",
-                    "symbol": "a"
-                },
-                {
-                    "kind": "identifier",
-                    "symbol": "b"
-                }
-            ],
-            "body": [
-                {
-                    "kind": "returnExpression",
-                    "value": {
-                        "kind": "binaryExpression",
-                        "left": {
-                            "kind": "identifier",
-                            "symbol": "a"
-                        },
-                        "operand": "+",
-                        "right": {
-                            "kind": "identifier",
-                            "symbol": "b"
-                        }
-                    }
-                }
-            ]
-        },
-        {
             "kind": "variableDeclarationExpression",
             "datatype": "int",
-            "identifier": "a",
+            "identifier": "A_d",
             "value": {
-                "kind": "identifier",
-                "symbol": "add"
+                "kind": "integerLiteral",
+                "value": 5
             },
             "constant": "False"
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "A_d"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "out"
+            }
+        },
+        {
+            "kind": "assignmentExpression",
+            "assigne": {
+                "kind": "identifier",
+                "symbol": "A_d"
+            },
+            "value": {
+                "kind": "integerLiteral",
+                "value": 9
+            }
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "A_d"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "out"
+            }
         }
     ]
 }

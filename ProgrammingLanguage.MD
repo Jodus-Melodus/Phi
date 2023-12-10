@@ -49,6 +49,15 @@ The following operators are supported in Phi:
 - `~` String format character
 - `<-` Return operator
 # Datatypes
+## Variables and Constants
+- ### Variable:
+```
+int x = 10
+```
+- ### Constant:
+```
+int X = 10
+```
 ## Built-in Constants
 The following constants are built into the system:
 * `_`: Represents an empty value or nothingness.

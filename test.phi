@@ -1,8 +1,9 @@
 
 
-fn add(a, b){
-	<- a + b
-}
+int A_d = 5
 
-int a = add
+out(A_d)
 
+A_d = 9
+
+out(A_d)

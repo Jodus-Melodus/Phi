@@ -265,15 +265,19 @@ class Parser:
     def parseVariableDeclaration(self) -> None:
         datatype = self.eat().type
         identifier = self.eat().value
+        if identifier.isupper():
+            constant = True
+        else:
+            constant = False
         if (self.get().type == TT.eof) or (self.get().type == TT.lineend):
             self.eat()
-            return variableDeclarationExpressionNode(datatype, identifier, nullLiteralNode(), False)
+            return variableDeclarationExpressionNode(datatype, identifier, nullLiteralNode(), constant)
         else:
             self.eat()
             statement = self.parseStatement()
             if isinstance(statement, error):
                 return statement
-            return variableDeclarationExpressionNode(datatype, identifier, statement, False)
+            return variableDeclarationExpressionNode(datatype, identifier, statement, constant)
 
     def parseAssignmentExpression(self) -> None:
         left = self.parseObjectExpression()
