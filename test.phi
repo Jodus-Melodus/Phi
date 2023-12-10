@@ -2,7 +2,7 @@
 
 
 real a = root(4, 3)
-a = 6
+a = 666.5
 
 out(a)
 

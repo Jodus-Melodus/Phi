@@ -160,7 +160,12 @@ class Interpreter:
     def evaluateAssignmentExpression(self, assignmentExpression: assignmentExpressionNode, env: environment) -> None:
         if isinstance(assignmentExpression.assigne, identifierNode):
             varName = assignmentExpression.assigne.symbol
-            return env.assignVariable(varName, self.evaluate(assignmentExpression.value, env))
+            currentValue = env.lookup(assignmentExpression.assigne)
+            value = self.evaluate(assignmentExpression.value, env)
+            if value.type == currentValue.type:
+                return env.assignVariable(varName, value)
+            return syntaxError(self, f"'{value.type}' is incompatible with '{currentValue.type}'")
+        
         elif isinstance(assignmentExpression.assigne, memberExpressionNode):
             member: memberExpressionNode = assignmentExpression.assigne
             varName = member.object

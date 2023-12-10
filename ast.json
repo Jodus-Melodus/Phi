@@ -31,8 +31,8 @@
                 "symbol": "a"
             },
             "value": {
-                "kind": "integerLiteral",
-                "value": 6
+                "kind": "realLiteral",
+                "value": 666.5
             }
         },
         {
