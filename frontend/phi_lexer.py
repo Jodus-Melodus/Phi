@@ -52,6 +52,15 @@ TT = TokenType()
 DIGITS = '12345678890'
 ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-'
 
+KEYWORDS = {
+    'var':TT.var,
+    'const':TT.const,
+    'fn':TT.fn,
+    'if':TT._if,
+    'else':TT._else,
+    'while':TT._while,
+    'do':TT.do
+}
 
 class Token:
     def __init__(self, type:str, value:str|int|float, index:int, column:int, line:int) -> None:
@@ -218,23 +227,10 @@ class Lexer:
                                 break
                             self.eat()
 
-                        match name:
-                            case 'var':
-                                tokens.append(Token(TT.var, name, self.index, self.column, self.line))
-                            case 'const':
-                                tokens.append(Token(TT.const, name, self.index, self.column, self.line))
-                            case 'fn':
-                                tokens.append(Token(TT.fn, name, self.index, self.column, self.line))
-                            case 'if':
-                                tokens.append(Token(TT._if, name, self.index, self.column, self.line))
-                            case 'else':
-                                tokens.append(Token(TT._else, name, self.index, self.column, self.line))
-                            case 'do':
-                                tokens.append(Token(TT.do, name, self.index, self.column, self.line))
-                            case 'while':
-                                tokens.append(Token(TT._while, name, self.index, self.column, self.line))
-                            case _:
-                                tokens.append(Token(TT.identifier, name, self.index, self.column, self.line))
+                        if name in KEYWORDS:
+                            tokens.append(Token(KEYWORDS[name], name, self.index, self.column, self.line))
+                        else:
+                            tokens.append(Token(TT.identifier, name, self.index, self.column, self.line))
                     else:
                         return invalidCharacterError(self, char, self.column, self.line)
                         
