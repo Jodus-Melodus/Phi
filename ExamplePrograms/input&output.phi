@@ -1,5 +1,5 @@
 # Phi has it's own built-in in and output functions
 
-var x = in("> ")    # Assigns the variable 'x' to the string value of the input from the terminal
+str x = in("> ")    # Assigns the variable 'x' to the string value of the input from the terminal
 
 out(x)  # Prints/Displays the value in the terminal

@@ -1,6 +1,6 @@
 # Phi supports objects/hashmaps/dictionaries.
 
-var obj = {
+obj o = {
     a:1,
     b:[1, 2, 3],
     c:{
@@ -11,9 +11,9 @@ var obj = {
 	}
 }
 
-out(obj.a)
-out(obj.b)
-out(obj.c)
-out(obj.e(4, 3))
+out(o.a)
+out(o.b)
+out(o.c)
+out(o.e(4, 3))
 
 

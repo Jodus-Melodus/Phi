@@ -1,7 +1,7 @@
 # Phi includes if statements
 
-var a = 4
-var b = 2
+int a = 4
+int b = 2
 
 if (a == b) {
     out("a is equal to b")

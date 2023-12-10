@@ -1,8 +1,8 @@
 # How to check primes.
 
 fn isPrime(number) {
-    var factors = []
-    var i = 2
+    array factors = []
+    int i = 2
 
     while (i < number){
         if (number % i == 0){
