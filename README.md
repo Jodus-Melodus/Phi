@@ -1,5 +1,5 @@
 # Phi
-This repository includes an IDE and the phi language itself.
+Phi is a high-level, statically typed, object-oriented programming language specifically designed to deploy programs quick.
 
 ## Programming Language:
 [phi](#programming-language.md)
