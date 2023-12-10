@@ -1,1 +1,132 @@
-{"kind": "program", "body": [{"kind": "variableDeclarationExpression", "identifier": "hsh", "value": {"kind": "callExpression", "arguments": [{"kind": "stringLiteral", "value": "Hello World"}], "caller": {"kind": "identifier", "symbol": "hash"}}, "constant": "False"}, {"kind": "callExpression", "arguments": [{"kind": "identifier", "symbol": "hsh"}], "caller": {"kind": "identifier", "symbol": "out"}}]}
+{
+    "kind": "program",
+    "body": [
+        {
+            "kind": "functionDeclaration",
+            "name": "factorial",
+            "parameters": [
+                {
+                    "kind": "identifier",
+                    "symbol": "n"
+                }
+            ],
+            "body": [
+                {
+                    "kind": "returnExpression",
+                    "value": {
+                        "kind": "ifStatement",
+                        "conditionLeft": {
+                            "kind": "identifier",
+                            "symbol": "n"
+                        },
+                        "operand": "==",
+                        "conditionRight": {
+                            "kind": "numericLiteral",
+                            "value": 0
+                        },
+                        "body": [
+                            {
+                                "kind": "returnExpression",
+                                "value": {
+                                    "kind": "numericLiteral",
+                                    "value": 1
+                                }
+                            }
+                        ],
+                        "elsebody": [
+                            {
+                                "kind": "returnExpression",
+                                "value": {
+                                    "kind": "ifStatement",
+                                    "conditionLeft": {
+                                        "kind": "identifier",
+                                        "symbol": "n"
+                                    },
+                                    "operand": "==",
+                                    "conditionRight": {
+                                        "kind": "numericLiteral",
+                                        "value": 1
+                                    },
+                                    "body": [
+                                        {
+                                            "kind": "returnExpression",
+                                            "value": {
+                                                "kind": "numericLiteral",
+                                                "value": 1
+                                            }
+                                        }
+                                    ],
+                                    "elsebody": [
+                                        {
+                                            "kind": "returnExpression",
+                                            "value": {
+                                                "kind": "binaryExpression",
+                                                "left": {
+                                                    "kind": "identifier",
+                                                    "symbol": "n"
+                                                },
+                                                "operand": "*",
+                                                "right": {
+                                                    "kind": "callExpression",
+                                                    "arguments": [
+                                                        {
+                                                            "kind": "binaryExpression",
+                                                            "left": {
+                                                                "kind": "identifier",
+                                                                "symbol": "n"
+                                                            },
+                                                            "operand": "-",
+                                                            "right": {
+                                                                "kind": "numericLiteral",
+                                                                "value": 1
+                                                            }
+                                                        }
+                                                    ],
+                                                    "caller": {
+                                                        "kind": "identifier",
+                                                        "symbol": "factorial"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "identifier": "num",
+            "value": {
+                "kind": "numericLiteral",
+                "value": 4
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "num"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "factorial"
+                    }
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "out"
+            }
+        }
+    ]
+}
