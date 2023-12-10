@@ -1,11 +1,13 @@
 
 
 
-array a = [2, 7]
+obj a = {
+	b:2,
+	c:9,
+	d:"hello"
+}
 
-a.append(0)
+obj b = a
 
-str b = a.join(", ")
-
+out(a)
 out(b)
-out(type(b))

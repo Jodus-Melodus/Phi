@@ -3,25 +3,33 @@
     "body": [
         {
             "kind": "variableDeclarationExpression",
-            "datatype": "array",
+            "datatype": "object",
             "identifier": "a",
             "value": {
-                "kind": "arrayLiteral",
-                "items": [
+                "kind": "objectLiteral",
+                "properties": [
                     {
-                        "kind": "itemLiteral",
-                        "index": 0,
+                        "kind": "propertyLiteral",
+                        "key": "b",
                         "value": {
                             "kind": "integerLiteral",
                             "value": 2
                         }
                     },
                     {
-                        "kind": "itemLiteral",
-                        "index": 1,
+                        "kind": "propertyLiteral",
+                        "key": "c",
                         "value": {
                             "kind": "integerLiteral",
-                            "value": 7
+                            "value": 9
+                        }
+                    },
+                    {
+                        "kind": "propertyLiteral",
+                        "key": "d",
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "hello"
                         }
                     }
                 ]
@@ -29,48 +37,12 @@
             "constant": "False"
         },
         {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "integerLiteral",
-                    "value": 0
-                }
-            ],
-            "caller": {
-                "kind": "memberExpression",
-                "object": {
-                    "kind": "identifier",
-                    "symbol": "a"
-                },
-                "property": {
-                    "kind": "identifier",
-                    "symbol": "append"
-                }
-            }
-        },
-        {
             "kind": "variableDeclarationExpression",
-            "datatype": "string",
+            "datatype": "object",
             "identifier": "b",
             "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "stringLiteral",
-                        "value": ", "
-                    }
-                ],
-                "caller": {
-                    "kind": "memberExpression",
-                    "object": {
-                        "kind": "identifier",
-                        "symbol": "a"
-                    },
-                    "property": {
-                        "kind": "identifier",
-                        "symbol": "join"
-                    }
-                }
+                "kind": "identifier",
+                "symbol": "a"
             },
             "constant": "False"
         },
@@ -79,7 +51,7 @@
             "arguments": [
                 {
                     "kind": "identifier",
-                    "symbol": "b"
+                    "symbol": "a"
                 }
             ],
             "caller": {
@@ -91,17 +63,8 @@
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "callExpression",
-                    "arguments": [
-                        {
-                            "kind": "identifier",
-                            "symbol": "b"
-                        }
-                    ],
-                    "caller": {
-                        "kind": "identifier",
-                        "symbol": "type"
-                    }
+                    "kind": "identifier",
+                    "symbol": "b"
                 }
             ],
             "caller": {

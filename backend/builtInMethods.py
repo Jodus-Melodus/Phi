@@ -31,8 +31,14 @@ def stringFormat(args, string:stringValue) -> stringValue:
             output += j
     return stringValue(output)
 
-def objItems(obj:objectValue) -> arrayValue:
+def objectItems(obj:objectValue) -> arrayValue:
     items = []
     for key in obj.properties:
         items.append(obj.properties[key])
+    return arrayValue(items, obj.line, obj.column)
+
+def objectKeys(obj:objectValue) -> arrayValue:
+    items = []
+    for key in obj.properties:
+        items.append(key)
     return arrayValue(items, obj.line, obj.column)
