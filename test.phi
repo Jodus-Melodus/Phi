@@ -1,6 +1,7 @@
 
-real value = 324.2
 
-out(round(value))
-out(floor(value))
-out(ceil(value))
+str a = in("> ")
+
+out(a)
+
+

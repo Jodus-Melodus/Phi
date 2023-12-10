@@ -3,11 +3,20 @@
     "body": [
         {
             "kind": "variableDeclarationExpression",
-            "datatype": "real",
-            "identifier": "value",
+            "datatype": "string",
+            "identifier": "a",
             "value": {
-                "kind": "realLiteral",
-                "value": 324.2
+                "kind": "callExpression",
+                "arguments": [
+                    {
+                        "kind": "stringLiteral",
+                        "value": "> "
+                    }
+                ],
+                "caller": {
+                    "kind": "identifier",
+                    "symbol": "in"
+                }
             },
             "constant": "False"
         },
@@ -15,61 +24,8 @@
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "callExpression",
-                    "arguments": [
-                        {
-                            "kind": "identifier",
-                            "symbol": "value"
-                        }
-                    ],
-                    "caller": {
-                        "kind": "identifier",
-                        "symbol": "round"
-                    }
-                }
-            ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "out"
-            }
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "callExpression",
-                    "arguments": [
-                        {
-                            "kind": "identifier",
-                            "symbol": "value"
-                        }
-                    ],
-                    "caller": {
-                        "kind": "identifier",
-                        "symbol": "floor"
-                    }
-                }
-            ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "out"
-            }
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "callExpression",
-                    "arguments": [
-                        {
-                            "kind": "identifier",
-                            "symbol": "value"
-                        }
-                    ],
-                    "caller": {
-                        "kind": "identifier",
-                        "symbol": "ceil"
-                    }
+                    "kind": "identifier",
+                    "symbol": "a"
                 }
             ],
             "caller": {

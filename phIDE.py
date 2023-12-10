@@ -8,23 +8,26 @@ import os
 import keyboard
 
 class TerminalRedirect:
-    def __init__(self, textWidget:ctk.CTkTextbox) -> None:
+    def __init__(self, textWidget) -> None:
         self.widget = textWidget
 
     def write(self, message) -> None:
         self.widget.configure(state='normal')
         self.widget.insert('end', message)
         self.widget.yview_moveto(1)
+        self.widget.update_idletasks()
         self.widget.configure(state='disabled')
 
     def readline(self, prompt="") -> str:
+        self.widget.configure(state='normal')
         self.widget.insert('end', prompt)
         self.widget.mark_set("input_start", "end-1c")
         self.widget.mark_set("input_end", "end-1c + 1l")
         line = self.widget.get("input_start", "input_end")
         self.widget.delete("input_start", "input_end")
+        self.widget.configure(state='disabled')
         return line
-
+    
 class Dropdown:
     def __init__(self, master, width:int, height:int, items:list, command, itempadx:int, itempady:int, bg_color:str):
         self.master = master
