@@ -15,9 +15,23 @@ class identifierNode:
         })
 
 
-class numericLiteralNode:
+class realLiteralNode:
     def __init__(self, value, column: int, line: int) -> None:
-        self.kind = 'numericLiteral'
+        self.kind = 'realLiteral'
+        self.value = value
+        self.column = column
+        self.line = line
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'value': self.value
+        })
+
+
+class integerLiteralNode:
+    def __init__(self, value, column: int, line: int) -> None:
+        self.kind = 'integerLiteral'
         self.value = value
         self.column = column
         self.line = line

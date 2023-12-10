@@ -1,4 +1,5 @@
 
+
 class RuntimeValue:
     def __init__(self) -> None:
         self.type = 'runtimeValue'
@@ -16,9 +17,9 @@ class nullValue(RuntimeValue):
         })
 
 
-class numberValue(RuntimeValue):
+class integerValue(RuntimeValue):
     def __init__(self, value) -> None:
-        self.type = 'numberValue'
+        self.type = 'integerValue'
         self.value = value
 
     def __repr__(self) -> str:
@@ -27,14 +28,26 @@ class numberValue(RuntimeValue):
             'value': self.value
         })
     
+class realValue(RuntimeValue):
+    def __init__(self, value) -> None:
+        self.type = 'realValue'
+        self.value = value
+
+    def __repr__(self) -> str:
+        return str({
+            'type': self.type,
+            'value': self.value
+        })
+
+
 class stringValue(RuntimeValue):
     def __init__(self, value) -> None:
         import backend.builtInMethods as bim
         self.type = 'stringValue'
         self.value = value
         self.methods = {
-            'length':nativeFunction(lambda args, scope : bim.stringLength(self)),
-            'format':nativeFunction(lambda args, scope : bim.stringFormat(args, self))
+            'length': nativeFunction(lambda args, scope: bim.stringLength(self)),
+            'format': nativeFunction(lambda args, scope: bim.stringFormat(args, self))
         }
 
     def __repr__(self) -> str:
@@ -42,8 +55,8 @@ class stringValue(RuntimeValue):
             'type': self.type,
             'value': self.value
         })
-    
-    
+
+
 class booleanValue(RuntimeValue):
     def __init__(self, value='F') -> None:
         self.type = 'booleanValue'
@@ -55,27 +68,28 @@ class booleanValue(RuntimeValue):
             'value': self.value
         })
 
+
 class arrayValue(RuntimeValue):
-    def __init__(self, items:dict) -> None:
+    def __init__(self, items: dict) -> None:
         import backend.builtInMethods as bim
         self.type = 'arrayValue'
         self.items = items
         self.methods = {
-            'append':nativeFunction(lambda args, scope : bim.append(self, args[0])),
-            'length':nativeFunction(lambda args, scope : bim.arrayLength(self)),
-            'join':nativeFunction(lambda args, scope : bim.arrayJoin(self, args[0]))
+            'append': nativeFunction(lambda args, scope: bim.append(self, args[0])),
+            'length': nativeFunction(lambda args, scope: bim.arrayLength(self)),
+            'join': nativeFunction(lambda args, scope: bim.arrayJoin(self, args[0]))
         }
 
     def __repr__(self) -> str:
         return str({
-            'type':self.type,
-            'items':self.items,
-            'methods':self.methods
+            'type': self.type,
+            'items': self.items,
+            'methods': self.methods
         })
-    
+
 
 class objectValue(RuntimeValue):
-    def __init__(self, properties:dict) -> None:
+    def __init__(self, properties: dict) -> None:
         self.type = 'objectValue'
         self.properties = properties
 
@@ -96,6 +110,7 @@ class nativeFunction(RuntimeValue):
             'type': self.type,
             'call': self.call
         })
+
 
 class function(RuntimeValue):
     def __init__(self, name, parameters: list, declarationEnvironment, body: list) -> None:

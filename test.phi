@@ -2,8 +2,9 @@
 
 
 
-var hsh = hash("Hello World")
+if (F != F){
+	out(T)
+}
 
 
-out(hsh)
 

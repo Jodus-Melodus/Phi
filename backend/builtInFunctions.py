@@ -6,7 +6,7 @@ from hashlib import *
 import sys
 
 def out(arg) -> str|bool:
-    if isinstance(arg, (numberValue, stringValue, booleanValue, nullValue)):
+    if isinstance(arg, (integerValue, stringValue, booleanValue, nullValue, realValue)):
         return arg.value
     elif isinstance(arg, objectValue):
         res = '{'
@@ -19,7 +19,8 @@ def out(arg) -> str|bool:
             res += str(out(arg.items[item])) + ', '
         return res + ']'
     elif isinstance(arg, function):
-        return f"fn {arg.name}()"
+        parameters = [parameter.symbol for parameter in arg.parameters]
+        return f"fn {arg.name}({', '.join(parameters)})"
     else:
         return arg
 
@@ -27,8 +28,8 @@ def in_(arg:stringValue) -> stringValue:
     sys.stdout.write(arg.value)
     return stringValue(sys.stdin.readline().strip())
 
-def now() -> numberValue:
-    return numberValue(time())
+def now() -> integerValue:
+    return integerValue(time())
 
 def type_(arg:RuntimeValue) -> str:
     return arg.type
@@ -36,8 +37,8 @@ def type_(arg:RuntimeValue) -> str:
 def wait(seconds) -> None:
     sleep(int(seconds.value))
 
-def root(radicand, index) -> numberValue:
-    return numberValue(float(float(radicand.value))**(1/float(index.value)))
+def root(radicand, index) -> integerValue:
+    return integerValue(float(float(radicand.value))**(1/float(index.value)))
 
 def hash(data:stringValue) -> stringValue:
     d = data.value.encode('utf-8')
