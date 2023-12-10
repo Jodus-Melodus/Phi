@@ -171,6 +171,14 @@ class Lexer:
                         self.eat()
                     self.eat()
                     tokens.append(Token(TT.stringValue, string, self.index, self.column, self.line))
+                case "'":
+                    self.eat()
+                    string = ''
+                    while self.get() != "'":
+                        string += self.get()
+                        self.eat()
+                    self.eat()
+                    tokens.append(Token(TT.stringValue, string, self.index, self.column, self.line))
                 case '&':
                     tokens.append(Token(TT._and, char, self.index, self.column, self.line))
                     self.eat()
