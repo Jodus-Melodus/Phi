@@ -73,7 +73,9 @@ class nullLiteralNode:
 
 
 class programNode:
-    def __init__(self, body: list = []) -> None:
+    def __init__(self, body: list = [], line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'program'
         self.body = body
 
@@ -85,7 +87,9 @@ class programNode:
 
 
 class expressionNode:
-    def __init__(self) -> None:
+    def __init__(self, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'expression'
 
     def __repr__(self) -> str:
@@ -95,7 +99,9 @@ class expressionNode:
 
 
 class binaryExpressionNode:
-    def __init__(self, left, operand: str, right) -> None:
+    def __init__(self, left, operand: str, right, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'binaryExpression'
         self.left = left
         self.operand = operand
@@ -111,7 +117,9 @@ class binaryExpressionNode:
 
 
 class ifStatementNode:
-    def __init__(self, conditionLeft, operand, conditionRight, body, elseBody=[]) -> None:
+    def __init__(self, conditionLeft, operand, conditionRight, body, elseBody=[], line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'ifStatement'
         self.conditionLeft = conditionLeft
         self.operand = operand
@@ -131,7 +139,9 @@ class ifStatementNode:
 
 
 class whileStatementNode:
-    def __init__(self, conditionLeft, operand, conditionRight, body, elseBody=[]) -> None:
+    def __init__(self, conditionLeft, operand, conditionRight, body, elseBody=[], line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'whileStatement'
         self.conditionLeft = conditionLeft
         self.operand = operand
@@ -151,7 +161,9 @@ class whileStatementNode:
 
 
 class doWhileStatementNode:
-    def __init__(self, body, conditionLeft, operand, conditionRight) -> None:
+    def __init__(self, body, conditionLeft, operand, conditionRight, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'doWhileStatement'
         self.body = body
         self.conditionLeft = conditionLeft
@@ -169,7 +181,9 @@ class doWhileStatementNode:
 
 
 class assignmentExpressionNode:
-    def __init__(self, assigne, value) -> None:
+    def __init__(self, assigne, value, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'assignmentExpression'
         self.assigne = assigne
         self.value = value
@@ -183,7 +197,9 @@ class assignmentExpressionNode:
 
 
 class assignmentBinaryExpressionNode:
-    def __init__(self, assigne, operand, value) -> None:
+    def __init__(self, assigne, operand, value, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'assignmentBinaryExpression'
         self.assigne = assigne
         self.operand = operand
@@ -199,7 +215,9 @@ class assignmentBinaryExpressionNode:
 
 
 class variableDeclarationExpressionNode:
-    def __init__(self, datatype:str, identifier:identifierNode, value, constant: bool = False) -> None:
+    def __init__(self, datatype:str, identifier:identifierNode, value, constant: bool = False, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'variableDeclarationExpression'
         self.dataType = datatype
         self.identifier = identifier
@@ -217,7 +235,9 @@ class variableDeclarationExpressionNode:
 
 
 class functionDeclarationExpressionNode:
-    def __init__(self, name: str, parameters: list = [], body: list = []) -> None:
+    def __init__(self, name: str, parameters: list = [], body: list = [], line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'functionDeclaration'
         self.name = name
         self.parameters = parameters
@@ -233,7 +253,9 @@ class functionDeclarationExpressionNode:
 
 
 class objectLiteralNode:
-    def __init__(self, properties: list) -> None:
+    def __init__(self, properties: list, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'objectLiteral'
         self.properties = properties
 
@@ -245,7 +267,9 @@ class objectLiteralNode:
 
 
 class propertyLiteralNode:
-    def __init__(self, key, value) -> None:
+    def __init__(self, key, value, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'propertyLiteral'
         self.key = key
         self.value = value
@@ -259,7 +283,9 @@ class propertyLiteralNode:
 
 
 class arrayLiteralNode:
-    def __init__(self, items: list) -> None:
+    def __init__(self, items: list, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'arrayLiteral'
         self.items = items
 
@@ -271,7 +297,9 @@ class arrayLiteralNode:
 
 
 class itemLiteralNode:
-    def __init__(self, index, value) -> None:
+    def __init__(self, index, value, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'itemLiteral'
         self.index = index
         self.value = value
@@ -285,7 +313,9 @@ class itemLiteralNode:
 
 
 class memberExpressionNode:
-    def __init__(self, object, property, computed: bool) -> None:
+    def __init__(self, object, property, computed: bool, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'memberExpression'
         self.object = object
         self.property = property
@@ -300,7 +330,9 @@ class memberExpressionNode:
 
 
 class callExpression:
-    def __init__(self, caller, arguments: list) -> None:
+    def __init__(self, caller, arguments: list, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'callExpression'
         self.caller = caller
         self.arguments = arguments
@@ -314,7 +346,9 @@ class callExpression:
 
 
 class returnNode:
-    def __init__(self, value) -> None:
+    def __init__(self, value, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
         self.kind = 'returnExpression'
         self.value = value
 

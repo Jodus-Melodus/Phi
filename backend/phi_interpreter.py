@@ -92,7 +92,7 @@ class Interpreter:
         elif isinstance(left, arrayValue):
             return self.evaluateArrayAppendBinaryExpression(left, right, binaryOperation.operand)
         else:
-            return syntaxError(self, "Cannot preform this operation.")
+            return syntaxError(self, "Cannot preform this operation.", right.column, right.line)
         
     def evaluateArrayAppendBinaryExpression(self, left:arrayValue, right, operand:str) -> arrayValue:
         match operand:
@@ -101,28 +101,28 @@ class Interpreter:
                 left.items[index] = right
                 return arrayValue(left.items)
             case _:
-                return syntaxError(self, "Cannot preform this operation on arrays.")
+                return syntaxError(self, "Cannot preform this operation on arrays.", right.column, right.line)
         
     def evaluateObjectBinaryExpression(self, left:objectValue, right:objectValue, operand:str) -> objectValue:
         match operand:
             case '+':
                 return objectValue(left.properties.update(right.properties))
             case _:
-                return syntaxError(self, "Cannot preform this operation on objects.")
+                return syntaxError(self, "Cannot preform this operation on objects.", right.column, right.line)
 
     def evaluateArrayBinaryExpression(self, left:arrayValue, right:arrayValue, operand:str) -> arrayValue:
         match operand:
             case '+':
                 return arrayValue(left.items + right.items)
             case _:
-                return syntaxError(self, "Cannot preform this operation on arrays.")
+                return syntaxError(self, "Cannot preform this operation on arrays.", right.column, right.line)
 
     def evaluateStringBinaryExpression(self, left:stringValue, right:stringValue|integerValue|realValue, operand:str) -> stringValue:
         match operand:
             case '+':
                 return stringValue(left.value + right.value)
             case _:
-                return syntaxError(self, "Cannot preform this operation on strings.")
+                return syntaxError(self, "Cannot preform this operation on strings.", right.column, right.line)
 
     def evaluateNumericBinaryExpression(self, left:integerValue|realValue, right:integerValue|realValue, operand:str) -> realValue:
         match operand:
@@ -150,7 +150,7 @@ class Interpreter:
                 else:
                     return zeroDivisionError(self)
             case _:
-                return syntaxError(self, "Cannot preform this operation on numbers")
+                return syntaxError(self, "Cannot preform this operation on numbers", right.column, right.line)
 
 # --------------------------------------------------------------------------------------------------------------------------------
 
@@ -164,7 +164,7 @@ class Interpreter:
             value = self.evaluate(assignmentExpression.value, env)
             if value.type == currentValue.type:
                 return env.assignVariable(varName, value)
-            return syntaxError(self, f"'{value.type}' is incompatible with '{currentValue.type}'")
+            return syntaxError(self, f"'{value.type}' is incompatible with '{currentValue.type}'", value.column, value.line)
         
         elif isinstance(assignmentExpression.assigne, memberExpressionNode):
             member: memberExpressionNode = assignmentExpression.assigne
@@ -184,7 +184,7 @@ class Interpreter:
         
         if dataTypeTable[declaration.dataType] == type(value):
             return env.declareVariable(declaration.identifier, value, declaration.constant)
-        return syntaxError(self, f"'{value.type}' is incompatible with '{declaration.dataType}'")
+        return syntaxError(self, f"'{value.type}' is incompatible with '{declaration.dataType}'", value.column, value.line)
 
     def evaluateFunctionDeclaration(self, declaration: functionDeclarationExpressionNode, env: environment) -> None:
         fn = function(declaration.name, declaration.parameters, env, declaration.body)
@@ -247,7 +247,7 @@ class Interpreter:
                 if isinstance(statement, returnNode):
                     return result
         else:
-            return syntaxError(self, f"'{fn}' is not a function")
+            return syntaxError(self, f"'{fn}' is not a function", fn.column, fn.line)
 
     def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
         obj:objectValue = env.lookup(member.object)
@@ -275,9 +275,9 @@ class Interpreter:
                     if value in obj.items:
                         return obj.items[value]
                     else:
-                        return syntaxError(self, f"'{member.property.symbol}' is not a valid method or property.")
+                        return syntaxError(self, f"'{member.property.symbol}' is not a valid method or property.", member.column, member.line)
             else:
-                return syntaxError(self, f"'{member.property.symbol}' is not valid.")
+                return syntaxError(self, f"'{member.property.symbol}' is not valid.", member.column, member.line)
         else:
             return keyError(self, member.property, member.object.symbol, member.property.column, member.property.line)
 
@@ -422,12 +422,12 @@ class Interpreter:
                 return self.evaluateAssignmentBinaryExpression(astNode, env)
 
             case 'integerLiteral':
-                return integerValue(astNode.value)
+                return integerValue(astNode.value, astNode.line, astNode.column)
             case 'realLiteral':
-                return realValue(astNode.value)
+                return realValue(astNode.value, astNode.line, astNode.column)
+            case 'stringLiteral':
+                return stringValue(astNode.value, astNode.line, astNode.column)
             case 'nullLiteral':
                 return nullValue()
-            case 'stringLiteral':
-                return stringValue(astNode.value)
             case _:
                 return notImplementedError(self, astNode)

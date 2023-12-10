@@ -1,9 +1,12 @@
 
 
 
-real a = root(4, 3)
-a = 666.5
+int a = root(4, 3)
+a = 34.2
 
 out(a)
+
+
+
 
 

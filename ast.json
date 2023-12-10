@@ -3,7 +3,7 @@
     "body": [
         {
             "kind": "variableDeclarationExpression",
-            "datatype": "real",
+            "datatype": "int",
             "identifier": "a",
             "value": {
                 "kind": "callExpression",
@@ -32,7 +32,7 @@
             },
             "value": {
                 "kind": "realLiteral",
-                "value": 666.5
+                "value": 34.2
             }
         },
         {

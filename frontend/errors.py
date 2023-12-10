@@ -21,9 +21,9 @@ class syntaxError(error):
 
     def __repr__(self) -> str:
         if self.column == -1:
-            return errorArrows(self.column) + f'[{self.stage}] ' + f"Syntax Error : {self.msg}."
+            return errorArrows(self.column) + f'[{self.stage}] ' + f"Syntax Error: {self.msg}."
         else:
-            return errorArrows(self.column) + f'[{self.stage}] ' + f"Syntax Error : {self.msg} at line {self.line}, column {self.column}."
+            return errorArrows(self.column) + f'[{self.stage}] ' + f"Syntax Error: {self.msg} at line {self.line}, column {self.column}."
 
 class nameError(error):
     def __init__(self, stage, name: str, column:int, line:int) -> None:
@@ -34,7 +34,7 @@ class nameError(error):
         self.line = line
 
     def __repr__(self) -> str:
-        return errorArrows(self.column) + f'[{self.stage}] ' + f"Name Error : '{self.name}' on line {self.line} in column {self.column} is undefined."
+        return errorArrows(self.column) + f'[{self.stage}] ' + f"Name Error: '{self.name}' on line {self.line} in column {self.column} is undefined."
 
 class invalidCharacterError(error):
     def __init__(self, stage, character:str, column:int, line:int) -> None:
@@ -45,7 +45,7 @@ class invalidCharacterError(error):
         self.line = line
 
     def __repr__(self) -> str:
-        return errorArrows(self.column) + f'[{self.stage}] ' + f"Invalid Character Error : Invalid character '{self.character}' on line {self.line} in column {self.column}"
+        return errorArrows(self.column) + f'[{self.stage}] ' + f"Invalid Character Error: Invalid character '{self.character}' on line {self.line} in column {self.column}"
 
 class notImplementedError(error):
     def __init__(self, stage, msg, column:int=-1, line:int=-1) -> None:
@@ -56,7 +56,7 @@ class notImplementedError(error):
         self.line = line
 
     def __repr__(self) -> str:
-        return errorArrows(self.column) + f'[{self.stage}] ' + f"Not Implemented Error : '{self.msg}' is not implemented."
+        return errorArrows(self.column) + f'[{self.stage}] ' + f"Not Implemented Error: '{self.msg}' is not implemented."
 
 class keyError(error):
     def __init__(self, stage, key, obj, column:int, line:int) -> None:
@@ -68,7 +68,7 @@ class keyError(error):
         self.line = line
 
     def __repr__(self) -> str:
-        return errorArrows(self.column) + f'[{self.stage}] ' + f"Key Error : '{self.key}' is not in '{self.obj}'"
+        return errorArrows(self.column) + f'[{self.stage}] ' + f"Key Error: '{self.key}' is not in '{self.obj}'"
     
 class typeError(error):
     def __init__(self, stage, type, column:int=-1, line:int=-1) -> None:
@@ -79,7 +79,7 @@ class typeError(error):
         self.line = line
 
     def __repr__(self) -> str:
-        return errorArrows(self.column) + f'[{self.stage}] ' + f"Type Error : '{self.type} is invalid.'"
+        return errorArrows(self.column) + f'[{self.stage}] ' + f"Type Error: '{self.type} is invalid.'"
 
 class zeroDivisionError(error):
     def __init__(self, stage, column:int=-1, line:int=-1) -> None:

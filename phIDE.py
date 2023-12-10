@@ -116,6 +116,7 @@ class App(ctk.CTk):
         self.centerx = self.width // 2
         self.centery = self.height // 2
         self.cursors = []
+        self.error = ''
 
         self.loadLanguageSyntax()
         # Frames
@@ -131,13 +132,16 @@ class App(ctk.CTk):
         self.centerTabview = ctk.CTkTabview(self.centerPanel, self.width*self.screenRatio, height=self.height*self.screenRatio)
         self.bottomTabview = ctk.CTkTabview(self.bottomPanel, width=self.width*self.screenRatio)
         self.consoleTab = self.bottomTabview.add('Console')
+        # Frames
+        self.consoleButtons = ctk.CTkFrame(self.consoleTab)
         # Textboxes
         self.console = ctk.CTkTextbox(self.consoleTab, font=self.textBoxFont, state='disabled')
         self.multiCursorText = ctk.CTkTextbox(self.multiCursorPanel, font=self.textBoxFont)
         # Buttons
-        self.clearConsoleButton = ctk.CTkButton(self.consoleTab, text='Clear', command=self.clearConsole, width=50, height=20, font=self.buttonFont)
+        self.clearConsoleButton = ctk.CTkButton(self.consoleButtons, text='Clear', command=self.clearConsole, width=50, height=20, font=self.buttonFont)
         self.findAndReplaceButton = ctk.CTkButton(self.findAndReplacePanel, command=self.findAndReplaceClick, text='Find & Replace', font=self.buttonFont)
         self.gotoButton = ctk.CTkButton(self.gotoPanel, command=self.gotoClick, text='Go to', font=self.buttonFont)
+        self.copyErrorButton = ctk.CTkButton(self.consoleButtons, text='Copy', command=self.copyErrorMessage, width=50, height=20, font=self.buttonFont)
         # Menu Buttons & Popups
         self.fileMenu = ctk.CTkButton(self.menuBar, text='File', height=20, width=50, command=self.fileMenuClick, font=self.buttonFont)
         self.editMenu = ctk.CTkButton(self.menuBar, text='Edit', height=20, width=50, command=self.editMenuClick, font=self.buttonFont)
@@ -181,12 +185,14 @@ class App(ctk.CTk):
         self.replace.pack(padx=self.padx, pady=self.pady, expand=True)
         self.findAndReplaceButton.pack(padx=self.padx, pady=self.pady, side='bottom')
 
-        self.statusbar.pack(padx=self.padx, pady=self.pady, side=ctk.BOTTOM, anchor='se', expand=True)
-        self.clearConsoleButton.pack(padx=self.padx, pady=self.pady, side=ctk.RIGHT, anchor='n')
+        self.statusbar.pack(padx=self.padx, pady=self.pady, side='bottom', anchor='se', expand=True)
+        self.consoleButtons.pack(padx=self.padx, pady=self.pady, side='right', anchor='n')
         self.console.pack(padx=self.padx, pady=self.pady, fill='both', expand=True)
+        self.clearConsoleButton.pack(padx=self.padx, pady=self.pady)
+        self.copyErrorButton.pack(padx=self.padx, pady=self.pady)
 
-        self.rightPanel.pack(padx=self.padx, pady=self.pady, fill='both', expand=True, side=ctk.RIGHT, anchor='e')
-        self.leftPanel.pack(padx=self.padx, pady=self.pady, fill='both', expand=True, side=ctk.LEFT, anchor='w')
+        self.rightPanel.pack(padx=self.padx, pady=self.pady, fill='both', expand=True, side='right', anchor='e')
+        self.leftPanel.pack(padx=self.padx, pady=self.pady, fill='both', expand=True, side='left', anchor='w')
         self.centerPanel.pack(padx=self.padx, pady=self.pady, fill='both', expand=True)
         self.bottomPanel.pack(padx=self.padx, pady=self.pady, fill='both', expand=True, anchor='s')
 
@@ -277,6 +283,11 @@ class App(ctk.CTk):
         if tabName != '':
             return self.openEditors[tabName]
         
+    def copyErrorMessage(self) -> None:
+        editor:ctk.CTkTextbox = self.currentTab
+        if editor:
+            editor.clipboard_append(self.error)
+
     def clearConsole(self) -> None:
         self.console.configure(state='normal')
         self.console.delete('0.0', 'end')
@@ -880,6 +891,7 @@ class App(ctk.CTk):
                     text = editor.get(f'{line}.0', f'{line}.end')
                     print(text)
                     print(error)
+                    self.error = error
             self.console['state'] = 'disabled'
             end = time.time()
             print(f"\nProcess finished in {end - start} seconds.")
