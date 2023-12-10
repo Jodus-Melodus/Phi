@@ -11,14 +11,6 @@ from frontend.errors import *
 # member
 # primary
 
-DATATYPE = {
-    'int':integerLiteralNode,
-    'real':realLiteralNode,
-    'string':stringLiteralNode,
-    'array':arrayLiteralNode,
-    'object':objectLiteralNode
-}
-
 class Parser:
     def __init__(self, tokens: list) -> None:
         self.tokens = tokens
@@ -275,15 +267,13 @@ class Parser:
         identifier = self.eat().value
         if (self.get().type == TT.eof) or (self.get().type == TT.lineend):
             self.eat()
-            return variableDeclarationExpressionNode(identifier, nullLiteralNode(), False)
+            return variableDeclarationExpressionNode(datatype, identifier, nullLiteralNode(), False)
         else:
             self.eat()
             statement = self.parseStatement()
             if isinstance(statement, error):
                 return statement
-            # if isinstance(statement, DATATYPE[datatype]):
-            return variableDeclarationExpressionNode(identifier, statement, False)
-            # return syntaxError(self, f"'{statement}' does not match datatype.", self.column, self.line)
+            return variableDeclarationExpressionNode(datatype, identifier, statement, False)
 
     def parseAssignmentExpression(self) -> None:
         left = self.parseObjectExpression()

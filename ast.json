@@ -2,32 +2,27 @@
     "kind": "program",
     "body": [
         {
-            "kind": "ifStatement",
-            "conditionLeft": {
-                "kind": "identifier",
-                "symbol": "F"
+            "kind": "variableDeclarationExpression",
+            "datatype": "int",
+            "identifier": "a",
+            "value": {
+                "kind": "stringLiteral",
+                "value": "hello"
             },
-            "operand": "!=",
-            "conditionRight": {
-                "kind": "identifier",
-                "symbol": "F"
-            },
-            "body": [
+            "constant": "False"
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
                 {
-                    "kind": "callExpression",
-                    "arguments": [
-                        {
-                            "kind": "identifier",
-                            "symbol": "T"
-                        }
-                    ],
-                    "caller": {
-                        "kind": "identifier",
-                        "symbol": "out"
-                    }
+                    "kind": "identifier",
+                    "symbol": "a"
                 }
             ],
-            "elsebody": []
+            "caller": {
+                "kind": "identifier",
+                "symbol": "out"
+            }
         }
     ]
 }

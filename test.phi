@@ -1,10 +1,8 @@
 
 
 
+int a = "hello"
 
-if (F != F){
-	out(T)
-}
-
+out(a)
 
 

@@ -1,4 +1,5 @@
 from backend.values import *
+from frontend.phi_lexer import *
 
 
 class identifierNode:
@@ -198,8 +199,9 @@ class assignmentBinaryExpressionNode:
 
 
 class variableDeclarationExpressionNode:
-    def __init__(self, identifier, value, constant: bool = False) -> None:
+    def __init__(self, datatype:str, identifier:identifierNode, value, constant: bool = False) -> None:
         self.kind = 'variableDeclarationExpression'
+        self.dataType = datatype
         self.identifier = identifier
         self.value = value
         self.constant = constant
@@ -207,6 +209,7 @@ class variableDeclarationExpressionNode:
     def __repr__(self) -> str:
         return str({
             'kind': self.kind,
+            'datatype': self.dataType,
             'identifier': self.identifier,
             'value': self.value,
             'constant': str(self.constant)

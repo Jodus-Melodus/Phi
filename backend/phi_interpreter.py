@@ -8,6 +8,14 @@ booleanTable = {
     'F':False
 }
 
+dataTypeTable = {
+    'int':integerValue,
+    'real':realValue,
+    'str':stringValue,
+    'object':objectValue,
+    'array':arrayValue
+}
+
 class Interpreter:
     def __init__(self) -> None:
         pass
@@ -168,7 +176,10 @@ class Interpreter:
         value = self.evaluate(declaration.value, env)
         if isinstance(value, error):
             return value
-        return env.declareVariable(declaration.identifier, value, declaration.constant)
+        
+        if dataTypeTable[declaration.dataType] == type(value):
+            return env.declareVariable(declaration.identifier, value, declaration.constant)
+        return syntaxError(self, f"'{value.type}' is incompatible with '{declaration.dataType}'")
 
     def evaluateFunctionDeclaration(self, declaration: functionDeclarationExpressionNode, env: environment) -> None:
         fn = function(declaration.name, declaration.parameters, env, declaration.body)
