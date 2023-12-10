@@ -3,9 +3,9 @@ from frontend.errors import *
 
 class TokenType:
     def __init__(self):
-        self.int = 'int'
-        self.string = 'string'
-        self.real = 'real'
+        self.intValue = 'intvalue'
+        self.stringValue = 'stringvalue'
+        self.realValue = 'realvalue'
 
         self.binaryOperation = 'binaryoperation'
         self.assignmentBinaryOperation = 'assignmentbinaryoperation'
@@ -39,8 +39,12 @@ class TokenType:
         self.identifier = 'identifier'
 
         # keywords
-        self.var = 'var'
-        self.const = 'const'
+        self.int = 'int'
+        self.real = 'real'
+        self.string = 'string'
+        self.array = 'array'
+        self.bool = 'bool'
+        self.obj = 'object'
         self.fn = 'fn'
         self._if = 'if'
         self._else = 'else'
@@ -53,13 +57,17 @@ DIGITS = '12345678890'
 ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-'
 
 KEYWORDS = {
-    'var':TT.var,
-    'const':TT.const,
     'fn':TT.fn,
     'if':TT._if,
     'else':TT._else,
     'while':TT._while,
-    'do':TT.do
+    'do':TT.do,
+    'int':TT.int,
+    'real':TT.real,
+    'str':TT.string,
+    'array':TT.array,
+    'bool':TT.bool,
+    'obj':TT.obj
 }
 
 class Token:
@@ -160,7 +168,7 @@ class Lexer:
                         string += self.get()
                         self.eat()
                     self.eat()
-                    tokens.append(Token(TT.string, string, self.index, self.column, self.line))
+                    tokens.append(Token(TT.stringValue, string, self.index, self.column, self.line))
                 case '&':
                     tokens.append(Token(TT._and, char, self.index, self.column, self.line))
                     self.eat()
@@ -212,9 +220,9 @@ class Lexer:
                             self.eat()
 
                         if decimal == 0:
-                            tokens.append(Token(TT.int, int(number), self.index, self.column, self.line))
+                            tokens.append(Token(TT.intValue, int(number), self.index, self.column, self.line))
                         else:
-                            tokens.append(Token(TT.real, float(number), self.index, self.column, self.line))
+                            tokens.append(Token(TT.realValue, float(number), self.index, self.column, self.line))
 
                     elif char in ALPHABET:
                         name = ''

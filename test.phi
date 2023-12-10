@@ -1,9 +1,8 @@
 
 
 
+int a = "hello"
 
-var hsh = hash("Hello World")
+out(a)
 
-
-out(hsh)
 

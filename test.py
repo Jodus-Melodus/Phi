@@ -1,3 +1,5 @@
 
 
-print('fn name(parameters) {\n\tbody\n}')
+b = int(4.3)
+
+print(b)

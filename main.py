@@ -3,6 +3,7 @@ from frontend.phi_lexer import *
 from frontend.phi_parser import *
 from backend.phi_interpreter import *
 from backend.phi_environment import *
+import json
 
 def run(sourceCode:str) -> None|error:
     environment = createGlobalEnvironment()
@@ -16,7 +17,7 @@ def run(sourceCode:str) -> None|error:
         return ast
 
     with open('ast.json', 'w') as f:
-        f.write(str(ast).replace("'", '"'))
+        f.write(json.dumps(json.loads(str(ast).replace("'", '"')), indent=4))
 
     interpreter = Interpreter()
     res = interpreter.evaluate(ast, environment)

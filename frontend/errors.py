@@ -21,9 +21,9 @@ class syntaxError(error):
 
     def __repr__(self) -> str:
         if self.column == -1:
-            return errorArrows(self.column) + f'[{self.stage}] ' + f"Syntax error : {self.msg}"
+            return errorArrows(self.column) + f'[{self.stage}] ' + f"Syntax Error : {self.msg}."
         else:
-            return errorArrows(self.column) + f'[{self.stage}] ' + f"Syntax error : {self.msg} on line {self.line} in column {self.column}"
+            return errorArrows(self.column) + f'[{self.stage}] ' + f"Syntax Error : {self.msg} at line {self.line}, column {self.column}."
 
 class nameError(error):
     def __init__(self, stage, name: str, column:int, line:int) -> None:

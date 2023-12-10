@@ -2,7 +2,7 @@ from frontend.phi_lexer import Token, TT
 from frontend.astNodes import *
 from frontend.errors import *
 
-# prescidence orders
+# Prescidence orders
 # assignment
 # object
 # additive
@@ -11,12 +11,12 @@ from frontend.errors import *
 # member
 # primary
 
-
 class Parser:
     def __init__(self, tokens: list) -> None:
         self.tokens = tokens
         self.program = programNode([])
-        self.conditionalOperators = (TT.equal, TT.notequal, TT.greaterThan, TT.lessThan, TT.greaterThanEqual, TT.lessThanEqual, TT._and, TT._or)
+        self.conditionalOperators = (TT.equal, TT.notequal, TT.greaterThan,
+                                     TT.lessThan, TT.greaterThanEqual, TT.lessThanEqual, TT._and, TT._or)
         self.column = 0
         self.line = 0
 
@@ -49,9 +49,15 @@ class Parser:
         match self.get().type:
             case TT.lineend:
                 self.eat()
-            case TT.var:
+            case TT.int:
                 return self.parseVariableDeclaration()
-            case TT.const:
+            case TT.real:
+                return self.parseVariableDeclaration()
+            case TT.string:
+                return self.parseVariableDeclaration()
+            case TT.array:
+                return self.parseVariableDeclaration()
+            case TT.obj:
                 return self.parseVariableDeclaration()
             case TT.fn:
                 return self.parseFunctionDeclaration()
@@ -66,10 +72,10 @@ class Parser:
 
     def parseExpression(self) -> None:
         return self.parseAssignmentExpression()
-    
+
     def parseDoWhileStatement(self) -> None:
         self.eat()
-        
+
         operand = ''
         if self.get().type == TT.openBrace:
             self.eat()
@@ -107,7 +113,6 @@ class Parser:
                 return syntaxError(self, "Expected a 'while'", self.column, self.line)
         else:
             return syntaxError(self, "Expected a '{'", self.column, self.line)
-
 
         return doWhileStatementNode(body, conditionLeft, operand, conditionRight)
 
@@ -165,7 +170,7 @@ class Parser:
         else:
             return syntaxError(self, "Expected a '('", self.column, self.line)
         return whileStatementNode(conditionLeft, operand, conditionRight, body, elseBody)
-    
+
     def parseIfStatement(self) -> None:
         self.eat()
 
@@ -220,14 +225,14 @@ class Parser:
         else:
             return syntaxError(self, "Expected a '('", self.column, self.line)
         return ifStatementNode(conditionLeft, operand, conditionRight, body, elseBody)
-    
+
     def parseFunctionDeclaration(self) -> None:
         self.eat()
         if self.get().type == TT.identifier:
             name = self.eat().value
         else:
             return syntaxError(self, 'Expected a name', self.column, self.line)
-        
+
         args = self.parseArguments()
         if isinstance(args, error):
             return args
@@ -258,32 +263,17 @@ class Parser:
         return functionDeclarationExpressionNode(str(name), parameters, body)
 
     def parseVariableDeclaration(self) -> None:
-        if self.get().type == TT.var:
+        datatype = self.eat().type
+        identifier = self.eat().value
+        if (self.get().type == TT.eof) or (self.get().type == TT.lineend):
             self.eat()
-            identifier = self.eat().value
-            if (self.get().type == TT.eof) or (self.get().type == TT.lineend):
-                self.eat()
-                return variableDeclarationExpressionNode(identifier, nullLiteralNode())
-            else:
-                self.eat()
-                statement = self.parseStatement()
-                if isinstance(statement, error):
-                    return statement
-                return variableDeclarationExpressionNode(identifier, statement)
-        elif self.get().type == TT.const:
-            self.eat()
-            identifier = self.eat().value
-            if (self.get().type == TT.eof) or (self.get().type == TT.lineend):
-                self.eat()
-                return variableDeclarationExpressionNode(identifier, nullLiteralNode(), True)
-            else:
-                self.eat()
-                statement = self.parseStatement()
-                if isinstance(statement, error):
-                    return statement
-                return variableDeclarationExpressionNode(identifier, statement, True)
+            return variableDeclarationExpressionNode(datatype, identifier, nullLiteralNode(), False)
         else:
-            return syntaxError(self, "Expected 'var' or 'const'", self.column, self.line)
+            self.eat()
+            statement = self.parseStatement()
+            if isinstance(statement, error):
+                return statement
+            return variableDeclarationExpressionNode(datatype, identifier, statement, False)
 
     def parseAssignmentExpression(self) -> None:
         left = self.parseObjectExpression()
@@ -492,11 +482,11 @@ class Parser:
 
     def parsePrimaryExpression(self) -> None:
         match self.get().type:
-            case TT.int:
-                return numericLiteralNode(int(self.eat().value), self.column, self.line)
-            case TT.real:
-                return numericLiteralNode(float(self.eat().value), self.column, self.line)
-            case TT.string:
+            case TT.intValue:
+                return integerLiteralNode(int(self.eat().value), self.column, self.line)
+            case TT.realValue:
+                return realLiteralNode(float(self.eat().value), self.column, self.line)
+            case TT.stringValue:
                 return stringLiteralNode(self.eat().value, self.column, self.line)
             case TT.identifier:
                 return identifierNode(str(self.eat().value), self.column, self.line)
