@@ -846,8 +846,10 @@ class App(ctk.CTk):
     def autoBrace(self, e=None) -> None:
         editor = self.currentTab
         if editor:
-            editor.insert('insert', '}')
-            editor.mark_set('insert', 'insert -1c')
+            currentLine = editor.index('insert').split('.')[0]
+            text = editor.get(currentLine + '.0', currentLine + '.end')
+            tabs = text.count('\t')
+            editor.insert('insert', '\n' + '\t'*(tabs+1) + '\n' + '\t'*tabs + '}')
 
     def closeFile(self, e=None) -> None:
         self.saveFile()

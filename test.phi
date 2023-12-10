@@ -1,9 +1,12 @@
 
 
-int A_d = 5
 
-out(A_d)
 
-A_d = 9
 
-out(A_d)
+
+fn add(a, b){
+	<- a + b
+}
+
+
+out(add(3, 2))

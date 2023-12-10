@@ -2,45 +2,55 @@
     "kind": "program",
     "body": [
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "int",
-            "identifier": "A_d",
-            "value": {
-                "kind": "integerLiteral",
-                "value": 5
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
+            "kind": "functionDeclaration",
+            "name": "add",
+            "parameters": [
                 {
                     "kind": "identifier",
-                    "symbol": "A_d"
+                    "symbol": "a"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "b"
                 }
             ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "out"
-            }
-        },
-        {
-            "kind": "assignmentExpression",
-            "assigne": {
-                "kind": "identifier",
-                "symbol": "A_d"
-            },
-            "value": {
-                "kind": "integerLiteral",
-                "value": 9
-            }
+            "body": [
+                {
+                    "kind": "returnExpression",
+                    "value": {
+                        "kind": "binaryExpression",
+                        "left": {
+                            "kind": "identifier",
+                            "symbol": "a"
+                        },
+                        "operand": "+",
+                        "right": {
+                            "kind": "identifier",
+                            "symbol": "b"
+                        }
+                    }
+                }
+            ]
         },
         {
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "identifier",
-                    "symbol": "A_d"
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "integerLiteral",
+                            "value": 3
+                        },
+                        {
+                            "kind": "integerLiteral",
+                            "value": 2
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "add"
+                    }
                 }
             ],
             "caller": {
