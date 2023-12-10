@@ -1,5 +1,9 @@
 # Phi: A Dynamic Scripting Language
 Welcome to Phi, a dynamic scripting language designed for flexibility and ease of use.
+
+## Conventions
+- All code should be indented using 4 spaces.
+- All code should be written using [Camel Case](https://en.wikipedia.org/wiki/Camel_case) although other cases are supported.
 # Reporting Issues
 If you encounter any unexpected behavior while using Phi, please report it promptly. Include a screenshot and a detailed description to help us improve.
 # Keywords
@@ -15,7 +19,7 @@ The following keywords are reserved in the Phi programming language:
 - `while` - [While loops](#while-loops)
 - `do` - Part of [do-while](#do-while-loops) loop
 - `fn` - Declare a new [function](#user-defined-functions)
-All other [built-in functions](#built-in-functions) are also reserved words.
+- All other [built-in functions](#built-in-functions) and methods are also reserved words.
 # Comments
 Comments start with `#` symbol and continue until end of line.
 # Operators
