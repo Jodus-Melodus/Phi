@@ -3,13 +3,37 @@
     "body": [
         {
             "kind": "variableDeclarationExpression",
-            "datatype": "int",
+            "datatype": "real",
             "identifier": "a",
             "value": {
-                "kind": "stringLiteral",
-                "value": "hello"
+                "kind": "callExpression",
+                "arguments": [
+                    {
+                        "kind": "integerLiteral",
+                        "value": 4
+                    },
+                    {
+                        "kind": "integerLiteral",
+                        "value": 3
+                    }
+                ],
+                "caller": {
+                    "kind": "identifier",
+                    "symbol": "root"
+                }
             },
             "constant": "False"
+        },
+        {
+            "kind": "assignmentExpression",
+            "assigne": {
+                "kind": "identifier",
+                "symbol": "a"
+            },
+            "value": {
+                "kind": "integerLiteral",
+                "value": 6
+            }
         },
         {
             "kind": "callExpression",

@@ -5,7 +5,7 @@ from time import time, sleep
 from hashlib import *
 import sys
 
-def out(arg) -> str|bool:
+def out(arg) -> str:
     if isinstance(arg, (integerValue, stringValue, booleanValue, nullValue, realValue)):
         return arg.value
     elif isinstance(arg, objectValue):
@@ -37,8 +37,8 @@ def type_(arg:RuntimeValue) -> str:
 def wait(seconds) -> None:
     sleep(int(seconds.value))
 
-def root(radicand, index) -> integerValue:
-    return integerValue(float(float(radicand.value))**(1/float(index.value)))
+def root(radicand, index) -> realValue:
+    return realValue(float(float(radicand.value))**(1/float(index.value)))
 
 def hash(data:stringValue) -> stringValue:
     d = data.value.encode('utf-8')

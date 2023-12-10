@@ -1,7 +1,8 @@
 
 
 
-int a = "hello"
+real a = root(4, 3)
+a = 6
 
 out(a)
 

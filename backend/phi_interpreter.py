@@ -11,7 +11,7 @@ booleanTable = {
 dataTypeTable = {
     'int':integerValue,
     'real':realValue,
-    'str':stringValue,
+    'string':stringValue,
     'object':objectValue,
     'array':arrayValue
 }
