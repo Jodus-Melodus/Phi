@@ -12,100 +12,63 @@
             "constant": "False"
         },
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "object",
-            "identifier": "a",
-            "value": {
-                "kind": "objectLiteral",
-                "properties": [
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "name",
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "John Doe"
-                        }
-                    },
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "age",
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 30
-                        }
-                    },
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "city",
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "New York"
-                        }
-                    },
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "property",
-                        "value": {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
                             "kind": "identifier",
                             "symbol": "value"
                         }
-                    },
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "method",
-                        "value": {
-                            "kind": "functionDeclaration",
-                            "name": "_",
-                            "parameters": [],
-                            "body": [
-                                {
-                                    "kind": "returnExpression",
-                                    "value": {
-                                        "kind": "integerLiteral",
-                                        "value": 0
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "newMethod",
-                        "value": {
-                            "kind": "functionDeclaration",
-                            "name": "_",
-                            "parameters": [],
-                            "body": [
-                                {
-                                    "kind": "returnExpression",
-                                    "value": {
-                                        "kind": "stringLiteral",
-                                        "value": "New method"
-                                    }
-                                }
-                            ]
-                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "round"
                     }
-                ]
-            },
-            "constant": "False"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "out"
+            }
         },
         {
             "kind": "callExpression",
             "arguments": [
                 {
                     "kind": "callExpression",
-                    "arguments": [],
-                    "caller": {
-                        "kind": "memberExpression",
-                        "object": {
+                    "arguments": [
+                        {
                             "kind": "identifier",
-                            "symbol": "a"
-                        },
-                        "property": {
-                            "kind": "identifier",
-                            "symbol": "newMethod"
+                            "symbol": "value"
                         }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "floor"
+                    }
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "out"
+            }
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "value"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "ceil"
                     }
                 }
             ],

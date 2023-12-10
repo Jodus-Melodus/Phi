@@ -1,14 +1,6 @@
 
 real value = 324.2
 
-obj a = {
-    name: "John Doe",
-    age: 30,
-    city: "New York",
-    property: value,
-    method: fn _(){<-0},
-    newMethod: fn _(){<-"New method"}
-}
-
-
-out(a.newMethod())
+out(round(value))
+out(floor(value))
+out(ceil(value))

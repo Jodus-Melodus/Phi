@@ -4,6 +4,7 @@ from frontend.errors import *
 from time import time, sleep
 from hashlib import *
 import sys
+import math
 
 def out(arg) -> str:
     if isinstance(arg, (integerValue, stringValue, booleanValue, nullValue, realValue)):
@@ -41,3 +42,20 @@ def root(radicand, index) -> realValue:
 def hash(data:stringValue) -> stringValue:
     d = data.value.encode('utf-8')
     return stringValue(sha256(d).hexdigest(), data.line, data.column)
+
+def absoluteValue(value:integerValue|realValue) -> integerValue|realValue:
+    if isinstance(value, integerValue):
+        return integerValue(abs(value.value), value.line, value.column)
+    elif isinstance(value, realValue):
+        return realValue(abs(value.value), value.line, value.column)
+    else:
+        return typeError('Built-in Functions', value, value.column, value.line)
+
+def _round(value:realValue) -> integerValue:
+    return integerValue(round(value.value))
+
+def _floor(value:realValue) -> integerValue:
+    return integerValue(math.floor(value.value))
+
+def _ceil(value:realValue) -> integerValue:
+    return integerValue(math.ceil(value.value))

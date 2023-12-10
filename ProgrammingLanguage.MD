@@ -310,6 +310,42 @@ Generate hash code for data(sha256)
 ```
 str hsh = hash("Hello World!")
 ```
+### abs(-23)
+Returns absolute value of a number.
+```
+int a = abs(-23)
+```
+Output:
+```
+23
+```
+### `round`(1.4)
+Rounds number to the nearest integer.
+```
+int rounded = round(1.4)
+```
+Output:
+```
+1
+```
+### `floor`(1.4)
+Rounds number down to the nearest integer.
+```
+int floored = floor(1.4)
+```
+Output:
+```
+1
+```
+### `ceil`(1.4)
+Rounds number up to the nearest integer.
+```
+int ceiled = ceil(1.4)
+```
+Output:
+```
+2
+```
 ## User Defined Functions
 Functions are defined using the `fn` keyword followed by its name and parameters in parentheses. The function body is enclosed within curly braces.
 
