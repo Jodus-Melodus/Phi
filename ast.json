@@ -16,7 +16,11 @@
                     "arguments": [
                         {
                             "kind": "realLiteral",
-                            "value": 5.2
+                            "value": 24.0
+                        },
+                        {
+                            "kind": "realLiteral",
+                            "value": 36.0
                         }
                     ],
                     "caller": {
@@ -27,7 +31,7 @@
                         },
                         "property": {
                             "kind": "identifier",
-                            "symbol": "ceil"
+                            "symbol": "lcm"
                         }
                     }
                 }

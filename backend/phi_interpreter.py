@@ -163,6 +163,8 @@ class Interpreter:
         if isinstance(assignmentExpression.assigne, identifierNode):
             varName = assignmentExpression.assigne.symbol
             currentValue = env.lookup(assignmentExpression.assigne)
+            if isinstance(currentValue, error):
+                return currentValue
             value = self.evaluate(assignmentExpression.value, env)
             if value.type == currentValue.type:
                 return env.assignVariable(varName, value)
