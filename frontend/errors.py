@@ -1,5 +1,5 @@
 
-def errorArrows(column:int) -> str:
+def errorArrows(column: int) -> str:
     out = ''
     while column-1 > 0:
         out += ' '
@@ -7,12 +7,14 @@ def errorArrows(column:int) -> str:
     out += '^'
     return out + '\n'
 
+
 class error:
     def __init__(self) -> None:
         pass
 
+
 class syntaxError(error):
-    def __init__(self, stage, msg: str, column:int, line:int) -> None:
+    def __init__(self, stage: str, msg: str, column: int, line: int) -> None:
         super().__init__()
         self.stage = stage
         self.msg = msg
@@ -25,8 +27,9 @@ class syntaxError(error):
 {self.msg}
 '''
 
+
 class nameError(error):
-    def __init__(self, stage, name: str, column:int, line:int) -> None:
+    def __init__(self, stage: str, name: str, column: int, line: int) -> None:
         super().__init__()
         self.stage = stage
         self.name = name
@@ -39,8 +42,9 @@ class nameError(error):
 '{self.name}' is not defined
 '''
 
+
 class invalidCharacterError(error):
-    def __init__(self, stage, character:str, column:int, line:int) -> None:
+    def __init__(self, stage: str, character: str, column: int, line: int) -> None:
         super().__init__()
         self.stage = stage
         self.character = character
@@ -53,8 +57,9 @@ class invalidCharacterError(error):
 '{self.character}' is not a valid character
 '''
 
+
 class notImplementedError(error):
-    def __init__(self, stage, msg, column:int, line:int) -> None:
+    def __init__(self, stage: str, msg:str, column: int, line: int) -> None:
         super().__init__()
         self.stage = stage
         self.msg = msg
@@ -67,8 +72,9 @@ class notImplementedError(error):
 '{self.msg}' is not yet Implemented
 '''
 
+
 class keyError(error):
-    def __init__(self, stage, key, obj, column:int, line:int) -> None:
+    def __init__(self, stage: str, key, obj, column: int, line: int) -> None:
         super().__init__()
         self.stage = stage
         self.key = key
@@ -81,9 +87,10 @@ class keyError(error):
 [Key Error] Ln {self.line}, Col {self.column}:
 '{self.key}' is not a valid key for '{self.obj}'
 '''
-    
+
+
 class typeError(error):
-    def __init__(self, stage, type, column:int, line:int) -> None:
+    def __init__(self, stage: str, type, column: int, line: int) -> None:
         super().__init__()
         self.stage = stage
         self.type = type
@@ -96,8 +103,9 @@ class typeError(error):
 '{self.type}' is not a valid type
 '''
 
+
 class zeroDivisionError(error):
-    def __init__(self, stage, column:int, line:int) -> None:
+    def __init__(self, stage: str, column: int, line: int) -> None:
         super().__init__()
         self.stage = stage
         self.column = column

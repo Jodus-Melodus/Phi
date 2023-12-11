@@ -3,30 +3,165 @@
     "body": [
         {
             "kind": "functionDeclaration",
-            "name": "test",
+            "name": "genFactors",
             "parameters": [
                 {
                     "kind": "identifier",
-                    "symbol": "a"
-                },
-                {
-                    "kind": "identifier",
-                    "symbol": "b"
+                    "symbol": "n"
                 }
             ],
             "body": [
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "array",
+                    "identifier": "factors",
+                    "value": {
+                        "kind": "arrayLiteral",
+                        "items": []
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "int",
+                    "identifier": "i",
+                    "value": {
+                        "kind": "integerLiteral",
+                        "value": 1
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "whileStatement",
+                    "conditionLeft": {
+                        "kind": "identifier",
+                        "symbol": "i"
+                    },
+                    "operand": "<=",
+                    "conditionRight": {
+                        "kind": "identifier",
+                        "symbol": "n"
+                    },
+                    "body": [
+                        {
+                            "kind": "ifStatement",
+                            "conditionLeft": {
+                                "kind": "binaryExpression",
+                                "left": {
+                                    "kind": "identifier",
+                                    "symbol": "n"
+                                },
+                                "operand": "%",
+                                "right": {
+                                    "kind": "identifier",
+                                    "symbol": "i"
+                                }
+                            },
+                            "operand": "==",
+                            "conditionRight": {
+                                "kind": "integerLiteral",
+                                "value": 0
+                            },
+                            "body": [
+                                {
+                                    "kind": "callExpression",
+                                    "arguments": [
+                                        {
+                                            "kind": "identifier",
+                                            "symbol": "i"
+                                        }
+                                    ],
+                                    "caller": {
+                                        "kind": "memberExpression",
+                                        "object": {
+                                            "kind": "identifier",
+                                            "symbol": "factors"
+                                        },
+                                        "property": {
+                                            "kind": "identifier",
+                                            "symbol": "append"
+                                        }
+                                    }
+                                }
+                            ],
+                            "elsebody": []
+                        },
+                        {
+                            "kind": "assignmentBinaryExpression",
+                            "assigne": {
+                                "kind": "identifier",
+                                "symbol": "i"
+                            },
+                            "operand": "+=",
+                            "value": {
+                                "kind": "integerLiteral",
+                                "value": 1
+                            }
+                        }
+                    ],
+                    "elsebody": []
+                },
+                {
+                    "kind": "returnExpression",
+                    "value": {
+                        "kind": "identifier",
+                        "symbol": "factors"
+                    }
+                }
+            ]
+        },
+        {
+            "kind": "functionDeclaration",
+            "name": "checkPrime",
+            "parameters": [
+                {
+                    "kind": "identifier",
+                    "symbol": "n"
+                }
+            ],
+            "body": [
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "array",
+                    "identifier": "factors",
+                    "value": {
+                        "kind": "callExpression",
+                        "arguments": [
+                            {
+                                "kind": "identifier",
+                                "symbol": "n"
+                            }
+                        ],
+                        "caller": {
+                            "kind": "identifier",
+                            "symbol": "genFactors"
+                        }
+                    },
+                    "constant": "False"
+                },
                 {
                     "kind": "returnExpression",
                     "value": {
                         "kind": "ifStatement",
                         "conditionLeft": {
-                            "kind": "identifier",
-                            "symbol": "a"
+                            "kind": "callExpression",
+                            "arguments": [],
+                            "caller": {
+                                "kind": "memberExpression",
+                                "object": {
+                                    "kind": "identifier",
+                                    "symbol": "factors"
+                                },
+                                "property": {
+                                    "kind": "identifier",
+                                    "symbol": "length"
+                                }
+                            }
                         },
-                        "operand": ">",
+                        "operand": "==",
                         "conditionRight": {
-                            "kind": "identifier",
-                            "symbol": "b"
+                            "kind": "integerLiteral",
+                            "value": 2
                         },
                         "body": [
                             {
@@ -52,24 +187,11 @@
         },
         {
             "kind": "variableDeclarationExpression",
-            "datatype": "bool",
-            "identifier": "a",
+            "datatype": "int",
+            "identifier": "number",
             "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "integerLiteral",
-                        "value": 1
-                    },
-                    {
-                        "kind": "integerLiteral",
-                        "value": 4
-                    }
-                ],
-                "caller": {
-                    "kind": "identifier",
-                    "symbol": "test"
-                }
+                "kind": "integerLiteral",
+                "value": 5
             },
             "constant": "False"
         },
@@ -77,8 +199,17 @@
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "identifier",
-                    "symbol": "a"
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "number"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "checkPrime"
+                    }
                 }
             ],
             "caller": {

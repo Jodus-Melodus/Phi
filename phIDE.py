@@ -314,7 +314,6 @@ class App(ctk.CTk):
             editor.tag_config('error', background='#990000')
             editor.tag_config('similar', background='#595959')
             editor.tag_config('sel', background='#595959')
-            editor.tag_config('currentLine', background='#111111')
 
             editor.pack(expand=True, fill='both')
 
@@ -392,8 +391,6 @@ class App(ctk.CTk):
             currentLine = editor.index('insert').split('.')[0]
             self.line, self.column = editor.index('insert').split('.')
             self.statusbar.configure(text=f'Ln {self.line}, Col {self.column}')
-            editor.tag_remove('currentLine', '0.0', 'end')
-            editor.tag_add('currentLine', f'{currentLine}.0', f'{currentLine}.end')
 
         self.updateMultiCursors(e)
         self.updateSyntax()
@@ -423,8 +420,6 @@ class App(ctk.CTk):
         if editor:
             currentLine = editor.index('insert').split('.')[0]
             editor.tag_remove('similar', '0.0', 'end')
-            editor.tag_remove('currentLine', '0.0', 'end')
-            editor.tag_add('currentLine', f'{currentLine}.0', f'{currentLine}.end')
 
     def highlightSelected(self, e=None) -> None:
         editor = self.currentTab

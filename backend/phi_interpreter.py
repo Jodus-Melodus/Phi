@@ -145,7 +145,7 @@ class Interpreter:
                 if right.value != 0:
                     return realValue(left.value % right.value)
                 else:
-                    return zeroDivisionError(self)
+                    return zeroDivisionError(self, right.column, right.line)
             case '//':
                 if right.value != 0:
                     return realValue(left.value // right.value)
@@ -227,7 +227,8 @@ class Interpreter:
             return result
         elif isinstance(fn, function):
             scope = createGlobalEnvironment(fn.declarationEnvironment)
-            scope.declareVariable(fn.name, scope.parent.lookup(identifierNode(fn.name, 0, 0)))
+            for variable in env.variables:
+                scope.declareVariable(variable, env.variables[variable])
 
             if len(fn.parameters) == len(args):
                 for i in range(len(fn.parameters)):

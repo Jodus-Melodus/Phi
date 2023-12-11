@@ -1,16 +1,32 @@
 
 
+fn genFactors(n){
+	array factors = []
+	int i = 1
+
+	while (i <= n){
+		if (n % i == 0){
+			factors.append(i)
+		}
+		i += 1
+	}
+	<- factors
+}
 
 
-fn test(a, b){
-	<- if (a > b){
+fn checkPrime(n){
+	array factors = genFactors(n)
+
+	<- if (factors.length() == 2){
 		<- T
 	} else {
 		<- F
 	}
 }
 
-bool a = test(1, 4)
+int number = 5
 
-out(a)
+out(checkPrime(number))
+
+
 
