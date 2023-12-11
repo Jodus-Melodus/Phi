@@ -9,220 +9,27 @@
             }
         },
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "int",
-            "identifier": "x",
-            "value": {
-                "kind": "integerLiteral",
-                "value": 5
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "real",
-            "identifier": "y",
-            "value": {
-                "kind": "realLiteral",
-                "value": 3.2
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "string",
-            "identifier": "z",
-            "value": {
-                "kind": "stringLiteral",
-                "value": "9"
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "real",
-            "identifier": "q",
-            "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "identifier",
-                        "symbol": "x"
-                    }
-                ],
-                "caller": {
-                    "kind": "identifier",
-                    "symbol": "Real"
-                }
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "string",
-            "identifier": "w",
-            "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "identifier",
-                        "symbol": "x"
-                    }
-                ],
-                "caller": {
-                    "kind": "identifier",
-                    "symbol": "Str"
-                }
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "int",
-            "identifier": "e",
-            "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "identifier",
-                        "symbol": "y"
-                    }
-                ],
-                "caller": {
-                    "kind": "identifier",
-                    "symbol": "Int"
-                }
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "string",
-            "identifier": "r",
-            "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "identifier",
-                        "symbol": "y"
-                    }
-                ],
-                "caller": {
-                    "kind": "identifier",
-                    "symbol": "Str"
-                }
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "int",
-            "identifier": "t",
-            "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "identifier",
-                        "symbol": "z"
-                    }
-                ],
-                "caller": {
-                    "kind": "identifier",
-                    "symbol": "Int"
-                }
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "real",
-            "identifier": "u",
-            "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "identifier",
-                        "symbol": "z"
-                    }
-                ],
-                "caller": {
-                    "kind": "identifier",
-                    "symbol": "Real"
-                }
-            },
-            "constant": "False"
-        },
-        {
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "identifier",
-                    "symbol": "q"
-                }
-            ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "out"
-            }
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "identifier",
-                    "symbol": "w"
-                }
-            ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "out"
-            }
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "identifier",
-                    "symbol": "e"
-                }
-            ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "out"
-            }
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "identifier",
-                    "symbol": "r"
-                }
-            ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "out"
-            }
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "identifier",
-                    "symbol": "t"
-                }
-            ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "out"
-            }
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "identifier",
-                    "symbol": "u"
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "realLiteral",
+                            "value": 5.2
+                        }
+                    ],
+                    "caller": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "meth"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "ceil"
+                        }
+                    }
                 }
             ],
             "caller": {

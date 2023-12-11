@@ -1,26 +1,7 @@
 import math as meth
 
-int x = 5
-real y = 3.2
-str z = "9"
 
-
-real q = Real(x)
-str w = Str(x)
-
-int e = Int(y)
-str r = Str(y)
-
-int t = Int(z)
-real u = Real(z)
-
-out(q)
-out(w)
-out(e)
-out(r)
-out(t)
-out(u)
-
+out(meth.floor(5.0))
 
 
 

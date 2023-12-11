@@ -75,9 +75,6 @@ def createGlobalEnvironment(parent=None) -> environment:
     # Move to modules
     env.declareVariable('now', nativeFunction(lambda args, scope : bif.now()), True)
     env.declareVariable('wait', nativeFunction(lambda args, scope : bif.wait(args[0])), True)
-    env.declareVariable('round', nativeFunction(lambda args, scope : bif._round(args[0])), True)
-    env.declareVariable('floor', nativeFunction(lambda args, scope : bif._floor(args[0])), True)
-    env.declareVariable('ceil', nativeFunction(lambda args, scope : bif._ceil(args[0])), True)
 
     # variables
     env.declareVariable('_', nullValue(), True)
