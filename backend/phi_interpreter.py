@@ -138,7 +138,7 @@ class Interpreter:
                 if right.value != 0:
                     return realValue(left.value / right.value)
                 else:
-                    return zeroDivisionError(self)
+                    return zeroDivisionError(self, right.column, right.line)
             case '^':
                 return realValue(left.value ** right.value)
             case '%':
@@ -150,7 +150,7 @@ class Interpreter:
                 if right.value != 0:
                     return realValue(left.value // right.value)
                 else:
-                    return zeroDivisionError(self)
+                    return zeroDivisionError(self, right.column, right.line)
             case _:
                 return syntaxError(self, "Cannot preform this operation on numbers", right.column, right.line)
 
@@ -200,7 +200,7 @@ class Interpreter:
             if isinstance(a, error):
                 return a
             properties[prop.key] = a
-        obj = objectValue(properties)
+        obj = objectValue(properties, object.line, object.column)
         return obj
 
     def evaluateArrayExpression(self, array: arrayLiteralNode, env: environment) -> arrayValue:
@@ -208,7 +208,7 @@ class Interpreter:
 
         for item in array.items:
             items[item.index] = self.evaluate(item.value, env)
-        arr = arrayValue(items)
+        arr = arrayValue(items, array.line, array.column)
         return arr
 
     def evaluateCallExpression(self, callExpr: callExpression, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | bool | None:
@@ -238,8 +238,8 @@ class Interpreter:
                     column = fn.parameters[-1].column
                     line = fn.parameters[-1].line
                 else:
-                    column = 0
-                    line = 0
+                    column = fn.column
+                    line = fn.line
                 return syntaxError(self, f'Insufficient arguments provided. Expected {len(fn.parameters)}, but received {len(args)}', column, line)
 
             result = nullValue()
@@ -250,7 +250,7 @@ class Interpreter:
                 if isinstance(statement, returnNode):
                     return result
         else:
-            return syntaxError(self, f"'{fn}' is not a function", fn.column, fn.line)
+            return syntaxError(self, f"'{fn.type}' is not a function", fn.column, fn.line)
 
     def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
         obj:objectValue = env.lookup(member.object)
@@ -370,8 +370,7 @@ class Interpreter:
                 if isinstance(left, error):
                     return result
                 if not isinstance(doWhile.conditionRight, nullValue):
-                    right: RuntimeValue = self.evaluate(
-                        doWhile.conditionRight, env)
+                    right: RuntimeValue = self.evaluate(doWhile.conditionRight, env)
                     if isinstance(right, error):
                         return result
                 else:
@@ -387,9 +386,9 @@ class Interpreter:
 
     def evaluateAssignmentBinaryExpression(self, expr: assignmentBinaryExpressionNode, env: environment) -> None:
         currentValue = realLiteralNode(env.lookup(expr.assigne).value, expr.column, expr.line)
-        binexpr = binaryExpressionNode(currentValue, expr.operand[0], expr.value)
+        binexpr = binaryExpressionNode(currentValue, expr.operand[0], expr.value, expr.line, expr.column)
         newValue = self.evaluateBinaryExpression(binexpr, env)
-        return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, integerLiteralNode(newValue.value, 0, 0)), env)
+        return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, integerLiteralNode(newValue.value, expr.line, expr.column)), env)
 
     def evaluate(self, astNode, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | None:
         if isinstance(astNode, (str, float, int)):
@@ -435,4 +434,4 @@ class Interpreter:
             case 'nullLiteral':
                 return nullValue()
             case _:
-                return notImplementedError(self, astNode)
+                return notImplementedError(self, astNode, astNode.column, astNode.line)

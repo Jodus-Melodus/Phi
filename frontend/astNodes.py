@@ -3,7 +3,7 @@ from frontend.phi_lexer import *
 
 
 class identifierNode:
-    def __init__(self, symbol: str, column: int, line: int) -> None:
+    def __init__(self, symbol: str, line: int, column: int) -> None:
         self.kind = 'identifier'
         self.symbol = symbol
         self.column = column
@@ -17,7 +17,7 @@ class identifierNode:
 
 
 class realLiteralNode:
-    def __init__(self, value, column: int, line: int) -> None:
+    def __init__(self, value, line: int, column: int) -> None:
         self.kind = 'realLiteral'
         self.value = value
         self.column = column
@@ -31,7 +31,7 @@ class realLiteralNode:
 
 
 class integerLiteralNode:
-    def __init__(self, value, column: int, line: int) -> None:
+    def __init__(self, value, line: int, column: int) -> None:
         self.kind = 'integerLiteral'
         self.value = value
         self.column = column
@@ -45,7 +45,7 @@ class integerLiteralNode:
 
 
 class stringLiteralNode:
-    def __init__(self, value, column: int, line: int) -> None:
+    def __init__(self, value, line: int, column: int) -> None:
         self.kind = 'stringLiteral'
         self.value = value
         self.column = column
@@ -59,7 +59,7 @@ class stringLiteralNode:
 
 
 class nullLiteralNode:
-    def __init__(self, column: int, line: int) -> None:
+    def __init__(self, line: int, column: int) -> None:
         self.kind = 'nullLiteral'
         self.value = 'null'
         self.column = column
