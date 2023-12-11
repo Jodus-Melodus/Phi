@@ -56,3 +56,21 @@ def _floor(value:realValue) -> integerValue:
 
 def _ceil(value:realValue) -> integerValue:
     return integerValue(math.ceil(value.value))
+
+def hardCastStr(value:RuntimeValue) -> stringValue:
+    return stringValue(value.value, value.line, value.column)
+
+def hardCastInt(value:RuntimeValue) -> integerValue:
+    try:
+        v = int(value.value)
+        return integerValue(v, value.line, value.column)
+    except ValueError:
+        return typeError("Integer Casting", value, value.column, value.line)
+
+def hardCastReal(value:RuntimeValue) -> realValue:
+    try:
+        v = float(value.value)
+        return realValue(v, value.line, value.column)
+    except ValueError:
+        return typeError("Float Casting", value, value.column, value.line)
+

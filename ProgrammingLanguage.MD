@@ -258,6 +258,39 @@ Result:
 ```
 # Statments
 ## Built-in Functions
+### `Int()`
+Return a integer version of the input.
+```
+int i1 = Int("34")
+int i2 = Int(43.2)
+```
+Output:
+```
+i1 = 34
+i2 = 43
+```
+### `Real()`
+Return a real version of the input.
+```
+real r1 = Real("34.56")
+real r2 = Real(34)
+```
+Output:
+```
+r1 = 34.56
+r2 = 34.0
+```
+### `Str()`
+Return a string version of the input.=
+```
+str s1 = Str(23)
+str s2 = Str(64.2)
+```
+Output:
+```
+s1 = "23"
+s2 = "64.2"
+```
 ### `out()`
 Prints the output of any type to console.
 Example usage:
@@ -313,42 +346,7 @@ Generate hash code for data(sha256)
 ```
 str hsh = hash("Hello World!")
 ```
-### abs(-23)
-Returns absolute value of a number.
-```
-int a = abs(-23)
-```
-Output:
-```
-23
-```
-### `round`(1.4)
-Rounds number to the nearest integer.
-```
-int rounded = round(1.4)
-```
-Output:
-```
-1
-```
-### `floor`(1.4)
-Rounds number down to the nearest integer.
-```
-int floored = floor(1.4)
-```
-Output:
-```
-1
-```
-### `ceil`(1.4)
-Rounds number up to the nearest integer.
-```
-int ceiled = ceil(1.4)
-```
-Output:
-```
-2
-```
+
 ## User Defined Functions
 Functions are defined using the `fn` keyword followed by its name and parameters in parentheses. The function body is enclosed within curly braces.
 
@@ -464,9 +462,11 @@ import math as m
 ## Accessing a module's functions
 ```
 out(math.root(16, 2))
+out(m.root(16, 2))
 ```
 Result:
 ```
+4
 4
 ```
 ## Accessing a module's variables
@@ -485,7 +485,7 @@ export obj name = {
     function:value
 }
 ```
-E.g.
+Example:
 ```
 export obj math = {
     pi:3.141592653589793,

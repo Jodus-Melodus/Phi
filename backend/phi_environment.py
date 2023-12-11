@@ -66,12 +66,15 @@ def createGlobalEnvironment(parent=None) -> environment:
     # functions
     env.declareVariable('out', nativeFunction(lambda args, scope : sys.stdout.write(str(bif.out(args[0])) + '\n')), True)
     env.declareVariable('in', nativeFunction(lambda args, scope : bif.in_(args[0])), True)
+    env.declareVariable('type', nativeFunction(lambda args, scope : bif.type_(args[0])), True)
+    env.declareVariable('hash', nativeFunction(lambda args, scope : bif.hash(args[0])), True)
+    env.declareVariable('Str', nativeFunction(lambda args, scope: bif.hardCastStr(args[0])), True)
+    env.declareVariable('Int', nativeFunction(lambda args, scope: bif.hardCastInt(args[0])), True)
+    env.declareVariable('Real', nativeFunction(lambda args, scope: bif.hardCastReal(args[0])), True)
+
+    # Move to modules
     env.declareVariable('now', nativeFunction(lambda args, scope : bif.now()), True)
     env.declareVariable('wait', nativeFunction(lambda args, scope : bif.wait(args[0])), True)
-    env.declareVariable('type', nativeFunction(lambda args, scope : bif.type_(args[0])), True)
-    env.declareVariable('root', nativeFunction(lambda args, scope : bif.root(args[0], args[1])), True)
-    env.declareVariable('hash', nativeFunction(lambda args, scope : bif.hash(args[0])), True)
-    env.declareVariable('abs', nativeFunction(lambda args, scope : bif.absoluteValue(args[0])), True)
     env.declareVariable('round', nativeFunction(lambda args, scope : bif._round(args[0])), True)
     env.declareVariable('floor', nativeFunction(lambda args, scope : bif._floor(args[0])), True)
     env.declareVariable('ceil', nativeFunction(lambda args, scope : bif._ceil(args[0])), True)

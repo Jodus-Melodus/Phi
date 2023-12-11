@@ -99,7 +99,7 @@ class typeError(error):
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
-[Type Error] Ln {self.line}, Col {self.column}:
+{self.stage}[Type Error] Ln {self.line}, Col {self.column}:
 '{self.type}' is not a valid type
 '''
 
