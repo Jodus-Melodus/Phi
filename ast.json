@@ -40,12 +40,8 @@
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "callExpression",
-                    "arguments": [],
-                    "caller": {
-                        "kind": "identifier",
-                        "symbol": "a"
-                    }
+                    "kind": "identifier",
+                    "symbol": "a"
                 }
             ],
             "caller": {

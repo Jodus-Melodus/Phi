@@ -6,6 +6,7 @@ import customtkinter as ctk
 from customtkinter import filedialog
 import os
 import keyboard
+import string
 
 class TerminalRedirect:
     def __init__(self, textWidget) -> None:
@@ -100,26 +101,27 @@ class App(ctk.CTk):
         self.iconbitmap('phi.ico')
         self.textBoxFont = ctk.CTkFont(family='Courier New', size=16, weight='bold')
         self.buttonFont = ctk.CTkFont(family='Fira Code', size=12, weight='normal')
-        self.screenRatio = 0.65
         self.width = self.winfo_width()
         self.height = self.winfo_height()
+        self.centerx = self.width // 2
+        self.screenRatio = 0.65
+        self.centery = self.height // 2
         self.padx = 5
         self.pady = 5
-        self.currentPath = ''
-        self.currentLanguage = ''
-        self.openEditors = {}
-        self.tabNamesPaths = {}
         self.line = 1
         self.column = 1
+        self.currentPath = ''
+        self.currentLanguage = ''
         self.clipboard = ''
+        self.code = ''
+        self.error = ''
+        self.openEditors = {}
+        self.tabNamesPaths = {}
         self.menuOpen = False
         self.rightMenuOpen = False
         self.saved = False
-        self.code = ''
-        self.centerx = self.width // 2
-        self.centery = self.height // 2
         self.cursors = []
-        self.error = ''
+        self.variables = []
 
         self.loadLanguageSyntax()
         # Frames
@@ -388,7 +390,6 @@ class App(ctk.CTk):
         self.currentLanguage = self.currentLanguageCombo.get()
         editor = self.currentTab
         if editor:
-            currentLine = editor.index('insert').split('.')[0]
             self.line, self.column = editor.index('insert').split('.')
             self.statusbar.configure(text=f'Ln {self.line}, Col {self.column}')
 
@@ -397,10 +398,10 @@ class App(ctk.CTk):
 
         if hasattr(self, 'intelliSenseBox'):
             if self.intelliSenseBox.winfo_ismapped():
-                self.intelliSenseTrigger
+                self.intelliSenseTrigger()
         if hasattr(self, 'snippetMenu'):
             if self.snippetMenu.winfo_ismapped():
-                self.showSnippets
+                self.showSnippets()
 
     def editorPress(self, e=None) -> None:
         self.saved = False
@@ -415,10 +416,15 @@ class App(ctk.CTk):
             else:
                 self.title(name)
 
+            self.variables = re.findall(r'\b[^\d\W]+\b', currentCode)
+
+            if hasattr(self, 'intelliSenseBox'):
+                if self.intelliSenseBox.winfo_ismapped():
+                    self.intelliSenseTrigger()
+
     def mouseClickUpdate(self, e=None) -> None:
         editor = self.currentTab
         if editor:
-            currentLine = editor.index('insert').split('.')[0]
             editor.tag_remove('similar', '0.0', 'end')
 
     def highlightSelected(self, e=None) -> None:
@@ -501,7 +507,7 @@ class App(ctk.CTk):
 
     def loadSnippets(self) -> None:
         with open(f'snippets/{self.currentLanguage[1:]}.json') as f:
-            self.snippets = json.load(f)
+            self.snippets = list(sorted(json.load(f)))
 
 # Syntax
     def loadLanguageSyntax(self) -> None:
@@ -572,7 +578,7 @@ class App(ctk.CTk):
         editor = self.currentTab
         if editor:
             self.intelliSenseBox.place_forget()
-            intelliSenseWords = self.languageSyntaxPatterns[self.currentLanguage]['keywords'][2]
+            intelliSenseWords = list(sorted(list(set(self.languageSyntaxPatterns[self.currentLanguage]['keywords'][2] + self.variables))))
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
             wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)

@@ -6,8 +6,4 @@ obj a = {
 	city:"potch"
 }
 
-out(a())
-
-
-
-
+out(a)
