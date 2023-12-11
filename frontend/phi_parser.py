@@ -275,7 +275,7 @@ class Parser:
             constant = False
         if (self.get().type == TT.eof) or (self.get().type == TT.lineend):
             self.eat()
-            return variableDeclarationExpressionNode(datatype, identifier, nullLiteralNode(), constant, self.line, self.column)
+            return variableDeclarationExpressionNode(datatype, identifier, nullLiteralNode(self.line, self.column), constant, self.line, self.column)
         else:
             self.eat()
             statement = self.parseStatement()

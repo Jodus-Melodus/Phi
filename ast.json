@@ -2,46 +2,311 @@
     "kind": "program",
     "body": [
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "object",
-            "identifier": "a",
-            "value": {
-                "kind": "objectLiteral",
-                "properties": [
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "name",
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "bob"
-                        }
+            "kind": "functionDeclaration",
+            "name": "evenFib",
+            "parameters": [
+                {
+                    "kind": "identifier",
+                    "symbol": "limit"
+                }
+            ],
+            "body": [
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "int",
+                    "identifier": "sum",
+                    "value": {
+                        "kind": "integerLiteral",
+                        "value": 0
                     },
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "age",
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 23
-                        }
+                    "constant": "False"
+                },
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "real",
+                    "identifier": "a",
+                    "value": {
+                        "kind": "realLiteral",
+                        "value": 1.0
                     },
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "city",
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "potch"
+                    "constant": "False"
+                },
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "real",
+                    "identifier": "b",
+                    "value": {
+                        "kind": "realLiteral",
+                        "value": 0.0
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "real",
+                    "identifier": "c",
+                    "value": {
+                        "kind": "realLiteral",
+                        "value": 0.0
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "array",
+                    "identifier": "nums",
+                    "value": {
+                        "kind": "arrayLiteral",
+                        "items": []
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "int",
+                    "identifier": "i",
+                    "value": {
+                        "kind": "integerLiteral",
+                        "value": 1
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "whileStatement",
+                    "conditionLeft": {
+                        "kind": "identifier",
+                        "symbol": "a"
+                    },
+                    "operand": "<",
+                    "conditionRight": {
+                        "kind": "identifier",
+                        "symbol": "limit"
+                    },
+                    "body": [
+                        {
+                            "kind": "assignmentExpression",
+                            "assigne": {
+                                "kind": "identifier",
+                                "symbol": "c"
+                            },
+                            "value": {
+                                "kind": "identifier",
+                                "symbol": "a"
+                            }
+                        },
+                        {
+                            "kind": "assignmentExpression",
+                            "assigne": {
+                                "kind": "identifier",
+                                "symbol": "a"
+                            },
+                            "value": {
+                                "kind": "binaryExpression",
+                                "left": {
+                                    "kind": "identifier",
+                                    "symbol": "a"
+                                },
+                                "operand": "+",
+                                "right": {
+                                    "kind": "identifier",
+                                    "symbol": "b"
+                                }
+                            }
+                        },
+                        {
+                            "kind": "assignmentExpression",
+                            "assigne": {
+                                "kind": "identifier",
+                                "symbol": "b"
+                            },
+                            "value": {
+                                "kind": "identifier",
+                                "symbol": "c"
+                            }
+                        },
+                        {
+                            "kind": "ifStatement",
+                            "conditionLeft": {
+                                "kind": "binaryExpression",
+                                "left": {
+                                    "kind": "identifier",
+                                    "symbol": "a"
+                                },
+                                "operand": "%",
+                                "right": {
+                                    "kind": "integerLiteral",
+                                    "value": 2
+                                }
+                            },
+                            "operand": "==",
+                            "conditionRight": {
+                                "kind": "integerLiteral",
+                                "value": 0
+                            },
+                            "body": [
+                                {
+                                    "kind": "callExpression",
+                                    "arguments": [
+                                        {
+                                            "kind": "identifier",
+                                            "symbol": "a"
+                                        }
+                                    ],
+                                    "caller": {
+                                        "kind": "memberExpression",
+                                        "object": {
+                                            "kind": "identifier",
+                                            "symbol": "nums"
+                                        },
+                                        "property": {
+                                            "kind": "identifier",
+                                            "symbol": "append"
+                                        }
+                                    }
+                                }
+                            ],
+                            "elsebody": []
+                        },
+                        {
+                            "kind": "assignmentBinaryExpression",
+                            "assigne": {
+                                "kind": "identifier",
+                                "symbol": "i"
+                            },
+                            "operand": "+=",
+                            "value": {
+                                "kind": "integerLiteral",
+                                "value": 1
+                            }
                         }
+                    ],
+                    "elsebody": []
+                },
+                {
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "nums"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "out"
                     }
-                ]
-            },
-            "constant": "False"
+                },
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "int",
+                    "identifier": "x",
+                    "value": {
+                        "kind": "integerLiteral",
+                        "value": 0
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "int",
+                    "identifier": "j",
+                    "value": {
+                        "kind": "integerLiteral",
+                        "value": 0
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "whileStatement",
+                    "conditionLeft": {
+                        "kind": "identifier",
+                        "symbol": "j"
+                    },
+                    "operand": "<",
+                    "conditionRight": {
+                        "kind": "callExpression",
+                        "arguments": [],
+                        "caller": {
+                            "kind": "memberExpression",
+                            "object": {
+                                "kind": "identifier",
+                                "symbol": "nums"
+                            },
+                            "property": {
+                                "kind": "identifier",
+                                "symbol": "length"
+                            }
+                        }
+                    },
+                    "body": [
+                        {
+                            "kind": "assignmentExpression",
+                            "assigne": {
+                                "kind": "identifier",
+                                "symbol": "x"
+                            },
+                            "value": {
+                                "kind": "memberExpression",
+                                "object": {
+                                    "kind": "identifier",
+                                    "symbol": "nums"
+                                },
+                                "property": {
+                                    "kind": "identifier",
+                                    "symbol": "j"
+                                }
+                            }
+                        },
+                        {
+                            "kind": "assignmentBinaryExpression",
+                            "assigne": {
+                                "kind": "identifier",
+                                "symbol": "sum"
+                            },
+                            "operand": "+=",
+                            "value": {
+                                "kind": "identifier",
+                                "symbol": "x"
+                            }
+                        },
+                        {
+                            "kind": "assignmentBinaryExpression",
+                            "assigne": {
+                                "kind": "identifier",
+                                "symbol": "j"
+                            },
+                            "operand": "+=",
+                            "value": {
+                                "kind": "integerLiteral",
+                                "value": 1
+                            }
+                        }
+                    ],
+                    "elsebody": []
+                },
+                {
+                    "kind": "returnExpression",
+                    "value": {
+                        "kind": "identifier",
+                        "symbol": "sum"
+                    }
+                }
+            ]
         },
         {
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "identifier",
-                    "symbol": "a"
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "integerLiteral",
+                            "value": 4000000
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "evenFib"
+                    }
                 }
             ],
             "caller": {

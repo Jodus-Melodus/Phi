@@ -388,6 +388,8 @@ class Interpreter:
         currentValue = realLiteralNode(env.lookup(expr.assigne).value, expr.column, expr.line)
         binexpr = binaryExpressionNode(currentValue, expr.operand[0], expr.value, expr.line, expr.column)
         newValue = self.evaluateBinaryExpression(binexpr, env)
+        if isinstance(newValue, error):
+            return newValue
         return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, integerLiteralNode(newValue.value, expr.line, expr.column)), env)
 
     def evaluate(self, astNode, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | None:
