@@ -1,13 +1,3 @@
+import math
 
-
-
-obj x = {
-	a:fn ~(y){<- y + 1}
-	b:fn ~(z){<- z - 1}
-}
-
-
-
-out(x.a(5))
-out(x.b(5))
-
+out(math.abs(0-5))
