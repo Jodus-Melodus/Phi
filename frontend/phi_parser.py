@@ -232,7 +232,7 @@ class Parser:
 
     def parseFunctionDeclaration(self) -> None:
         self.eat()
-        if self.get().type == TT.identifier:
+        if self.get().type in (TT.identifier, TT.anonymous):
             name = self.eat().value
         else:
             return syntaxError(self, 'Expected a name', self.column, self.line)

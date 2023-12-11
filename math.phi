@@ -1,7 +1,5 @@
-fn r(radicand, index){
-    <- radicand^(1 / index)
-}
+
 
 export obj math = {
-    root:r
+    root:fn ~(r, i){<-r^(1/i)}
 }

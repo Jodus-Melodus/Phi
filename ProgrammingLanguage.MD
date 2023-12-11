@@ -53,7 +53,8 @@ The following operators are supported in Phi:
 - `[...]` Array literal
 - `{...}` Object literal
 - `"..."` String literals
-- `~` String format character
+- `$` String format character
+- `~` Used to name anonymous function
 - `<-` Return operator
 # Datatypes
 ## Variables and Constants
@@ -106,7 +107,7 @@ Result:
 ```
 - ### Format:
 ```
-str result = "Hello ~ world ~".format("there", 500)
+str result = "Hello $ world $".format("there", 500)
 ```
 Result:
 ```

@@ -6,6 +6,7 @@ class TokenType:
         self.intValue = 'intvalue'
         self.stringValue = 'stringvalue'
         self.realValue = 'realvalue'
+        self.anonymous = 'anonymous'
 
         self.binaryOperation = 'binaryoperation'
         self.assignmentBinaryOperation = 'assignmentbinaryoperation'
@@ -213,6 +214,9 @@ class Lexer:
                         tokens.append(Token(TT.greaterThanEqual, char+'=', self.index, self.column, self.line))
                     else:
                         tokens.append(Token(TT.greaterThan, char ,self.index, self.column, self.line))
+                case '~':
+                    self.eat()
+                    tokens.append(Token(TT.anonymous, char, self.index, self.column, self.line))
                 case _:
 
                     if char in DIGITS:

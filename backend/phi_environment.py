@@ -30,7 +30,7 @@ class environment:
         return varValue
 
     def declareVariable(self, varName: str, varValue, constant:bool=False) -> None:
-        if (varName in self.variables) or (varName in self.constants):
+        if ((varName in self.variables) or (varName in self.constants)) and (varName != '~'):
             return syntaxError(self, f"Variable '{varName}' already defined.", 0, 0)
         else:
             if constant:
@@ -69,8 +69,8 @@ def createGlobalEnvironment(parent=None) -> environment:
     env.declareVariable('now', nativeFunction(lambda args, scope : bif.now()), True)
     env.declareVariable('wait', nativeFunction(lambda args, scope : bif.wait(args[0])), True)
     env.declareVariable('type', nativeFunction(lambda args, scope : bif.type_(args[0])), True)
+    env.declareVariable('root', nativeFunction(lambda args, scope : bif.root(args[0], args[1])), True)
     env.declareVariable('hash', nativeFunction(lambda args, scope : bif.hash(args[0])), True)
-
     env.declareVariable('abs', nativeFunction(lambda args, scope : bif.absoluteValue(args[0])), True)
     env.declareVariable('round', nativeFunction(lambda args, scope : bif._round(args[0])), True)
     env.declareVariable('floor', nativeFunction(lambda args, scope : bif._floor(args[0])), True)
@@ -80,6 +80,5 @@ def createGlobalEnvironment(parent=None) -> environment:
     env.declareVariable('_', nullValue(), True)
     env.declareVariable('T', booleanValue("T"), True)
     env.declareVariable('F', booleanValue("F"), True)
-    env.declareVariable('vars', env.variables, True)
     
     return env

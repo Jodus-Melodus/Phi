@@ -1,7 +1,13 @@
 
 
-import math
 
-out(math.root(16, 2))
+obj x = {
+	a:fn ~(y){<- y + 1}
+	b:fn ~(z){<- z - 1}
+}
 
+
+
+out(x.a(5))
+out(x.b(5))
 

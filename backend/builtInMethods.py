@@ -24,7 +24,7 @@ def stringFormat(args, string:stringValue) -> stringValue:
     s:str = string.value
     i = 0
     for j in s:
-        if j == '~':
+        if j == '$':
             output += str(args[i].value)
             i += 1
         else:
