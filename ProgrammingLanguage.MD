@@ -68,7 +68,7 @@ The following constants are built into the system:
 * `_`: Represents an empty value or nothingness.
 * `T` / `F`: Boolean values representing true/false conditions.
 ## Integer/Real
-```phi
+```
 int x = 2
 real y = 2.1
 ```
