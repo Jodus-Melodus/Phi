@@ -346,10 +346,36 @@ class callExpression:
 
 
 class returnNode:
-    def __init__(self, value, line:int=-1, column:int=-1) -> None:
+    def __init__(self, value, line:int, column:int) -> None:
         self.line = line
         self.column = column
         self.kind = 'returnExpression'
+        self.value = value
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'value': self.value
+        })
+    
+class exportNode:
+    def __init__(self, value, line:int, column:int) -> None:
+        self.line = line
+        self.column = column
+        self.kind = 'exportExpression'
+        self.value = value
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'value': self.value
+        })
+    
+class importNode:
+    def __init__(self, value, line:int, column:int) -> None:
+        self.line = line
+        self.column = column
+        self.kind = 'importExpression'
         self.value = value
 
     def __repr__(self) -> str:

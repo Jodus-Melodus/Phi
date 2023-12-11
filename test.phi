@@ -1,9 +1,7 @@
 
 
-obj a = {
-	name:"bob",
-	age:23,
-	city:"potch"
-}
+import math
 
-out(a)
+out(math.root(16, 2))
+
+

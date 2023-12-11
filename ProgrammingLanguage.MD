@@ -20,6 +20,8 @@ The following keywords are reserved in the Phi programming language:
 - `while` - [While loops](#while-loops)
 - `do` - Part of [do-while](#do-while-loops) loop
 - `fn` - Declare a new [function](#user-defined-functions)
+- `import` - [Import](#import-name) a module
+- `export` - [Export](#export-value) a value
 - All other [built-in functions](#built-in-functions) and methods are also reserved words.
 # Comments
 Comments start with `#` symbol and continue until end of line.
@@ -452,3 +454,39 @@ Result:
 2
 ```
 Do-while loops can be useful when you want to ensure that your code block executes at least once regardless of whether or not the condition is false.
+# Modules
+## Importing a module
+```
+import math
+```
+## Accessing a module's functions
+```
+out(math.root(16, 2))
+```
+Result:
+```
+4
+```
+## Accessing a module's variables
+```
+out(math.pi)
+```
+Result:
+```
+3.141592653589793
+```
+## Exporting a module
+Also the format for the modules
+```
+export obj name = {
+    variable:value,
+    function:value
+}
+```
+E.g.
+```
+export obj math = {
+    pi:3.141592653589793,
+    root:fn r(radicand, index){<- radicand ^ (1 / index)}
+}
+```

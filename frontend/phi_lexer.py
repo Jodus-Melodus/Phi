@@ -51,6 +51,8 @@ class TokenType:
         self._else = 'else'
         self._while = 'while'
         self.do = 'do'
+        self.export = 'export'
+        self._import = 'import'
 
 
 TT = TokenType()
@@ -69,7 +71,9 @@ KEYWORDS = {
     'array':TT.array,
     'bool':TT.bool,
     'obj':TT.obj,
-    'lambda':TT._lambda
+    'lambda':TT._lambda,
+    'export':TT.export,
+    'import':TT._import
 }
 
 class Token:

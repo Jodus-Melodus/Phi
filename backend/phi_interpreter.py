@@ -392,6 +392,24 @@ class Interpreter:
             return newValue
         return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, integerLiteralNode(newValue.value, expr.line, expr.column)), env)
 
+    def evaluateExportExpression(self, exportExpression: exportNode, env: environment):
+        return exportValue(self.evaluate(exportExpression.value, env), exportExpression.line, exportExpression.column)
+
+    def evaluateImportExpression(self, importExpression:importNode, env:environment):
+        from main import run
+        path = importExpression.value
+        if isinstance(path, identifierNode):
+            path = path.symbol
+
+            with open(f'{path}.phi', 'r') as f:
+                code = '\n'.join(f.readlines())
+
+            code = run(code)
+            if isinstance(code, exportValue):
+                return env.declareVariable(path, code.value, True)
+            else:
+                return nullValue()
+
     def evaluate(self, astNode, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | None:
         if isinstance(astNode, (str, float, int)):
             return astNode
@@ -426,6 +444,10 @@ class Interpreter:
                 return self.evaluateReturnExpression(astNode, env)
             case 'assignmentBinaryExpression':
                 return self.evaluateAssignmentBinaryExpression(astNode, env)
+            case 'exportExpression':
+                return self.evaluateExportExpression(astNode, env)
+            case 'importExpression':
+                return self.evaluateImportExpression(astNode, env)
 
             case 'integerLiteral':
                 return integerValue(astNode.value, astNode.line, astNode.column)

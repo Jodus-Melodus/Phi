@@ -18,10 +18,11 @@ def run(sourceCode:str) -> None|error:
 
     with open('ast.json', 'w') as f:
         f.write(json.dumps(json.loads(str(ast).replace("'", '"')), indent=4))
+        # f.write(str(ast).replace("'", '"'))
 
     interpreter = Interpreter()
     res = interpreter.evaluate(ast, environment)
-    if isinstance(res, error):
+    if isinstance(res, (error, exportValue)):
         return res
 
 if __name__ == '__main__':

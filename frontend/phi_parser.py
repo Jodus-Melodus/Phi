@@ -512,6 +512,18 @@ class Parser:
                 value = self.parseStatement()
                 if isinstance(value, error):
                     return value
-                return returnNode(value)
+                return returnNode(value, self.line, self.column)
+            case TT.export:
+                self.eat()
+                value = self.parseStatement()
+                if isinstance(value, error):
+                    return value
+                return exportNode(value, self.line, self.column)
+            case TT._import:
+                self.eat()
+                value = self.parseStatement()
+                if isinstance(value, error):
+                    return value
+                return importNode(value, self.line, self.column)
             case _:
                 return syntaxError(self, 'Invalid token found', self.column, self.line)

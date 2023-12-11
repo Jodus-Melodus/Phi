@@ -1,0 +1,7 @@
+fn r(radicand, index){
+    <- radicand^(1 / index)
+}
+
+export obj math = {
+    root:r
+}

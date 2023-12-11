@@ -36,9 +36,6 @@ def type_(arg:RuntimeValue) -> str:
 def wait(seconds) -> None:
     sleep(int(seconds.value))
 
-def root(radicand, index) -> realValue:
-    return realValue(float(float(radicand.value))**(1/float(index.value)), index.line, index.column)
-
 def hash(data:stringValue) -> stringValue:
     d = data.value.encode('utf-8')
     return stringValue(sha256(d).hexdigest(), data.line, data.column)

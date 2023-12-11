@@ -1,7 +1,7 @@
 
 
 class RuntimeValue:
-    def __init__(self, line:int=-1, column:int=-1) -> None:
+    def __init__(self, line: int = -1, column: int = -1) -> None:
         self.line = line
         self.column = column
         self.type = 'runtimeValue'
@@ -21,7 +21,7 @@ class nullValue(RuntimeValue):
 
 
 class integerValue(RuntimeValue):
-    def __init__(self, value, line:int=-1, column:int=-1) -> None:
+    def __init__(self, value, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.type = 'integerValue'
         self.value = value
@@ -31,9 +31,10 @@ class integerValue(RuntimeValue):
             'type': self.type,
             'value': self.value
         })
-    
+
+
 class realValue(RuntimeValue):
-    def __init__(self, value, line:int=-1, column:int=-1) -> None:
+    def __init__(self, value, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.type = 'realValue'
         self.value = value
@@ -46,7 +47,7 @@ class realValue(RuntimeValue):
 
 
 class stringValue(RuntimeValue):
-    def __init__(self, value, line:int=-1, column:int=-1) -> None:
+    def __init__(self, value, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         import backend.builtInMethods as bim
         self.type = 'stringValue'
@@ -77,7 +78,7 @@ class booleanValue(RuntimeValue):
 
 
 class arrayValue(RuntimeValue):
-    def __init__(self, items: dict, line:int=-1, column:int=-1) -> None:
+    def __init__(self, items: dict, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         import backend.builtInMethods as bim
         self.type = 'arrayValue'
@@ -97,7 +98,7 @@ class arrayValue(RuntimeValue):
 
 
 class objectValue(RuntimeValue):
-    def __init__(self, properties: dict, line:int=-1, column:int=-1) -> None:
+    def __init__(self, properties: dict, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         import backend.builtInMethods as bim
         self.type = 'objectValue'
@@ -128,7 +129,7 @@ class nativeFunction(RuntimeValue):
 
 
 class function(RuntimeValue):
-    def __init__(self, name, parameters: list, declarationEnvironment, body: list, line:int=-1, column:int=-1) -> None:
+    def __init__(self, name, parameters: list, declarationEnvironment, body: list, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.type = 'FunctionValue'
         self.name = name
@@ -143,4 +144,17 @@ class function(RuntimeValue):
             'parameters': self.parameters,
             'declarationEnvironment': self.declarationEnvironment,
             'body': self.body
+        })
+
+
+class exportValue(RuntimeValue):
+    def __init__(self, value, line: int = -1, column: int = -1) -> None:
+        super().__init__(line, column)
+        self.type = 'exportValue'
+        self.value = value
+
+    def __repr__(self) -> str:
+        return str({
+            'type': self.type,
+            'value': self.value
         })
