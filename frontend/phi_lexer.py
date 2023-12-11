@@ -54,7 +54,7 @@ class TokenType:
         self.do = 'do'
         self.export = 'export'
         self._import = 'import'
-
+        self._as = 'as'
 
 TT = TokenType()
 DIGITS = '12345678890'
@@ -74,7 +74,8 @@ KEYWORDS = {
     'obj':TT.obj,
     'lambda':TT._lambda,
     'export':TT.export,
-    'import':TT._import
+    'import':TT._import,
+    'as':TT._as
 }
 
 class Token:

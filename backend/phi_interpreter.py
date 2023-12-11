@@ -401,12 +401,17 @@ class Interpreter:
         if isinstance(path, identifierNode):
             path = path.symbol
 
+            if isinstance(importExpression.name, nullValue):
+                name = path
+            elif isinstance(importExpression.name, identifierNode):
+                name = importExpression.name.symbol
+
             with open(f'{path}.phi', 'r') as f:
                 code = '\n'.join(f.readlines())
 
             code = run(code)
             if isinstance(code, exportValue):
-                return env.declareVariable(path, code.value, True)
+                return env.declareVariable(name, code.value, True)
             else:
                 return nullValue()
 

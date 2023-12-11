@@ -459,6 +459,7 @@ Do-while loops can be useful when you want to ensure that your code block execut
 ## Importing a module
 ```
 import math
+import math as m
 ```
 ## Accessing a module's functions
 ```

@@ -372,7 +372,8 @@ class exportNode:
         })
     
 class importNode:
-    def __init__(self, value, line:int, column:int) -> None:
+    def __init__(self, name, value, line:int, column:int) -> None:
+        self.name = name
         self.line = line
         self.column = column
         self.kind = 'importExpression'

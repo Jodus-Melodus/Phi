@@ -521,9 +521,18 @@ class Parser:
                 return exportNode(value, self.line, self.column)
             case TT._import:
                 self.eat()
-                value = self.parseStatement()
-                if isinstance(value, error):
-                    return value
-                return importNode(value, self.line, self.column)
+                if self.get().type == TT.identifier:
+                    value = self.parseStatement()
+                    if isinstance(value, error):
+                        return value
+                    
+                    if self.get().type == TT._as:
+                        self.eat()
+                        name = self.parsePrimaryExpression()
+                        return importNode(name, value, self.line, self.column)
+                    else:
+                        return importNode(nullValue(), value, self.line, self.column)
+                else:
+                    return syntaxError(self, "Expected an identifier", self.column, self.line)
             case _:
                 return syntaxError(self, 'Invalid token found', self.column, self.line)
