@@ -5,7 +5,10 @@ from backend.phi_interpreter import *
 from backend.phi_environment import *
 import json
 
+ran = False
+
 def run(sourceCode:str) -> None|error:
+    global ran
     environment = createGlobalEnvironment()
     lexer = Lexer(sourceCode)
     tokens = lexer.tokenize()
@@ -16,9 +19,10 @@ def run(sourceCode:str) -> None|error:
     if isinstance(ast, error):
         return ast
 
-    with open('ast.json', 'w') as f:
-        f.write(json.dumps(json.loads(str(ast).replace("'", '"')), indent=4))
-        # f.write(str(ast).replace("'", '"'))
+    if not ran:
+        with open('ast.json', 'w') as f:
+            f.write(json.dumps(json.loads(str(ast).replace("'", '"')), indent=4))
+        ran = True
 
     interpreter = Interpreter()
     res = interpreter.evaluate(ast, environment)

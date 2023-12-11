@@ -2,5 +2,7 @@
 
 export obj math = {
     root:fn ~(r, i){<-r^(1/i)},
-    abs:fn ~(v){<-(v^2)^(1/2)}
+    abs:fn ~(v){<-(v^2)^(1/2)},
+	power:fn ~(v, e){<-v^e}
 }
+
