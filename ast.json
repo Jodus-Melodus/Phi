@@ -2,20 +2,73 @@
     "kind": "program",
     "body": [
         {
+            "kind": "functionDeclaration",
+            "name": "test",
+            "parameters": [
+                {
+                    "kind": "identifier",
+                    "symbol": "a"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "b"
+                }
+            ],
+            "body": [
+                {
+                    "kind": "returnExpression",
+                    "value": {
+                        "kind": "ifStatement",
+                        "conditionLeft": {
+                            "kind": "identifier",
+                            "symbol": "a"
+                        },
+                        "operand": ">",
+                        "conditionRight": {
+                            "kind": "identifier",
+                            "symbol": "b"
+                        },
+                        "body": [
+                            {
+                                "kind": "returnExpression",
+                                "value": {
+                                    "kind": "identifier",
+                                    "symbol": "T"
+                                }
+                            }
+                        ],
+                        "elsebody": [
+                            {
+                                "kind": "returnExpression",
+                                "value": {
+                                    "kind": "identifier",
+                                    "symbol": "F"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
             "kind": "variableDeclarationExpression",
-            "datatype": "string",
+            "datatype": "bool",
             "identifier": "a",
             "value": {
                 "kind": "callExpression",
                 "arguments": [
                     {
-                        "kind": "stringLiteral",
-                        "value": "> "
+                        "kind": "integerLiteral",
+                        "value": 1
+                    },
+                    {
+                        "kind": "integerLiteral",
+                        "value": 4
                     }
                 ],
                 "caller": {
                     "kind": "identifier",
-                    "symbol": "in"
+                    "symbol": "test"
                 }
             },
             "constant": "False"

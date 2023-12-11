@@ -14,6 +14,7 @@ dataTypeTable = {
     'string':stringValue,
     'object':objectValue,
     'array':arrayValue,
+    'bool':booleanValue,
     'lambda':function
 }
 

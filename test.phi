@@ -1,7 +1,16 @@
 
 
-str a = in("> ")
+
+
+fn test(a, b){
+	<- if (a > b){
+		<- T
+	} else {
+		<- F
+	}
+}
+
+bool a = test(1, 4)
 
 out(a)
-
 
