@@ -1,5 +1,3 @@
-import math
-
 fn factors(number){
 	array fac = []
 	int i = 1

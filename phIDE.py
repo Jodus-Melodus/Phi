@@ -184,7 +184,7 @@ class App(ctk.CTk):
         self.gotoLabel.pack(padx=self.padx, pady=self.pady, side='top', anchor='nw')
         self.gotoButton.pack(padx=self.padx, pady=self.pady, side='bottom')
         self.gotoEntry.pack(padx=self.padx, pady=self.pady, side='top', expand=True)
-        
+
         self.findAdnReplaceLabel.pack(padx=self.padx, pady=self.pady, side='top', anchor='nw')
         self.find.pack(padx=self.padx, pady=self.pady, side='top', expand=True)
         self.replace.pack(padx=self.padx, pady=self.pady, expand=True)
@@ -533,7 +533,6 @@ class App(ctk.CTk):
                     editor.tag_remove('error', f'{currLine}.0', f'{currLine}.end')
 
 # IntelliSense
-
     def intelliSenseTabKeyPress(self, e=None) -> None:
         if self.intelliSenseBox.winfo_ismapped():
             keyboard.press('Backspace')
@@ -603,7 +602,7 @@ class App(ctk.CTk):
         if self.intelliSenseBox.winfo_ismapped():
             if len(self.intelliSenseBox.items) > 0:
                 editor = self.currentTab
-                if editor:           
+                if editor:
                     keyboard.press('Backspace')
                     selectedWord = self.intelliSenseBox.items[self.intelliSenseBox.currentSelectedIndex]
                     startLine, startColumn = map(int, editor.search(r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
