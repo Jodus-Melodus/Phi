@@ -20,8 +20,8 @@ The following keywords are reserved in the Phi programming language:
 - `while` - [While loops](#while-loops)
 - `do` - Part of [do-while](#do-while-loops) loop
 - `fn` - Declare a new [function](#user-defined-functions)
-- `import` - [Import](#import-name) a module
-- `export` - [Export](#export-value) a value
+- `import` - [Import](#importing-a-module) a module
+- `export` - [Export](#exporting-a-module) a value
 - All other [built-in functions](#built-in-functions) and methods are also reserved words.
 # Comments
 Comments start with `#` symbol and continue until end of line.
