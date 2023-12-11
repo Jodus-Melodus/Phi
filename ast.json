@@ -15,12 +15,19 @@
                     "kind": "callExpression",
                     "arguments": [
                         {
-                            "kind": "realLiteral",
-                            "value": 24.0
+                            "kind": "integerLiteral",
+                            "value": 10
                         },
                         {
-                            "kind": "realLiteral",
-                            "value": 36.0
+                            "kind": "memberExpression",
+                            "object": {
+                                "kind": "identifier",
+                                "symbol": "meth"
+                            },
+                            "property": {
+                                "kind": "identifier",
+                                "symbol": "e"
+                            }
                         }
                     ],
                     "caller": {
@@ -31,7 +38,7 @@
                         },
                         "property": {
                             "kind": "identifier",
-                            "symbol": "lcm"
+                            "symbol": "log"
                         }
                     }
                 }

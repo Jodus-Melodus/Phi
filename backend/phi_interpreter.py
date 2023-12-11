@@ -166,6 +166,8 @@ class Interpreter:
             if isinstance(currentValue, error):
                 return currentValue
             value = self.evaluate(assignmentExpression.value, env)
+            if isinstance(value, error):
+                return value
             if value.type == currentValue.type:
                 return env.assignVariable(varName, value)
             return syntaxError(self, f"'{value.type}' is incompatible with '{currentValue.type}'", value.column, value.line)
@@ -392,7 +394,11 @@ class Interpreter:
         newValue = self.evaluateBinaryExpression(binexpr, env)
         if isinstance(newValue, error):
             return newValue
-        return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, integerLiteralNode(newValue.value, expr.line, expr.column)), env)
+        elif isinstance(newValue, realValue):
+            v = realLiteralNode(newValue.value, expr.line, expr.column)
+        elif isinstance(newValue, integerValue):
+            v = integerLiteralNode(newValue.value, expr.line, expr.column)
+        return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, v), env)
 
     def evaluateExportExpression(self, exportExpression: exportNode, env: environment):
         return exportValue(self.evaluate(exportExpression.value, env), exportExpression.line, exportExpression.column)

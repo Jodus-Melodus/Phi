@@ -1,7 +1,7 @@
 import math as meth
 
 
-out(meth.lcm(24.0, 36.0))
+out(meth.log(10, meth.e))
 
 
 
