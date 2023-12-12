@@ -527,7 +527,7 @@ class App(ctk.CTk):
                 else:
                     text = line
                     currLine = lnIndex
-                matches = [(match.start(), match.end()) for match in re.finditer(pattern, text)]
+                matches = [(match.start(), match.end()) for match in re.finditer(pattern, text, re.MULTILINE)]
                 for start, end in matches:
                     editor.tag_add(tag, f'{currLine}.{start}', f'{currLine}.{end}')
                     editor.tag_remove('error', f'{currLine}.0', f'{currLine}.end')
@@ -853,10 +853,8 @@ class App(ctk.CTk):
     def autoBrace(self, e=None) -> None:
         editor = self.currentTab
         if editor:
-            currentLine = editor.index('insert').split('.')[0]
-            text = editor.get(currentLine + '.0', currentLine + '.end')
-            tabs = text.count('\t')
-            editor.insert('insert', '\n' + '\t'*(tabs+1) + '\n' + '\t'*tabs + '}')
+            editor.insert('insert', '}')
+            editor.mark_set('insert', 'insert -1c')
 
     def closeFile(self, e=None) -> None:
         self.saveFile()
