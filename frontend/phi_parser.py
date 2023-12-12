@@ -15,8 +15,7 @@ class Parser:
     def __init__(self, tokens: list) -> None:
         self.tokens = tokens
         self.program = programNode([])
-        self.conditionalOperators = (TT.equal, TT.notequal, TT.greaterThan,
-                                     TT.lessThan, TT.greaterThanEqual, TT.lessThanEqual, TT._and, TT._or)
+        self.conditionalOperators = (TT.equal, TT.notequal, TT.greaterThan, TT.lessThan, TT.greaterThanEqual, TT.lessThanEqual, TT._and, TT._or)
         self.column = 0
         self.line = 0
 
@@ -171,6 +170,8 @@ class Parser:
                         return whileStatementNode(conditionLeft, operand, conditionRight, body)
                 else:
                     return syntaxError(self, "Expected a '{'", self.column, self.line)
+            else:
+                return syntaxError(self, "Expected a ')'", self.column, self.line)
         else:
             return syntaxError(self, "Expected a '('", self.column, self.line)
         return whileStatementNode(conditionLeft, operand, conditionRight, body, elseBody, self.line, self.column)
@@ -268,6 +269,8 @@ class Parser:
 
     def parseVariableDeclaration(self) -> None:
         datatype = self.eat().type
+        if self.get().type == TT.eof:
+            return syntaxError(self, "Expected an identifier", self.column, self.line)
         identifier = self.eat().value
         if identifier.isupper():
             constant = True
