@@ -1,8 +1,22 @@
 import math as meth
 
+fn log(value, b){
+	real t = 0.000001
+    int n = 100
+    int i = 1
+    real g = (value - 1)/(b - 1)
+    real term = 0.0
 
-out(meth.log(10, meth.e))
+    <- while (i < n){
+		term = (0-1) ^ (i + 1) * (value - 1) ^ i / (i * b ^ i)
+        g += term
 
+#         <- if ((term^2)^0.5 < t){
+#             <- g
+#         }
+		out(g)
+        i += 1
+	}
+}
 
-
-
+out(log(10, meth.e))

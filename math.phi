@@ -14,25 +14,7 @@ export obj math = {
     gcd:fn ~(a,b){real temp=b while(b!=0){b=a%b a=temp temp=b}<-a},
     lcm:fn ~(a,b){real x=(((a*b)^2)^0.5)real temp=b while(b!=0){b=a%b a=temp temp=b}<-x//a},
     rad:fn ~(v){<-v*(3.1415926535897932384/180)},
-    deg:fn ~(v){<-v*(180/3.1415926535897932384)},
-    log:fn ~(v, b){
-        real t = 0.000000000000001
-        int n = 100
-        int i = 1
-        real g = (v - 1)/(b - 1)
-        real term = 0.0
-
-        <- while (i < n){
-            term = (0-1) ^ (i + 1) * (v - 1) ^ i / (i * b ^ i)
-            out(g)
-            g += term
-
-            if ((term^2)^0.5 < t){
-                <- g
-            }
-            i += 1
-        }
-    }
+    deg:fn ~(v){<-v*(180/3.1415926535897932384)}
 }
 
 

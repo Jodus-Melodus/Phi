@@ -2,51 +2,273 @@
     "kind": "program",
     "body": [
         {
-            "kind": "importExpression",
-            "value": {
-                "kind": "identifier",
-                "symbol": "math"
-            }
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
+            "kind": "functionDeclaration",
+            "name": "log",
+            "parameters": [
                 {
-                    "kind": "callExpression",
-                    "arguments": [
-                        {
-                            "kind": "integerLiteral",
-                            "value": 10
-                        },
-                        {
-                            "kind": "memberExpression",
-                            "object": {
-                                "kind": "identifier",
-                                "symbol": "meth"
-                            },
-                            "property": {
-                                "kind": "identifier",
-                                "symbol": "e"
-                            }
-                        }
-                    ],
-                    "caller": {
-                        "kind": "memberExpression",
-                        "object": {
-                            "kind": "identifier",
-                            "symbol": "meth"
-                        },
-                        "property": {
-                            "kind": "identifier",
-                            "symbol": "log"
-                        }
-                    }
+                    "kind": "identifier",
+                    "symbol": "value"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "b"
                 }
             ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "out"
-            }
+            "body": [
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "real",
+                    "identifier": "t",
+                    "value": {
+                        "kind": "realLiteral",
+                        "value": 1e-15
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "int",
+                    "identifier": "n",
+                    "value": {
+                        "kind": "integerLiteral",
+                        "value": 100
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "int",
+                    "identifier": "i",
+                    "value": {
+                        "kind": "integerLiteral",
+                        "value": 1
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "real",
+                    "identifier": "g",
+                    "value": {
+                        "kind": "binaryExpression",
+                        "left": {
+                            "kind": "binaryExpression",
+                            "left": {
+                                "kind": "identifier",
+                                "symbol": "value"
+                            },
+                            "operand": "-",
+                            "right": {
+                                "kind": "integerLiteral",
+                                "value": 1
+                            }
+                        },
+                        "operand": "/",
+                        "right": {
+                            "kind": "binaryExpression",
+                            "left": {
+                                "kind": "identifier",
+                                "symbol": "b"
+                            },
+                            "operand": "-",
+                            "right": {
+                                "kind": "integerLiteral",
+                                "value": 1
+                            }
+                        }
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "real",
+                    "identifier": "term",
+                    "value": {
+                        "kind": "realLiteral",
+                        "value": 0.0
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "returnExpression",
+                    "value": {
+                        "kind": "whileStatement",
+                        "conditionLeft": {
+                            "kind": "identifier",
+                            "symbol": "i"
+                        },
+                        "operand": "<",
+                        "conditionRight": {
+                            "kind": "identifier",
+                            "symbol": "n"
+                        },
+                        "body": [
+                            {
+                                "kind": "assignmentExpression",
+                                "assigne": {
+                                    "kind": "identifier",
+                                    "symbol": "term"
+                                },
+                                "value": {
+                                    "kind": "binaryExpression",
+                                    "left": {
+                                        "kind": "binaryExpression",
+                                        "left": {
+                                            "kind": "binaryExpression",
+                                            "left": {
+                                                "kind": "binaryExpression",
+                                                "left": {
+                                                    "kind": "binaryExpression",
+                                                    "left": {
+                                                        "kind": "integerLiteral",
+                                                        "value": 0
+                                                    },
+                                                    "operand": "-",
+                                                    "right": {
+                                                        "kind": "integerLiteral",
+                                                        "value": 1
+                                                    }
+                                                },
+                                                "operand": "^",
+                                                "right": {
+                                                    "kind": "binaryExpression",
+                                                    "left": {
+                                                        "kind": "identifier",
+                                                        "symbol": "i"
+                                                    },
+                                                    "operand": "+",
+                                                    "right": {
+                                                        "kind": "integerLiteral",
+                                                        "value": 1
+                                                    }
+                                                }
+                                            },
+                                            "operand": "*",
+                                            "right": {
+                                                "kind": "binaryExpression",
+                                                "left": {
+                                                    "kind": "identifier",
+                                                    "symbol": "value"
+                                                },
+                                                "operand": "-",
+                                                "right": {
+                                                    "kind": "integerLiteral",
+                                                    "value": 1
+                                                }
+                                            }
+                                        },
+                                        "operand": "^",
+                                        "right": {
+                                            "kind": "identifier",
+                                            "symbol": "i"
+                                        }
+                                    },
+                                    "operand": "/",
+                                    "right": {
+                                        "kind": "binaryExpression",
+                                        "left": {
+                                            "kind": "binaryExpression",
+                                            "left": {
+                                                "kind": "identifier",
+                                                "symbol": "i"
+                                            },
+                                            "operand": "*",
+                                            "right": {
+                                                "kind": "identifier",
+                                                "symbol": "b"
+                                            }
+                                        },
+                                        "operand": "^",
+                                        "right": {
+                                            "kind": "identifier",
+                                            "symbol": "i"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "kind": "callExpression",
+                                "arguments": [
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "g"
+                                    }
+                                ],
+                                "caller": {
+                                    "kind": "identifier",
+                                    "symbol": "out"
+                                }
+                            },
+                            {
+                                "kind": "assignmentBinaryExpression",
+                                "assigne": {
+                                    "kind": "identifier",
+                                    "symbol": "g"
+                                },
+                                "operand": "+=",
+                                "value": {
+                                    "kind": "identifier",
+                                    "symbol": "term"
+                                }
+                            },
+                            {
+                                "kind": "returnExpression",
+                                "value": {
+                                    "kind": "ifStatement",
+                                    "conditionLeft": {
+                                        "kind": "binaryExpression",
+                                        "left": {
+                                            "kind": "binaryExpression",
+                                            "left": {
+                                                "kind": "identifier",
+                                                "symbol": "term"
+                                            },
+                                            "operand": "^",
+                                            "right": {
+                                                "kind": "integerLiteral",
+                                                "value": 2
+                                            }
+                                        },
+                                        "operand": "^",
+                                        "right": {
+                                            "kind": "realLiteral",
+                                            "value": 0.5
+                                        }
+                                    },
+                                    "operand": "<",
+                                    "conditionRight": {
+                                        "kind": "identifier",
+                                        "symbol": "t"
+                                    },
+                                    "body": [
+                                        {
+                                            "kind": "returnExpression",
+                                            "value": {
+                                                "kind": "identifier",
+                                                "symbol": "g"
+                                            }
+                                        }
+                                    ],
+                                    "elsebody": []
+                                }
+                            },
+                            {
+                                "kind": "assignmentBinaryExpression",
+                                "assigne": {
+                                    "kind": "identifier",
+                                    "symbol": "i"
+                                },
+                                "operand": "+=",
+                                "value": {
+                                    "kind": "integerLiteral",
+                                    "value": 1
+                                }
+                            }
+                        ],
+                        "elsebody": []
+                    }
+                }
+            ]
         }
     ]
 }
