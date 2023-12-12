@@ -136,10 +136,12 @@ class App(ctk.CTk):
         self.centerTabview = ctk.CTkTabview(self.centerPanel, self.width*self.screenRatio, height=self.height*self.screenRatio)
         self.bottomTabview = ctk.CTkTabview(self.bottomPanel, width=self.width*self.screenRatio)
         self.consoleTab = self.bottomTabview.add('Console')
+        self.warningTab = self.bottomTabview.add('Warnings')
         # Frames
         self.consoleButtons = ctk.CTkFrame(self.consoleTab)
         # Textboxes
         self.console = ctk.CTkTextbox(self.consoleTab, font=self.textBoxFont, state='disabled')
+        self.warnings = ctk.CTkTextbox(self.warningTab, font=self.textBoxFont, state='disabled')
         self.multiCursorText = ctk.CTkTextbox(self.multiCursorPanel, font=self.textBoxFont)
         # Buttons
         self.clearConsoleButton = ctk.CTkButton(self.consoleButtons, text='Clear', command=self.clearConsole, width=50, height=20, font=self.buttonFont)
@@ -192,6 +194,7 @@ class App(ctk.CTk):
         self.statusbar.pack(padx=self.padx, pady=self.pady, side='bottom', anchor='se', expand=True)
         self.consoleButtons.pack(padx=self.padx, pady=self.pady, side='right', anchor='n')
         self.console.pack(padx=self.padx, pady=self.pady, fill='both', expand=True)
+        self.warnings.pack(padx=self.padx, pady=self.pady, fill='both', expand=True)
         self.clearConsoleButton.pack(padx=self.padx, pady=self.pady)
         self.copyErrorButton.pack(padx=self.padx, pady=self.pady)
 
@@ -315,6 +318,7 @@ class App(ctk.CTk):
             editor.tag_config('error', background='#990000')
             editor.tag_config('similar', background='#595959')
             editor.tag_config('sel', background='#595959')
+            editor.tag_config('warning', underline=True, foreground='#ebd834')
 
             editor.pack(expand=True, fill='both')
 
@@ -407,6 +411,7 @@ class App(ctk.CTk):
 
         editor = self.currentTab
         if editor:
+            editor.tag_remove('warning', '0.0', 'end')
             currentCode = editor.get('0.0', 'end')
             name = self.centerTabview.get()
             if currentCode != self.code:
@@ -421,6 +426,28 @@ class App(ctk.CTk):
                 if self.intelliSenseBox.winfo_ismapped():
                     self.intelliSenseTrigger()
 
+            warning = main.incrementalParsing(currentCode)
+            self.warnings.configure(state='normal')
+            self.warnings.delete('0.0', 'end')
+            self.warnings.configure(state='disabled')
+            if warning != '':
+                line = warning.line
+                editor.tag_add('warning', f'{line}.0', f'{line}.end')
+                if warning.warningMessage() not in self.warnings.get('0.0', 'end'):
+                    self.warnings.configure(state='normal')
+                    self.warnings.insert('end', warning.warningMessage())
+                    self.warnings.configure(state='disabled')
+
+            warnings = self.warnings.get('0.0', 'end').strip().split('\n')
+            tabs = list(self.bottomTabview._tab_dict.keys())
+            currentName = tabs[1]
+            if (len(warnings) > 0) and (warnings[0] != ''):
+                newName = f'Warnings({len(warnings)})'
+            else:
+                newName = 'Warnings'
+            if newName not in self.bottomTabview._tab_dict.keys():
+                self.bottomTabview.rename(currentName, newName)
+                
     def mouseClickUpdate(self, e=None) -> None:
         editor = self.currentTab
         if editor:

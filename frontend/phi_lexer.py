@@ -175,6 +175,8 @@ class Lexer:
                     while self.get() != '"':
                         string += self.get()
                         self.eat()
+                        if self.sourceCode == '':
+                            return syntaxError(self, "Expected a '\"'", self.column, self.line)
                     self.eat()
                     tokens.append(Token(TT.stringValue, string, self.index, self.column, self.line))
                 case "'":
@@ -183,6 +185,8 @@ class Lexer:
                     while self.get() != "'":
                         string += self.get()
                         self.eat()
+                        if self.sourceCode == '':
+                            return syntaxError(self, "Expected a \"'\"", self.column, self.line)
                     self.eat()
                     tokens.append(Token(TT.stringValue, string, self.index, self.column, self.line))
                 case '&':

@@ -7,8 +7,8 @@ import json
 
 ran = False
 
-def run(sourceCode:str) -> None|error:
-    global ran
+def incrementalParsing(sourceCode:str, x=False):
+    global ran, environment
     environment = createGlobalEnvironment()
     lexer = Lexer(sourceCode)
     tokens = lexer.tokenize()
@@ -24,6 +24,13 @@ def run(sourceCode:str) -> None|error:
             f.write(json.dumps(json.loads(str(ast).replace("'", '"')), indent=4))
         ran = True
 
+    if x:
+        return ast
+    else:
+        return ''
+
+def run(sourceCode:str) -> None|error:
+    ast = incrementalParsing(sourceCode, True)
     interpreter = Interpreter()
     res = interpreter.evaluate(ast, environment)
     if isinstance(res, (error, exportValue)):
