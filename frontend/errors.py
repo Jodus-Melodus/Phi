@@ -27,6 +27,9 @@ class syntaxError(error):
 {self.msg}
 '''
 
+    def warningMessage(self) -> str:
+        return f"{self.msg}"
+
 
 class nameError(error):
     def __init__(self, stage: str, name: str, column: int, line: int) -> None:
@@ -57,6 +60,8 @@ class invalidCharacterError(error):
 '{self.character}' is not a valid character
 '''
 
+    def warningMessage(self) -> str:
+        return f"Invalid Character '{self.character}' found."
 
 class notImplementedError(error):
     def __init__(self, stage: str, msg:str, column: int, line: int) -> None:

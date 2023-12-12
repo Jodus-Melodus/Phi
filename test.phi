@@ -1,7 +1,7 @@
 
 
 
-str x = "hello world'
+str x = "hello world"
 
 
 out(x)
