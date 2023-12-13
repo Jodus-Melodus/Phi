@@ -2,9 +2,10 @@
     ".phi": {
         "keywords": [
             "#3d81ff",
-            "(?<!\\w)(out|while|if|int|Real|Int|Str|as|lambda|real|import|export|obj|array|bool|str|items|now|length|wait|hash|fn|do|else|append|keys|join|format)(?!\\w)",
+            "(?<!\\w)(out|type|while|if|int|Real|Int|Str|as|lambda|real|import|export|obj|array|bool|str|items|now|length|wait|hash|fn|do|else|append|keys|join|format)(?!\\w)",
             [
                 "out",
+                "type",
                 "while",
                 "if",
                 "int",

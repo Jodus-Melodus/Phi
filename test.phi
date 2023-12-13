@@ -3,7 +3,8 @@
 
 str x = "hello world"
 
+str t = type(x)
 
-out(x)
-
-
+if (t == "stringvalue"){
+	out(T)
+}

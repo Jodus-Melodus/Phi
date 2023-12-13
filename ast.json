@@ -12,17 +12,51 @@
             "constant": "False"
         },
         {
-            "kind": "callExpression",
-            "arguments": [
-                {
+            "kind": "variableDeclarationExpression",
+            "datatype": "string",
+            "identifier": "t",
+            "value": {
+                "kind": "callExpression",
+                "arguments": [
+                    {
+                        "kind": "identifier",
+                        "symbol": "x"
+                    }
+                ],
+                "caller": {
                     "kind": "identifier",
-                    "symbol": "x"
+                    "symbol": "type"
+                }
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "ifStatement",
+            "conditionLeft": {
+                "kind": "identifier",
+                "symbol": "t"
+            },
+            "operand": "==",
+            "conditionRight": {
+                "kind": "stringLiteral",
+                "value": "stringValue"
+            },
+            "body": [
+                {
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "T"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "out"
+                    }
                 }
             ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "out"
-            }
+            "elsebody": []
         }
     ]
 }

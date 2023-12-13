@@ -30,8 +30,8 @@ def in_(arg:stringValue) -> stringValue:
 def now() -> integerValue:
     return integerValue(time())
 
-def type_(arg:RuntimeValue) -> str:
-    return arg.type
+def type_(arg:RuntimeValue) -> stringValue:
+    return stringValue(arg.type)
     
 def wait(seconds) -> None:
     sleep(int(seconds.value))
