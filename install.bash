@@ -1,1 +1,0 @@
-python auto_py_to_exe config.json
