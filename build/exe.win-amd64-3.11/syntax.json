@@ -1,0 +1,59 @@
+{
+    ".phi": {
+        "keywords": [
+            "#3d81ff",
+            "(?<!\\w)(out|while|if|int|Real|Int|Str|as|lambda|real|import|export|obj|array|bool|str|items|now|length|wait|hash|fn|do|else|append|keys|join|format)(?!\\w)",
+            [
+                "out",
+                "while",
+                "if",
+                "int",
+                "real",
+                "str",
+                "Int",
+                "Str",
+                "Real",
+                "obj",
+                "array",
+                "now",
+                "wait",
+                "root",
+                "fn",
+                "do",
+                "else",
+                "hash",
+                "lambda",
+                "bool",
+                "export",
+                "import",
+                "as",
+                ".length",
+                ".append",
+                ".join",
+                ".format",
+                ".items",
+                ".keys"
+            ]
+        ],
+        "symbols": [
+            "#ffb617",
+            "(==|!=|&|\\||<-|<=|>=|<|>|{|}|\\[|\\]|\\(|\\)|\\+=|-=|\\*=|\/=|%=|\\^=|\\+|-|\\*|\/|%|\\^|)",
+            []
+        ],
+        "numbers": [
+            "#ec00a5",
+            "\\d+",
+            []
+        ],
+        "strings": [
+            "#52ff5b",
+            "(\"(.*?)\"|'(.*?)')",
+            []
+        ],
+        "comments": [
+            "#6b6b6b",
+            "#.*",
+            []
+        ]
+    }
+}

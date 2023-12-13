@@ -1,0 +1,28 @@
+{
+    "kind": "program",
+    "body": [
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "string",
+            "identifier": "x",
+            "value": {
+                "kind": "stringLiteral",
+                "value": "hello world"
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "x"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "out"
+            }
+        }
+    ]
+}
