@@ -14,8 +14,7 @@ additionalFiles = [
 exe = Executable(
     script="phIDE.py",
     base=base,
-    icon="phi.ico",
-    shortcutName="phIDE",
+    icon="phi.ico"
 )
 
 setup(
