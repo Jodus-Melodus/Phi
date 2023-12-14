@@ -2,37 +2,6 @@
     "kind": "program",
     "body": [
         {
-            "kind": "whileStatement",
-            "conditionLeft": {
-                "kind": "identifier",
-                "symbol": "T"
-            },
-            "operand": "",
-            "conditionRight": {
-                "type": "nullValue",
-                "value": "_"
-            },
-            "body": [
-                {
-                    "kind": "callExpression",
-                    "arguments": [
-                        {
-                            "kind": "stringLiteral",
-                            "value": "hello world"
-                        }
-                    ],
-                    "caller": {
-                        "kind": "identifier",
-                        "symbol": "out"
-                    }
-                },
-                {
-                    "kind": "breakExpression"
-                }
-            ],
-            "elsebody": []
-        },
-        {
             "kind": "variableDeclarationExpression",
             "datatype": "real",
             "identifier": "i",
@@ -41,59 +10,6 @@
                 "value": 5.0
             },
             "constant": "False"
-        },
-        {
-            "kind": "doWhileStatement",
-            "body": [
-                {
-                    "kind": "callExpression",
-                    "arguments": [
-                        {
-                            "kind": "identifier",
-                            "symbol": "i"
-                        }
-                    ],
-                    "caller": {
-                        "kind": "identifier",
-                        "symbol": "out"
-                    }
-                },
-                {
-                    "kind": "assignmentBinaryExpression",
-                    "assigne": {
-                        "kind": "identifier",
-                        "symbol": "i"
-                    },
-                    "operand": "-=",
-                    "value": {
-                        "kind": "integerLiteral",
-                        "value": 1
-                    }
-                },
-                {
-                    "kind": "breakExpression"
-                }
-            ],
-            "conditionLeft": {
-                "kind": "identifier",
-                "symbol": "i"
-            },
-            "operand": ">",
-            "conditionRight": {
-                "kind": "integerLiteral",
-                "value": 0
-            }
-        },
-        {
-            "kind": "assignmentExpression",
-            "assigne": {
-                "kind": "identifier",
-                "symbol": "i"
-            },
-            "value": {
-                "kind": "realLiteral",
-                "value": 5.0
-            }
         },
         {
             "kind": "whileStatement",

@@ -320,8 +320,7 @@ class Interpreter:
 
     def evaluateWhileStatement(self, whileStatement: whileStatementNode, env: environment) -> bool:
         while True:
-            left: RuntimeValue = self.evaluate(
-                whileStatement.conditionLeft, env)
+            left: RuntimeValue = self.evaluate(whileStatement.conditionLeft, env)
             if isinstance(left, error):
                 return left
             if not isinstance(whileStatement.conditionRight, nullValue):
@@ -340,6 +339,8 @@ class Interpreter:
                     if isinstance(statement, (error, returnNode, breakNode, continueNode)):
                         return result
                     result = self.evaluate(statement, env)
+                    if isinstance(result, error):
+                        return result
             else:
                 if whileStatement.elseBody != []:
                     result = nullValue()
@@ -347,6 +348,8 @@ class Interpreter:
                         if isinstance(result, (error, returnNode, breakNode, continueNode)):
                             return result
                         result = self.evaluate(statement, env)
+                        if isinstance(result, error):
+                            return result
                 break
         return nullValue()
 
@@ -359,6 +362,8 @@ class Interpreter:
                     if isinstance(statement, (returnNode, error, breakNode, continueNode)):
                         return result
                     result = self.evaluate(statement, env)
+                    if isinstance(result, error):
+                        return result
 
                 left: RuntimeValue = self.evaluate(doWhile.conditionLeft, env)
                 if isinstance(left, error):
