@@ -22,7 +22,8 @@ The following keywords are reserved in the Phi programming language:
 - `fn` - Declare a new [function](#user-defined-functions)
 - `import` - [Import](#importing-a-module) a module
 - `export` - [Export](#exporting-a-module) a value
-- `break` - Terminates the loop. Works for [while loop](#loop-with-break) and [do while loop](#loop-with-break-1)
+- `break` - Terminates the loop. Works for [while loop](#loop-with-break), [do while loop](#loop-with-break-1) and [for loop](#for-loop)
+- `continue` - Skips to the next iteration of the loop
 - All other [built-in functions](#built-in-functions) and methods are also reserved words.
 # Comments
 Comments start with `#` symbol and continue until end of line.
@@ -437,17 +438,93 @@ while (T) {
 }
 ```
 This will run forever, as the while loop's condition always evaluates to true (`T`).
-- ### Loop with break
-This will terminate loop as soon as it it reached
+- ### While Loop with break
+To exit early from a loop you can use `break`.
 ```
-while (T){
-    out("hi")
-    break
+int c = 0
+while (T) {
+    out(c)
+    c += 1
+    if (c == 5) {
+        break
+    }
 }
 ```
-Output:
+Result:
 ```
-hi
+0
+1
+2
+3
+4
+```
+- ### While Loops with continue
+`continue` skips the rest of the current iteration and jumps directly to the next one.
+```
+d = 0
+while (T) {
+    d += 1
+    if (d % 2 == 0) {
+        continue
+    }
+    out("I am odd!")
+}
+```
+Result:
+```
+I am odd!
+I am odd!
+I am odd!
+```
+## For Loops
+For loops have three parts separated by colons (`,`)
+- ### Example of a for loop.
+```
+for (int i = 0, i < 5, i += 1){
+    out(i)
+}
+```
+Result:
+```
+0
+1
+2
+3
+4
+```
+The variable `i` starts at 0 and continues until it is no longer less than 5. After each iteration, `i` is incremented.
+- ### For Loop with break
+```
+for (int j = 0; j < 10; j++){
+    if (j == 5){
+        break
+    }
+}
+```
+Result:
+```
+0
+1
+2
+3
+4
+```
+- ### For Loop with continue
+The `continue` statement skips the rest of the code in the current iteration and moves on to the next one.
+```
+for (k = 0; k <= 9; k++) {
+    if (k % 2 == 0) {
+        continue
+    }
+}
+```
+Result:
+```
+1
+3
+5
+7
+9
 ```
 ## Do-While Loops
 The do-while loop works similarly to the while loop, but it runs at least once before checking the condition.
@@ -466,16 +543,42 @@ Result:
 2
 ```
 Do-while loops can be useful when you want to ensure that your code block executes at least once regardless of whether or not the condition is false.
-- ### Loop with break
+- ### Do-While Loop with break
 ```
+int j = 0
 do {
-    out("bye")
-    break
+    j += 1
+    if (j > 5) {
+        break
+    }
 } while (T)
 ```
-Output:
+Result:
 ```
-bye
+1
+2
+3
+4
+5
+```
+- ### Do-While Loop with continue
+```
+int k = 0
+do {
+    k += 1
+    if (k % 2 == 0) {
+        continue
+    }
+    out(k)
+} while (k < 10)
+```
+Result:
+```
+1
+3
+5
+7
+9
 ```
 # Modules
 ## Importing a module

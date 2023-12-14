@@ -1,6 +1,17 @@
 
 
-for (int i = 0, i < 5, i += 1){
-	out('hi')
-}
+int i = 0
+
+do {
+	if (i == 2){
+		i += 1
+		continue
+	}
+	out(i)
+	i += 1
+} while (i < 5)
+
+
+
+
 

@@ -20,15 +20,33 @@
             "operand": "<",
             "conditionRight": {
                 "kind": "integerLiteral",
-                "value": 6
+                "value": 5
             },
             "body": [
+                {
+                    "kind": "ifStatement",
+                    "conditionLeft": {
+                        "kind": "identifier",
+                        "symbol": "i"
+                    },
+                    "operand": "==",
+                    "conditionRight": {
+                        "kind": "integerLiteral",
+                        "value": 2
+                    },
+                    "body": [
+                        {
+                            "kind": "continueExpression"
+                        }
+                    ],
+                    "elsebody": []
+                },
                 {
                     "kind": "callExpression",
                     "arguments": [
                         {
-                            "kind": "stringLiteral",
-                            "value": "hi"
+                            "kind": "identifier",
+                            "symbol": "i"
                         }
                     ],
                     "caller": {
