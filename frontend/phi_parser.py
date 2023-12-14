@@ -68,6 +68,8 @@ class Parser:
                 return self.parseIfStatement()
             case TT._while:
                 return self.parseWhileStatement()
+            case TT._for:
+                return self.parseForStatement()
             case TT.do:
                 return self.parseDoWhileStatement()
             case _:
@@ -175,6 +177,57 @@ class Parser:
         else:
             return syntaxError(self, "Expected a '('", self.column, self.line)
         return whileStatementNode(conditionLeft, operand, conditionRight, body, elseBody, self.line, self.column)
+
+    def parseForStatement(self) -> None:
+        self.eat()
+
+        if self.get().type == TT.openParenthesis:
+            self.eat()
+            declaration = self.parseVariableDeclaration()
+            if isinstance(declaration, error):
+                return declaration
+            if self.get().type == TT.comma:
+                self.eat()
+                conditionLeft = self.parseExpression()
+                if isinstance(conditionLeft, error):
+                    return conditionLeft
+                if self.get().type in self.conditionalOperators:
+                    operand = self.eat().value
+                    conditionRight = self.parseExpression()
+                    if isinstance(conditionRight, error):
+                        return conditionRight
+                    if self.get().type == TT.comma:
+                        self.eat()
+                        step = self.parseExpression()
+                        if isinstance(step, error):
+                            return step
+                        if self.get().type == TT.closeParenthesis:
+                            self.eat()
+                            if self.get().type == TT.openBrace:
+                                self.eat()
+                                body = []
+                                while self.get().type != TT.closeBrace:
+                                    statement = self.parseStatement()
+                                    if isinstance(statement, error):
+                                        return statement
+                                    if statement:
+                                        body.append(statement)
+                                    if self.get().type == TT.eof:
+                                        return syntaxError(self, "Expected a '}'", self.column, self.line)
+                                self.eat()
+                            else:
+                                return syntaxError(self, "Expected a '{'", self.column, self.line)
+                        else:
+                            return syntaxError(self, "Expected a ')'", self.column, self.line)
+                    else:
+                        return syntaxError(self, "Expected a comma after the condition", self.column, self.line)
+                else:
+                    return syntaxError(self, f"Expected one of the following operators: {self.conditionalOperators}", self.column, self.line)
+            else:
+                return syntaxError(self, "Expected a comma", self.column, self.line)
+        else:
+            return syntaxError(self, "Expected a '(' after 'for'", self.column, self.line)
+        return forStatementNode(declaration, conditionLeft, operand, conditionRight, step, body, self.line, self.column)
 
     def parseIfStatement(self) -> None:
         self.eat()

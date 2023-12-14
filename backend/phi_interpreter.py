@@ -129,26 +129,38 @@ class Interpreter:
     def evaluateNumericBinaryExpression(self, left:integerValue|realValue, right:integerValue|realValue, operand:str) -> realValue:
         match operand:
             case '+':
-                return realValue(left.value + right.value)
+                if isinstance(left, realValue) or isinstance(right, realValue):
+                    return realValue(left.value + right.value)
+                else:
+                    return integerValue(left.value + right.value)
             case '-':
-                return realValue(left.value - right.value)
+                if isinstance(left, realValue) or isinstance(right, realValue):
+                    return realValue(left.value - right.value)
+                else:
+                    return integerValue(left.value - right.value)
             case '*':
-                return realValue(left.value * right.value)
+                if isinstance(left, realValue) or isinstance(right, realValue):
+                    return realValue(left.value * right.value)
+                else:
+                    return integerValue(left.value * right.value)
             case '/':
                 if right.value != 0:
                     return realValue(left.value / right.value)
                 else:
                     return zeroDivisionError(self, right.column, right.line)
             case '^':
-                return realValue(left.value ** right.value)
+                if isinstance(left, realValue) or isinstance(right, realValue):
+                    return realValue(left.value ** right.value)
+                else:
+                    return integerValue(left.value ** right.value)
             case '%':
                 if right.value != 0:
-                    return realValue(left.value % right.value)
+                    return integerValue(left.value % right.value)
                 else:
                     return zeroDivisionError(self, right.column, right.line)
             case '//':
                 if right.value != 0:
-                    return realValue(left.value // right.value)
+                    return integerValue(left.value // right.value)
                 else:
                     return zeroDivisionError(self, right.column, right.line)
             case _:
@@ -352,6 +364,38 @@ class Interpreter:
                             return result
                 break
         return nullValue()
+    
+    def evaluateForStatement(self, forLoop:forStatementNode, env:environment) -> None:
+        self.evaluateVariableDeclarationExpression(forLoop.declaration, env)
+
+        while True:
+            left: RuntimeValue = self.evaluate(forLoop.conditionLeft, env)
+            if isinstance(left, error):
+                return left
+            if not isinstance(forLoop.conditionRight, nullValue):
+                right: RuntimeValue = self.evaluate(forLoop.conditionRight, env)
+                if isinstance(right, error):
+                    return right
+            else:
+                right = nullValue()
+
+            res = False
+            res = self.checkCondition(left, forLoop.operand, right)
+            if res:
+                result = nullValue()
+                for statement in forLoop.body:
+                    if isinstance(statement, (error, returnNode, breakNode, continueNode)):
+                        return result
+                    result = self.evaluate(statement, env)
+                    if isinstance(result, error):
+                        return result
+                result = self.evaluateAssignmentBinaryExpression(forLoop.step, env)
+                if isinstance(result, error):
+                    return result
+            else:
+                break
+        return nullValue()
+
 
     def evaluateDoWhileStatement(self, doWhile: doWhileStatementNode, env: environment) -> None:
         res = True
@@ -384,15 +428,22 @@ class Interpreter:
         return self.evaluate(returnExpression.value, env)
 
     def evaluateAssignmentBinaryExpression(self, expr: assignmentBinaryExpressionNode, env: environment) -> None:
-        currentValue = realLiteralNode(env.lookup(expr.assigne).value, expr.column, expr.line)
+        currValue = env.lookup(expr.assigne)
+        if isinstance(currValue, integerValue):
+            currentValue = integerLiteralNode(currValue.value, expr.column, expr.line)
+        elif isinstance(currValue, realValue):
+            currentValue = realLiteralNode(currValue.value, expr.column, expr.line)
+
         binexpr = binaryExpressionNode(currentValue, expr.operand[0], expr.value, expr.line, expr.column)
         newValue = self.evaluateBinaryExpression(binexpr, env)
+
         if isinstance(newValue, error):
             return newValue
         elif isinstance(newValue, realValue):
             v = realLiteralNode(newValue.value, expr.line, expr.column)
         elif isinstance(newValue, integerValue):
             v = integerLiteralNode(newValue.value, expr.line, expr.column)
+
         return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, v), env)
 
     def evaluateExportExpression(self, exportExpression: exportNode, env: environment):
@@ -444,6 +495,8 @@ class Interpreter:
                 return self.evaluateIfStatement(astNode, env)
             case 'whileStatement':
                 return self.evaluateWhileStatement(astNode, env)
+            case 'forStatement':
+                return self.evaluateForStatement(astNode, env)
             case 'doWhileStatement':
                 return self.evaluateDoWhileStatement(astNode, env)
             case 'arrayLiteral':
@@ -466,4 +519,4 @@ class Interpreter:
             case 'nullLiteral':
                 return nullValue()
             case _:
-                return notImplementedError(self, astNode, astNode.column, astNode.line)
+                return notImplementedError(self, astNode.kind, astNode.column, astNode.line)

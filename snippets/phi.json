@@ -4,5 +4,6 @@
     "ifElse":"if (condition) {\n\tbody\n} else {\n\tbody\n}",
     "while":"while (condition) {\n\tbody\n}",
     "whileElse":"while (condition) {\n\tbody\n} else {\n\tbody\n}",
-    "do":"do {\n\tbody\n} while (condition)"
+    "do":"do {\n\tbody\n} while (condition)",
+    "for":"for (int i = 0, i < value, i += 1){\n\tbody\n}"
 }

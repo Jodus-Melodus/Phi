@@ -57,6 +57,7 @@ class TokenType:
         self._as = 'as'
         self._break = 'break'
         self._continue = 'continue'
+        self._for = 'for'
 
 TT = TokenType()
 DIGITS = '12345678890'
@@ -79,7 +80,8 @@ KEYWORDS = {
     'import':TT._import,
     'as':TT._as,
     'break':TT._break,
-    'continue':TT._continue
+    'continue':TT._continue,
+    'for':TT._for
 }
 
 class Token:

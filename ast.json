@@ -2,72 +2,53 @@
     "kind": "program",
     "body": [
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "real",
-            "identifier": "i",
-            "value": {
-                "kind": "realLiteral",
-                "value": 5.0
+            "kind": "forStatement",
+            "declaration": {
+                "kind": "variableDeclarationExpression",
+                "datatype": "int",
+                "identifier": "i",
+                "value": {
+                    "kind": "integerLiteral",
+                    "value": 0
+                },
+                "constant": "False"
             },
-            "constant": "False"
-        },
-        {
-            "kind": "whileStatement",
             "conditionLeft": {
                 "kind": "identifier",
                 "symbol": "i"
             },
-            "operand": ">",
+            "operand": "<",
             "conditionRight": {
                 "kind": "integerLiteral",
-                "value": 0
+                "value": 6
             },
             "body": [
-                {
-                    "kind": "ifStatement",
-                    "conditionLeft": {
-                        "kind": "identifier",
-                        "symbol": "i"
-                    },
-                    "operand": "==",
-                    "conditionRight": {
-                        "kind": "integerLiteral",
-                        "value": 3
-                    },
-                    "body": [
-                        {
-                            "kind": "breakExpression"
-                        }
-                    ],
-                    "elsebody": []
-                },
                 {
                     "kind": "callExpression",
                     "arguments": [
                         {
-                            "kind": "identifier",
-                            "symbol": "i"
+                            "kind": "stringLiteral",
+                            "value": "hi"
                         }
                     ],
                     "caller": {
                         "kind": "identifier",
                         "symbol": "out"
                     }
-                },
-                {
-                    "kind": "assignmentBinaryExpression",
-                    "assigne": {
-                        "kind": "identifier",
-                        "symbol": "i"
-                    },
-                    "operand": "-=",
-                    "value": {
-                        "kind": "integerLiteral",
-                        "value": 1
-                    }
                 }
             ],
-            "elsebody": []
+            "step": {
+                "kind": "assignmentBinaryExpression",
+                "assigne": {
+                    "kind": "identifier",
+                    "symbol": "i"
+                },
+                "operand": "+=",
+                "value": {
+                    "kind": "integerLiteral",
+                    "value": 1
+                }
+            }
         }
     ]
 }

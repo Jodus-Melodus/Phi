@@ -158,6 +158,29 @@ class whileStatementNode:
             'body': self.body,
             'elsebody': self.elseBody
         })
+    
+class forStatementNode:
+    def __init__(self, declaration, conditionLeft, operand, conditionRight, step, body, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
+        self.kind = 'forStatement'
+        self.declaration = declaration
+        self.conditionLeft = conditionLeft
+        self.operand = operand
+        self.conditionRight = conditionRight
+        self.body = body
+        self.step = step
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'declaration':self.declaration,
+            'conditionLeft': self.conditionLeft,
+            'operand': self.operand,
+            'conditionRight': self.conditionRight,
+            'body': self.body,
+            'step': self.step
+        })
 
 
 class doWhileStatementNode:

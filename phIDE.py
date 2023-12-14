@@ -533,7 +533,7 @@ class App(ctk.CTk):
 
     def loadSnippets(self) -> None:
         with open(f'snippets/{self.currentLanguage[1:]}.json') as f:
-            self.snippets = list(sorted(json.load(f)))
+            self.snippets = json.load(f)
 
 # Syntax
     def loadLanguageSyntax(self) -> None:
