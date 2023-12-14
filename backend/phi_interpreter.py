@@ -384,8 +384,10 @@ class Interpreter:
             if res:
                 result = nullValue()
                 for statement in forLoop.body:
-                    if isinstance(statement, (error, returnNode, breakNode, continueNode)):
+                    if isinstance(statement, (error, returnNode, breakNode)):
                         return result
+                    if isinstance(statement, continueNode):
+                        break
                     result = self.evaluate(statement, env)
                     if isinstance(result, error):
                         return result
