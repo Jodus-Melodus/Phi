@@ -7,5 +7,24 @@ while (T){
 	break
 }
 
+real i = 5.0
+
+do {
+	out(i)
+	i -= 1
+	break
+} while (i > 0)
+
+
+i = 5.0
+
+while (i > 0){
+	if (i == 3){
+		break
+	}
+	out(i)
+	i -= 1
+}
+
 
 

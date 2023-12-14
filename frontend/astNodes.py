@@ -396,3 +396,14 @@ class breakNode:
         return str({
             'kind': self.kind
         })
+    
+class continueNode:
+    def __init__(self, line:int, column:int) -> None:
+        self.line = line
+        self.column = column
+        self.kind = 'continueExpression'
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind
+        })

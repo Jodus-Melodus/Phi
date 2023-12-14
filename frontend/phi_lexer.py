@@ -56,6 +56,7 @@ class TokenType:
         self._import = 'import'
         self._as = 'as'
         self._break = 'break'
+        self._continue = 'continue'
 
 TT = TokenType()
 DIGITS = '12345678890'
@@ -77,7 +78,8 @@ KEYWORDS = {
     'export':TT.export,
     'import':TT._import,
     'as':TT._as,
-    'break':TT._break
+    'break':TT._break,
+    'continue':TT._continue
 }
 
 class Token:

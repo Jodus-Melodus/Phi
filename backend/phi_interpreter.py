@@ -307,18 +307,14 @@ class Interpreter:
             result = nullValue()
             for statement in ifStatement.body:
                 result = self.evaluate(statement, env)
-                if isinstance(result, error):
-                    return result
-                if isinstance(statement, returnNode):
+                if isinstance(result, (error, returnNode)):
                     return result
         else:
             if ifStatement.elseBody != []:
                 result = nullValue()
                 for statement in ifStatement.elseBody:
                     result = self.evaluate(statement, env)
-                    if isinstance(result, error):
-                        return result
-                    if isinstance(statement, returnNode):
+                    if isinstance(result, (error, returnNode)):
                         return result
         return nullValue()
 
@@ -341,18 +337,16 @@ class Interpreter:
             if res:
                 result = nullValue()
                 for statement in whileStatement.body:
-                    if isinstance(statement, (error, returnNode, breakNode)):
+                    if isinstance(statement, (error, returnNode, breakNode, continueNode)):
                         return result
                     result = self.evaluate(statement, env)
-                    if isinstance(result, error):
-                        return result
             else:
                 if whileStatement.elseBody != []:
                     result = nullValue()
                     for statement in whileStatement.elseBody:
-                        result = self.evaluate(statement, env)
-                        if isinstance(result, (error, returnNode, breakNode)):
+                        if isinstance(result, (error, returnNode, breakNode, continueNode)):
                             return result
+                        result = self.evaluate(statement, env)
                 break
         return nullValue()
 
@@ -362,11 +356,9 @@ class Interpreter:
             if res:
                 result = nullValue()
                 for statement in doWhile.body:
-                    if isinstance(statement, returnNode):
+                    if isinstance(statement, (returnNode, error, breakNode, continueNode)):
                         return result
                     result = self.evaluate(statement, env)
-                    if isinstance(result, error):
-                        return result
 
                 left: RuntimeValue = self.evaluate(doWhile.conditionLeft, env)
                 if isinstance(left, error):

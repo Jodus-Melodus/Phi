@@ -27,15 +27,96 @@
                     }
                 },
                 {
+                    "kind": "breakExpression"
+                }
+            ],
+            "elsebody": []
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "real",
+            "identifier": "i",
+            "value": {
+                "kind": "realLiteral",
+                "value": 5.0
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "doWhileStatement",
+            "body": [
+                {
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "i"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "out"
+                    }
+                },
+                {
+                    "kind": "assignmentBinaryExpression",
+                    "assigne": {
+                        "kind": "identifier",
+                        "symbol": "i"
+                    },
+                    "operand": "-=",
+                    "value": {
+                        "kind": "integerLiteral",
+                        "value": 1
+                    }
+                },
+                {
+                    "kind": "breakExpression"
+                }
+            ],
+            "conditionLeft": {
+                "kind": "identifier",
+                "symbol": "i"
+            },
+            "operand": ">",
+            "conditionRight": {
+                "kind": "integerLiteral",
+                "value": 0
+            }
+        },
+        {
+            "kind": "assignmentExpression",
+            "assigne": {
+                "kind": "identifier",
+                "symbol": "i"
+            },
+            "value": {
+                "kind": "realLiteral",
+                "value": 5.0
+            }
+        },
+        {
+            "kind": "whileStatement",
+            "conditionLeft": {
+                "kind": "identifier",
+                "symbol": "i"
+            },
+            "operand": ">",
+            "conditionRight": {
+                "kind": "integerLiteral",
+                "value": 0
+            },
+            "body": [
+                {
                     "kind": "ifStatement",
                     "conditionLeft": {
                         "kind": "identifier",
-                        "symbol": "T"
+                        "symbol": "i"
                     },
-                    "operand": "",
+                    "operand": "==",
                     "conditionRight": {
-                        "type": "nullValue",
-                        "value": "_"
+                        "kind": "integerLiteral",
+                        "value": 3
                     },
                     "body": [
                         {
@@ -43,6 +124,31 @@
                         }
                     ],
                     "elsebody": []
+                },
+                {
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "i"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "out"
+                    }
+                },
+                {
+                    "kind": "assignmentBinaryExpression",
+                    "assigne": {
+                        "kind": "identifier",
+                        "symbol": "i"
+                    },
+                    "operand": "-=",
+                    "value": {
+                        "kind": "integerLiteral",
+                        "value": 1
+                    }
                 }
             ],
             "elsebody": []

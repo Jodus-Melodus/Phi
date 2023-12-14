@@ -502,6 +502,9 @@ class Parser:
             case TT._break:
                 self.eat()
                 return breakNode(self.line, self.column)
+            case TT._continue:
+                self.eat()
+                return continueNode(self.line, self.column)
             case TT.identifier:
                 return identifierNode(str(self.eat().value), self.line, self.column)
             case TT.openParenthesis:

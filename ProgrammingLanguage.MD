@@ -22,6 +22,7 @@ The following keywords are reserved in the Phi programming language:
 - `fn` - Declare a new [function](#user-defined-functions)
 - `import` - [Import](#importing-a-module) a module
 - `export` - [Export](#exporting-a-module) a value
+- `break` - Terminates the loop. Works for [while loop](#loop-with-break) and [do while loop](#loop-with-break-1)
 - All other [built-in functions](#built-in-functions) and methods are also reserved words.
 # Comments
 Comments start with `#` symbol and continue until end of line.
@@ -436,6 +437,18 @@ while (T) {
 }
 ```
 This will run forever, as the while loop's condition always evaluates to true (`T`).
+- ### Loop with break
+This will terminate loop as soon as it it reached
+```
+while (T){
+    out("hi")
+    break
+}
+```
+Output:
+```
+hi
+```
 ## Do-While Loops
 The do-while loop works similarly to the while loop, but it runs at least once before checking the condition.
 - ### Example of a do-while loop.
@@ -453,6 +466,17 @@ Result:
 2
 ```
 Do-while loops can be useful when you want to ensure that your code block executes at least once regardless of whether or not the condition is false.
+- ### Loop with break
+```
+do {
+    out("bye")
+    break
+} while (T)
+```
+Output:
+```
+bye
+```
 # Modules
 ## Importing a module
 ```
