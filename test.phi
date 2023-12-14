@@ -1,10 +1,11 @@
 
 
 
-str x = "hello world"
+while (T){
+	out("hello world")
 
-str t = type(x)
-
-if (t == "stringvalue"){
-	out(T)
+	break
 }
+
+
+

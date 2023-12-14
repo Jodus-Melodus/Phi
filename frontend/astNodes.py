@@ -384,3 +384,15 @@ class importNode:
             'kind': self.kind,
             'value': self.value
         })
+    
+
+class breakNode:
+    def __init__(self, line:int, column:int) -> None:
+        self.line = line
+        self.column = column
+        self.kind = 'breakExpression'
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind
+        })

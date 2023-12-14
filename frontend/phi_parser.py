@@ -499,6 +499,9 @@ class Parser:
                 return realLiteralNode(float(self.eat().value), self.line, self.column)
             case TT.stringValue:
                 return stringLiteralNode(self.eat().value, self.line, self.column)
+            case TT._break:
+                self.eat()
+                return breakNode(self.line, self.column)
             case TT.identifier:
                 return identifierNode(str(self.eat().value), self.line, self.column)
             case TT.openParenthesis:
@@ -538,4 +541,4 @@ class Parser:
                 else:
                     return syntaxError(self, "Expected an identifier", self.column, self.line)
             case _:
-                return syntaxError(self, 'Invalid token found', self.column, self.line)
+                return syntaxError(self, f"Invalid token '{self.get()}' found", self.column, self.line)

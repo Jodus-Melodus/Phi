@@ -23,6 +23,7 @@ class syntaxError(error):
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
+{self.stage}
 [Syntax Error] Ln {self.line}, Col {self.column}:
 {self.msg}
 '''

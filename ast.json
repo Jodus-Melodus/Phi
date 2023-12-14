@@ -2,58 +2,47 @@
     "kind": "program",
     "body": [
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "string",
-            "identifier": "x",
-            "value": {
-                "kind": "stringLiteral",
-                "value": "hello world"
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "string",
-            "identifier": "t",
-            "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "identifier",
-                        "symbol": "x"
-                    }
-                ],
-                "caller": {
-                    "kind": "identifier",
-                    "symbol": "type"
-                }
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "ifStatement",
+            "kind": "whileStatement",
             "conditionLeft": {
                 "kind": "identifier",
-                "symbol": "t"
+                "symbol": "T"
             },
-            "operand": "==",
+            "operand": "",
             "conditionRight": {
-                "kind": "stringLiteral",
-                "value": "stringValue"
+                "type": "nullValue",
+                "value": "_"
             },
             "body": [
                 {
                     "kind": "callExpression",
                     "arguments": [
                         {
-                            "kind": "identifier",
-                            "symbol": "T"
+                            "kind": "stringLiteral",
+                            "value": "hello world"
                         }
                     ],
                     "caller": {
                         "kind": "identifier",
                         "symbol": "out"
                     }
+                },
+                {
+                    "kind": "ifStatement",
+                    "conditionLeft": {
+                        "kind": "identifier",
+                        "symbol": "T"
+                    },
+                    "operand": "",
+                    "conditionRight": {
+                        "type": "nullValue",
+                        "value": "_"
+                    },
+                    "body": [
+                        {
+                            "kind": "breakExpression"
+                        }
+                    ],
+                    "elsebody": []
                 }
             ],
             "elsebody": []

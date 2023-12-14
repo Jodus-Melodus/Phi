@@ -341,7 +341,7 @@ class Interpreter:
             if res:
                 result = nullValue()
                 for statement in whileStatement.body:
-                    if isinstance(statement, returnNode):
+                    if isinstance(statement, (error, returnNode, breakNode)):
                         return result
                     result = self.evaluate(statement, env)
                     if isinstance(result, error):
@@ -351,9 +351,7 @@ class Interpreter:
                     result = nullValue()
                     for statement in whileStatement.elseBody:
                         result = self.evaluate(statement, env)
-                        if isinstance(result, error):
-                            return result
-                        if isinstance(statement, returnNode):
+                        if isinstance(result, (error, returnNode, breakNode)):
                             return result
                 break
         return nullValue()
@@ -424,7 +422,7 @@ class Interpreter:
                 return nullValue()
 
     def evaluate(self, astNode, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | None:
-        if isinstance(astNode, (str, float, int)):
+        if isinstance(astNode, (str, float, int, error)):
             return astNode
         match astNode.kind:
             case 'program':
