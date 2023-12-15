@@ -116,3 +116,16 @@ class zeroDivisionError(error):
 [Zero Division Error] Ln {self.line}, Col {self.column}:
 Cannot divide by zero
 '''
+
+class fileNotFoundError(error):
+    def __init__(self, stage: str, file: str, column: int, line: int) -> None:
+        super().__init__(column, line)
+        self.stage = stage
+        self.file = file
+        self.type = 'fileNotFoundError'
+
+    def __repr__(self) -> str:
+        return f'''{errorArrows(self.column)}
+[File Not Found Error] Ln {self.line}, Col {self.column}:
+File '{self.file}' not found
+'''
