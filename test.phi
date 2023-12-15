@@ -9,7 +9,9 @@ do {
 	}
 	out(i)
 	i += 1
+	out(k)
 } while (i < 5)
+
 
 
 

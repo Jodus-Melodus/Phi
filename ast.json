@@ -2,26 +2,17 @@
     "kind": "program",
     "body": [
         {
-            "kind": "forStatement",
-            "declaration": {
-                "kind": "variableDeclarationExpression",
-                "datatype": "int",
-                "identifier": "i",
-                "value": {
-                    "kind": "integerLiteral",
-                    "value": 0
-                },
-                "constant": "False"
-            },
-            "conditionLeft": {
-                "kind": "identifier",
-                "symbol": "i"
-            },
-            "operand": "<",
-            "conditionRight": {
+            "kind": "variableDeclarationExpression",
+            "datatype": "int",
+            "identifier": "i",
+            "value": {
                 "kind": "integerLiteral",
-                "value": 5
+                "value": 0
             },
+            "constant": "False"
+        },
+        {
+            "kind": "doWhileStatement",
             "body": [
                 {
                     "kind": "ifStatement",
@@ -35,6 +26,18 @@
                         "value": 2
                     },
                     "body": [
+                        {
+                            "kind": "assignmentBinaryExpression",
+                            "assigne": {
+                                "kind": "identifier",
+                                "symbol": "i"
+                            },
+                            "operand": "+=",
+                            "value": {
+                                "kind": "integerLiteral",
+                                "value": 1
+                            }
+                        },
                         {
                             "kind": "continueExpression"
                         }
@@ -53,19 +56,41 @@
                         "kind": "identifier",
                         "symbol": "out"
                     }
+                },
+                {
+                    "kind": "assignmentBinaryExpression",
+                    "assigne": {
+                        "kind": "identifier",
+                        "symbol": "i"
+                    },
+                    "operand": "+=",
+                    "value": {
+                        "kind": "integerLiteral",
+                        "value": 1
+                    }
+                },
+                {
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "k"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "out"
+                    }
                 }
             ],
-            "step": {
-                "kind": "assignmentBinaryExpression",
-                "assigne": {
-                    "kind": "identifier",
-                    "symbol": "i"
-                },
-                "operand": "+=",
-                "value": {
-                    "kind": "integerLiteral",
-                    "value": 1
-                }
+            "conditionLeft": {
+                "kind": "identifier",
+                "symbol": "i"
+            },
+            "operand": "<",
+            "conditionRight": {
+                "kind": "integerLiteral",
+                "value": 5
             }
         }
     ]

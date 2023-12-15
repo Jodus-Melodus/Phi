@@ -6,7 +6,9 @@ import customtkinter as ctk
 from customtkinter import filedialog
 import os
 import keyboard
-import string
+
+with open('settings.json', 'r') as f:
+    settings = json.load(f)
 
 class TerminalRedirect:
     def __init__(self, textWidget) -> None:
@@ -38,7 +40,7 @@ class Dropdown:
         self.command = command
         self.itempadx = itempadx
         self.itempady = itempady
-        self.itemFont = ctk.CTkFont(family='Fira Code', size=12, weight='normal')
+        self.itemFont = ctk.CTkFont(family=settings['font-family'], size=settings['font-size'], weight='normal')
         self.bg_color = bg_color
 
         self.ismapped = False
@@ -77,9 +79,9 @@ class Dialog:
         self.height = 250
 
         self.dialog = ctk.CTkFrame(self.master, width=self.width, height=self.height, corner_radius=5)
-        title = ctk.CTkLabel(self.dialog, anchor='nw', text=self.title, font=ctk.CTkFont(family='Fira Code', size=14), text_color='#ee0000')
-        msg = ctk.CTkTextbox(self.dialog, font=ctk.CTkFont(family='Fira Code', size=12))
-        close = ctk.CTkButton(self.dialog, text='Close', command=self._close, font=ctk.CTkFont(family='Fira Code', size=12))
+        title = ctk.CTkLabel(self.dialog, anchor='nw', text=self.title, font=ctk.CTkFont(family=settings['font-family'], size=settings['font-size']), text_color='#ee0000')
+        msg = ctk.CTkTextbox(self.dialog, font=ctk.CTkFont(family=settings['font-family'], size=settings['font-size']))
+        close = ctk.CTkButton(self.dialog, text='Close', command=self._close, font=ctk.CTkFont(family=settings['font-family'], size=settings['font-size']))
 
         msg.insert('0.0', self.message)
         msg.configure(wrap='word', state='disabled')
@@ -98,8 +100,8 @@ class App(ctk.CTk):
         super().__init__()
         self.title('phIDE')
         self.state('zoomed')
-        self.textBoxFont = ctk.CTkFont(family='Courier New', size=16, weight='bold')
-        self.buttonFont = ctk.CTkFont(family='Fira Code', size=12, weight='normal')
+        self.textBoxFont = ctk.CTkFont(family='Courier New', size=settings['font-size'] + 4, weight='bold')
+        self.buttonFont = ctk.CTkFont(family=settings['font-family'], size=settings['font-size'], weight='normal')
         self.width = self.winfo_width()
         self.height = self.winfo_height()
         self.centerx = self.width // 2
@@ -315,15 +317,15 @@ class App(ctk.CTk):
             
             for tag in self.languageSyntaxPatterns[self.currentLanguage]:
                 editor.tag_config(tag, foreground=self.languageSyntaxPatterns[self.currentLanguage][tag][0])
-            editor.tag_config('error', background='#990000')
-            editor.tag_config('similar', background='#595959')
-            editor.tag_config('sel', background='#595959')
-            editor.tag_config('warning', underline=True, foreground='#ebd834')
+            editor.tag_config('error', foreground=settings['error-tag-foreground-color'], background=settings['error-tag-background-color'], underline=settings['error-tag-underline'])
+            editor.tag_config('similar', foreground=settings['similar-tag-foreground-color'], background=settings['similar-tag-background-color'], underline=settings['similar-tag-underline'])
+            editor.tag_config('sel', foreground=settings['selected-tag-foreground-color'], background=settings['selected-tag-background-color'], underline=settings['selected-tag-underline'])
+            editor.tag_config('warning', foreground=settings['warning-tag-foreground-color'], background=settings['warning-tag-background-color'], underline=settings['warning-tag-underline'])
 
             editor.pack(expand=True, fill='both')
 
-            self.intelliSenseBox = Dropdown(editor, 300, 100, [], self.intelliSenseClickInsert, 2, 2, '#ff00ff')
-            self.snippetMenu = Dropdown(editor, 300, 100, [], self.insertSnippet, 2, 2, '#3366ff')
+            self.intelliSenseBox = Dropdown(editor, 300, 100, [], self.intelliSenseClickInsert, 2, 2, settings['intelliSense-menu-color'])
+            self.snippetMenu = Dropdown(editor, 300, 100, [], self.insertSnippet, 2, 2, settings['snippet-menu-color'])
             editor.bind('<Tab>', self.intelliSenseTabKeyPress)
             editor.bind('<Up>', self.intelliSenseUpKeyPress)
             editor.bind('<Down>', self.intelliSenseDownKeyPress)
@@ -395,6 +397,30 @@ class App(ctk.CTk):
         if editor:
             self.line, self.column = editor.index('insert').split('.')
             self.statusbar.configure(text=f'Ln {self.line}, Col {self.column}')
+
+            currentCode = editor.get('0.0', 'end')
+
+            warning = main.incrementalParsing(currentCode)
+            self.warnings.configure(state='normal')
+            self.warnings.delete('0.0', 'end')
+            self.warnings.configure(state='disabled')
+            if warning != '':
+                line = warning.line
+                editor.tag_add('warning', f'{line}.0', f'{line}.end')
+                if warning.warningMessage() not in self.warnings.get('0.0', 'end'):
+                    self.warnings.configure(state='normal')
+                    self.warnings.insert('end', warning.warningMessage())
+                    self.warnings.configure(state='disabled')
+
+            warnings = self.warnings.get('0.0', 'end').strip().split('\n')
+            tabs = list(self.bottomTabview._tab_dict.keys())
+            currentName = tabs[1]
+            if (len(warnings) > 0) and (warnings[0] != ''):
+                newName = f'Warnings({len(warnings)})'
+            else:
+                newName = 'Warnings'
+            if newName not in self.bottomTabview._tab_dict.keys():
+                self.bottomTabview.rename(currentName, newName)
 
         self.updateMultiCursors(e)
         self.updateSyntax()
