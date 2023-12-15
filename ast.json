@@ -2,57 +2,39 @@
     "kind": "program",
     "body": [
         {
-            "kind": "functionDeclaration",
-            "name": "makeAdd",
-            "parameters": [],
-            "body": [
-                {
-                    "kind": "returnExpression",
-                    "value": {
-                        "kind": "functionDeclaration",
-                        "name": "add",
-                        "parameters": [
-                            {
-                                "kind": "identifier",
-                                "symbol": "a"
-                            },
-                            {
-                                "kind": "identifier",
-                                "symbol": "b"
-                            }
-                        ],
-                        "body": [
-                            {
-                                "kind": "returnExpression",
-                                "value": {
-                                    "kind": "binaryExpression",
-                                    "left": {
-                                        "kind": "identifier",
-                                        "symbol": "a"
-                                    },
-                                    "operand": "+",
-                                    "right": {
-                                        "kind": "identifier",
-                                        "symbol": "b"
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        {
             "kind": "variableDeclarationExpression",
             "datatype": "lambda",
             "identifier": "x",
             "value": {
-                "kind": "callExpression",
-                "arguments": [],
-                "caller": {
-                    "kind": "identifier",
-                    "symbol": "makeAdd"
-                }
+                "kind": "functionDeclaration",
+                "name": "~",
+                "parameters": [
+                    {
+                        "kind": "identifier",
+                        "symbol": "a"
+                    },
+                    {
+                        "kind": "identifier",
+                        "symbol": "b"
+                    }
+                ],
+                "body": [
+                    {
+                        "kind": "returnExpression",
+                        "value": {
+                            "kind": "binaryExpression",
+                            "left": {
+                                "kind": "identifier",
+                                "symbol": "a"
+                            },
+                            "operand": "+",
+                            "right": {
+                                "kind": "identifier",
+                                "symbol": "b"
+                            }
+                        }
+                    }
+                ]
             },
             "constant": "False"
         },
@@ -63,13 +45,17 @@
                     "kind": "callExpression",
                     "arguments": [
                         {
-                            "kind": "identifier",
-                            "symbol": "x"
+                            "kind": "integerLiteral",
+                            "value": 4
+                        },
+                        {
+                            "kind": "integerLiteral",
+                            "value": 3
                         }
                     ],
                     "caller": {
                         "kind": "identifier",
-                        "symbol": "type"
+                        "symbol": "x"
                     }
                 }
             ],

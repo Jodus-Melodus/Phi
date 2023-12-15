@@ -301,21 +301,21 @@ Output:
 s1 = "23"
 s2 = "64.2"
 ```
-### `out()`
+### `output()`
 Prints the output of any type to console.
 Example usage:
 ```
-out("hello world")
+output("hello world")
 ```
 Output:
 ```
 hello world
 ```
-### `in()`
+### `input()`
 Reads input from user and returns it as string.
 Example usage:
 ```
-str input = in("> ")
+str input = input("> ")
 ```
 Input (user):
 ```

@@ -23,7 +23,7 @@ class Parser:
         self.datetypeMap = {
             'int':integerLiteralNode(0, self.line, self.column),
             'real':realLiteralNode(0.0, self.line, self.column),
-            'str':stringLiteralNode('', self.line, self.column),
+            'string':stringLiteralNode('', self.line, self.column),
             'array':arrayLiteralNode([], self.line, self.column),
             'obj':objectLiteralNode([], self.line, self.column),
             'bool':identifierNode('F', self.line, self.column),
@@ -42,16 +42,19 @@ class Parser:
         return self.tokens[0]
 
     def genAST(self) -> programNode:
-        while self.get().type != TT.eof:
-            if self.get().type == TT.lineend:
-                self.eat()
-                continue
+        while len(self.tokens) > 0:
+            if self.get().type != TT.eof:
+                if self.get().type == TT.lineend:
+                    self.eat()
+                    continue
+                else:
+                    statement = self.parseStatement()
+                    if isinstance(statement, error):
+                        return statement
+                    if statement:
+                        self.program.body.append(statement)
             else:
-                statement = self.parseStatement()
-                if isinstance(statement, error):
-                    return statement
-                if statement:
-                    self.program.body.append(statement)
+                break
 
         return self.program
 

@@ -1,10 +1,4 @@
 
 
-lambda x = fn ~(a, b){
-		<- a + b
-	}
 
-out(x(4, 3))
-
-
-
+str x = input("<")
