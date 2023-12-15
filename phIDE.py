@@ -266,7 +266,7 @@ class App(ctk.CTk):
         self.bottomTabview.pack(
             padx=self.padx, pady=self.pady, expand=True, fill='both')
 
-        # Bindings
+# Bindings
 # Single Character Sequence
         self.bind('<F1>', self.showHelp)
         self.bind('<F5>', self.run)
@@ -571,16 +571,13 @@ class App(ctk.CTk):
             if len(self.snippetMenu.items) > 0:
                 editor = self.currentTab
                 if editor:
-                    snippetName = self.snippetMenu.items[self.snippetMenu.currentSelectedIndex]
-                    startLine, startColumn = map(int, editor.search(
-                        r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
-                    if startColumn == 0:
-                        startLine += 1
-                        startPos = f'{startLine}.{startColumn}'
-                    else:
-                        startPos = f'{startLine}.{startColumn + 1}'
+                    snippet = self.snippets[list(self.snippets.keys())[self.snippetMenu.currentSelectedIndex]]
+                    currentIndex = editor.index('insert -1l lineend')
+                    wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+                    word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
+                    startPos = f'{currentIndex.split(".")[0]}.{int(currentIndex.split(".")[1]) - len(word)}'
                     editor.delete(startPos, 'insert')
-                    editor.insert(startPos, self.snippets[snippetName] + ' ')
+                    editor.insert(startPos, snippet)
                     editor.focus_set()
                     self.snippetMenu.place_forget()
                     self.updateSyntax()
@@ -588,16 +585,13 @@ class App(ctk.CTk):
     def insertSnippet(self, snippetName: str) -> None:
         editor = self.currentTab
         if editor:
-            snippet = self.snippetMenu.items[snippetName]
-            startLine, startColumn = map(int, editor.search(
-                r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
-            if startColumn == 0:
-                startLine += 1
-                startPos = f'{startLine}.{startColumn}'
-            else:
-                startPos = f'{startLine}.{startColumn + 1}'
+            snippet = self.snippets[snippetName]
+            currentIndex = editor.index('insert -1l lineend')
+            wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+            word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
+            startPos = f'{currentIndex.split(".")[0]}.{int(currentIndex.split(".")[1]) - len(word)}'
             editor.delete(startPos, 'insert')
-            editor.insert(startPos, snippet + ' ')
+            editor.insert(startPos, snippet)
             editor.focus_set()
             self.snippetMenu.place_forget()
             self.updateSyntax()
@@ -610,23 +604,28 @@ class App(ctk.CTk):
             currentIndex = editor.index('insert')
             wordStart = editor.search(
                 r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
-            word = editor.get(wordStart, currentIndex).strip(' \n\t\r')
+            word = editor.get(wordStart, currentIndex).strip(' \n\t\r{[()]}')
 
+            size = 4
+            i = self.snippetMenu.currentSelectedIndex
+            startIndex = max(0, i)
             if word:
                 words = []
                 for w in self.snippets:
                     if w.startswith(word):
                         words.append(w)
+                self.snippets = words
                 if len(words) > 0:
                     if self.intelliSenseBox.winfo_ismapped():
                         self.intelliSenseBox.place_forget()
-                    self.snippetMenu.items = words
-                    self.snippetMenu.place(x=x, y=y+30)
+                    endIndex = min(len(self.snippets), i + size + 1)
             else:
                 if self.intelliSenseBox.winfo_ismapped():
                     self.intelliSenseBox.place_forget()
-                self.snippetMenu.items = self.snippets
-                self.snippetMenu.place(x=x, y=y+30)
+                endIndex = min(len(self.snippets), i + size + 1)
+            items = list(self.snippets.copy().keys())
+            self.snippetMenu.items = items[startIndex:endIndex]
+            self.snippetMenu.place(x=x, y=y+30)
 
     def loadSnippets(self) -> None:
         with open(f'snippets/{self.currentLanguage[1:]}.json') as f:
@@ -660,20 +659,6 @@ class App(ctk.CTk):
                         'error', f'{currLine}.0', f'{currLine}.end')
 
 # IntelliSense
-    def intelliSenseTabKeyPress(self, e=None) -> None:
-        if self.intelliSenseBox.winfo_ismapped():
-            keyboard.press('Backspace')
-            self.intelliSenseBox.currentSelectedIndex += 1
-            if self.intelliSenseBox.currentSelectedIndex >= len(self.intelliSenseBox.items):
-                self.intelliSenseBox.currentSelectedIndex = 0
-            self.intelliSenseTrigger()
-        elif self.snippetMenu.winfo_ismapped():
-            keyboard.press('Backspace')
-            self.snippetMenu.currentSelectedIndex += 1
-            if self.snippetMenu.currentSelectedIndex >= len(self.snippetMenu.items):
-                self.snippetMenu.currentSelectedIndex = 0
-            self.showSnippets()
-
     def intelliSenseUpKeyPress(self, e=None) -> None:
         if hasattr(self, 'intelliSenseBox'):
             if self.intelliSenseBox.winfo_ismapped():
@@ -685,14 +670,16 @@ class App(ctk.CTk):
                     self.intelliSenseBox.currentSelectedIndex = len(
                         self.intelliSenseWords) - 1
                 self.intelliSenseTrigger()
-            elif self.snippetMenu.winfo_ismapped():
+
+        if hasattr(self, 'snippetMenu'):
+            if self.snippetMenu.winfo_ismapped():
                 editor = self.currentTab
                 if editor:
                     editor.mark_set('insert', editor.index('insert +1l lineend'))
                 self.snippetMenu.currentSelectedIndex -= 1
                 if self.snippetMenu.currentSelectedIndex < 0:
                     self.snippetMenu.currentSelectedIndex = len(
-                        self.snippetMenu.items) - 1
+                        self.snippets) - 1
                 self.showSnippets()
 
     def intelliSenseDownKeyPress(self, e=None) -> None:
@@ -705,12 +692,14 @@ class App(ctk.CTk):
                 if self.intelliSenseBox.currentSelectedIndex >= len(self.intelliSenseWords):
                     self.intelliSenseBox.currentSelectedIndex = 0
                 self.intelliSenseTrigger()
-            elif self.snippetMenu.winfo_ismapped():
+
+        if hasattr(self, 'snippetMenu'):
+            if self.snippetMenu.winfo_ismapped():
                 editor = self.currentTab
                 if editor:
                     editor.mark_set('insert', editor.index('insert -1l lineend'))
                 self.snippetMenu.currentSelectedIndex += 1
-                if self.snippetMenu.currentSelectedIndex >= len(self.snippetMenu.items):
+                if self.snippetMenu.currentSelectedIndex >= len(self.snippets):
                     self.snippetMenu.currentSelectedIndex = 0
                 self.showSnippets()
 
@@ -722,8 +711,7 @@ class App(ctk.CTk):
                 self.languageSyntaxPatterns[self.currentLanguage]['keywords'][2] + self.variables + self.languageSyntaxPatterns[self.currentLanguage]['errors'][2]))))
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
-            wordStart = editor.search(
-                r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+            wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
             word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
 
             size = 4
@@ -736,19 +724,18 @@ class App(ctk.CTk):
                         words.append(w)
                 self.intelliSenseWords = words
                 if len(self.intelliSenseWords) > 0:
+                    # Hide snippetMenu if present
                     if self.snippetMenu.winfo_ismapped():
                         self.snippetMenu.place_forget()
-
                     endIndex = min(len(self.intelliSenseWords), i + size + 1)
-                    self.intelliSenseBox.items = self.intelliSenseWords[startIndex:endIndex]
-                    self.intelliSenseBox.place(x=x, y=y+30)
             else:
+                # Hide snippetMenu if present
                 if self.snippetMenu.winfo_ismapped():
                     self.snippetMenu.place_forget()
-
                 endIndex = min(len(self.intelliSenseWords), i + size + 1)
-                self.intelliSenseBox.items = self.intelliSenseWords[startIndex:endIndex]
-                self.intelliSenseBox.place(x=x, y=y+30)
+
+            self.intelliSenseBox.items = self.intelliSenseWords[startIndex:endIndex]
+            self.intelliSenseBox.place(x=x, y=y+30)
 
     def intelliSenseEnterInsert(self, e=None) -> None:
         if self.intelliSenseBox.winfo_ismapped():
@@ -757,8 +744,7 @@ class App(ctk.CTk):
                 if editor:
                     selectedWord = self.intelliSenseWords[self.intelliSenseBox.currentSelectedIndex]
                     currentIndex = editor.index('insert -1l lineend')
-                    wordStart = editor.search(
-                        r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+                    wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
                     word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
                     startPos = f'{currentIndex.split(".")[0]}.{int(currentIndex.split(".")[1]) - len(word)}'
                     editor.delete(startPos, 'insert')
@@ -771,8 +757,7 @@ class App(ctk.CTk):
         editor = self.currentTab
         if editor:
             currentIndex = editor.index('insert')
-            wordStart = editor.search(
-                r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+            wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
             word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
             startPos = f'{currentIndex.split(".")[0]}.{int(currentIndex.split(".")[1]) - len(word)}'
             editor.delete(startPos, 'insert')
