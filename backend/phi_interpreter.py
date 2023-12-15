@@ -2,6 +2,7 @@ from backend.values import *
 from frontend.astNodes import *
 from frontend.errors import *
 from backend.phi_environment import environment, createGlobalEnvironment
+import os
 
 booleanTable = {
     'T': True,
@@ -514,14 +515,17 @@ class Interpreter:
             elif isinstance(importExpression.name, identifierNode):
                 name = importExpression.name.symbol
 
-            with open(f'{path}.phi', 'r') as f:
-                code = '\n'.join(f.readlines())
+            if os.path.exists(f'{path}.phi'):
+                with open(f'{path}.phi', 'r') as f:
+                    code = '\n'.join(f.readlines())
 
-            code = run(code)
-            if isinstance(code, exportValue):
-                return env.declareVariable(name, code.value, True)
+                code = run(code)
+                if isinstance(code, exportValue):
+                    return env.declareVariable(name, code.value, True)
+                else:
+                    return nullValue()
             else:
-                return nullValue()
+                return fileNotFoundError(self, f'{path}.phi', importExpression.column, importExpression.line)
 
     def evaluateTryStatement(self, tryStatement: tryNode, env: environment) -> None:
         result = nullValue()
