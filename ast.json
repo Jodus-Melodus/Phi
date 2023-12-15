@@ -2,137 +2,728 @@
     "kind": "program",
     "body": [
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "array",
-            "identifier": "x",
+            "kind": "exportExpression",
             "value": {
-                "kind": "arrayLiteral",
-                "items": [
-                    {
-                        "kind": "itemLiteral",
-                        "index": 0,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 45
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 1,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 29
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 2,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 29
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 3,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 23828
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 4,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 23
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 5,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 0
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 6,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 234
-                        }
-                    }
-                ]
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "forStatement",
-            "declaration": {
                 "kind": "variableDeclarationExpression",
-                "datatype": "int",
-                "identifier": "i",
+                "datatype": "object",
+                "identifier": "math",
                 "value": {
-                    "kind": "integerLiteral",
-                    "value": 0
-                },
-                "constant": "False"
-            },
-            "conditionLeft": {
-                "kind": "identifier",
-                "symbol": "i"
-            },
-            "operand": "<",
-            "conditionRight": {
-                "kind": "callExpression",
-                "arguments": [],
-                "caller": {
-                    "kind": "memberExpression",
-                    "object": {
-                        "kind": "identifier",
-                        "symbol": "x"
-                    },
-                    "property": {
-                        "kind": "identifier",
-                        "symbol": "lengt"
-                    }
-                }
-            },
-            "body": [
-                {
-                    "kind": "callExpression",
-                    "arguments": [
+                    "kind": "objectLiteral",
+                    "properties": [
                         {
-                            "kind": "memberExpression",
-                            "object": {
-                                "kind": "identifier",
-                                "symbol": "x"
-                            },
-                            "property": {
-                                "kind": "identifier",
-                                "symbol": "i"
+                            "kind": "propertyLiteral",
+                            "key": "pi",
+                            "value": {
+                                "kind": "realLiteral",
+                                "value": 3.141592653589793
+                            }
+                        },
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "phi",
+                            "value": {
+                                "kind": "realLiteral",
+                                "value": 1.618033988749895
+                            }
+                        },
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "e",
+                            "value": {
+                                "kind": "realLiteral",
+                                "value": 2.718281828459045
+                            }
+                        },
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "root",
+                            "value": {
+                                "kind": "functionDeclaration",
+                                "name": "~",
+                                "parameters": [
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "r"
+                                    },
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "i"
+                                    }
+                                ],
+                                "body": [
+                                    {
+                                        "kind": "returnExpression",
+                                        "value": {
+                                            "kind": "binaryExpression",
+                                            "left": {
+                                                "kind": "identifier",
+                                                "symbol": "r"
+                                            },
+                                            "operand": "^",
+                                            "right": {
+                                                "kind": "binaryExpression",
+                                                "left": {
+                                                    "kind": "integerLiteral",
+                                                    "value": 1
+                                                },
+                                                "operand": "/",
+                                                "right": {
+                                                    "kind": "identifier",
+                                                    "symbol": "i"
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "abs",
+                            "value": {
+                                "kind": "functionDeclaration",
+                                "name": "~",
+                                "parameters": [
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "v"
+                                    }
+                                ],
+                                "body": [
+                                    {
+                                        "kind": "returnExpression",
+                                        "value": {
+                                            "kind": "binaryExpression",
+                                            "left": {
+                                                "kind": "binaryExpression",
+                                                "left": {
+                                                    "kind": "identifier",
+                                                    "symbol": "v"
+                                                },
+                                                "operand": "^",
+                                                "right": {
+                                                    "kind": "integerLiteral",
+                                                    "value": 2
+                                                }
+                                            },
+                                            "operand": "^",
+                                            "right": {
+                                                "kind": "realLiteral",
+                                                "value": 0.5
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "power",
+                            "value": {
+                                "kind": "functionDeclaration",
+                                "name": "~",
+                                "parameters": [
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "v"
+                                    },
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "e"
+                                    }
+                                ],
+                                "body": [
+                                    {
+                                        "kind": "returnExpression",
+                                        "value": {
+                                            "kind": "binaryExpression",
+                                            "left": {
+                                                "kind": "identifier",
+                                                "symbol": "v"
+                                            },
+                                            "operand": "^",
+                                            "right": {
+                                                "kind": "identifier",
+                                                "symbol": "e"
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "round",
+                            "value": {
+                                "kind": "functionDeclaration",
+                                "name": "~",
+                                "parameters": [
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "v"
+                                    },
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "d"
+                                    }
+                                ],
+                                "body": [
+                                    {
+                                        "kind": "returnExpression",
+                                        "value": {
+                                            "kind": "binaryExpression",
+                                            "left": {
+                                                "kind": "callExpression",
+                                                "arguments": [
+                                                    {
+                                                        "kind": "binaryExpression",
+                                                        "left": {
+                                                            "kind": "binaryExpression",
+                                                            "left": {
+                                                                "kind": "identifier",
+                                                                "symbol": "v"
+                                                            },
+                                                            "operand": "*",
+                                                            "right": {
+                                                                "kind": "binaryExpression",
+                                                                "left": {
+                                                                    "kind": "integerLiteral",
+                                                                    "value": 10
+                                                                },
+                                                                "operand": "^",
+                                                                "right": {
+                                                                    "kind": "identifier",
+                                                                    "symbol": "d"
+                                                                }
+                                                            }
+                                                        },
+                                                        "operand": "+",
+                                                        "right": {
+                                                            "kind": "realLiteral",
+                                                            "value": 0.5
+                                                        }
+                                                    }
+                                                ],
+                                                "caller": {
+                                                    "kind": "identifier",
+                                                    "symbol": "Int"
+                                                }
+                                            },
+                                            "operand": "/",
+                                            "right": {
+                                                "kind": "binaryExpression",
+                                                "left": {
+                                                    "kind": "integerLiteral",
+                                                    "value": 10
+                                                },
+                                                "operand": "^",
+                                                "right": {
+                                                    "kind": "identifier",
+                                                    "symbol": "d"
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "floor",
+                            "value": {
+                                "kind": "functionDeclaration",
+                                "name": "~",
+                                "parameters": [
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "v"
+                                    }
+                                ],
+                                "body": [
+                                    {
+                                        "kind": "returnExpression",
+                                        "value": {
+                                            "kind": "callExpression",
+                                            "arguments": [
+                                                {
+                                                    "kind": "identifier",
+                                                    "symbol": "v"
+                                                }
+                                            ],
+                                            "caller": {
+                                                "kind": "identifier",
+                                                "symbol": "Int"
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "ceil",
+                            "value": {
+                                "kind": "functionDeclaration",
+                                "name": "~",
+                                "parameters": [
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "v"
+                                    }
+                                ],
+                                "body": [
+                                    {
+                                        "kind": "returnExpression",
+                                        "value": {
+                                            "kind": "ifStatement",
+                                            "conditionLeft": {
+                                                "kind": "identifier",
+                                                "symbol": "v"
+                                            },
+                                            "operand": ">",
+                                            "conditionRight": {
+                                                "kind": "callExpression",
+                                                "arguments": [
+                                                    {
+                                                        "kind": "identifier",
+                                                        "symbol": "v"
+                                                    }
+                                                ],
+                                                "caller": {
+                                                    "kind": "identifier",
+                                                    "symbol": "Int"
+                                                }
+                                            },
+                                            "body": [
+                                                {
+                                                    "kind": "returnExpression",
+                                                    "value": {
+                                                        "kind": "binaryExpression",
+                                                        "left": {
+                                                            "kind": "callExpression",
+                                                            "arguments": [
+                                                                {
+                                                                    "kind": "identifier",
+                                                                    "symbol": "v"
+                                                                }
+                                                            ],
+                                                            "caller": {
+                                                                "kind": "identifier",
+                                                                "symbol": "Int"
+                                                            }
+                                                        },
+                                                        "operand": "+",
+                                                        "right": {
+                                                            "kind": "integerLiteral",
+                                                            "value": 1
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "elsebody": [
+                                                {
+                                                    "kind": "returnExpression",
+                                                    "value": {
+                                                        "kind": "callExpression",
+                                                        "arguments": [
+                                                            {
+                                                                "kind": "identifier",
+                                                                "symbol": "v"
+                                                            }
+                                                        ],
+                                                        "caller": {
+                                                            "kind": "identifier",
+                                                            "symbol": "Int"
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "factorial",
+                            "value": {
+                                "kind": "functionDeclaration",
+                                "name": "~",
+                                "parameters": [
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "v"
+                                    }
+                                ],
+                                "body": [
+                                    {
+                                        "kind": "variableDeclarationExpression",
+                                        "datatype": "int",
+                                        "identifier": "p",
+                                        "value": {
+                                            "kind": "integerLiteral",
+                                            "value": 1
+                                        },
+                                        "constant": "False"
+                                    },
+                                    {
+                                        "kind": "whileStatement",
+                                        "conditionLeft": {
+                                            "kind": "identifier",
+                                            "symbol": "v"
+                                        },
+                                        "operand": ">",
+                                        "conditionRight": {
+                                            "kind": "integerLiteral",
+                                            "value": 0
+                                        },
+                                        "body": [
+                                            {
+                                                "kind": "assignmentBinaryExpression",
+                                                "assigne": {
+                                                    "kind": "identifier",
+                                                    "symbol": "p"
+                                                },
+                                                "operand": "*=",
+                                                "value": {
+                                                    "kind": "identifier",
+                                                    "symbol": "v"
+                                                }
+                                            },
+                                            {
+                                                "kind": "assignmentBinaryExpression",
+                                                "assigne": {
+                                                    "kind": "identifier",
+                                                    "symbol": "v"
+                                                },
+                                                "operand": "-=",
+                                                "value": {
+                                                    "kind": "integerLiteral",
+                                                    "value": 1
+                                                }
+                                            }
+                                        ],
+                                        "elsebody": []
+                                    },
+                                    {
+                                        "kind": "returnExpression",
+                                        "value": {
+                                            "kind": "identifier",
+                                            "symbol": "p"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "gcd",
+                            "value": {
+                                "kind": "functionDeclaration",
+                                "name": "~",
+                                "parameters": [
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "a"
+                                    },
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "b"
+                                    }
+                                ],
+                                "body": [
+                                    {
+                                        "kind": "variableDeclarationExpression",
+                                        "datatype": "real",
+                                        "identifier": "temp",
+                                        "value": {
+                                            "kind": "identifier",
+                                            "symbol": "b"
+                                        },
+                                        "constant": "False"
+                                    },
+                                    {
+                                        "kind": "whileStatement",
+                                        "conditionLeft": {
+                                            "kind": "identifier",
+                                            "symbol": "b"
+                                        },
+                                        "operand": "!=",
+                                        "conditionRight": {
+                                            "kind": "integerLiteral",
+                                            "value": 0
+                                        },
+                                        "body": [
+                                            {
+                                                "kind": "assignmentExpression",
+                                                "assigne": {
+                                                    "kind": "identifier",
+                                                    "symbol": "b"
+                                                },
+                                                "value": {
+                                                    "kind": "binaryExpression",
+                                                    "left": {
+                                                        "kind": "identifier",
+                                                        "symbol": "a"
+                                                    },
+                                                    "operand": "%",
+                                                    "right": {
+                                                        "kind": "identifier",
+                                                        "symbol": "b"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "kind": "assignmentExpression",
+                                                "assigne": {
+                                                    "kind": "identifier",
+                                                    "symbol": "a"
+                                                },
+                                                "value": {
+                                                    "kind": "identifier",
+                                                    "symbol": "temp"
+                                                }
+                                            },
+                                            {
+                                                "kind": "assignmentExpression",
+                                                "assigne": {
+                                                    "kind": "identifier",
+                                                    "symbol": "temp"
+                                                },
+                                                "value": {
+                                                    "kind": "identifier",
+                                                    "symbol": "b"
+                                                }
+                                            }
+                                        ],
+                                        "elsebody": []
+                                    },
+                                    {
+                                        "kind": "returnExpression",
+                                        "value": {
+                                            "kind": "identifier",
+                                            "symbol": "a"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "lcm",
+                            "value": {
+                                "kind": "functionDeclaration",
+                                "name": "~",
+                                "parameters": [
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "a"
+                                    },
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "b"
+                                    }
+                                ],
+                                "body": [
+                                    {
+                                        "kind": "variableDeclarationExpression",
+                                        "datatype": "real",
+                                        "identifier": "x",
+                                        "value": {
+                                            "kind": "binaryExpression",
+                                            "left": {
+                                                "kind": "binaryExpression",
+                                                "left": {
+                                                    "kind": "binaryExpression",
+                                                    "left": {
+                                                        "kind": "identifier",
+                                                        "symbol": "a"
+                                                    },
+                                                    "operand": "*",
+                                                    "right": {
+                                                        "kind": "identifier",
+                                                        "symbol": "b"
+                                                    }
+                                                },
+                                                "operand": "^",
+                                                "right": {
+                                                    "kind": "integerLiteral",
+                                                    "value": 2
+                                                }
+                                            },
+                                            "operand": "^",
+                                            "right": {
+                                                "kind": "realLiteral",
+                                                "value": 0.5
+                                            }
+                                        },
+                                        "constant": "False"
+                                    },
+                                    {
+                                        "kind": "variableDeclarationExpression",
+                                        "datatype": "real",
+                                        "identifier": "temp",
+                                        "value": {
+                                            "kind": "identifier",
+                                            "symbol": "b"
+                                        },
+                                        "constant": "False"
+                                    },
+                                    {
+                                        "kind": "whileStatement",
+                                        "conditionLeft": {
+                                            "kind": "identifier",
+                                            "symbol": "b"
+                                        },
+                                        "operand": "!=",
+                                        "conditionRight": {
+                                            "kind": "integerLiteral",
+                                            "value": 0
+                                        },
+                                        "body": [
+                                            {
+                                                "kind": "assignmentExpression",
+                                                "assigne": {
+                                                    "kind": "identifier",
+                                                    "symbol": "b"
+                                                },
+                                                "value": {
+                                                    "kind": "binaryExpression",
+                                                    "left": {
+                                                        "kind": "identifier",
+                                                        "symbol": "a"
+                                                    },
+                                                    "operand": "%",
+                                                    "right": {
+                                                        "kind": "identifier",
+                                                        "symbol": "b"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "kind": "assignmentExpression",
+                                                "assigne": {
+                                                    "kind": "identifier",
+                                                    "symbol": "a"
+                                                },
+                                                "value": {
+                                                    "kind": "identifier",
+                                                    "symbol": "temp"
+                                                }
+                                            },
+                                            {
+                                                "kind": "assignmentExpression",
+                                                "assigne": {
+                                                    "kind": "identifier",
+                                                    "symbol": "temp"
+                                                },
+                                                "value": {
+                                                    "kind": "identifier",
+                                                    "symbol": "b"
+                                                }
+                                            }
+                                        ],
+                                        "elsebody": []
+                                    },
+                                    {
+                                        "kind": "returnExpression",
+                                        "value": {
+                                            "kind": "binaryExpression",
+                                            "left": {
+                                                "kind": "identifier",
+                                                "symbol": "x"
+                                            },
+                                            "operand": "//",
+                                            "right": {
+                                                "kind": "identifier",
+                                                "symbol": "a"
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "rad",
+                            "value": {
+                                "kind": "functionDeclaration",
+                                "name": "~",
+                                "parameters": [
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "v"
+                                    }
+                                ],
+                                "body": [
+                                    {
+                                        "kind": "returnExpression",
+                                        "value": {
+                                            "kind": "binaryExpression",
+                                            "left": {
+                                                "kind": "identifier",
+                                                "symbol": "v"
+                                            },
+                                            "operand": "*",
+                                            "right": {
+                                                "kind": "binaryExpression",
+                                                "left": {
+                                                    "kind": "realLiteral",
+                                                    "value": 3.141592653589793
+                                                },
+                                                "operand": "/",
+                                                "right": {
+                                                    "kind": "integerLiteral",
+                                                    "value": 180
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "deg",
+                            "value": {
+                                "kind": "functionDeclaration",
+                                "name": "~",
+                                "parameters": [
+                                    {
+                                        "kind": "identifier",
+                                        "symbol": "v"
+                                    }
+                                ],
+                                "body": [
+                                    {
+                                        "kind": "returnExpression",
+                                        "value": {
+                                            "kind": "binaryExpression",
+                                            "left": {
+                                                "kind": "identifier",
+                                                "symbol": "v"
+                                            },
+                                            "operand": "*",
+                                            "right": {
+                                                "kind": "binaryExpression",
+                                                "left": {
+                                                    "kind": "integerLiteral",
+                                                    "value": 180
+                                                },
+                                                "operand": "/",
+                                                "right": {
+                                                    "kind": "realLiteral",
+                                                    "value": 3.141592653589793
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
                             }
                         }
-                    ],
-                    "caller": {
-                        "kind": "identifier",
-                        "symbol": "output"
-                    }
-                }
-            ],
-            "step": {
-                "kind": "assignmentBinaryExpression",
-                "assigne": {
-                    "kind": "identifier",
-                    "symbol": "i"
+                    ]
                 },
-                "operand": "+=",
-                "value": {
-                    "kind": "integerLiteral",
-                    "value": 1
-                }
+                "constant": "False"
             }
         }
     ]

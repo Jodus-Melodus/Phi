@@ -1061,6 +1061,7 @@ class App(ctk.CTk):
             self.updateSyntax()
 
     def saveFile(self, e=None) -> None:
+        self.currentPath = self.tabNamesPaths[self.centerTabview.get()]
         if not self.currentPath:
             self.currentPath = filedialog.asksaveasfilename(
                 title='Select a file', filetypes=[('Phi File', '*.phi'), ('All Files', '*.*')])
