@@ -4,19 +4,20 @@ from frontend.errors import *
 from backend.phi_environment import environment, createGlobalEnvironment
 
 booleanTable = {
-    'T':True,
-    'F':False
+    'T': True,
+    'F': False
 }
 
 dataTypeTable = {
-    'int':integerValue,
-    'real':realValue,
-    'string':stringValue,
-    'object':objectValue,
-    'array':arrayValue,
-    'bool':booleanValue,
-    'lambda':function
+    'int': integerValue,
+    'real': realValue,
+    'string': stringValue,
+    'object': objectValue,
+    'array': arrayValue,
+    'bool': booleanValue,
+    'lambda': function
 }
+
 
 class Interpreter:
     def __init__(self) -> None:
@@ -78,7 +79,7 @@ class Interpreter:
 
         return lastEvaluated
 
-    def evaluateBinaryExpression(self, binaryOperation:binaryExpressionNode, env: environment) -> integerValue | nullValue:
+    def evaluateBinaryExpression(self, binaryOperation: binaryExpressionNode, env: environment) -> integerValue | nullValue:
         left = self.evaluate(binaryOperation.left, env)
         if isinstance(left, error):
             return left
@@ -90,13 +91,13 @@ class Interpreter:
             return self.evaluateNumericBinaryExpression(left, right, binaryOperation.operand)
         elif isinstance(left, stringValue) and isinstance(right, (stringValue, (realValue, integerValue))):
             return self.evaluateStringBinaryExpression(left, right, binaryOperation.operand)
-        
+
         elif isinstance(left, arrayValue):
             return self.evaluateArrayAppendBinaryExpression(left, right, binaryOperation.operand)
         else:
             return syntaxError(self, "Cannot preform this operation.", right.column, right.line)
-        
-    def evaluateArrayAppendBinaryExpression(self, left:arrayValue, right, operand:str) -> arrayValue:
+
+    def evaluateArrayAppendBinaryExpression(self, left: arrayValue, right, operand: str) -> arrayValue:
         match operand:
             case '+':
                 index = len(left.items)
@@ -104,29 +105,29 @@ class Interpreter:
                 return arrayValue(left.items)
             case _:
                 return syntaxError(self, "Cannot preform this operation on arrays.", right.column, right.line)
-        
-    def evaluateObjectBinaryExpression(self, left:objectValue, right:objectValue, operand:str) -> objectValue:
+
+    def evaluateObjectBinaryExpression(self, left: objectValue, right: objectValue, operand: str) -> objectValue:
         match operand:
             case '+':
                 return objectValue(left.properties.update(right.properties))
             case _:
                 return syntaxError(self, "Cannot preform this operation on objects.", right.column, right.line)
 
-    def evaluateArrayBinaryExpression(self, left:arrayValue, right:arrayValue, operand:str) -> arrayValue:
+    def evaluateArrayBinaryExpression(self, left: arrayValue, right: arrayValue, operand: str) -> arrayValue:
         match operand:
             case '+':
                 return arrayValue(left.items + right.items)
             case _:
                 return syntaxError(self, "Cannot preform this operation on arrays.", right.column, right.line)
 
-    def evaluateStringBinaryExpression(self, left:stringValue, right:stringValue|integerValue|realValue, operand:str) -> stringValue:
+    def evaluateStringBinaryExpression(self, left: stringValue, right: stringValue | integerValue | realValue, operand: str) -> stringValue:
         match operand:
             case '+':
                 return stringValue(left.value + right.value)
             case _:
                 return syntaxError(self, "Cannot preform this operation on strings.", right.column, right.line)
 
-    def evaluateNumericBinaryExpression(self, left:integerValue|realValue, right:integerValue|realValue, operand:str) -> realValue:
+    def evaluateNumericBinaryExpression(self, left: integerValue | realValue, right: integerValue | realValue, operand: str) -> realValue:
         match operand:
             case '+':
                 if isinstance(left, realValue) or isinstance(right, realValue):
@@ -183,7 +184,7 @@ class Interpreter:
             if value.type == currentValue.type:
                 return env.assignVariable(varName, value)
             return syntaxError(self, f"'{value.type}' is incompatible with '{currentValue.type}'", value.column, value.line)
-        
+
         elif isinstance(assignmentExpression.assigne, memberExpressionNode):
             member: memberExpressionNode = assignmentExpression.assigne
             varName = member.object
@@ -199,13 +200,14 @@ class Interpreter:
         value = self.evaluate(declaration.value, env)
         if isinstance(value, error):
             return value
-        
+
         if dataTypeTable[declaration.dataType] == type(value):
             return env.declareVariable(declaration.identifier, value, declaration.constant)
         return syntaxError(self, f"'{value.type}' is incompatible with '{declaration.dataType}'", value.column, value.line)
 
     def evaluateFunctionDeclaration(self, declaration: functionDeclarationExpressionNode, env: environment) -> None:
-        fn = function(declaration.name, declaration.parameters, env, declaration.body)
+        fn = function(declaration.name, declaration.parameters,
+                      env, declaration.body)
         return env.declareVariable(declaration.name, fn)
 
     def evaluateObjectExpression(self, object: objectLiteralNode, env: environment) -> objectValue:
@@ -269,7 +271,7 @@ class Interpreter:
             return syntaxError(self, f"'{fn.type}' is not a function", fn.column, fn.line)
 
     def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
-        obj:objectValue = env.lookup(member.object)
+        obj: objectValue = env.lookup(member.object)
 
         if isinstance(obj, objectValue):
             if isinstance(member.property, identifierNode):
@@ -307,7 +309,8 @@ class Interpreter:
         if isinstance(left, error):
             return left
         if not isinstance(ifStatement.conditionRight, nullValue):
-            right: RuntimeValue = self.evaluate(ifStatement.conditionRight, env)
+            right: RuntimeValue = self.evaluate(
+                ifStatement.conditionRight, env)
             if isinstance(right, error):
                 return right
         else:
@@ -336,7 +339,8 @@ class Interpreter:
 
     def evaluateWhileStatement(self, whileStatement: whileStatementNode, env: environment) -> bool:
         while True:
-            left: RuntimeValue = self.evaluate(whileStatement.conditionLeft, env)
+            left: RuntimeValue = self.evaluate(
+                whileStatement.conditionLeft, env)
             if isinstance(left, error):
                 return left
             if not isinstance(whileStatement.conditionRight, nullValue):
@@ -376,8 +380,8 @@ class Interpreter:
                             break
                 break
         return nullValue()
-    
-    def evaluateForStatement(self, forLoop:forStatementNode, env:environment) -> None:
+
+    def evaluateForStatement(self, forLoop: forStatementNode, env: environment) -> None:
         self.evaluateVariableDeclarationExpression(forLoop.declaration, env)
 
         while True:
@@ -385,7 +389,8 @@ class Interpreter:
             if isinstance(left, error):
                 return left
             if not isinstance(forLoop.conditionRight, nullValue):
-                right: RuntimeValue = self.evaluate(forLoop.conditionRight, env)
+                right: RuntimeValue = self.evaluate(
+                    forLoop.conditionRight, env)
                 if isinstance(right, error):
                     return right
             else:
@@ -403,18 +408,21 @@ class Interpreter:
                         return result
                     if isinstance(result, continueNode):
                         break
-                result = self.evaluateAssignmentBinaryExpression(forLoop.step, env)
+                result = self.evaluateAssignmentBinaryExpression(
+                    forLoop.step, env)
             else:
                 break
         return nullValue()
-    
-    def evaluateForEachStatement(self, forEachLoop:forEachStatementNode, env:environment) -> None:
-        self.evaluateVariableDeclarationExpression(forEachLoop.declaration, env)
+
+    def evaluateForEachStatement(self, forEachLoop: forEachStatementNode, env: environment) -> None:
+        self.evaluateVariableDeclarationExpression(
+            forEachLoop.declaration, env)
 
         array = self.evaluate(forEachLoop.iterable, env)
 
         for item in array.items:
-            assignmentExpr = assignmentExpressionNode(identifierNode(forEachLoop.declaration.identifier, forEachLoop.declaration.line, forEachLoop.declaration.column), integerLiteralNode(array.items[item].value, -1, -1))
+            assignmentExpr = assignmentExpressionNode(identifierNode(
+                forEachLoop.declaration.identifier, forEachLoop.declaration.line, forEachLoop.declaration.column), integerLiteralNode(array.items[item].value, -1, -1))
             res = self.evaluateAssignmentExpression(assignmentExpr, env)
             if isinstance(res, error):
                 return res
@@ -430,7 +438,6 @@ class Interpreter:
                     break
 
         return nullValue()
-
 
     def evaluateDoWhileStatement(self, doWhile: doWhileStatementNode, env: environment) -> None:
         res = True
@@ -452,7 +459,8 @@ class Interpreter:
                 if isinstance(left, error):
                     return result
                 if not isinstance(doWhile.conditionRight, nullValue):
-                    right: RuntimeValue = self.evaluate(doWhile.conditionRight, env)
+                    right: RuntimeValue = self.evaluate(
+                        doWhile.conditionRight, env)
                     if isinstance(right, error):
                         return result
                 else:
@@ -469,11 +477,14 @@ class Interpreter:
     def evaluateAssignmentBinaryExpression(self, expr: assignmentBinaryExpressionNode, env: environment) -> None:
         currValue = env.lookup(expr.assigne)
         if isinstance(currValue, integerValue):
-            currentValue = integerLiteralNode(currValue.value, expr.column, expr.line)
+            currentValue = integerLiteralNode(
+                currValue.value, expr.column, expr.line)
         elif isinstance(currValue, realValue):
-            currentValue = realLiteralNode(currValue.value, expr.column, expr.line)
+            currentValue = realLiteralNode(
+                currValue.value, expr.column, expr.line)
 
-        binexpr = binaryExpressionNode(currentValue, expr.operand[0], expr.value, expr.line, expr.column)
+        binexpr = binaryExpressionNode(
+            currentValue, expr.operand[0], expr.value, expr.line, expr.column)
         newValue = self.evaluateBinaryExpression(binexpr, env)
 
         if isinstance(newValue, error):
@@ -488,7 +499,7 @@ class Interpreter:
     def evaluateExportExpression(self, exportExpression: exportNode, env: environment):
         return exportValue(self.evaluate(exportExpression.value, env), exportExpression.line, exportExpression.column)
 
-    def evaluateImportExpression(self, importExpression:importNode, env:environment):
+    def evaluateImportExpression(self, importExpression: importNode, env: environment):
         from main import run
         path = importExpression.value
         if isinstance(path, identifierNode):
@@ -507,8 +518,8 @@ class Interpreter:
                 return env.declareVariable(name, code.value, True)
             else:
                 return nullValue()
-            
-    def evaluateTryStatement(self, tryStatement:tryNode, env:environment) -> None:
+
+    def evaluateTryStatement(self, tryStatement: tryNode, env: environment) -> None:
         result = nullValue()
         for statement in tryStatement.tryBody:
             if isinstance(statement, (returnNode, error, breakNode)):
@@ -525,13 +536,13 @@ class Interpreter:
             if result.type == tryStatement.exception.symbol:
                 result = nullValue()
                 for statement in tryStatement.exceptBody:
-                    if isinstance(statement, (returnNode, error, breakNode)):
-                        return
+                    if isinstance(statement, (error, breakNode)):
+                        return statement
                     if isinstance(statement, continueNode):
                         break
                     result = self.evaluate(statement, env)
                     if isinstance(result, (error, breakNode)):
-                        return
+                        return result
                     if isinstance(result, continueNode):
                         break
             else:
@@ -539,7 +550,7 @@ class Interpreter:
         else:
             return result
 
-    def evaluateThrowStatement(self, throwStmt:throwNode, env:environment) -> None:
+    def evaluateThrowStatement(self, throwStmt: throwNode, env: environment) -> None:
         match throwStmt.error.symbol:
             case 'syntaxError':
                 return syntaxError('', '', throwStmt.column, throwStmt.line)
@@ -555,7 +566,26 @@ class Interpreter:
                 return invalidCharacterError('', '', throwStmt.column, throwStmt.line)
             case 'nameError':
                 return nameError('', '', throwStmt.column, throwStmt.line)
-    
+
+    def evaluateMatchStatement(self, matchStmt: matchNode, env: environment) -> None:
+        value = self.evaluate(matchStmt.value, env)
+
+        for match in matchStmt.matches:
+            v = self.evaluate(match.value, env)
+            if value.value == v.value:
+                result = nullValue()
+                for statement in match.body:
+                    if isinstance(statement, (error, breakNode)):
+                        return statement
+                    if isinstance(statement, continueNode):
+                        break
+                    result = self.evaluate(statement, env)
+                    if isinstance(result, (error, breakNode, returnNode)):
+                        return result
+                    if isinstance(result, continueNode):
+                        break
+                return result
+        return nullValue()
 
     def evaluate(self, astNode, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | None:
         if isinstance(astNode, (str, float, int, error)):
@@ -603,6 +633,8 @@ class Interpreter:
                 return self.evaluateTryStatement(astNode, env)
             case 'throwStatement':
                 return self.evaluateThrowStatement(astNode, env)
+            case 'matchStatement':
+                return self.evaluateMatchStatement(astNode, env)
 
             case 'integerLiteral':
                 return integerValue(astNode.value, astNode.line, astNode.column)

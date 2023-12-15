@@ -4,100 +4,71 @@
         {
             "kind": "variableDeclarationExpression",
             "datatype": "int",
-            "identifier": "x",
+            "identifier": "a",
             "value": {
                 "kind": "integerLiteral",
-                "value": 0
+                "value": 1
             },
             "constant": "False"
         },
         {
             "kind": "variableDeclarationExpression",
-            "datatype": "object",
-            "identifier": "a",
+            "datatype": "int",
+            "identifier": "b",
             "value": {
-                "kind": "objectLiteral",
-                "properties": [
+                "kind": "matchStatement",
+                "value": {
+                    "kind": "identifier",
+                    "symbol": "a"
+                },
+                "matches": [
                     {
-                        "kind": "propertyLiteral",
-                        "key": "f",
+                        "kind": "case",
                         "value": {
                             "kind": "integerLiteral",
-                            "value": 3
-                        }
+                            "value": 1
+                        },
+                        "body": [
+                            {
+                                "kind": "returnExpression",
+                                "value": {
+                                    "kind": "integerLiteral",
+                                    "value": 4
+                                }
+                            }
+                        ]
                     },
                     {
-                        "kind": "propertyLiteral",
-                        "key": "e",
+                        "kind": "case",
                         "value": {
                             "kind": "integerLiteral",
-                            "value": 9
-                        }
+                            "value": 5
+                        },
+                        "body": [
+                            {
+                                "kind": "returnExpression",
+                                "value": {
+                                    "kind": "stringLiteral",
+                                    "value": "hello world"
+                                }
+                            }
+                        ]
                     }
                 ]
             },
             "constant": "False"
         },
         {
-            "kind": "tryStatement",
-            "tryBody": [
-                {
-                    "kind": "assignmentExpression",
-                    "assigne": {
-                        "kind": "identifier",
-                        "symbol": "x"
-                    },
-                    "value": {
-                        "kind": "memberExpression",
-                        "object": {
-                            "kind": "identifier",
-                            "symbol": "a"
-                        },
-                        "property": {
-                            "kind": "identifier",
-                            "symbol": "e"
-                        }
-                    }
-                }
-            ],
-            "exception": {
-                "kind": "identifier",
-                "symbol": "syntaxError"
-            },
-            "exceptBody": [
-                {
-                    "kind": "callExpression",
-                    "arguments": [
-                        {
-                            "kind": "stringLiteral",
-                            "value": "oh no"
-                        }
-                    ],
-                    "caller": {
-                        "kind": "identifier",
-                        "symbol": "output"
-                    }
-                }
-            ]
-        },
-        {
             "kind": "callExpression",
             "arguments": [
                 {
                     "kind": "identifier",
-                    "symbol": "x"
+                    "symbol": "b"
                 }
             ],
             "caller": {
                 "kind": "identifier",
                 "symbol": "output"
-            }
-        },
-        {
-            "kind": "throwStatement",
-            "error": {
-                "kind": "identifier",
-                "symbol": "syntaxError"
             }
         }
     ]

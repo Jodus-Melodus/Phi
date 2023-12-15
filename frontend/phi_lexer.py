@@ -63,6 +63,8 @@ class TokenType:
         self.do = 'do'
         self.catch = 'catch'
         self.throw = 'throw'
+        self._case = 'case'
+        self._match = 'match'
 
 
 TT = TokenType()
@@ -92,7 +94,9 @@ KEYWORDS = {
     'in': TT._in,
     'try': TT._try,
     'catch': TT.catch,
-    'throw':TT.throw
+    'throw':TT.throw,
+    'case':TT._case,
+    'match':TT._match
 }
 
 

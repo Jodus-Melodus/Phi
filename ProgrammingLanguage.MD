@@ -422,6 +422,25 @@ Result:
 ```
 Second True
 ```
+## Case Statements
+Case statements are similar to if else statements, but they can handle multiple conditions. They work by comparing a value with different cases and executing the code block of the value if it matches. The code block is a default code block and does not need to return a value.
+```
+int x = 3
+
+str r = match x {
+    case 1 {<- "one"}
+    case 2 {<- "two"}
+    case 3 {<- "three"}
+    case 4 {<- "four"}
+    case 5 {<- "five"}
+}
+
+output(r)
+```
+Result:
+```
+three
+```
 ## While Loops
 Conditions are the same as [if statements](#if-else-statements)
 - ### Looping until a condition is met.

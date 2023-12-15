@@ -90,12 +90,67 @@ class Parser:
                 return self.parseTryStatement()
             case TT.throw:
                 return self.parseThrowStatement()
+            case TT._match:
+                return self.parseMatchStatement()
             case _:
                 return self.parseExpression()
 
     def parseExpression(self) -> None:
         return self.parseAssignmentExpression()
     
+    def parseMatchStatement(self) -> None:
+        self.eat()
+        
+        if self.get().type == TT.identifier:
+            value = self.parsePrimaryExpression()
+            if isinstance(value, error):
+                return value
+            if self.get().type == TT.openBrace:
+                self.eat()
+                matches = []
+                while self.get().type != TT.closeBrace:
+                    if self.get().type == TT._case:
+                        statement = self.parseCase()
+                        if isinstance(statement, error):
+                            return statement
+                        if statement:
+                            matches.append(statement)
+                        if self.get().type == TT.eof:
+                            return syntaxError(self, "Expected a '}'", self.column, self.line)
+                    elif self.get().type in (TT.lineend):
+                        self.eat()
+                    else:
+                        return syntaxError(self, "Expected 'case'", self.column, self.line)
+                self.eat()
+            else:
+                return syntaxError(self, "Expected a '{'", self.column, self.line)
+        else:
+            return syntaxError(self, "Expected an identifier", self.column, self.line)
+        return matchNode(value, matches, self.line, self.column)
+    
+    def parseCase(self) -> None:
+        self.eat()
+
+        if self.get().type in (TT.intValue, TT.realValue, TT.stringValue):
+            value = self.parsePrimaryExpression()
+            if self.get().type == TT.openBrace:
+                self.eat()
+                body = []
+                while self.get().type != TT.closeBrace:
+                    statement = self.parseStatement()
+                    if isinstance(statement, error):
+                        return statement
+                    if statement:
+                        body.append(statement)
+                    if self.get().type == TT.eof:
+                        return syntaxError(self, "Expected a '}'", self.column, self.line)
+                self.eat()
+            else:
+                return syntaxError(self, "Expected a '{' after the match value.", self.column, self.line)
+        else:
+            return syntaxError(self, "Expected a literal value", self.column, self.line)
+        return caseNode(value, body, self.line, self.column)
+
     def parseThrowStatement(self) -> None:
         self.eat()
 

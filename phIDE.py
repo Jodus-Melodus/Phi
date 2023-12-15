@@ -1,7 +1,8 @@
 import json
 import sys
 import re
-import main, time
+import main
+import time
 import customtkinter as ctk
 from customtkinter import filedialog
 import os
@@ -9,6 +10,7 @@ import keyboard
 
 with open('settings.json', 'r') as f:
     settings = json.load(f)
+
 
 class TerminalRedirect:
     def __init__(self, textWidget) -> None:
@@ -30,9 +32,10 @@ class TerminalRedirect:
         self.widget.delete("input_start", "input_end")
         self.widget.configure(state='disabled')
         return line
-    
+
+
 class Dropdown:
-    def __init__(self, master, width:int, height:int, items:list, command, itempadx:int, itempady:int, bg_color:str):
+    def __init__(self, master, width: int, height: int, items: list, command, itempadx: int, itempady: int, bg_color: str):
         self.master = master
         self.width = width
         self.height = height
@@ -40,17 +43,19 @@ class Dropdown:
         self.command = command
         self.itempadx = itempadx
         self.itempady = itempady
-        self.itemFont = ctk.CTkFont(family=settings['font-family'], size=settings['font-size'], weight='normal')
+        self.itemFont = ctk.CTkFont(
+            family=settings['font-family'], size=settings['font-size'], weight='normal')
         self.bg_color = bg_color
 
         self.ismapped = False
         self.currentSelectedIndex = 0
 
-        self.frame = ctk.CTkFrame(self.master, width=self.width, height=self.height, bg_color=self.bg_color)
+        self.frame = ctk.CTkFrame(
+            self.master, width=self.width, height=self.height, bg_color=self.bg_color)
 
     def winfo_ismapped(self) -> bool:
         return self.ismapped
-    
+
     def update(self) -> None:
         for child in self.frame.winfo_children():
             child.destroy()
@@ -58,8 +63,10 @@ class Dropdown:
     def place(self, x, y) -> None:
         self.update()
         for i, item in enumerate(self.items):
-            btn = ctk.CTkButton(self.frame, text=item, command=lambda item=item: self.command(str(item)), font=self.itemFont, height=14, anchor='w', fg_color='#262626' if self.currentSelectedIndex == i else'#333333', hover_color='#262626')
-            btn.pack(fill='both', expand=True, padx=self.itempadx, pady=self.itempady)
+            btn = ctk.CTkButton(self.frame, text=item, command=lambda item=item: self.command(str(item)), font=self.itemFont,
+                                height=14, anchor='w', fg_color='#262626' if self.currentSelectedIndex == i else '#333333', hover_color='#262626')
+            btn.pack(fill='both', expand=True,
+                     padx=self.itempadx, pady=self.itempady)
         self.frame.place(x=x, y=y)
         self.ismapped = True
 
@@ -68,8 +75,9 @@ class Dropdown:
         self.frame.place_forget()
         self.ismapped = False
 
+
 class Dialog:
-    def __init__(self, master, title:str, message:str, x:int, y:int) -> None:
+    def __init__(self, master, title: str, message: str, x: int, y: int) -> None:
         self.master = master
         self.title = title
         self.message = message
@@ -78,10 +86,14 @@ class Dialog:
         self.width = 500
         self.height = 250
 
-        self.dialog = ctk.CTkFrame(self.master, width=self.width, height=self.height, corner_radius=5)
-        title = ctk.CTkLabel(self.dialog, anchor='nw', text=self.title, font=ctk.CTkFont(family=settings['font-family'], size=settings['font-size']), text_color='#ee0000')
-        msg = ctk.CTkTextbox(self.dialog, font=ctk.CTkFont(family=settings['font-family'], size=settings['font-size']))
-        close = ctk.CTkButton(self.dialog, text='Close', command=self._close, font=ctk.CTkFont(family=settings['font-family'], size=settings['font-size']))
+        self.dialog = ctk.CTkFrame(
+            self.master, width=self.width, height=self.height, corner_radius=5)
+        title = ctk.CTkLabel(self.dialog, anchor='nw', text=self.title, font=ctk.CTkFont(
+            family=settings['font-family'], size=settings['font-size']), text_color='#ee0000')
+        msg = ctk.CTkTextbox(self.dialog, font=ctk.CTkFont(
+            family=settings['font-family'], size=settings['font-size']))
+        close = ctk.CTkButton(self.dialog, text='Close', command=self._close, font=ctk.CTkFont(
+            family=settings['font-family'], size=settings['font-size']))
 
         msg.insert('0.0', self.message)
         msg.configure(wrap='word', state='disabled')
@@ -95,13 +107,16 @@ class Dialog:
     def _close(self) -> None:
         self.dialog.destroy()
 
+
 class App(ctk.CTk):
     def __init__(self) -> None:
         super().__init__()
         self.title('phIDE')
         self.state('zoomed')
-        self.textBoxFont = ctk.CTkFont(family='Courier New', size=settings['font-size'] + 4, weight='bold')
-        self.buttonFont = ctk.CTkFont(family=settings['font-family'], size=settings['font-size'], weight='normal')
+        self.textBoxFont = ctk.CTkFont(
+            family='Courier New', size=settings['font-size'] + 4, weight='bold')
+        self.buttonFont = ctk.CTkFont(
+            family=settings['font-family'], size=settings['font-size'], weight='normal')
         self.width = self.winfo_width()
         self.height = self.winfo_height()
         self.centerx = self.width // 2
@@ -135,78 +150,121 @@ class App(ctk.CTk):
         self.multiCursorPanel = ctk.CTkFrame(self.rightPanel)
         self.menuBar = ctk.CTkFrame(self, height=20)
         # Tabviews
-        self.centerTabview = ctk.CTkTabview(self.centerPanel, self.width*self.screenRatio, height=self.height*self.screenRatio)
-        self.bottomTabview = ctk.CTkTabview(self.bottomPanel, width=self.width*self.screenRatio)
+        self.centerTabview = ctk.CTkTabview(
+            self.centerPanel, self.width*self.screenRatio, height=self.height*self.screenRatio)
+        self.bottomTabview = ctk.CTkTabview(
+            self.bottomPanel, width=self.width*self.screenRatio)
         self.consoleTab = self.bottomTabview.add('Console')
         self.warningTab = self.bottomTabview.add('Warnings')
         # Frames
         self.consoleButtons = ctk.CTkFrame(self.consoleTab)
         # Textboxes
-        self.console = ctk.CTkTextbox(self.consoleTab, font=self.textBoxFont, state='disabled')
-        self.warnings = ctk.CTkTextbox(self.warningTab, font=self.textBoxFont, state='disabled')
-        self.multiCursorText = ctk.CTkTextbox(self.multiCursorPanel, font=self.textBoxFont)
+        self.console = ctk.CTkTextbox(
+            self.consoleTab, font=self.textBoxFont, state='disabled')
+        self.warnings = ctk.CTkTextbox(
+            self.warningTab, font=self.textBoxFont, state='disabled')
+        self.multiCursorText = ctk.CTkTextbox(
+            self.multiCursorPanel, font=self.textBoxFont)
         # Buttons
-        self.clearConsoleButton = ctk.CTkButton(self.consoleButtons, text='Clear', command=self.clearConsole, width=50, height=20, font=self.buttonFont)
-        self.findAndReplaceButton = ctk.CTkButton(self.findAndReplacePanel, command=self.findAndReplaceClick, text='Find & Replace', font=self.buttonFont)
-        self.gotoButton = ctk.CTkButton(self.gotoPanel, command=self.gotoClick, text='Go to', font=self.buttonFont)
-        self.copyErrorButton = ctk.CTkButton(self.consoleButtons, text='Copy', command=self.copyErrorMessage, width=50, height=20, font=self.buttonFont)
+        self.clearConsoleButton = ctk.CTkButton(
+            self.consoleButtons, text='Clear', command=self.clearConsole, width=50, height=20, font=self.buttonFont)
+        self.findAndReplaceButton = ctk.CTkButton(
+            self.findAndReplacePanel, command=self.findAndReplaceClick, text='Find & Replace', font=self.buttonFont)
+        self.gotoButton = ctk.CTkButton(
+            self.gotoPanel, command=self.gotoClick, text='Go to', font=self.buttonFont)
+        self.copyErrorButton = ctk.CTkButton(
+            self.consoleButtons, text='Copy', command=self.copyErrorMessage, width=50, height=20, font=self.buttonFont)
         # Menu Buttons & Popups
-        self.fileMenu = ctk.CTkButton(self.menuBar, text='File', height=20, width=50, command=self.fileMenuClick, font=self.buttonFont)
-        self.editMenu = ctk.CTkButton(self.menuBar, text='Edit', height=20, width=50, command=self.editMenuClick, font=self.buttonFont)
-        self.runMenu = ctk.CTkButton(self.menuBar, text='Run', height=20, width=50, command=self.runMenuClick, font=self.buttonFont)
-        self.fileMenuPopup = ctk.CTkSegmentedButton(self, values=['New File', 'Open File', 'Save File', 'Close File'], command=self.processMenuShortcuts, height=20, font=self.buttonFont)
-        self.editMenuPopup = ctk.CTkSegmentedButton(self, values=['Undo', 'Redo', 'Copy', 'Paste', 'Replace', 'Comment'], command=self.processMenuShortcuts, height=20, font=self.buttonFont)
-        self.runMenuPopup = ctk.CTkSegmentedButton(self, values=['Run'], command=self.processMenuShortcuts, height=20, font=self.buttonFont)
-        self.rightClickPopup = Dropdown(self, 300, 100, ['New File', 'Open File', 'Save File', 'Close File', 'Run', 'Undo', 'Redo', 'Copy', 'Paste', 'Replace', 'Comment'], self.processMenuShortcuts, 2, 2, '#ff00ff')
+        self.fileMenu = ctk.CTkButton(
+            self.menuBar, text='File', height=20, width=50, command=self.fileMenuClick, font=self.buttonFont)
+        self.editMenu = ctk.CTkButton(
+            self.menuBar, text='Edit', height=20, width=50, command=self.editMenuClick, font=self.buttonFont)
+        self.runMenu = ctk.CTkButton(
+            self.menuBar, text='Run', height=20, width=50, command=self.runMenuClick, font=self.buttonFont)
+        self.fileMenuPopup = ctk.CTkSegmentedButton(self, values=[
+                                                    'New File', 'Open File', 'Save File', 'Close File'], command=self.processMenuShortcuts, height=20, font=self.buttonFont)
+        self.editMenuPopup = ctk.CTkSegmentedButton(self, values=[
+                                                    'Undo', 'Redo', 'Copy', 'Paste', 'Replace', 'Comment'], command=self.processMenuShortcuts, height=20, font=self.buttonFont)
+        self.runMenuPopup = ctk.CTkSegmentedButton(self, values=[
+                                                   'Run'], command=self.processMenuShortcuts, height=20, font=self.buttonFont)
+        self.rightClickPopup = Dropdown(self, 300, 100, ['New File', 'Open File', 'Save File', 'Close File', 'Run',
+                                        'Undo', 'Redo', 'Copy', 'Paste', 'Replace', 'Comment'], self.processMenuShortcuts, 2, 2, '#ff00ff')
         # Labels
-        self.statusbar = ctk.CTkLabel(self, text='', height=20, font=self.buttonFont)
-        self.multiCursorLabel = ctk.CTkLabel(self.multiCursorPanel, text='Multi-Cursor', font=self.buttonFont, anchor='nw')
-        self.findAdnReplaceLabel = ctk.CTkLabel(self.findAndReplacePanel, text='Find and Replace', font=self.buttonFont, anchor='nw')
-        self.gotoLabel = ctk.CTkLabel(self.gotoPanel, text='Go To', font=self.buttonFont, anchor='nw')
+        self.statusbar = ctk.CTkLabel(
+            self, text='', height=20, font=self.buttonFont)
+        self.multiCursorLabel = ctk.CTkLabel(
+            self.multiCursorPanel, text='Multi-Cursor', font=self.buttonFont, anchor='nw')
+        self.findAdnReplaceLabel = ctk.CTkLabel(
+            self.findAndReplacePanel, text='Find and Replace', font=self.buttonFont, anchor='nw')
+        self.gotoLabel = ctk.CTkLabel(
+            self.gotoPanel, text='Go To', font=self.buttonFont, anchor='nw')
         # Entries
-        self.find = ctk.CTkEntry(self.findAndReplacePanel, placeholder_text='Find', font=self.buttonFont)
-        self.replace = ctk.CTkEntry(self.findAndReplacePanel, placeholder_text='Replace', font=self.buttonFont)
-        self.gotoEntry = ctk.CTkEntry(self.gotoPanel, placeholder_text='Go to line', font=self.buttonFont)
+        self.find = ctk.CTkEntry(
+            self.findAndReplacePanel, placeholder_text='Find', font=self.buttonFont)
+        self.replace = ctk.CTkEntry(
+            self.findAndReplacePanel, placeholder_text='Replace', font=self.buttonFont)
+        self.gotoEntry = ctk.CTkEntry(
+            self.gotoPanel, placeholder_text='Go to line', font=self.buttonFont)
         # ComboBox
-        self.currentLanguageCombo = ctk.CTkOptionMenu(self.menuBar, height=20, values=[x for x in self.languageSyntaxPatterns], font=self.buttonFont)
+        self.currentLanguageCombo = ctk.CTkOptionMenu(self.menuBar, height=20, values=[
+                                                      x for x in self.languageSyntaxPatterns], font=self.buttonFont)
         # Other
         sys.stdin = TerminalRedirect(self.console)
         sys.stdout = TerminalRedirect(self.console)
         sys.stderr = TerminalRedirect(self.console)
 
-        self.multiCursorLabel.pack(padx=self.padx, pady=self.pady, side='top', anchor='nw')
+        self.multiCursorLabel.pack(
+            padx=self.padx, pady=self.pady, side='top', anchor='nw')
         self.multiCursorText.pack(padx=self.padx, pady=self.pady, expand=True)
         self.multiCursorText.configure(state='disabled')
-        
+
         self.menuBar.pack(padx=self.padx, pady=self.pady, anchor='w')
-        self.currentLanguageCombo.pack(padx=self.padx, pady=self.pady, expand=True, anchor='e', side='right')
-        self.fileMenu.pack(padx=self.padx, pady=self.pady, expand=True, anchor='w', side='left')
-        self.editMenu.pack(padx=self.padx, pady=self.pady, expand=True, anchor='w', side='left')
-        self.runMenu.pack(padx=self.padx, pady=self.pady, expand=True, anchor='w', side='left')
+        self.currentLanguageCombo.pack(
+            padx=self.padx, pady=self.pady, expand=True, anchor='e', side='right')
+        self.fileMenu.pack(padx=self.padx, pady=self.pady,
+                           expand=True, anchor='w', side='left')
+        self.editMenu.pack(padx=self.padx, pady=self.pady,
+                           expand=True, anchor='w', side='left')
+        self.runMenu.pack(padx=self.padx, pady=self.pady,
+                          expand=True, anchor='w', side='left')
 
-        self.gotoLabel.pack(padx=self.padx, pady=self.pady, side='top', anchor='nw')
+        self.gotoLabel.pack(padx=self.padx, pady=self.pady,
+                            side='top', anchor='nw')
         self.gotoButton.pack(padx=self.padx, pady=self.pady, side='bottom')
-        self.gotoEntry.pack(padx=self.padx, pady=self.pady, side='top', expand=True)
+        self.gotoEntry.pack(padx=self.padx, pady=self.pady,
+                            side='top', expand=True)
 
-        self.findAdnReplaceLabel.pack(padx=self.padx, pady=self.pady, side='top', anchor='nw')
+        self.findAdnReplaceLabel.pack(
+            padx=self.padx, pady=self.pady, side='top', anchor='nw')
         self.find.pack(padx=self.padx, pady=self.pady, side='top', expand=True)
         self.replace.pack(padx=self.padx, pady=self.pady, expand=True)
-        self.findAndReplaceButton.pack(padx=self.padx, pady=self.pady, side='bottom')
+        self.findAndReplaceButton.pack(
+            padx=self.padx, pady=self.pady, side='bottom')
 
-        self.statusbar.pack(padx=self.padx, pady=self.pady, side='bottom', anchor='se', expand=True)
-        self.consoleButtons.pack(padx=self.padx, pady=self.pady, side='right', anchor='n')
-        self.console.pack(padx=self.padx, pady=self.pady, fill='both', expand=True)
-        self.warnings.pack(padx=self.padx, pady=self.pady, fill='both', expand=True)
+        self.statusbar.pack(padx=self.padx, pady=self.pady,
+                            side='bottom', anchor='se', expand=True)
+        self.consoleButtons.pack(
+            padx=self.padx, pady=self.pady, side='right', anchor='n')
+        self.console.pack(padx=self.padx, pady=self.pady,
+                          fill='both', expand=True)
+        self.warnings.pack(padx=self.padx, pady=self.pady,
+                           fill='both', expand=True)
         self.clearConsoleButton.pack(padx=self.padx, pady=self.pady)
         self.copyErrorButton.pack(padx=self.padx, pady=self.pady)
 
-        self.rightPanel.pack(padx=self.padx, pady=self.pady, fill='both', expand=True, side='right', anchor='e')
-        self.leftPanel.pack(padx=self.padx, pady=self.pady, fill='both', expand=True, side='left', anchor='w')
-        self.centerPanel.pack(padx=self.padx, pady=self.pady, fill='both', expand=True)
-        self.bottomPanel.pack(padx=self.padx, pady=self.pady, fill='both', expand=True, anchor='s')
+        self.rightPanel.pack(padx=self.padx, pady=self.pady,
+                             fill='both', expand=True, side='right', anchor='e')
+        self.leftPanel.pack(padx=self.padx, pady=self.pady,
+                            fill='both', expand=True, side='left', anchor='w')
+        self.centerPanel.pack(
+            padx=self.padx, pady=self.pady, fill='both', expand=True)
+        self.bottomPanel.pack(padx=self.padx, pady=self.pady,
+                              fill='both', expand=True, anchor='s')
 
-        self.centerTabview.pack(padx=self.padx, pady=self.pady, expand=True, fill='both')
-        self.bottomTabview.pack(padx=self.padx, pady=self.pady, expand=True, fill='both')
+        self.centerTabview.pack(
+            padx=self.padx, pady=self.pady, expand=True, fill='both')
+        self.bottomTabview.pack(
+            padx=self.padx, pady=self.pady, expand=True, fill='both')
 
         # Bindings
 # Single Character Sequence
@@ -291,9 +349,9 @@ class App(ctk.CTk):
         tabName = self.centerTabview.get()
         if tabName != '':
             return self.openEditors[tabName]
-        
+
     def copyErrorMessage(self) -> None:
-        editor:ctk.CTkTextbox = self.currentTab
+        editor: ctk.CTkTextbox = self.currentTab
         if editor:
             editor.clipboard_append(self.error)
 
@@ -302,7 +360,7 @@ class App(ctk.CTk):
         self.console.delete('0.0', 'end')
         self.console.configure(state='disabled')
 
-    def addTab(self, path:str) -> None:
+    def addTab(self, path: str) -> None:
         self.currentPath = path
         self.currentLanguage = '.' + path.split('/')[-1].split('.')[-1]
         self.currentLanguageCombo.set(self.currentLanguage)
@@ -314,18 +372,25 @@ class App(ctk.CTk):
             editor = ctk.CTkTextbox(tab, font=self.textBoxFont)
             editor.configure(tabs=40)
             editor.configure(wrap='none')
-            
+
             for tag in self.languageSyntaxPatterns[self.currentLanguage]:
-                editor.tag_config(tag, foreground=self.languageSyntaxPatterns[self.currentLanguage][tag][0])
-            editor.tag_config('error', foreground=settings['error-tag-foreground-color'], background=settings['error-tag-background-color'], underline=settings['error-tag-underline'])
-            editor.tag_config('similar', foreground=settings['similar-tag-foreground-color'], background=settings['similar-tag-background-color'], underline=settings['similar-tag-underline'])
-            editor.tag_config('sel', foreground=settings['selected-tag-foreground-color'], background=settings['selected-tag-background-color'], underline=settings['selected-tag-underline'])
-            editor.tag_config('warning', foreground=settings['warning-tag-foreground-color'], background=settings['warning-tag-background-color'], underline=settings['warning-tag-underline'])
+                editor.tag_config(
+                    tag, foreground=self.languageSyntaxPatterns[self.currentLanguage][tag][0])
+            editor.tag_config('error', foreground=settings['error-tag-foreground-color'],
+                              background=settings['error-tag-background-color'], underline=settings['error-tag-underline'])
+            editor.tag_config('similar', foreground=settings['similar-tag-foreground-color'],
+                              background=settings['similar-tag-background-color'], underline=settings['similar-tag-underline'])
+            editor.tag_config('sel', foreground=settings['selected-tag-foreground-color'],
+                              background=settings['selected-tag-background-color'], underline=settings['selected-tag-underline'])
+            editor.tag_config('warning', foreground=settings['warning-tag-foreground-color'],
+                              background=settings['warning-tag-background-color'], underline=settings['warning-tag-underline'])
 
             editor.pack(expand=True, fill='both')
 
-            self.intelliSenseBox = Dropdown(editor, 300, 100, [], self.intelliSenseClickInsert, 2, 2, settings['intelliSense-menu-color'])
-            self.snippetMenu = Dropdown(editor, 300, 100, [], self.insertSnippet, 2, 2, settings['snippet-menu-color'])
+            self.intelliSenseBox = Dropdown(editor, 300, 100, [
+            ], self.intelliSenseClickInsert, 2, 2, settings['intelliSense-menu-color'])
+            self.snippetMenu = Dropdown(
+                editor, 300, 100, [], self.insertSnippet, 2, 2, settings['snippet-menu-color'])
             editor.bind('<Tab>', self.intelliSenseTabKeyPress)
             editor.bind('<Up>', self.intelliSenseUpKeyPress)
             editor.bind('<Down>', self.intelliSenseDownKeyPress)
@@ -338,26 +403,27 @@ class App(ctk.CTk):
                 for ln, line in enumerate(f.readlines()):
                     editor.insert('end', line)
                     self.updateSyntax(line, ln + 1)
-            
+
             self.code = editor.get('0.0', 'end')
             self.loadSnippets()
         else:
-            Dialog(self, 'Error', 'Cannot open two files with the same name.', self.centerx, self.centery)
+            Dialog(self, 'Error', 'Cannot open two files with the same name.',
+                   self.centerx, self.centery)
 
 # Updates
-    def incrementIndex(self, cursor:str) -> str:
+    def incrementIndex(self, cursor: str) -> str:
         line, char = cursor.split('.')
-        
+
         return f'{line}.{str(int(char) + 1)}'
-    
-    def decrementIndex(self, cursor:str) -> str:
+
+    def decrementIndex(self, cursor: str) -> str:
         line, char = cursor.split('.')
 
         if char == '0':
             return str(int(line) - 1) + '.lineend'
-        
+
         return f'{line}.{str(int(char) - 1)}'
-    
+
     def updateMultiCursors(self, e) -> None:
         editor = self.currentTab
         if editor:
@@ -473,7 +539,7 @@ class App(ctk.CTk):
                 newName = 'Warnings'
             if newName not in self.bottomTabview._tab_dict.keys():
                 self.bottomTabview.rename(currentName, newName)
-                
+
     def mouseClickUpdate(self, e=None) -> None:
         editor = self.currentTab
         if editor:
@@ -488,9 +554,11 @@ class App(ctk.CTk):
                 word = re.escape(w)
                 pattern = f'({word})'
                 for ln, line in enumerate(text):
-                    matches = [(match.start(), match.end()) for match in re.finditer(pattern, line)]
+                    matches = [(match.start(), match.end())
+                               for match in re.finditer(pattern, line)]
                     for start, end in matches:
-                        editor.tag_add('similar', f'{ln+1}.{start}', f'{ln+1}.{end}')
+                        editor.tag_add(
+                            'similar', f'{ln+1}.{start}', f'{ln+1}.{end}')
                         editor.tag_remove('error', f'{ln}.0', f'{ln}.end')
 
     def enterCommands(self, e=None) -> None:
@@ -504,7 +572,8 @@ class App(ctk.CTk):
                 editor = self.currentTab
                 if editor:
                     snippetName = self.snippetMenu.items[self.snippetMenu.currentSelectedIndex]
-                    startLine, startColumn = map(int, editor.search(r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
+                    startLine, startColumn = map(int, editor.search(
+                        r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
                     if startColumn == 0:
                         startLine += 1
                         startPos = f'{startLine}.{startColumn}'
@@ -516,11 +585,12 @@ class App(ctk.CTk):
                     self.snippetMenu.place_forget()
                     self.updateSyntax()
 
-    def insertSnippet(self, snippetName:str) -> None:
+    def insertSnippet(self, snippetName: str) -> None:
         editor = self.currentTab
         if editor:
             snippet = self.snippetMenu.items[snippetName]
-            startLine, startColumn = map(int, editor.search(r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
+            startLine, startColumn = map(int, editor.search(
+                r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
             if startColumn == 0:
                 startLine += 1
                 startPos = f'{startLine}.{startColumn}'
@@ -538,7 +608,8 @@ class App(ctk.CTk):
             self.snippetMenu.place_forget()
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
-            wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+            wordStart = editor.search(
+                r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
             word = editor.get(wordStart, currentIndex).strip(' \n\t\r')
 
             if word:
@@ -566,7 +637,7 @@ class App(ctk.CTk):
         with open('syntax.json', 'r') as f:
             self.languageSyntaxPatterns = json.load(f)
 
-    def updateSyntax(self, line:str=None, lnIndex:int=None) -> None:
+    def updateSyntax(self, line: str = None, lnIndex: int = None) -> None:
         editor = self.currentTab
         if editor:
             for tag in self.languageSyntaxPatterns[self.currentLanguage]:
@@ -575,14 +646,18 @@ class App(ctk.CTk):
                     currLineEnd = editor.index('insert lineend')
                     currLine = currLineEnd.split('.')[0]
                     editor.tag_remove(tag, f'{currLine}.0', f'{currLine}.end')
-                    text = editor.get(f"{currLineEnd.split('.')[0]}.0", currLineEnd)
+                    text = editor.get(
+                        f"{currLineEnd.split('.')[0]}.0", currLineEnd)
                 else:
                     text = line
                     currLine = lnIndex
-                matches = [(match.start(), match.end()) for match in re.finditer(pattern, text, re.MULTILINE)]
+                matches = [(match.start(), match.end())
+                           for match in re.finditer(pattern, text, re.MULTILINE)]
                 for start, end in matches:
-                    editor.tag_add(tag, f'{currLine}.{start}', f'{currLine}.{end}')
-                    editor.tag_remove('error', f'{currLine}.0', f'{currLine}.end')
+                    editor.tag_add(
+                        tag, f'{currLine}.{start}', f'{currLine}.{end}')
+                    editor.tag_remove(
+                        'error', f'{currLine}.0', f'{currLine}.end')
 
 # IntelliSense
     def intelliSenseTabKeyPress(self, e=None) -> None:
@@ -604,13 +679,15 @@ class App(ctk.CTk):
             keyboard.press('Up')
             self.intelliSenseBox.currentSelectedIndex -= 1
             if self.intelliSenseBox.currentSelectedIndex < 0:
-                self.intelliSenseBox.currentSelectedIndex = len(self.intelliSenseBox.items) - 1
+                self.intelliSenseBox.currentSelectedIndex = len(
+                    self.intelliSenseBox.items) - 1
             self.intelliSenseTrigger()
         elif self.snippetMenu.winfo_ismapped():
             keyboard.press('Up')
             self.snippetMenu.currentSelectedIndex -= 1
             if self.snippetMenu.currentSelectedIndex < 0:
-                self.snippetMenu.currentSelectedIndex = len(self.snippetMenu.items) - 1
+                self.snippetMenu.currentSelectedIndex = len(
+                    self.snippetMenu.items) - 1
             self.showSnippets()
 
     def intelliSenseDownKeyPress(self, e=None) -> None:
@@ -624,15 +701,17 @@ class App(ctk.CTk):
             if self.snippetMenu.currentSelectedIndex >= len(self.snippetMenu.items):
                 self.snippetMenu.currentSelectedIndex = 0
             self.showSnippets()
-            
+
     def intelliSenseTrigger(self, e=None) -> None:
         editor = self.currentTab
         if editor:
             self.intelliSenseBox.place_forget()
-            intelliSenseWords = list(sorted(list(set(self.languageSyntaxPatterns[self.currentLanguage]['keywords'][2] + self.variables))))
+            intelliSenseWords = list(sorted(list(set(
+                self.languageSyntaxPatterns[self.currentLanguage]['keywords'][2] + self.variables))))
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
-            wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+            wordStart = editor.search(
+                r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
             word = editor.get(wordStart, currentIndex).strip(' \n\t\r')
             if word:
                 words = []
@@ -657,7 +736,8 @@ class App(ctk.CTk):
                 if editor:
                     keyboard.press('Backspace')
                     selectedWord = self.intelliSenseBox.items[self.intelliSenseBox.currentSelectedIndex]
-                    startLine, startColumn = map(int, editor.search(r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
+                    startLine, startColumn = map(int, editor.search(
+                        r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
                     if startColumn == 0:
                         startLine += 1
                         startPos = f'{startLine}.{startColumn}'
@@ -672,7 +752,8 @@ class App(ctk.CTk):
     def intelliSenseClickInsert(self, selected) -> None:
         editor = self.currentTab
         if editor:
-            startLine, startColumn = map(int, editor.search(r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
+            startLine, startColumn = map(int, editor.search(
+                r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
             if startColumn == 0:
                 startLine += 1
                 startPos = f'{startLine}.{startColumn}'
@@ -701,7 +782,8 @@ class App(ctk.CTk):
             self.runMenuPopup.place_forget()
             self.menuOpen = False
         else:
-            self.fileMenuPopup.place(x=self.fileMenu.winfo_x()+5, y=self.fileMenu.winfo_y()+30)
+            self.fileMenuPopup.place(
+                x=self.fileMenu.winfo_x()+5, y=self.fileMenu.winfo_y()+30)
             self.menuOpen = True
 
     def editMenuClick(self) -> None:
@@ -712,7 +794,8 @@ class App(ctk.CTk):
             self.runMenuPopup.place_forget()
             self.menuOpen = False
         else:
-            self.editMenuPopup.place(x=self.editMenu.winfo_x()+5, y=self.editMenu.winfo_y()+30)
+            self.editMenuPopup.place(
+                x=self.editMenu.winfo_x()+5, y=self.editMenu.winfo_y()+30)
             self.menuOpen = True
 
     def runMenuClick(self) -> None:
@@ -723,10 +806,11 @@ class App(ctk.CTk):
             self.runMenuPopup.place_forget()
             self.menuOpen = False
         else:
-            self.runMenuPopup.place(x=self.runMenu.winfo_x()+5, y=self.runMenu.winfo_y()+30)
+            self.runMenuPopup.place(
+                x=self.runMenu.winfo_x()+5, y=self.runMenu.winfo_y()+30)
             self.menuOpen = True
 
-    def processMenuShortcuts(self, name:str) -> None:
+    def processMenuShortcuts(self, name: str) -> None:
         self.fileMenuPopup.place_forget()
         self.editMenuPopup.place_forget()
         self.runMenuPopup.place_forget()
@@ -785,7 +869,7 @@ class App(ctk.CTk):
         else:
             self.findAndReplacePanel.pack(padx=self.padx, pady=self.pady*5)
             self.find.focus_set()
-        
+
     def gotoClick(self) -> None:
         editor = self.currentTab
         if editor:
@@ -846,9 +930,11 @@ class App(ctk.CTk):
                 startLine = int(startPosition.split('.')[0])
                 endLine = int(endPosition.split('.')[0])
                 while startLine != endLine:
-                    curr = editor.get(str(startLine) + '.0', str(startLine) + '.1')
+                    curr = editor.get(str(startLine) + '.0',
+                                      str(startLine) + '.1')
                     if curr == '\t':
-                        editor.delete(str(startLine) + '.0', str(startLine) + '.1')
+                        editor.delete(str(startLine) + '.0',
+                                      str(startLine) + '.1')
                     startLine += 1
             else:
                 line = editor.index('insert').split('.')[0]
@@ -916,13 +1002,15 @@ class App(ctk.CTk):
 
     def openFolder(self, e=None) -> None:
         dirPath = filedialog.askdirectory(title='Select a folder')
-        files = [os.path.join(root, file) for root, dirs, files in os.walk(dirPath) for file in files]
+        files = [os.path.join(root, file) for root, dirs,
+                 files in os.walk(dirPath) for file in files]
         if files:
             for file in files:
                 self.addTab(file.replace('\\', '/'))
 
     def openFiles(self, e=None) -> None:
-        filePath = filedialog.askopenfilenames(title='Select a file', filetypes=[('Phi File', '*.phi'), ('All Files', '*.*')])
+        filePath = filedialog.askopenfilenames(title='Select a file', filetypes=[
+                                               ('Phi File', '*.phi'), ('All Files', '*.*')])
         if filePath:
             for file in filePath:
                 self.addTab(file)
@@ -931,7 +1019,8 @@ class App(ctk.CTk):
         editor = self.currentTab
         if editor:
             currentIndex = editor.index('insert')
-            wordStart = editor.search(r'\s', currentIndex, backwards=True, regexp=True)
+            wordStart = editor.search(
+                r'\s', currentIndex, backwards=True, regexp=True)
             editor.delete(wordStart, currentIndex)
 
     def run(self, e=None) -> None:
@@ -973,7 +1062,8 @@ class App(ctk.CTk):
 
     def saveFile(self, e=None) -> None:
         if not self.currentPath:
-            self.currentPath = filedialog.asksaveasfilename(title='Select a file', filetypes=[('Phi File', '*.phi'), ('All Files', '*.*')])
+            self.currentPath = filedialog.asksaveasfilename(
+                title='Select a file', filetypes=[('Phi File', '*.phi'), ('All Files', '*.*')])
 
         editor = self.currentTab
         if editor:
@@ -985,7 +1075,8 @@ class App(ctk.CTk):
         self.saved = True
 
     def newFile(self, e=None) -> None:
-        self.currentPath = filedialog.asksaveasfilename(title='Select a file', filetypes=[('Phi File', '*.phi'), ('All Files', '*.*')])
+        self.currentPath = filedialog.asksaveasfilename(
+            title='Select a file', filetypes=[('Phi File', '*.phi'), ('All Files', '*.*')])
         with open(self.currentPath, 'w') as f:
             f.write('')
         self.addTab(self.currentPath)
@@ -1004,11 +1095,12 @@ class App(ctk.CTk):
         editor = self.currentTab
         if editor:
             editor.edit_undo()
-    
+
     def redo(self, e=None) -> None:
         editor = self.currentTab
         if editor:
             editor.edit_redo()
+
 
 if __name__ == '__main__':
     app = App()

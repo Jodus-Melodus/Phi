@@ -1,21 +1,10 @@
 
-int x
+int a = 1
 
-obj a = {
-    f:3,
-    e:9
+int b = match a {
+    case 1 {<- 4}
+    case 5 {<- "hello world"}
 }
 
-try {
-    x = a.e
-} catch (syntaxError) {
-    output("oh no")
-}
 
-output(x)
-
-throw syntaxError
-
-
-
-
+output(b)
