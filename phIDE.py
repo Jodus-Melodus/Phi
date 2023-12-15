@@ -64,7 +64,7 @@ class Dropdown:
         self.update()
         for i, item in enumerate(self.items):
             btn = ctk.CTkButton(self.frame, text=item, command=lambda item=item: self.command(str(item)), font=self.itemFont,
-                                height=14, anchor='w', fg_color='#262626' if self.currentSelectedIndex == i else '#333333', hover_color='#262626')
+                                height=14, anchor='w', fg_color='#262626' if i == 0 else '#333333', hover_color='#262626')
             btn.pack(fill='both', expand=True,
                      padx=self.itempadx, pady=self.itempady)
         self.frame.place(x=x, y=y)
@@ -278,6 +278,9 @@ class App(ctk.CTk):
         self.bind('<">', self.autoDoubleQuote)
         self.bind("<'>", self.autoApostrophe)
         self.bind('<KeyPress>', self.keyPressUpdate)
+        self.bind('<Down>', self.intelliSenseDownKeyPress)
+        self.bind('<Up>', self.intelliSenseUpKeyPress)
+
 # Double Character Sequence
         self.bind('<Control-F4>', self.closeFile)
         self.bind('<Control-BackSpace>', self.backspaceEntireWord)
@@ -391,9 +394,6 @@ class App(ctk.CTk):
             ], self.intelliSenseClickInsert, 2, 2, settings['intelliSense-menu-color'])
             self.snippetMenu = Dropdown(
                 editor, 300, 100, [], self.insertSnippet, 2, 2, settings['snippet-menu-color'])
-            editor.bind('<Tab>', self.intelliSenseTabKeyPress)
-            editor.bind('<Up>', self.intelliSenseUpKeyPress)
-            editor.bind('<Down>', self.intelliSenseDownKeyPress)
             editor.bind('<KeyPress>', self.editorPress)
 
             self.openEditors[tabName] = editor
@@ -675,58 +675,79 @@ class App(ctk.CTk):
             self.showSnippets()
 
     def intelliSenseUpKeyPress(self, e=None) -> None:
-        if self.intelliSenseBox.winfo_ismapped():
-            keyboard.press('Up')
-            self.intelliSenseBox.currentSelectedIndex -= 1
-            if self.intelliSenseBox.currentSelectedIndex < 0:
-                self.intelliSenseBox.currentSelectedIndex = len(
-                    self.intelliSenseBox.items) - 1
-            self.intelliSenseTrigger()
-        elif self.snippetMenu.winfo_ismapped():
-            keyboard.press('Up')
-            self.snippetMenu.currentSelectedIndex -= 1
-            if self.snippetMenu.currentSelectedIndex < 0:
-                self.snippetMenu.currentSelectedIndex = len(
-                    self.snippetMenu.items) - 1
-            self.showSnippets()
+        if hasattr(self, 'intelliSenseBox'):
+            if self.intelliSenseBox.winfo_ismapped():
+                editor = self.currentTab
+                if editor:
+                    editor.mark_set('insert', editor.index('insert +1l lineend'))
+                self.intelliSenseBox.currentSelectedIndex -= 1
+                if self.intelliSenseBox.currentSelectedIndex < 0:
+                    self.intelliSenseBox.currentSelectedIndex = len(
+                        self.intelliSenseWords) - 1
+                self.intelliSenseTrigger()
+            elif self.snippetMenu.winfo_ismapped():
+                editor = self.currentTab
+                if editor:
+                    editor.mark_set('insert', editor.index('insert +1l lineend'))
+                self.snippetMenu.currentSelectedIndex -= 1
+                if self.snippetMenu.currentSelectedIndex < 0:
+                    self.snippetMenu.currentSelectedIndex = len(
+                        self.snippetMenu.items) - 1
+                self.showSnippets()
 
     def intelliSenseDownKeyPress(self, e=None) -> None:
-        if self.intelliSenseBox.winfo_ismapped():
-            self.intelliSenseBox.currentSelectedIndex += 1
-            if self.intelliSenseBox.currentSelectedIndex >= len(self.intelliSenseBox.items):
-                self.intelliSenseBox.currentSelectedIndex = 0
-            self.intelliSenseTrigger()
-        elif self.snippetMenu.winfo_ismapped():
-            self.snippetMenu.currentSelectedIndex += 1
-            if self.snippetMenu.currentSelectedIndex >= len(self.snippetMenu.items):
-                self.snippetMenu.currentSelectedIndex = 0
-            self.showSnippets()
+        if hasattr(self, 'intelliSenseBox'):
+            if self.intelliSenseBox.winfo_ismapped():
+                editor = self.currentTab
+                if editor:
+                    editor.mark_set('insert', editor.index('insert -1l lineend'))
+                self.intelliSenseBox.currentSelectedIndex += 1
+                if self.intelliSenseBox.currentSelectedIndex >= len(self.intelliSenseWords):
+                    self.intelliSenseBox.currentSelectedIndex = 0
+                self.intelliSenseTrigger()
+            elif self.snippetMenu.winfo_ismapped():
+                editor = self.currentTab
+                if editor:
+                    editor.mark_set('insert', editor.index('insert -1l lineend'))
+                self.snippetMenu.currentSelectedIndex += 1
+                if self.snippetMenu.currentSelectedIndex >= len(self.snippetMenu.items):
+                    self.snippetMenu.currentSelectedIndex = 0
+                self.showSnippets()
 
     def intelliSenseTrigger(self, e=None) -> None:
         editor = self.currentTab
         if editor:
             self.intelliSenseBox.place_forget()
-            intelliSenseWords = list(sorted(list(set(
+            self.intelliSenseWords = list(sorted(list(set(
                 self.languageSyntaxPatterns[self.currentLanguage]['keywords'][2] + self.variables + self.languageSyntaxPatterns[self.currentLanguage]['errors'][2]))))
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
             wordStart = editor.search(
                 r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
-            word = editor.get(wordStart, currentIndex).strip(' \n\t\r')
+            word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
+
+            size = 4
+            i = self.intelliSenseBox.currentSelectedIndex
+            startIndex = max(0, i)
             if word:
                 words = []
-                for w in intelliSenseWords:
+                for w in self.intelliSenseWords:
                     if w.startswith(word):
                         words.append(w)
-                if len(words) > 0:
+                self.intelliSenseWords = words
+                if len(self.intelliSenseWords) > 0:
                     if self.snippetMenu.winfo_ismapped():
                         self.snippetMenu.place_forget()
-                    self.intelliSenseBox.items = words
+
+                    endIndex = min(len(self.intelliSenseWords), i + size + 1)
+                    self.intelliSenseBox.items = self.intelliSenseWords[startIndex:endIndex]
                     self.intelliSenseBox.place(x=x, y=y+30)
             else:
                 if self.snippetMenu.winfo_ismapped():
                     self.snippetMenu.place_forget()
-                self.intelliSenseBox.items = intelliSenseWords
+
+                endIndex = min(len(self.intelliSenseWords), i + size + 1)
+                self.intelliSenseBox.items = self.intelliSenseWords[startIndex:endIndex]
                 self.intelliSenseBox.place(x=x, y=y+30)
 
     def intelliSenseEnterInsert(self, e=None) -> None:
@@ -734,17 +755,14 @@ class App(ctk.CTk):
             if len(self.intelliSenseBox.items) > 0:
                 editor = self.currentTab
                 if editor:
-                    keyboard.press('Backspace')
-                    selectedWord = self.intelliSenseBox.items[self.intelliSenseBox.currentSelectedIndex]
-                    startLine, startColumn = map(int, editor.search(
-                        r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
-                    if startColumn == 0:
-                        startLine += 1
-                        startPos = f'{startLine}.{startColumn}'
-                    else:
-                        startPos = f'{startLine}.{startColumn + 1}'
+                    selectedWord = self.intelliSenseWords[self.intelliSenseBox.currentSelectedIndex]
+                    currentIndex = editor.index('insert -1l lineend')
+                    wordStart = editor.search(
+                        r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+                    word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
+                    startPos = f'{currentIndex.split(".")[0]}.{int(currentIndex.split(".")[1]) - len(word)}'
                     editor.delete(startPos, 'insert')
-                    editor.insert(startPos, selectedWord + ' ')
+                    editor.insert(startPos, selectedWord)
                     editor.focus_set()
                     self.intelliSenseBox.place_forget()
                     self.updateSyntax()
@@ -752,15 +770,13 @@ class App(ctk.CTk):
     def intelliSenseClickInsert(self, selected) -> None:
         editor = self.currentTab
         if editor:
-            startLine, startColumn = map(int, editor.search(
-                r'\s', 'insert-1c', backwards=True, regexp=True).split('.'))
-            if startColumn == 0:
-                startLine += 1
-                startPos = f'{startLine}.{startColumn}'
-            else:
-                startPos = f'{startLine}.{startColumn + 1}'
+            currentIndex = editor.index('insert')
+            wordStart = editor.search(
+                r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+            word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
+            startPos = f'{currentIndex.split(".")[0]}.{int(currentIndex.split(".")[1]) - len(word)}'
             editor.delete(startPos, 'insert')
-            editor.insert(startPos, selected + ' ')
+            editor.insert(startPos, selected)
             editor.focus_set()
             self.intelliSenseBox.place_forget()
             self.updateSyntax()

@@ -2,11 +2,18 @@
     "kind": "program",
     "body": [
         {
-            "kind": "importExpression",
-            "value": {
-                "kind": "identifier",
-                "symbol": "math"
-            }
+            "kind": "ifStatement",
+            "conditionLeft": {
+                "kind": "integerLiteral",
+                "value": 3
+            },
+            "operand": ">",
+            "conditionRight": {
+                "kind": "integerLiteral",
+                "value": 1
+            },
+            "body": [],
+            "elsebody": []
         }
     ]
 }

@@ -1,7 +1,6 @@
 
 
 
-str a1 = "hello world"
-
-
-output(a1)
+if (3 > 1){
+	
+}
