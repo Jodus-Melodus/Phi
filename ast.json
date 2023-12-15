@@ -3,73 +3,102 @@
     "body": [
         {
             "kind": "variableDeclarationExpression",
-            "datatype": "int",
-            "identifier": "a",
+            "datatype": "array",
+            "identifier": "x",
             "value": {
-                "kind": "integerLiteral",
-                "value": 1
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "int",
-            "identifier": "b",
-            "value": {
-                "kind": "matchStatement",
-                "value": {
-                    "kind": "identifier",
-                    "symbol": "a"
-                },
-                "matches": [
+                "kind": "arrayLiteral",
+                "items": [
                     {
-                        "kind": "case",
+                        "kind": "itemLiteral",
+                        "index": 0,
                         "value": {
                             "kind": "integerLiteral",
-                            "value": 1
-                        },
-                        "body": [
-                            {
-                                "kind": "returnExpression",
-                                "value": {
-                                    "kind": "integerLiteral",
-                                    "value": 4
-                                }
-                            }
-                        ]
+                            "value": 45
+                        }
                     },
                     {
-                        "kind": "case",
+                        "kind": "itemLiteral",
+                        "index": 1,
                         "value": {
                             "kind": "integerLiteral",
-                            "value": 5
-                        },
-                        "body": [
-                            {
-                                "kind": "returnExpression",
-                                "value": {
-                                    "kind": "stringLiteral",
-                                    "value": "hello world"
-                                }
-                            }
-                        ]
+                            "value": 29
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 2,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 29
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 3,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 23828
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 4,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 23
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 5,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 0
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 6,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 234
+                        }
                     }
                 ]
             },
             "constant": "False"
         },
         {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "identifier",
-                    "symbol": "b"
-                }
-            ],
-            "caller": {
+            "kind": "forEachStatement",
+            "declaration": {
+                "kind": "variableDeclarationExpression",
+                "datatype": "int",
+                "identifier": "i",
+                "value": {
+                    "kind": "integerLiteral",
+                    "value": 0
+                },
+                "constant": "False"
+            },
+            "iterable": {
                 "kind": "identifier",
-                "symbol": "output"
-            }
+                "symbol": "x"
+            },
+            "body": [
+                {
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "i"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "output"
+                    }
+                }
+            ]
         }
     ]
 }

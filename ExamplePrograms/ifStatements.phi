@@ -4,23 +4,23 @@ int a = 4
 int b = 2
 
 if (a == b) {
-    out("a is equal to b")
+    output("a is equal to b")
 } else {
-    out("a is not equal to b")
+    output("a is not equal to b")
 }
 
 if (a > b) {
-    out("a is larger than b")
+    output("a is larger than b")
 } else {
     if (a < b) {
-        out("a is smaller than b")
+        output("a is smaller than b")
     } else {
-        out("a is equal to b")
+        output("a is equal to b")
     }
 }
 
 if (a == b) {
-    out("a is equal to b")
+    output("a is equal to b")
 }
 
 

@@ -7,9 +7,9 @@ int len = string.length()
 str fmt = string.format("hi", 3, 2.3)
 
 
-out(len)
+output(len)
 
-out(fmt)
+output(fmt)
 
 
 

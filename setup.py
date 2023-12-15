@@ -9,7 +9,8 @@ additionalFiles = [
     'syntax.json',
     'snippets',
     'main.py',
-    'settings.py'
+    'settings.json',
+    'math.phi'
 ]
 
 exe = Executable(

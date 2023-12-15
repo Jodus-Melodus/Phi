@@ -13,5 +13,5 @@ fn factorial(n){
 
 int num = 4
 
-out(factorial(num))
+output(factorial(num))
 

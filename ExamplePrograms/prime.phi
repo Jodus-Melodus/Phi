@@ -36,4 +36,4 @@ fn calcNPrimes(n){
 }
 
 
-out(calcNPrimes(50))
+output(calcNPrimes(50))

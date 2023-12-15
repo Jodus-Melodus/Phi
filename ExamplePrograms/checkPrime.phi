@@ -18,6 +18,6 @@ fn isPrime(number) {
     }
 }
 
-out(isPrime(97))
+output(isPrime(97))
 
 

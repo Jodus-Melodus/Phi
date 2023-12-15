@@ -2,6 +2,6 @@
 
 import exports
 
-out(exports.hi)
+output(exports.hi)
 
-out(exports.add(5, 4))
+output(exports.add(5, 4))

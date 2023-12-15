@@ -11,9 +11,9 @@ obj o = {
 	}
 }
 
-out(o.a)
-out(o.b)
-out(o.c)
-out(o.e(4, 3))
+output(o.a)
+output(o.b)
+output(o.c)
+output(o.e(4, 3))
 
 
