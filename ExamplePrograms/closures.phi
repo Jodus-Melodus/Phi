@@ -2,7 +2,7 @@
 
 fn One() {
     fn makeAdd() {
-        fn add(a, b) {
+        fn ~(a, b) {
             <- a + b
         }
         <- add
@@ -14,7 +14,7 @@ fn One() {
 
 fn Two() {
     fn makeAdd() {
-        <- fn add(a, b) {
+        <- fn ~(a, b) {
             <- a + b
         }
     }
@@ -24,7 +24,7 @@ fn Two() {
 }
 
 fn Three() {
-    lambda x = fn add(a, b){<- a + b}
+    lambda x = fn ~(a, b){<- a + b}
     out(x(3, 2))
 }
 
