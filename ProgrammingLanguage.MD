@@ -428,7 +428,7 @@ Conditions are the same as [if statements](#if-else-statements)
 ```
 int a = 0
 while (a < 2) {
-    out(a)
+    output(a)
     a += 1
 }
 ```
@@ -441,7 +441,7 @@ Result:
 ```
 int b = 0
 while (T) {
-    out(b)
+    output(b)
     b += 1
 }
 ```
@@ -451,7 +451,7 @@ To exit early from a loop you can use `break`.
 ```
 int c = 0
 while (T) {
-    out(c)
+    output(c)
     c += 1
     if (c == 5) {
         break
@@ -475,7 +475,7 @@ while (T) {
     if (d % 2 == 0) {
         continue
     }
-    out("I am odd!")
+    output("I am odd!")
 }
 ```
 Result:
@@ -489,7 +489,7 @@ For loops have three parts separated by colons (`,`)
 - ### Example of a for loop.
 ```
 for (int i = 0, i < 5, i += 1){
-    out(i)
+    output(i)
 }
 ```
 Result:
@@ -540,7 +540,7 @@ For-each loops are used when you want to perform an action on each element in a 
 array a = [6, 4, 29, 234, 1209, 98203, 12, 0, 2]
 
 for each (int i in a){
-    out(i)
+    output(i)
 }
 ```
 Result:
@@ -561,7 +561,7 @@ The do-while loop works similarly to the while loop, but it runs at least once b
 ```
 int c = 0
 do {
-    out(c)
+    output(c)
     c += 1
 } while (c < 3)
 ```
@@ -598,7 +598,7 @@ do {
     if (k % 2 == 0) {
         continue
     }
-    out(k)
+    output(k)
 } while (k < 10)
 ```
 Result:
@@ -617,8 +617,8 @@ import math as m
 ```
 ## Accessing a module's functions
 ```
-out(math.root(16, 2))
-out(m.root(16, 2))
+output(math.root(16, 2))
+output(m.root(16, 2))
 ```
 Result:
 ```
@@ -627,7 +627,7 @@ Result:
 ```
 ## Accessing a module's variables
 ```
-out(math.pi)
+output(math.pi)
 ```
 Result:
 ```
@@ -647,4 +647,17 @@ export obj math = {
     pi:3.141592653589793,
     root:fn r(radicand, index){<- radicand ^ (1 / index)}
 }
+```
+# Try-Catch
+The try block is where you put the code that might throw an error. The catch block is where you handle it if there is one.
+```
+try {
+    int x = 5 / 0
+} catch (zeroDivisionError) {
+    output("Can't devide a number by 0")
+}
+```
+Result:
+```
+Can't divide a number by 0
 ```

@@ -1,4 +1,15 @@
 
+int x
 
+obj a = {
+    f:3,
+    e:9
+}
 
-str x = input("<")
+try {
+    x = a.t
+} catch (syntaxError) {
+    output("oh no")
+}
+
+output(x)

@@ -9,17 +9,17 @@ def errorArrows(column: int) -> str:
 
 
 class error:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, column, line) -> None:
+        self.column = column
+        self.line = line
 
 
 class syntaxError(error):
     def __init__(self, stage: str, msg: str, column: int, line: int) -> None:
-        super().__init__()
+        super().__init__(column, line)
         self.stage = stage
         self.msg = msg
-        self.column = column
-        self.line = line
+        self.type = 'syntaxError'
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
@@ -33,11 +33,10 @@ class syntaxError(error):
 
 class nameError(error):
     def __init__(self, stage: str, name: str, column: int, line: int) -> None:
-        super().__init__()
+        super().__init__(column, line)
         self.stage = stage
         self.name = name
-        self.column = column
-        self.line = line
+        self.type = 'nameError'
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
@@ -48,11 +47,10 @@ class nameError(error):
 
 class invalidCharacterError(error):
     def __init__(self, stage: str, character: str, column: int, line: int) -> None:
-        super().__init__()
+        super().__init__(column, line)
         self.stage = stage
         self.character = character
-        self.column = column
-        self.line = line
+        self.type = 'invalidCharacterError'
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
@@ -63,13 +61,13 @@ class invalidCharacterError(error):
     def warningMessage(self) -> str:
         return f"Invalid Character '{self.character}' found."
 
+
 class notImplementedError(error):
-    def __init__(self, stage: str, msg:str, column: int, line: int) -> None:
-        super().__init__()
+    def __init__(self, stage: str, msg: str, column: int, line: int) -> None:
+        super().__init__(column, line)
         self.stage = stage
         self.msg = msg
-        self.column = column
-        self.line = line
+        self.type = 'notImplementedError'
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
@@ -80,12 +78,11 @@ class notImplementedError(error):
 
 class keyError(error):
     def __init__(self, stage: str, key, obj, column: int, line: int) -> None:
-        super().__init__()
+        super().__init__(column, line)
         self.stage = stage
         self.key = key
         self.obj = obj
-        self.column = column
-        self.line = line
+        self.type = 'keyError'
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
@@ -96,11 +93,10 @@ class keyError(error):
 
 class typeError(error):
     def __init__(self, stage: str, type, column: int, line: int) -> None:
-        super().__init__()
+        super().__init__(column, line)
         self.stage = stage
         self.type = type
-        self.column = column
-        self.line = line
+        self.type = 'typeError'
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
@@ -111,10 +107,9 @@ class typeError(error):
 
 class zeroDivisionError(error):
     def __init__(self, stage: str, column: int, line: int) -> None:
-        super().__init__()
+        super().__init__(column, line)
         self.stage = stage
-        self.column = column
-        self.line = line
+        self.type = 'zeroDivisionError'
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}

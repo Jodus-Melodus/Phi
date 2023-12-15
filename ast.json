@@ -3,35 +3,35 @@
     "body": [
         {
             "kind": "variableDeclarationExpression",
-            "datatype": "lambda",
+            "datatype": "int",
             "identifier": "x",
             "value": {
-                "kind": "functionDeclaration",
-                "name": "~",
-                "parameters": [
+                "kind": "integerLiteral",
+                "value": 0
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "object",
+            "identifier": "a",
+            "value": {
+                "kind": "objectLiteral",
+                "properties": [
                     {
-                        "kind": "identifier",
-                        "symbol": "a"
+                        "kind": "propertyLiteral",
+                        "key": "f",
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 3
+                        }
                     },
                     {
-                        "kind": "identifier",
-                        "symbol": "b"
-                    }
-                ],
-                "body": [
-                    {
-                        "kind": "returnExpression",
+                        "kind": "propertyLiteral",
+                        "key": "e",
                         "value": {
-                            "kind": "binaryExpression",
-                            "left": {
-                                "kind": "identifier",
-                                "symbol": "a"
-                            },
-                            "operand": "+",
-                            "right": {
-                                "kind": "identifier",
-                                "symbol": "b"
-                            }
+                            "kind": "integerLiteral",
+                            "value": 9
                         }
                     }
                 ]
@@ -39,29 +39,58 @@
             "constant": "False"
         },
         {
-            "kind": "callExpression",
-            "arguments": [
+            "kind": "tryStatement",
+            "tryBody": [
+                {
+                    "kind": "assignmentExpression",
+                    "assigne": {
+                        "kind": "identifier",
+                        "symbol": "x"
+                    },
+                    "value": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "a"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "t"
+                        }
+                    }
+                }
+            ],
+            "exception": {
+                "kind": "identifier",
+                "symbol": "syntaxError"
+            },
+            "exceptBody": [
                 {
                     "kind": "callExpression",
                     "arguments": [
                         {
-                            "kind": "integerLiteral",
-                            "value": 4
-                        },
-                        {
-                            "kind": "integerLiteral",
-                            "value": 3
+                            "kind": "stringLiteral",
+                            "value": "oh no"
                         }
                     ],
                     "caller": {
                         "kind": "identifier",
-                        "symbol": "x"
+                        "symbol": "output"
                     }
+                }
+            ]
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "x"
                 }
             ],
             "caller": {
                 "kind": "identifier",
-                "symbol": "out"
+                "symbol": "output"
             }
         }
     ]

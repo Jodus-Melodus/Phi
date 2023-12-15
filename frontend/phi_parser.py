@@ -86,11 +86,64 @@ class Parser:
                 return self.parseForStatement()
             case TT.do:
                 return self.parseDoWhileStatement()
+            case TT._try:
+                return self.parseTryStatement()
             case _:
                 return self.parseExpression()
 
     def parseExpression(self) -> None:
         return self.parseAssignmentExpression()
+    
+    def parseTryStatement(self) -> None:
+        self.eat()
+
+        if self.get().type == TT.openBrace:
+            self.eat()
+            tryBody = []
+            while self.get().type != TT.closeBrace:
+                statement = self.parseStatement()
+                if isinstance(statement, error):
+                    return statement
+                if statement:
+                    tryBody.append(statement)
+                if self.get().type == TT.eof:
+                    return syntaxError(self, "Expected a '}'", self.column, self.line)
+            self.eat()
+            if self.get().type == TT.catch:
+                self.eat()
+                if self.get().type == TT.openParenthesis:
+                    self.eat()
+                    if self.get().type == TT.identifier:
+                        catch = self.parsePrimaryExpression()
+                        if isinstance(catch, error):
+                            return catch
+                        if self.get().type == TT.closeParenthesis:
+                            self.eat()
+                            if self.get().type == TT.openBrace:
+                                self.eat()
+                                exceptBody = []
+                                while self.get().type != TT.closeBrace:
+                                    statement = self.parseStatement()
+                                    if isinstance(statement, error):
+                                        return statement
+                                    if statement:
+                                        exceptBody.append(statement)
+                                    if self.get().type == TT.eof:
+                                        return syntaxError(self, "Expected a '}'", self.column, self.line)
+                                self.eat()
+                            else:
+                                return syntaxError(self, "Expected a '{' after the exception name.", self.column, self.line)
+                        else:
+                            return syntaxError(self, "Expected a ')'", self.column, self.line)
+                    else:
+                        return syntaxError(self, "Expected an identifier after 'catch'", self.column, self.line)
+                else:
+                    return syntaxError(self, "'(' expected after catch", self.column, self.line)
+            else:
+                return syntaxError(self, "'catch' expected after 'try'", self.column, self.line)
+        else:
+            return syntaxError(self, "Expected a '{'", self.column, self.line)
+        return tryNode(tryBody, catch, exceptBody, self.line, self.column)
 
     def parseDoWhileStatement(self) -> None:
         self.eat()

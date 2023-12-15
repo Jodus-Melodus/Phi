@@ -507,6 +507,38 @@ class Interpreter:
                 return env.declareVariable(name, code.value, True)
             else:
                 return nullValue()
+            
+    def evaluateTryStatement(self, tryStatement:tryNode, env:environment) -> None:
+        result = nullValue()
+        for statement in tryStatement.tryBody:
+            if isinstance(statement, (returnNode, error, breakNode)):
+                break
+            if isinstance(statement, continueNode):
+                break
+            result = self.evaluate(statement, env)
+            if isinstance(result, (error, breakNode)):
+                break
+            if isinstance(result, continueNode):
+                break
+
+        if isinstance(result, error):
+            if result.type == tryStatement.exception.symbol:
+                result = nullValue()
+                for statement in tryStatement.exceptBody:
+                    if isinstance(statement, (returnNode, error, breakNode)):
+                        return
+                    if isinstance(statement, continueNode):
+                        break
+                    result = self.evaluate(statement, env)
+                    if isinstance(result, (error, breakNode)):
+                        return
+                    if isinstance(result, continueNode):
+                        break
+            else:
+                return result
+        else:
+            return result
+    
 
     def evaluate(self, astNode, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | None:
         if isinstance(astNode, (str, float, int, error)):
@@ -550,6 +582,8 @@ class Interpreter:
                 return self.evaluateExportExpression(astNode, env)
             case 'importExpression':
                 return self.evaluateImportExpression(astNode, env)
+            case 'tryStatement':
+                return self.evaluateTryStatement(astNode, env)
 
             case 'integerLiteral':
                 return integerValue(astNode.value, astNode.line, astNode.column)

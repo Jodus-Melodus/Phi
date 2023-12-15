@@ -53,6 +53,7 @@ class TokenType:
         self.real = 'real'
         self.bool = 'bool'
         self.each = 'each'
+        self._try = 'try'
         self._for = 'for'
         self.int = 'int'
         self._if = 'if'
@@ -60,36 +61,41 @@ class TokenType:
         self._as = 'as'
         self.fn = 'fn'
         self.do = 'do'
+        self.catch = 'catch'
+
 
 TT = TokenType()
 DIGITS = '12345678890'
 ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-'
 
 KEYWORDS = {
-    'fn':TT.fn,
-    'if':TT._if,
-    'else':TT._else,
-    'while':TT._while,
-    'do':TT.do,
-    'int':TT.int,
-    'real':TT.real,
-    'str':TT.string,
-    'array':TT.array,
-    'bool':TT.bool,
-    'obj':TT.obj,
-    'lambda':TT._lambda,
-    'export':TT.export,
-    'import':TT._import,
-    'as':TT._as,
-    'break':TT._break,
-    'continue':TT._continue,
-    'for':TT._for,
-    'each':TT.each,
-    'in':TT._in
+    'fn': TT.fn,
+    'if': TT._if,
+    'else': TT._else,
+    'while': TT._while,
+    'do': TT.do,
+    'int': TT.int,
+    'real': TT.real,
+    'str': TT.string,
+    'array': TT.array,
+    'bool': TT.bool,
+    'obj': TT.obj,
+    'lambda': TT._lambda,
+    'export': TT.export,
+    'import': TT._import,
+    'as': TT._as,
+    'break': TT._break,
+    'continue': TT._continue,
+    'for': TT._for,
+    'each': TT.each,
+    'in': TT._in,
+    'try': TT._try,
+    'catch': TT.catch
 }
 
+
 class Token:
-    def __init__(self, type:str, value:str|int|float, index:int, column:int, line:int) -> None:
+    def __init__(self, type: str, value: str | int | float, index: int, column: int, line: int) -> None:
         self.type = type
         self.value = value
         self.index = index + len(str(value))
@@ -132,49 +138,64 @@ class Lexer:
                 case '+' | '/' | '*' | '-' | '^' | '%':
                     self.eat()
                     if self.get() == '=':
-                        tokens.append(Token(TT.assignmentBinaryOperation, char+'=', self.index, self.column, self.line))
+                        tokens.append(Token(
+                            TT.assignmentBinaryOperation, char+'=', self.index, self.column, self.line))
                         self.eat()
                     elif (char == '/') and (self.get() == '/'):
-                        tokens.append(Token(TT.binaryOperation, char + '/', self.index, self.column, self.line))
+                        tokens.append(
+                            Token(TT.binaryOperation, char + '/', self.index, self.column, self.line))
                         self.eat()
                     else:
-                        tokens.append(Token(TT.binaryOperation, char, self.index, self.column, self.line))
+                        tokens.append(
+                            Token(TT.binaryOperation, char, self.index, self.column, self.line))
                 case '\n':
-                    tokens.append(Token(TT.lineend, char, self.index, self.column, self.line))
+                    tokens.append(
+                        Token(TT.lineend, char, self.index, self.column, self.line))
                     self.eat()
                 case '(':
-                    tokens.append(Token(TT.openParenthesis, char, self.index, self.column, self.line))
+                    tokens.append(Token(TT.openParenthesis, char,
+                                  self.index, self.column, self.line))
                     self.eat()
                 case ')':
-                    tokens.append(Token(TT.closeParenthesis, char, self.index, self.column, self.line))
+                    tokens.append(Token(TT.closeParenthesis, char,
+                                  self.index, self.column, self.line))
                     self.eat()
                 case '{':
-                    tokens.append(Token(TT.openBrace, char, self.index, self.column, self.line))
+                    tokens.append(Token(TT.openBrace, char,
+                                  self.index, self.column, self.line))
                     self.eat()
                 case '}':
-                    tokens.append(Token(TT.closeBrace, char, self.index, self.column, self.line))
+                    tokens.append(Token(TT.closeBrace, char,
+                                  self.index, self.column, self.line))
                     self.eat()
                 case '[':
-                    tokens.append(Token(TT.openBracket, char, self.index, self.column, self.line))
+                    tokens.append(Token(TT.openBracket, char,
+                                  self.index, self.column, self.line))
                     self.eat()
                 case ']':
-                    tokens.append(Token(TT.closeBracket, char, self.index, self.column, self.line))
+                    tokens.append(Token(TT.closeBracket, char,
+                                  self.index, self.column, self.line))
                     self.eat()
                 case '=':
                     self.eat()
                     if self.get() == '=':
-                        tokens.append(Token(TT.equal, '==', self.index, self.column, self.line))
+                        tokens.append(
+                            Token(TT.equal, '==', self.index, self.column, self.line))
                         self.eat()
                     else:
-                        tokens.append(Token(TT.assignmentOperator, char, self.index, self.column, self.line))
+                        tokens.append(Token(TT.assignmentOperator,
+                                      char, self.index, self.column, self.line))
                 case ':':
-                    tokens.append(Token(TT.colon, char, self.index, self.column, self.line))
+                    tokens.append(
+                        Token(TT.colon, char, self.index, self.column, self.line))
                     self.eat()
                 case ',':
-                    tokens.append(Token(TT.comma, char, self.index, self.column, self.line))
+                    tokens.append(
+                        Token(TT.comma, char, self.index, self.column, self.line))
                     self.eat()
                 case '.':
-                    tokens.append(Token(TT.period, char, self.index, self.column, self.line))
+                    tokens.append(
+                        Token(TT.period, char, self.index, self.column, self.line))
                     self.eat()
                 case '#':
                     while self.get() != '\n':
@@ -188,7 +209,8 @@ class Lexer:
                         if self.sourceCode == '':
                             return syntaxError(self, "Expected a '\"'", self.column, self.line)
                     self.eat()
-                    tokens.append(Token(TT.stringValue, string, self.index, self.column, self.line))
+                    tokens.append(Token(TT.stringValue, string,
+                                  self.index, self.column, self.line))
                 case "'":
                     self.eat()
                     string = ''
@@ -198,17 +220,21 @@ class Lexer:
                         if self.sourceCode == '':
                             return syntaxError(self, "Expected a \"'\"", self.column, self.line)
                     self.eat()
-                    tokens.append(Token(TT.stringValue, string, self.index, self.column, self.line))
+                    tokens.append(Token(TT.stringValue, string,
+                                  self.index, self.column, self.line))
                 case '&':
-                    tokens.append(Token(TT._and, char, self.index, self.column, self.line))
+                    tokens.append(
+                        Token(TT._and, char, self.index, self.column, self.line))
                     self.eat()
                 case '|':
-                    tokens.append(Token(TT._or, char, self.index, self.column, self.line))
+                    tokens.append(
+                        Token(TT._or, char, self.index, self.column, self.line))
                     self.eat()
                 case '!':
                     self.eat()
                     if self.get() == '=':
-                        tokens.append(Token(TT.notequal, char+'=', self.index, self.column, self.line))
+                        tokens.append(Token(TT.notequal, char+'=',
+                                      self.index, self.column, self.line))
                         self.eat()
                     else:
                         return invalidCharacterError(self, char, self.column, self.line)
@@ -216,22 +242,28 @@ class Lexer:
                     self.eat()
                     if self.get() == '-':
                         self.eat()
-                        tokens.append(Token(TT._return, char + '-', self.index, self.column, self.line))
+                        tokens.append(Token(TT._return, char + '-',
+                                      self.index, self.column, self.line))
                     elif self.get() == '=':
                         self.eat()
-                        tokens.append(Token(TT.lessThanEqual, char + '=', self.index, self.column, self.line))
+                        tokens.append(
+                            Token(TT.lessThanEqual, char + '=', self.index, self.column, self.line))
                     else:
-                        tokens.append(Token(TT.lessThan, char, self.index, self.column, self.line))
+                        tokens.append(
+                            Token(TT.lessThan, char, self.index, self.column, self.line))
                 case '>':
                     self.eat()
                     if self.get() == '=':
                         self.eat()
-                        tokens.append(Token(TT.greaterThanEqual, char+'=', self.index, self.column, self.line))
+                        tokens.append(
+                            Token(TT.greaterThanEqual, char+'=', self.index, self.column, self.line))
                     else:
-                        tokens.append(Token(TT.greaterThan, char ,self.index, self.column, self.line))
+                        tokens.append(Token(TT.greaterThan, char,
+                                      self.index, self.column, self.line))
                 case '~':
                     self.eat()
-                    tokens.append(Token(TT.anonymous, char, self.index, self.column, self.line))
+                    tokens.append(Token(TT.anonymous, char,
+                                  self.index, self.column, self.line))
                 case _:
 
                     if char in DIGITS:
@@ -253,9 +285,11 @@ class Lexer:
                             self.eat()
 
                         if decimal == 0:
-                            tokens.append(Token(TT.intValue, int(number), self.index, self.column, self.line))
+                            tokens.append(Token(TT.intValue, int(
+                                number), self.index, self.column, self.line))
                         else:
-                            tokens.append(Token(TT.realValue, float(number), self.index, self.column, self.line))
+                            tokens.append(Token(TT.realValue, float(
+                                number), self.index, self.column, self.line))
 
                     elif char in ALPHABET:
                         name = ''
@@ -269,19 +303,19 @@ class Lexer:
                             self.eat()
 
                         if name in KEYWORDS:
-                            tokens.append(Token(KEYWORDS[name], name, self.index, self.column, self.line))
+                            tokens.append(
+                                Token(KEYWORDS[name], name, self.index, self.column, self.line))
                         else:
-                            tokens.append(Token(TT.identifier, name, self.index, self.column, self.line))
+                            tokens.append(
+                                Token(TT.identifier, name, self.index, self.column, self.line))
                     else:
                         return invalidCharacterError(self, char, self.column, self.line)
-                        
 
-        tokens.append(Token(TT.eof, 'eof', self.index + 1, self.column + 1, self.line))
+        tokens.append(Token(TT.eof, 'eof', self.index +
+                      1, self.column + 1, self.line))
         return tokens
 
 
 if __name__ == '__main__':
     l = Lexer(input('> '))
     print(l.tokenize())
-
-
