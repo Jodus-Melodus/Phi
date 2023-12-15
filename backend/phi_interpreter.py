@@ -295,7 +295,10 @@ class Interpreter:
                 if member.property.symbol in obj.methods:
                     return obj.methods[member.property.symbol]
                 else:
-                    value = self.evaluate(member.property, env).value
+                    value = self.evaluate(member.property, env)
+                    if isinstance(value, error):
+                        return value
+                    value = value.value
                     if value in obj.items:
                         return obj.items[value]
                     else:

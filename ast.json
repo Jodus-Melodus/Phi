@@ -69,7 +69,7 @@
             "constant": "False"
         },
         {
-            "kind": "forEachStatement",
+            "kind": "forStatement",
             "declaration": {
                 "kind": "variableDeclarationExpression",
                 "datatype": "int",
@@ -80,17 +80,40 @@
                 },
                 "constant": "False"
             },
-            "iterable": {
+            "conditionLeft": {
                 "kind": "identifier",
-                "symbol": "x"
+                "symbol": "i"
+            },
+            "operand": "<",
+            "conditionRight": {
+                "kind": "callExpression",
+                "arguments": [],
+                "caller": {
+                    "kind": "memberExpression",
+                    "object": {
+                        "kind": "identifier",
+                        "symbol": "x"
+                    },
+                    "property": {
+                        "kind": "identifier",
+                        "symbol": "lengt"
+                    }
+                }
             },
             "body": [
                 {
                     "kind": "callExpression",
                     "arguments": [
                         {
-                            "kind": "identifier",
-                            "symbol": "i"
+                            "kind": "memberExpression",
+                            "object": {
+                                "kind": "identifier",
+                                "symbol": "x"
+                            },
+                            "property": {
+                                "kind": "identifier",
+                                "symbol": "i"
+                            }
                         }
                     ],
                     "caller": {
@@ -98,7 +121,19 @@
                         "symbol": "output"
                     }
                 }
-            ]
+            ],
+            "step": {
+                "kind": "assignmentBinaryExpression",
+                "assigne": {
+                    "kind": "identifier",
+                    "symbol": "i"
+                },
+                "operand": "+=",
+                "value": {
+                    "kind": "integerLiteral",
+                    "value": 1
+                }
+            }
         }
     ]
 }
