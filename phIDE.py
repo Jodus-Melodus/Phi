@@ -6,7 +6,6 @@ import time
 import customtkinter as ctk
 from customtkinter import filedialog
 import os
-import keyboard
 
 with open('settings.json', 'r') as f:
     settings = json.load(f)
@@ -110,6 +109,7 @@ class Dialog:
 
 class App(ctk.CTk):
     def __init__(self) -> None:
+        ctk.set_default_color_theme('phi-theme.json')
         super().__init__()
         self.title('phIDE')
         self.state('zoomed')
