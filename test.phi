@@ -1,6 +1,7 @@
-import math
 
 
 
+str a1 = "hello world"
 
 
+output(a1)

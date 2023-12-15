@@ -302,7 +302,7 @@ class Lexer:
 
                         while len(self.sourceCode) > 0:
                             char = self.get()
-                            if char in ALPHABET:
+                            if char in ALPHABET + '1234567890':
                                 name += char
                             else:
                                 break
