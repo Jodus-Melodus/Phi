@@ -25,7 +25,7 @@ class Parser:
             'real':realLiteralNode(0.0, self.line, self.column),
             'string':stringLiteralNode('', self.line, self.column),
             'array':arrayLiteralNode([], self.line, self.column),
-            'obj':objectLiteralNode([], self.line, self.column),
+            'object':objectLiteralNode([], self.line, self.column),
             'bool':identifierNode('F', self.line, self.column),
             'lambda':nullLiteralNode(self.line, self.column)
         }
