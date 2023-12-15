@@ -423,7 +423,7 @@ Result:
 Second True
 ```
 ## Case Statements
-Case statements are similar to if else statements, but they can handle multiple conditions. They work by comparing a value with different cases and executing the code block of the value if it matches. The code block is a default code block and does not need to return a value.
+Case statements are similar to if else statements, but they can handle multiple conditions. They work by comparing a value with different cases and executing the code block of the value if it matches. The code block is a default code block and does not need to return a value. You can use any datatype.
 ```
 int x = 3
 

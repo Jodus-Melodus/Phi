@@ -4,7 +4,7 @@
         {
             "kind": "variableDeclarationExpression",
             "datatype": "int",
-            "identifier": "a",
+            "identifier": "x",
             "value": {
                 "kind": "integerLiteral",
                 "value": 1
@@ -13,13 +13,13 @@
         },
         {
             "kind": "variableDeclarationExpression",
-            "datatype": "int",
-            "identifier": "b",
+            "datatype": "string",
+            "identifier": "a",
             "value": {
                 "kind": "matchStatement",
                 "value": {
                     "kind": "identifier",
-                    "symbol": "a"
+                    "symbol": "x"
                 },
                 "matches": [
                     {
@@ -30,10 +30,16 @@
                         },
                         "body": [
                             {
-                                "kind": "returnExpression",
-                                "value": {
-                                    "kind": "integerLiteral",
-                                    "value": 4
+                                "kind": "callExpression",
+                                "arguments": [
+                                    {
+                                        "kind": "stringLiteral",
+                                        "value": "hello"
+                                    }
+                                ],
+                                "caller": {
+                                    "kind": "identifier",
+                                    "symbol": "output"
                                 }
                             }
                         ]
@@ -42,14 +48,30 @@
                         "kind": "case",
                         "value": {
                             "kind": "integerLiteral",
-                            "value": 5
+                            "value": 2
                         },
                         "body": [
                             {
                                 "kind": "returnExpression",
                                 "value": {
                                     "kind": "stringLiteral",
-                                    "value": "hello world"
+                                    "value": "hello"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "kind": "case",
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 3
+                        },
+                        "body": [
+                            {
+                                "kind": "returnExpression",
+                                "value": {
+                                    "kind": "stringLiteral",
+                                    "value": "hi"
                                 }
                             }
                         ]
@@ -63,7 +85,7 @@
             "arguments": [
                 {
                     "kind": "identifier",
-                    "symbol": "b"
+                    "symbol": "a"
                 }
             ],
             "caller": {

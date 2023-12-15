@@ -269,6 +269,7 @@ class Interpreter:
                     return result
         else:
             return syntaxError(self, f"'{fn.type}' is not a function", fn.column, fn.line)
+        return nullValue()
 
     def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
         obj: objectValue = env.lookup(member.object)
@@ -584,7 +585,7 @@ class Interpreter:
                         return result
                     if isinstance(result, continueNode):
                         break
-                return result
+                return nullValue()
         return nullValue()
 
     def evaluate(self, astNode, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | None:

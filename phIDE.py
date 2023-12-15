@@ -707,7 +707,7 @@ class App(ctk.CTk):
         if editor:
             self.intelliSenseBox.place_forget()
             intelliSenseWords = list(sorted(list(set(
-                self.languageSyntaxPatterns[self.currentLanguage]['keywords'][2] + self.variables))))
+                self.languageSyntaxPatterns[self.currentLanguage]['keywords'][2] + self.variables + self.languageSyntaxPatterns[self.currentLanguage]['errors'][2]))))
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
             wordStart = editor.search(
