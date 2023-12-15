@@ -538,6 +538,23 @@ class Interpreter:
                 return result
         else:
             return result
+
+    def evaluateThrowStatement(self, throwStmt:throwNode, env:environment) -> None:
+        match throwStmt.error.symbol:
+            case 'syntaxError':
+                return syntaxError('', '', throwStmt.column, throwStmt.line)
+            case 'zeroDivisionError':
+                return zeroDivisionError('', throwStmt.column, throwStmt.line)
+            case 'typeError':
+                return typeError('', '', throwStmt.column, throwStmt.line)
+            case 'keyError':
+                return keyError('', '', '', throwStmt.column, throwStmt.line)
+            case 'notImplementedError':
+                return notImplementedError('', '', throwStmt.column, throwStmt.line)
+            case 'invalidCharacterError':
+                return invalidCharacterError('', '', throwStmt.column, throwStmt.line)
+            case 'nameError':
+                return nameError('', '', throwStmt.column, throwStmt.line)
     
 
     def evaluate(self, astNode, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | None:
@@ -584,6 +601,8 @@ class Interpreter:
                 return self.evaluateImportExpression(astNode, env)
             case 'tryStatement':
                 return self.evaluateTryStatement(astNode, env)
+            case 'throwStatement':
+                return self.evaluateThrowStatement(astNode, env)
 
             case 'integerLiteral':
                 return integerValue(astNode.value, astNode.line, astNode.column)

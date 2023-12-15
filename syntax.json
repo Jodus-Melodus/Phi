@@ -2,13 +2,14 @@
     ".phi": {
         "keywords": [
             "#3d81ff",
-            "(?<!\\w)(output|for|in|input|each|try|catch|continue|break|type|while|if|int|Real|Int|Str|as|lambda|real|import|export|obj|array|bool|str|items|now|length|wait|hash|fn|do|else|append|keys|join|format)(?!\\w)",
+            "(?<!\\w)(output|for|in|input|throw|each|try|catch|continue|break|type|while|if|int|Real|Int|Str|as|lambda|real|import|export|obj|array|bool|str|items|now|length|wait|hash|fn|do|else|append|keys|join|format)(?!\\w)",
             [
                 "output",
                 "input",
                 "type",
                 "while",
                 "break",
+                "throw",
                 "continue",
                 "each",
                 "for",
@@ -64,7 +65,7 @@
             []
         ],
         "errors": [
-            "#990000",
+            "#bb0000",
             "(?<!\\w)(syntaxError|keyError|nameError|notImplementerError|invalidCharacterError|typeError|zeroDivisionError)(?!\\w)",
             [
                 "syntaxError",

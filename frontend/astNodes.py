@@ -439,6 +439,18 @@ class tryNode(Node):
             'tryBody':self.tryBody,
             'exception':self.exception,
             'exceptBody':self.exceptBody
-        })        
+        })
+    
+class throwNode(Node):
+    def __init__(self, error, line:int, column:int) -> None:
+        super().__init__(line, column)
+        self.kind = 'throwStatement'
+        self.error = error
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'error':self.error
+        })
 
     

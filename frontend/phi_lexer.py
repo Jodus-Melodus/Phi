@@ -62,6 +62,7 @@ class TokenType:
         self.fn = 'fn'
         self.do = 'do'
         self.catch = 'catch'
+        self.throw = 'throw'
 
 
 TT = TokenType()
@@ -90,7 +91,8 @@ KEYWORDS = {
     'each': TT.each,
     'in': TT._in,
     'try': TT._try,
-    'catch': TT.catch
+    'catch': TT.catch,
+    'throw':TT.throw
 }
 
 

@@ -88,11 +88,24 @@ class Parser:
                 return self.parseDoWhileStatement()
             case TT._try:
                 return self.parseTryStatement()
+            case TT.throw:
+                return self.parseThrowStatement()
             case _:
                 return self.parseExpression()
 
     def parseExpression(self) -> None:
         return self.parseAssignmentExpression()
+    
+    def parseThrowStatement(self) -> None:
+        self.eat()
+
+        if self.get().type == TT.identifier:
+            err = self.parsePrimaryExpression()
+            if isinstance(err, error):
+                return err
+        else:
+            return syntaxError(self, "Expected an identifier", self.column, self.line)
+        return throwNode(err, self.line, self.column)
     
     def parseTryStatement(self) -> None:
         self.eat()

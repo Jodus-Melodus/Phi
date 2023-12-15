@@ -648,7 +648,8 @@ export obj math = {
     root:fn r(radicand, index){<- radicand ^ (1 / index)}
 }
 ```
-# Try-Catch
+# Error Handeling
+## Try-Catch
 The try block is where you put the code that might throw an error. The catch block is where you handle it if there is one.
 ```
 try {
@@ -660,4 +661,9 @@ try {
 Result:
 ```
 Can't divide a number by 0
+```
+## Throw
+You can also throw an error if something goes wrong in your code. This is useful when you want to handle errors yourself instead of letting them crash your program.
+```
+throw syntaxError
 ```

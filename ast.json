@@ -55,7 +55,7 @@
                         },
                         "property": {
                             "kind": "identifier",
-                            "symbol": "t"
+                            "symbol": "e"
                         }
                     }
                 }
@@ -91,6 +91,13 @@
             "caller": {
                 "kind": "identifier",
                 "symbol": "output"
+            }
+        },
+        {
+            "kind": "throwStatement",
+            "error": {
+                "kind": "identifier",
+                "symbol": "syntaxError"
             }
         }
     ]

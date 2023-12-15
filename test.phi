@@ -7,9 +7,15 @@ obj a = {
 }
 
 try {
-    x = a.t
+    x = a.e
 } catch (syntaxError) {
     output("oh no")
 }
 
 output(x)
+
+throw syntaxError
+
+
+
+
