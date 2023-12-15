@@ -64,9 +64,17 @@ The following operators are supported in Phi:
 ```
 int x = 10
 ```
+This will create the variable and give it a value of 0
+```
+int x
+```
 - ### Constant:
 ```
 int X = 10
+```
+This will create the variable and give it a value of 0
+```
+int X
 ```
 ## Built-in Constants
 The following constants are built into the system:
@@ -531,7 +539,7 @@ For-each loops are used when you want to perform an action on each element in a 
 ```
 array a = [6, 4, 29, 234, 1209, 98203, 12, 0, 2]
 
-for each (int i = 0 in a){
+for each (int i in a){
     out(i)
 }
 ```

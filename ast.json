@@ -99,8 +99,8 @@
                 "datatype": "int",
                 "identifier": "i",
                 "value": {
-                    "kind": "nullLiteral",
-                    "value": "null"
+                    "kind": "integerLiteral",
+                    "value": 0
                 },
                 "constant": "False"
             },

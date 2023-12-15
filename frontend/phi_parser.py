@@ -21,6 +21,12 @@ class Parser:
         self.column = 0
         self.line = 0
 
+        self.datetypeMap = {
+            'int':integerLiteralNode(0, self.line, self.column),
+            'real':realLiteralNode(0.0, self.line, self.column),
+            'str':stringLiteralNode('', self.line, self.column)
+        }
+
     def __str__(self) -> str:
         return 'Parser'
 
@@ -374,7 +380,7 @@ class Parser:
         if self.get().type != TT.assignmentOperator:
             if self.get().type in (TT.eof, TT.lineend):
                 self.eat()
-            return variableDeclarationExpressionNode(datatype, identifier, nullLiteralNode(self.line, self.column), constant, self.line, self.column)
+            return variableDeclarationExpressionNode(datatype, identifier, self.datetypeMap[datatype], constant, self.line, self.column)
         else:
             self.eat()
             statement = self.parseStatement()
