@@ -1,6 +1,0 @@
-array x = [45, 29 , 29 ,23828, 23, 0 ,234]
-
-for (int i = 0, i < x.lengt(), i += 1){
-	output(x[i])
-}
-
