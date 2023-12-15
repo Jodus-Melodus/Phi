@@ -1,12 +1,10 @@
 
-array a = [1, 2, 3, 9, 3, 2, 983, 29, 82903, 72]
 
-for each (int i in a){
-	out(i)
-}
+lambda x = fn ~(a, b){
+		<- a + b
+	}
 
-
-
+out(x(4, 3))
 
 
 

@@ -2,127 +2,81 @@
     "kind": "program",
     "body": [
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "array",
-            "identifier": "a",
-            "value": {
-                "kind": "arrayLiteral",
-                "items": [
-                    {
-                        "kind": "itemLiteral",
-                        "index": 0,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 1
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 1,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 2
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 2,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 3
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 3,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 9
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 4,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 3
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 5,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 2
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 6,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 983
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 7,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 29
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 8,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 82903
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 9,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 72
-                        }
+            "kind": "functionDeclaration",
+            "name": "makeAdd",
+            "parameters": [],
+            "body": [
+                {
+                    "kind": "returnExpression",
+                    "value": {
+                        "kind": "functionDeclaration",
+                        "name": "add",
+                        "parameters": [
+                            {
+                                "kind": "identifier",
+                                "symbol": "a"
+                            },
+                            {
+                                "kind": "identifier",
+                                "symbol": "b"
+                            }
+                        ],
+                        "body": [
+                            {
+                                "kind": "returnExpression",
+                                "value": {
+                                    "kind": "binaryExpression",
+                                    "left": {
+                                        "kind": "identifier",
+                                        "symbol": "a"
+                                    },
+                                    "operand": "+",
+                                    "right": {
+                                        "kind": "identifier",
+                                        "symbol": "b"
+                                    }
+                                }
+                            }
+                        ]
                     }
-                ]
+                }
+            ]
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "lambda",
+            "identifier": "x",
+            "value": {
+                "kind": "callExpression",
+                "arguments": [],
+                "caller": {
+                    "kind": "identifier",
+                    "symbol": "makeAdd"
+                }
             },
             "constant": "False"
         },
         {
-            "kind": "forEachStatement",
-            "declaration": {
-                "kind": "variableDeclarationExpression",
-                "datatype": "int",
-                "identifier": "i",
-                "value": {
-                    "kind": "integerLiteral",
-                    "value": 0
-                },
-                "constant": "False"
-            },
-            "iterable": {
-                "kind": "identifier",
-                "symbol": "a"
-            },
-            "body": [
+            "kind": "callExpression",
+            "arguments": [
                 {
                     "kind": "callExpression",
                     "arguments": [
                         {
                             "kind": "identifier",
-                            "symbol": "i"
+                            "symbol": "x"
                         }
                     ],
                     "caller": {
                         "kind": "identifier",
-                        "symbol": "out"
+                        "symbol": "type"
                     }
                 }
-            ]
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "out"
+            }
         }
     ]
 }

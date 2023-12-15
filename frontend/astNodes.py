@@ -1,7 +1,7 @@
 from backend.values import *
 from frontend.phi_lexer import *
 
-
+# datatypes
 class identifierNode:
     def __init__(self, symbol: str, line: int, column: int) -> None:
         self.kind = 'identifier'
@@ -70,6 +70,65 @@ class nullLiteralNode:
             'kind': self.kind,
             'value': self.value
         })
+    
+class objectLiteralNode:
+    def __init__(self, properties: list, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
+        self.kind = 'objectLiteral'
+        self.properties = properties
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'properties': self.properties
+        })
+
+
+class propertyLiteralNode:
+    def __init__(self, key, value, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
+        self.kind = 'propertyLiteral'
+        self.key = key
+        self.value = value
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'key': self.key,
+            'value': self.value
+        })
+
+
+class arrayLiteralNode:
+    def __init__(self, items: list, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
+        self.kind = 'arrayLiteral'
+        self.items = items
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'items': self.items
+        })
+
+
+class itemLiteralNode:
+    def __init__(self, index, value, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
+        self.kind = 'itemLiteral'
+        self.index = index
+        self.value = value
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'index': self.index,
+            'value': self.value
+        })
 
 
 class programNode:
@@ -116,6 +175,7 @@ class binaryExpressionNode:
         })
 
 
+# statements
 class ifStatementNode:
     def __init__(self, conditionLeft, operand, conditionRight, body, elseBody=[], line:int=-1, column:int=-1) -> None:
         self.line = line
@@ -289,66 +349,6 @@ class functionDeclarationExpressionNode:
             'name': self.name,
             'parameters': self.parameters,
             'body': self.body
-        })
-
-
-class objectLiteralNode:
-    def __init__(self, properties: list, line:int=-1, column:int=-1) -> None:
-        self.line = line
-        self.column = column
-        self.kind = 'objectLiteral'
-        self.properties = properties
-
-    def __repr__(self) -> str:
-        return str({
-            'kind': self.kind,
-            'properties': self.properties
-        })
-
-
-class propertyLiteralNode:
-    def __init__(self, key, value, line:int=-1, column:int=-1) -> None:
-        self.line = line
-        self.column = column
-        self.kind = 'propertyLiteral'
-        self.key = key
-        self.value = value
-
-    def __repr__(self) -> str:
-        return str({
-            'kind': self.kind,
-            'key': self.key,
-            'value': self.value
-        })
-
-
-class arrayLiteralNode:
-    def __init__(self, items: list, line:int=-1, column:int=-1) -> None:
-        self.line = line
-        self.column = column
-        self.kind = 'arrayLiteral'
-        self.items = items
-
-    def __repr__(self) -> str:
-        return str({
-            'kind': self.kind,
-            'items': self.items
-        })
-
-
-class itemLiteralNode:
-    def __init__(self, index, value, line:int=-1, column:int=-1) -> None:
-        self.line = line
-        self.column = column
-        self.kind = 'itemLiteral'
-        self.index = index
-        self.value = value
-
-    def __repr__(self) -> str:
-        return str({
-            'kind': self.kind,
-            'index': self.index,
-            'value': self.value
         })
 
 

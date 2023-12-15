@@ -16,15 +16,18 @@ class Parser:
     def __init__(self, tokens: list) -> None:
         self.tokens = tokens
         self.program = programNode([])
-        self.conditionalOperators = (TT.equal, TT.notequal, TT.greaterThan,
-                                     TT.lessThan, TT.greaterThanEqual, TT.lessThanEqual, TT._and, TT._or)
+        self.conditionalOperators = (TT.equal, TT.notequal, TT.greaterThan, TT.lessThan, TT.greaterThanEqual, TT.lessThanEqual, TT._and, TT._or)
         self.column = 0
         self.line = 0
 
         self.datetypeMap = {
             'int':integerLiteralNode(0, self.line, self.column),
             'real':realLiteralNode(0.0, self.line, self.column),
-            'str':stringLiteralNode('', self.line, self.column)
+            'str':stringLiteralNode('', self.line, self.column),
+            'array':arrayLiteralNode([], self.line, self.column),
+            'obj':objectLiteralNode([], self.line, self.column),
+            'bool':identifierNode('F', self.line, self.column),
+            'lambda':nullLiteralNode(self.line, self.column)
         }
 
     def __str__(self) -> str:
@@ -578,10 +581,11 @@ class Parser:
             if operand.type == TT.period:
                 computed = False
                 prop = self.parsePrimaryExpression()
-                if isinstance(prop, error):
-                    return prop
-                if prop.kind != ('identifier'):
-                    return syntaxError(self, "Invalid syntax", self.column, self.line)
+                if prop != None:
+                    if isinstance(prop, error):
+                        return prop
+                    if prop.kind != ('identifier'):
+                        return syntaxError(self, "Invalid syntax", self.column, self.line)
             else:
                 computed = True
                 prop = self.parseExpression()
