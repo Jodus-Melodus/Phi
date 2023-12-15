@@ -5,5 +5,3 @@ array x = [45, 29 , 29 ,23828, 23, 0 ,234]
 for each (int i in x){
 	output(i)
 }
-
-

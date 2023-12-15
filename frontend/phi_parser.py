@@ -371,34 +371,37 @@ class Parser:
 
         if self.get().type == TT.openParenthesis:
             self.eat()
-            declaration = self.parseVariableDeclaration()
-            if isinstance(declaration, error):
-                return declaration
-            if self.get().type == TT._in:
-                self.eat()
-                iterable = self.parseExpression()
-                if isinstance(iterable, error):
-                    return iterable
-                if self.get().type == TT.closeParenthesis:
+            if self.get().type in ('int', 'real', 'str'):
+                declaration = self.parseVariableDeclaration()
+                if isinstance(declaration, error):
+                    return declaration
+                if self.get().type == TT._in:
                     self.eat()
-                    if self.get().type == TT.openBrace:
+                    iterable = self.parseExpression()
+                    if isinstance(iterable, error):
+                        return iterable
+                    if self.get().type == TT.closeParenthesis:
                         self.eat()
-                        body = []
-                        while self.get().type != TT.closeBrace:
-                            statement = self.parseStatement()
-                            if isinstance(statement, error):
-                                return statement
-                            if statement:
-                                body.append(statement)
-                            if self.get().type == TT.eof:
-                                return syntaxError(self, "Expected a '}'", self.column, self.line)
-                        self.eat()
+                        if self.get().type == TT.openBrace:
+                            self.eat()
+                            body = []
+                            while self.get().type != TT.closeBrace:
+                                statement = self.parseStatement()
+                                if isinstance(statement, error):
+                                    return statement
+                                if statement:
+                                    body.append(statement)
+                                if self.get().type == TT.eof:
+                                    return syntaxError(self, "Expected a '}'", self.column, self.line)
+                            self.eat()
+                        else:
+                            return syntaxError(self, "Expected a '{'", self.column, self.line)
                     else:
-                        return syntaxError(self, "Expected a '{'", self.column, self.line)
+                        return syntaxError(self, "Expected a ')'", self.column, self.line)
                 else:
-                    return syntaxError(self, "Expected a ')'", self.column, self.line)
+                    return syntaxError(self, "'in' expected after the variable in for-each loop", self.column, self.line)
             else:
-                return syntaxError(self, "'in' expected after the variable in for-each loop", self.column, self.line)
+                return syntaxError(self, "Expected variable declaration", self.column, self.line)
         else:
             return syntaxError(self, "Expected a '('", self.column, self.line)
 
