@@ -1,7 +1,7 @@
 
 array a = [1, 2, 3, 9, 3, 2, 983, 29, 82903, 72]
 
-for each (int i = 0 in a){
+for each (int i in a){
 	out(i)
 }
 
