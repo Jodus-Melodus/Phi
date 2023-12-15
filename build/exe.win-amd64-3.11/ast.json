@@ -1,0 +1,12 @@
+{
+    "kind": "program",
+    "body": [
+        {
+            "kind": "importExpression",
+            "value": {
+                "kind": "identifier",
+                "symbol": "math"
+            }
+        }
+    ]
+}
