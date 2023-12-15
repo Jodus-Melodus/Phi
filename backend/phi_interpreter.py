@@ -585,7 +585,7 @@ class Interpreter:
                         return result
                     if isinstance(result, continueNode):
                         break
-                return nullValue()
+                return result
         return nullValue()
 
     def evaluate(self, astNode, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | None:

@@ -8,7 +8,8 @@ if sys.platform == "win32":
 additionalFiles = [
     'syntax.json',
     'snippets',
-    'main.py'
+    'main.py',
+    'settings.py'
 ]
 
 exe = Executable(

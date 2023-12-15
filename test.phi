@@ -1,10 +1,11 @@
 
-int a = 1
+int a = 5
 
-int b = match a {
+str b = match a {
     case 1 {<- 4}
     case 5 {<- "hello world"}
 }
 
 
 output(b)
+
