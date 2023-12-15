@@ -526,6 +526,27 @@ Result:
 7
 9
 ```
+## For-Each Loops
+For-each loops are used when you want to perform an action on each element in a collection without having to manually iterate through it using an index.
+```
+array a = [6, 4, 29, 234, 1209, 98203, 12, 0, 2]
+
+for each (int i = 0 in a){
+    out(i)
+}
+```
+Result:
+```
+6
+4
+29
+234
+1209
+98203
+12
+0
+2
+```
 ## Do-While Loops
 The do-while loop works similarly to the while loop, but it runs at least once before checking the condition.
 - ### Example of a do-while loop.

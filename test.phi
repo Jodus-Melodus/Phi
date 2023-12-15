@@ -1,16 +1,9 @@
 
+array a = [1, 2, 3, 9, 3, 2, 983, 29, 82903, 72]
 
-int i = 0
-
-do {
-	if (i == 2){
-		i += 1
-		continue
-	}
+for each (int i = 0 in a){
 	out(i)
-	i += 1
-	out(k)
-} while (i < 5)
+}
 
 
 

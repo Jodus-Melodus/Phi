@@ -181,6 +181,23 @@ class forStatementNode:
             'body': self.body,
             'step': self.step
         })
+    
+class forEachStatementNode:
+    def __init__(self, declaration, iterable, body, line:int=-1, column:int=-1) -> None:
+        self.line = line
+        self.column = column
+        self.kind = 'forEachStatement'
+        self.declaration = declaration
+        self.body = body
+        self.iterable = iterable
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'declaration':self.declaration,
+            'iterable':self.iterable,
+            'body': self.body
+        })
 
 
 class doWhileStatementNode:

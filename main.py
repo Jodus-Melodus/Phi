@@ -3,7 +3,7 @@ from frontend.phi_lexer import *
 from frontend.phi_parser import *
 from backend.phi_interpreter import *
 from backend.phi_environment import *
-import json
+import json, os
 
 ran = False
 
@@ -43,9 +43,12 @@ if __name__ == '__main__':
         if filePath:
             break
 
-    with open(filePath, 'r') as f:
-        sourceCode = ''.join(f.readlines())
+    if os.path.exists(filePath):
+        with open(filePath, 'r') as f:
+            sourceCode = ''.join(f.readlines())
 
-    res = run(sourceCode)
-    if res:
-        print(res)
+        res = run(sourceCode)
+        if res:
+            print(res)
+    else:
+        print('No such file exists.')

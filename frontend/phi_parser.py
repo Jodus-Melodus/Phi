@@ -11,11 +11,13 @@ from frontend.errors import *
 # member
 # primary
 
+
 class Parser:
     def __init__(self, tokens: list) -> None:
         self.tokens = tokens
         self.program = programNode([])
-        self.conditionalOperators = (TT.equal, TT.notequal, TT.greaterThan, TT.lessThan, TT.greaterThanEqual, TT.lessThanEqual, TT._and, TT._or)
+        self.conditionalOperators = (TT.equal, TT.notequal, TT.greaterThan,
+                                     TT.lessThan, TT.greaterThanEqual, TT.lessThanEqual, TT._and, TT._or)
         self.column = 0
         self.line = 0
 
@@ -225,9 +227,49 @@ class Parser:
                     return syntaxError(self, f"Expected one of the following operators: {self.conditionalOperators}", self.column, self.line)
             else:
                 return syntaxError(self, "Expected a comma", self.column, self.line)
+        elif self.get().type == TT.each:
+            return self.parseForEachStatement()
         else:
             return syntaxError(self, "Expected a '(' after 'for'", self.column, self.line)
         return forStatementNode(declaration, conditionLeft, operand, conditionRight, step, body, self.line, self.column)
+
+    def parseForEachStatement(self) -> None:
+        self.eat()
+
+        if self.get().type == TT.openParenthesis:
+            self.eat()
+            declaration = self.parseVariableDeclaration()
+            if isinstance(declaration, error):
+                return declaration
+            if self.get().type == TT._in:
+                self.eat()
+                iterable = self.parseExpression()
+                if isinstance(iterable, error):
+                    return iterable
+                if self.get().type == TT.closeParenthesis:
+                    self.eat()
+                    if self.get().type == TT.openBrace:
+                        self.eat()
+                        body = []
+                        while self.get().type != TT.closeBrace:
+                            statement = self.parseStatement()
+                            if isinstance(statement, error):
+                                return statement
+                            if statement:
+                                body.append(statement)
+                            if self.get().type == TT.eof:
+                                return syntaxError(self, "Expected a '}'", self.column, self.line)
+                        self.eat()
+                    else:
+                        return syntaxError(self, "Expected a '{'", self.column, self.line)
+                else:
+                    return syntaxError(self, "Expected a ')'", self.column, self.line)
+            else:
+                return syntaxError(self, "'in' expected after the variable in for-each loop", self.column, self.line)
+        else:
+            return syntaxError(self, "Expected a '('", self.column, self.line)
+
+        return forEachStatementNode(declaration, iterable, body, self.line, self.column)
 
     def parseIfStatement(self) -> None:
         self.eat()
@@ -329,8 +371,9 @@ class Parser:
             constant = True
         else:
             constant = False
-        if (self.get().type == TT.eof) or (self.get().type == TT.lineend):
-            self.eat()
+        if self.get().type != TT.assignmentOperator:
+            if self.get().type in (TT.eof, TT.lineend):
+                self.eat()
             return variableDeclarationExpressionNode(datatype, identifier, nullLiteralNode(self.line, self.column), constant, self.line, self.column)
         else:
             self.eat()
@@ -440,7 +483,8 @@ class Parser:
             right = self.parseMultiplicativeExpression()
             if isinstance(right, error):
                 return right
-            left = binaryExpressionNode(left, str(operand), right, self.line, self.column)
+            left = binaryExpressionNode(
+                left, str(operand), right, self.line, self.column)
 
         return left
 
@@ -454,7 +498,8 @@ class Parser:
             right = self.parseCallMemberExpression()
             if isinstance(right, error):
                 return right
-            left = binaryExpressionNode(left, str(operand), right, self.line, self.column)
+            left = binaryExpressionNode(
+                left, str(operand), right, self.line, self.column)
 
         return left
 
@@ -541,7 +586,8 @@ class Parser:
                 else:
                     self.eat()
 
-            obj = memberExpressionNode(obj, prop, computed, self.line, self.column)
+            obj = memberExpressionNode(
+                obj, prop, computed, self.line, self.column)
         return obj
 
     def parsePrimaryExpression(self) -> None:
@@ -587,7 +633,7 @@ class Parser:
                     value = self.parseStatement()
                     if isinstance(value, error):
                         return value
-                    
+
                     if self.get().type == TT._as:
                         self.eat()
                         name = self.parsePrimaryExpression()

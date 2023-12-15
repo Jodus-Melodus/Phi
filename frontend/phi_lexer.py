@@ -40,24 +40,26 @@ class TokenType:
         self.identifier = 'identifier'
 
         # keywords
-        self.int = 'int'
-        self.real = 'real'
-        self.string = 'string'
-        self.array = 'array'
-        self.bool = 'bool'
-        self.obj = 'object'
-        self._lambda = 'lambda'
-        self.fn = 'fn'
-        self._if = 'if'
-        self._else = 'else'
-        self._while = 'while'
-        self.do = 'do'
-        self.export = 'export'
-        self._import = 'import'
-        self._as = 'as'
-        self._break = 'break'
         self._continue = 'continue'
+        self._lambda = 'lambda'
+        self._import = 'import'
+        self.string = 'string'
+        self.export = 'export'
+        self._while = 'while'
+        self._break = 'break'
+        self.array = 'array'
+        self.obj = 'object'
+        self._else = 'else'
+        self.real = 'real'
+        self.bool = 'bool'
+        self.each = 'each'
         self._for = 'for'
+        self.int = 'int'
+        self._if = 'if'
+        self._in = 'in'
+        self._as = 'as'
+        self.fn = 'fn'
+        self.do = 'do'
 
 TT = TokenType()
 DIGITS = '12345678890'
@@ -81,7 +83,9 @@ KEYWORDS = {
     'as':TT._as,
     'break':TT._break,
     'continue':TT._continue,
-    'for':TT._for
+    'for':TT._for,
+    'each':TT.each,
+    'in':TT._in
 }
 
 class Token:

@@ -407,6 +407,29 @@ class Interpreter:
             else:
                 break
         return nullValue()
+    
+    def evaluateForEachStatement(self, forEachLoop:forEachStatementNode, env:environment) -> None:
+        self.evaluateVariableDeclarationExpression(forEachLoop.declaration, env)
+
+        array = self.evaluate(forEachLoop.iterable, env)
+
+        for item in array.items:
+            assignmentExpr = assignmentExpressionNode(identifierNode(forEachLoop.declaration.identifier, forEachLoop.declaration.line, forEachLoop.declaration.column), integerLiteralNode(array.items[item].value, -1, -1))
+            res = self.evaluateAssignmentExpression(assignmentExpr, env)
+            if isinstance(res, error):
+                return res
+
+            result = nullValue()
+            for statement in forEachLoop.body:
+                if isinstance(statement, (error, returnNode, breakNode)):
+                    return result
+                result = self.evaluate(statement, env)
+                if isinstance(result, (error, breakNode)):
+                    return result
+                if isinstance(result, continueNode):
+                    break
+
+        return nullValue()
 
 
     def evaluateDoWhileStatement(self, doWhile: doWhileStatementNode, env: environment) -> None:
@@ -513,6 +536,8 @@ class Interpreter:
                 return self.evaluateWhileStatement(astNode, env)
             case 'forStatement':
                 return self.evaluateForStatement(astNode, env)
+            case 'forEachStatement':
+                return self.evaluateForEachStatement(astNode, env)
             case 'doWhileStatement':
                 return self.evaluateDoWhileStatement(astNode, env)
             case 'arrayLiteral':
