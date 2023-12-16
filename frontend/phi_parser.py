@@ -16,18 +16,19 @@ class Parser:
     def __init__(self, tokens: list) -> None:
         self.tokens = tokens
         self.program = programNode([])
-        self.conditionalOperators = (TT.equal, TT.notequal, TT.greaterThan, TT.lessThan, TT.greaterThanEqual, TT.lessThanEqual, TT._and, TT._or)
+        self.conditionalOperators = (TT.equal, TT.notequal, TT.greaterThan,
+                                     TT.lessThan, TT.greaterThanEqual, TT.lessThanEqual, TT._and, TT._or)
         self.column = 0
         self.line = 0
 
         self.datetypeMap = {
-            'int':integerLiteralNode(0, self.line, self.column),
-            'real':realLiteralNode(0.0, self.line, self.column),
-            'string':stringLiteralNode('', self.line, self.column),
-            'array':arrayLiteralNode([], self.line, self.column),
-            'object':objectLiteralNode([], self.line, self.column),
-            'bool':identifierNode('F', self.line, self.column),
-            'lambda':nullLiteralNode(self.line, self.column)
+            'int': integerLiteralNode(0, self.line, self.column),
+            'real': realLiteralNode(0.0, self.line, self.column),
+            'string': stringLiteralNode('', self.line, self.column),
+            'array': arrayLiteralNode([], self.line, self.column),
+            'object': objectLiteralNode([], self.line, self.column),
+            'bool': identifierNode('F', self.line, self.column),
+            'lambda': nullLiteralNode(self.line, self.column)
         }
 
     def __str__(self) -> str:
@@ -92,15 +93,55 @@ class Parser:
                 return self.parseThrowStatement()
             case TT._match:
                 return self.parseMatchStatement()
+            case TT._class:
+                return self.parseClassStatement()
             case _:
                 return self.parseExpression()
 
     def parseExpression(self) -> None:
         return self.parseAssignmentExpression()
-    
+
+    def parseClassStatement(self) -> None:
+        self.eat()
+
+        if self.get().type == TT.identifier:
+            className = self.eat().value
+            if self.get().type == TT.openBrace:
+                self.eat()
+                classBody = []
+                while self.get().type != TT.closeBrace:
+                    if self.get().type == TT.identifier:
+                        key = self.eat().value
+                        if self.get().type == TT.colon:
+                            self.eat()
+                            value = self.parseFunctionDeclaration()
+                            if isinstance(value, error):
+                                return value
+                            if value:
+                                classBody.append(classMethodLiteralNode(
+                                    key, value, self.line, self.column))
+                            if self.get().type in (TT.comma, TT.lineend):
+                                self.eat()
+                            elif self.get().type == TT.closeBrace:
+                                break
+                            else:
+                                return syntaxError(self, "Expected a ',' or a '}'", self.column, self.line)
+                        else:
+                            return syntaxError(self, "Expected ':' after method name", self.column, self.line)
+                    elif self.get().type == TT.lineend:
+                        self.eat()
+                    else:
+                        return syntaxError(self, "Expected an identifier", self.column, self.line)
+                self.eat()
+            else:
+                return syntaxError(self, "Expected a '{' after class name", self.column, self.line)
+        else:
+            return syntaxError(self, 'Expected an identifier', self.column, self.line)
+        return classNode(className, classBody, self.line, self.column)
+
     def parseMatchStatement(self) -> None:
         self.eat()
-        
+
         if self.get().type == TT.identifier:
             value = self.parsePrimaryExpression()
             if isinstance(value, error):
@@ -127,7 +168,7 @@ class Parser:
         else:
             return syntaxError(self, "Expected an identifier", self.column, self.line)
         return matchNode(value, matches, self.line, self.column)
-    
+
     def parseCase(self) -> None:
         self.eat()
 
@@ -161,7 +202,7 @@ class Parser:
         else:
             return syntaxError(self, "Expected an identifier", self.column, self.line)
         return throwNode(err, self.line, self.column)
-    
+
     def parseTryStatement(self) -> None:
         self.eat()
 
@@ -554,7 +595,6 @@ class Parser:
                 break
             elif self.get().type == TT.lineend:
                 self.eat()
-                continue
             elif self.get().type == TT.identifier:
                 key = self.eat().value
                 if self.get().type == TT.colon:
@@ -562,7 +602,8 @@ class Parser:
                     value = self.parseStatement()
                     if isinstance(value, error):
                         return value
-                    properties.append(propertyLiteralNode(key, value))
+                    properties.append(propertyLiteralNode(
+                        key, value, self.line, self.column))
                     if self.get().type in (TT.comma, TT.lineend):
                         self.eat()
                     elif self.get().type == TT.closeBrace:
@@ -570,7 +611,7 @@ class Parser:
                     else:
                         return syntaxError(self, "Expected a ',' or a '}'", self.column, self.line)
                 else:
-                    return syntaxError(self, "Expected a value", self.column, self.line)
+                    return syntaxError(self, "Expected a ':'", self.column, self.line)
             else:
                 return syntaxError(self, 'Something went wrong', self.column, self.line)
         self.eat()

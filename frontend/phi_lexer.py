@@ -47,7 +47,12 @@ class TokenType:
         self.export = 'export'
         self._while = 'while'
         self._break = 'break'
+        self._match = 'match'
+        self._class = 'class'
+        self.throw = 'throw'
         self.array = 'array'
+        self.catch = 'catch'
+        self._case = 'case'
         self.obj = 'object'
         self._else = 'else'
         self.real = 'real'
@@ -61,10 +66,6 @@ class TokenType:
         self._as = 'as'
         self.fn = 'fn'
         self.do = 'do'
-        self.catch = 'catch'
-        self.throw = 'throw'
-        self._case = 'case'
-        self._match = 'match'
 
 
 TT = TokenType()
@@ -96,7 +97,8 @@ KEYWORDS = {
     'catch': TT.catch,
     'throw':TT.throw,
     'case':TT._case,
-    'match':TT._match
+    'match':TT._match,
+    'class':TT._class
 }
 
 

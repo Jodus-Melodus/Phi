@@ -89,7 +89,7 @@ class objectLiteralNode(Node):
 
 
 class propertyLiteralNode(Node):
-    def __init__(self, key, value, line: int = -1, column: int = -1) -> None:
+    def __init__(self, key, value, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'propertyLiteral'
         self.key = key
@@ -491,4 +491,32 @@ class caseNode(Node):
             'kind': self.kind,
             'value': self.value,
             'body': self.body
+        })
+    
+class classNode(Node):
+    def __init__(self, name, body, line: int, column: int) -> None:
+        super().__init__(line, column)
+        self.kind = 'classStatement'
+        self.name = name
+        self.body = body
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'name':self.name,
+            'body':self.body
+        })
+    
+class classMethodLiteralNode(Node):
+    def __init__(self, key, value, line: int, column: int) -> None:
+        super().__init__(line, column)
+        self.kind = 'classMethodLiteral'
+        self.key = key
+        self.value = value
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'key': self.key,
+            'value': self.value
         })

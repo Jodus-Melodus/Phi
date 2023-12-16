@@ -1,6 +1,17 @@
 
 
-real a1 = 5.23
-real a2 = 12.1
+class Person {
+    constr: fn ~(name, age){
+        self.name = name
+        self.age = age
+    },
+    getName: fn ~(){<- self.name}
+}
 
-output(a1 + a2)
+# ----------
+# obj person = {
+#     name:"john",
+#     age:26,
+#     sayHi:fn sayHi(){}
+# }
+

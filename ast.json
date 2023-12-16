@@ -2,17 +2,91 @@
     "kind": "program",
     "body": [
         {
-            "kind": "callExpression",
-            "arguments": [
+            "kind": "classStatement",
+            "name": "Person",
+            "body": [
                 {
-                    "kind": "stringLiteral",
-                    "value": "hello world"
+                    "kind": "propertyLiteral",
+                    "key": "constr",
+                    "value": {
+                        "kind": "functionDeclaration",
+                        "name": "~",
+                        "parameters": [
+                            {
+                                "kind": "identifier",
+                                "symbol": "name"
+                            },
+                            {
+                                "kind": "identifier",
+                                "symbol": "age"
+                            }
+                        ],
+                        "body": [
+                            {
+                                "kind": "assignmentExpression",
+                                "assigne": {
+                                    "kind": "memberExpression",
+                                    "object": {
+                                        "kind": "identifier",
+                                        "symbol": "self"
+                                    },
+                                    "property": {
+                                        "kind": "identifier",
+                                        "symbol": "name"
+                                    }
+                                },
+                                "value": {
+                                    "kind": "identifier",
+                                    "symbol": "name"
+                                }
+                            },
+                            {
+                                "kind": "assignmentExpression",
+                                "assigne": {
+                                    "kind": "memberExpression",
+                                    "object": {
+                                        "kind": "identifier",
+                                        "symbol": "self"
+                                    },
+                                    "property": {
+                                        "kind": "identifier",
+                                        "symbol": "age"
+                                    }
+                                },
+                                "value": {
+                                    "kind": "identifier",
+                                    "symbol": "age"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "kind": "propertyLiteral",
+                    "key": "getName",
+                    "value": {
+                        "kind": "functionDeclaration",
+                        "name": "~",
+                        "parameters": [],
+                        "body": [
+                            {
+                                "kind": "returnExpression",
+                                "value": {
+                                    "kind": "memberExpression",
+                                    "object": {
+                                        "kind": "identifier",
+                                        "symbol": "self"
+                                    },
+                                    "property": {
+                                        "kind": "identifier",
+                                        "symbol": "name"
+                                    }
+                                }
+                            }
+                        ]
+                    }
                 }
-            ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "output"
-            }
+            ]
         }
     ]
 }
