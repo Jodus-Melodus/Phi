@@ -132,6 +132,8 @@ class App(ctk.CTk):
         self.code = ''
         self.error = ''
         self.openEditors = {}
+        self.intelliSenseBoxes = {}
+        self.snippetMenus = {}
         self.tabNamesPaths = {}
         self.menuOpen = False
         self.rightMenuOpen = False
@@ -390,9 +392,9 @@ class App(ctk.CTk):
 
             editor.pack(expand=True, fill='both')
 
-            self.intelliSenseBox = Dropdown(editor, 300, 100, [
+            self.intelliSenseBoxes[tabName] = Dropdown(editor, 300, 100, [
             ], self.intelliSenseClickInsert, 2, 2, settings['intelliSense-menu-color'])
-            self.snippetMenu = Dropdown(
+            self.snippetMenus[tabName] = Dropdown(
                 editor, 300, 100, [], self.insertSnippet, 2, 2, settings['snippet-menu-color'])
             editor.bind('<KeyPress>', self.editorPress)
 
@@ -492,10 +494,10 @@ class App(ctk.CTk):
         self.updateSyntax()
 
         if hasattr(self, 'intelliSenseBox'):
-            if self.intelliSenseBox.winfo_ismapped():
+            if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
                 self.intelliSenseTrigger()
         if hasattr(self, 'snippetMenu'):
-            if self.snippetMenu.winfo_ismapped():
+            if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
                 self.showSnippets()
 
     def editorPress(self, e=None) -> None:
@@ -515,7 +517,7 @@ class App(ctk.CTk):
             self.variables = re.findall(r'\b[^\d\W]+\b', currentCode)
 
             if hasattr(self, 'intelliSenseBox'):
-                if self.intelliSenseBox.winfo_ismapped():
+                if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
                     self.intelliSenseTrigger()
 
             warning = shell.incrementalParsing(currentCode)
@@ -567,11 +569,11 @@ class App(ctk.CTk):
 
 # Snippets
     def enterSnippets(self) -> None:
-        if self.snippetMenu.winfo_ismapped():
-            if len(self.snippetMenu.items) > 0:
+        if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
+            if len(self.snippetMenus[self.centerTabview.get()].items) > 0:
                 editor = self.currentTab
                 if editor:
-                    snippet = self.snippets[list(self.snippets.keys())[self.snippetMenu.currentSelectedIndex]]
+                    snippet = self.snippets[list(self.snippets.keys())[self.snippetMenus[self.centerTabview.get()].currentSelectedIndex]]
                     currentIndex = editor.index('insert -1l lineend')
                     wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
                     word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
@@ -579,7 +581,7 @@ class App(ctk.CTk):
                     editor.delete(startPos, 'insert')
                     editor.insert(startPos, snippet)
                     editor.focus_set()
-                    self.snippetMenu.place_forget()
+                    self.snippetMenus[self.centerTabview.get()].place_forget()
                     self.updateSyntax()
 
     def insertSnippet(self, snippetName: str) -> None:
@@ -593,13 +595,13 @@ class App(ctk.CTk):
             editor.delete(startPos, 'insert')
             editor.insert(startPos, snippet)
             editor.focus_set()
-            self.snippetMenu.place_forget()
+            self.snippetMenus[self.centerTabview.get()].place_forget()
             self.updateSyntax()
 
     def showSnippets(self, e=None) -> None:
         editor = self.currentTab
         if editor:
-            self.snippetMenu.place_forget()
+            self.snippetMenus[self.centerTabview.get()].place_forget()
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
             wordStart = editor.search(
@@ -607,25 +609,24 @@ class App(ctk.CTk):
             word = editor.get(wordStart, currentIndex).strip(' \n\t\r{[()]}')
 
             size = 4
-            i = self.snippetMenu.currentSelectedIndex
+            i = self.snippetMenus[self.centerTabview.get()].currentSelectedIndex
             startIndex = max(0, i)
             if word:
                 words = []
                 for w in self.snippets:
                     if w.startswith(word):
                         words.append(w)
-                self.snippets = words
                 if len(words) > 0:
-                    if self.intelliSenseBox.winfo_ismapped():
-                        self.intelliSenseBox.place_forget()
-                    endIndex = min(len(self.snippets), i + size + 1)
+                    if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
+                        self.intelliSenseBoxes[self.centerTabview.get()].place_forget()
+                    endIndex = min(len(words), i + size + 1)
             else:
-                if self.intelliSenseBox.winfo_ismapped():
-                    self.intelliSenseBox.place_forget()
+                if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
+                    self.intelliSenseBoxes[self.centerTabview.get()].place_forget()
                 endIndex = min(len(self.snippets), i + size + 1)
-            items = list(self.snippets.copy().keys())
-            self.snippetMenu.items = items[startIndex:endIndex]
-            self.snippetMenu.place(x=x, y=y+30)
+            items = list(self.snippets.keys())
+            self.snippetMenus[self.centerTabview.get()].items = items[startIndex:endIndex]
+            self.snippetMenus[self.centerTabview.get()].place(x=x, y=y+30)
 
     def loadSnippets(self) -> None:
         with open(f'snippets/{self.currentLanguage[1:]}.json') as f:
@@ -661,61 +662,61 @@ class App(ctk.CTk):
 # IntelliSense
     def intelliSenseUpKeyPress(self, e=None) -> None:
         if hasattr(self, 'intelliSenseBox'):
-            if self.intelliSenseBox.winfo_ismapped():
+            if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
                 editor = self.currentTab
                 if editor:
                     editor.mark_set('insert', editor.index('insert +1l lineend'))
-                self.intelliSenseBox.currentSelectedIndex -= 1
-                if self.intelliSenseBox.currentSelectedIndex < 0:
-                    self.intelliSenseBox.currentSelectedIndex = len(
+                self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex -= 1
+                if self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex < 0:
+                    self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex = len(
                         self.intelliSenseWords) - 1
                 self.intelliSenseTrigger()
 
         if hasattr(self, 'snippetMenu'):
-            if self.snippetMenu.winfo_ismapped():
+            if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
                 editor = self.currentTab
                 if editor:
                     editor.mark_set('insert', editor.index('insert +1l lineend'))
-                self.snippetMenu.currentSelectedIndex -= 1
-                if self.snippetMenu.currentSelectedIndex < 0:
-                    self.snippetMenu.currentSelectedIndex = len(
+                self.snippetMenus[self.centerTabview.get()].currentSelectedIndex -= 1
+                if self.snippetMenus[self.centerTabview.get()].currentSelectedIndex < 0:
+                    self.snippetMenus[self.centerTabview.get()].currentSelectedIndex = len(
                         self.snippets) - 1
                 self.showSnippets()
 
     def intelliSenseDownKeyPress(self, e=None) -> None:
         if hasattr(self, 'intelliSenseBox'):
-            if self.intelliSenseBox.winfo_ismapped():
+            if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
                 editor = self.currentTab
                 if editor:
                     editor.mark_set('insert', editor.index('insert -1l lineend'))
-                self.intelliSenseBox.currentSelectedIndex += 1
-                if self.intelliSenseBox.currentSelectedIndex >= len(self.intelliSenseWords):
-                    self.intelliSenseBox.currentSelectedIndex = 0
+                self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex += 1
+                if self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex >= len(self.intelliSenseWords):
+                    self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex = 0
                 self.intelliSenseTrigger()
 
         if hasattr(self, 'snippetMenu'):
-            if self.snippetMenu.winfo_ismapped():
+            if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
                 editor = self.currentTab
                 if editor:
                     editor.mark_set('insert', editor.index('insert -1l lineend'))
-                self.snippetMenu.currentSelectedIndex += 1
-                if self.snippetMenu.currentSelectedIndex >= len(self.snippets):
-                    self.snippetMenu.currentSelectedIndex = 0
+                self.snippetMenus[self.centerTabview.get()].currentSelectedIndex += 1
+                if self.snippetMenus[self.centerTabview.get()].currentSelectedIndex >= len(self.snippets):
+                    self.snippetMenus[self.centerTabview.get()].currentSelectedIndex = 0
                 self.showSnippets()
 
     def intelliSenseTrigger(self, e=None) -> None:
         editor = self.currentTab
         if editor:
-            self.intelliSenseBox.place_forget()
+            self.intelliSenseBoxes[self.centerTabview.get()].place_forget()
             self.intelliSenseWords = list(sorted(list(set(
                 self.languageSyntaxPatterns[self.currentLanguage]['keywords'][2] + self.variables + self.languageSyntaxPatterns[self.currentLanguage]['errors'][2]))))
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
             wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
-            word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
+            word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[.]})')
 
             size = 4
-            i = self.intelliSenseBox.currentSelectedIndex
+            i = self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex
             startIndex = max(0, i)
             if word:
                 words = []
@@ -725,24 +726,24 @@ class App(ctk.CTk):
                 self.intelliSenseWords = words
                 if len(self.intelliSenseWords) > 0:
                     # Hide snippetMenu if present
-                    if self.snippetMenu.winfo_ismapped():
-                        self.snippetMenu.place_forget()
+                    if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
+                        self.snippetMenus[self.centerTabview.get()].place_forget()
                     endIndex = min(len(self.intelliSenseWords), i + size + 1)
             else:
                 # Hide snippetMenu if present
-                if self.snippetMenu.winfo_ismapped():
-                    self.snippetMenu.place_forget()
+                if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
+                    self.snippetMenus[self.centerTabview.get()].place_forget()
                 endIndex = min(len(self.intelliSenseWords), i + size + 1)
 
-            self.intelliSenseBox.items = self.intelliSenseWords[startIndex:endIndex]
-            self.intelliSenseBox.place(x=x, y=y+30)
+            self.intelliSenseBoxes[self.centerTabview.get()].items = self.intelliSenseWords[startIndex:endIndex]
+            self.intelliSenseBoxes[self.centerTabview.get()].place(x=x, y=y+30)
 
     def intelliSenseEnterInsert(self, e=None) -> None:
-        if self.intelliSenseBox.winfo_ismapped():
-            if len(self.intelliSenseBox.items) > 0:
+        if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
+            if len(self.intelliSenseBoxes[self.centerTabview.get()].items) > 0:
                 editor = self.currentTab
                 if editor:
-                    selectedWord = self.intelliSenseWords[self.intelliSenseBox.currentSelectedIndex]
+                    selectedWord = self.intelliSenseWords[self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex]
                     currentIndex = editor.index('insert -1l lineend')
                     wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
                     word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
@@ -750,7 +751,7 @@ class App(ctk.CTk):
                     editor.delete(startPos, 'insert')
                     editor.insert(startPos, selectedWord)
                     editor.focus_set()
-                    self.intelliSenseBox.place_forget()
+                    self.intelliSenseBoxes[self.centerTabview.get()].place_forget()
                     self.updateSyntax()
 
     def intelliSenseClickInsert(self, selected) -> None:
@@ -763,7 +764,7 @@ class App(ctk.CTk):
             editor.delete(startPos, 'insert')
             editor.insert(startPos, selected)
             editor.focus_set()
-            self.intelliSenseBox.place_forget()
+            self.intelliSenseBoxes[self.centerTabview.get()].place_forget()
             self.updateSyntax()
 
 # Menu Bar
@@ -945,11 +946,11 @@ class App(ctk.CTk):
 
     def escapeKeyPress(self, e=None) -> None:
         if hasattr(self, 'intelliSenseBox'):
-            if self.intelliSenseBox.winfo_ismapped():
-                self.intelliSenseBox.place_forget
+            if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
+                self.intelliSenseBoxes[self.centerTabview.get()].place_forget()
         if hasattr(self, 'snippetMenu'):
-            if self.snippetMenu.winfo_ismapped():
-                self.snippetMenu.place_forget
+            if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
+                self.snippetMenus[self.centerTabview.get()].place_forget()
 
     def prevTab(self, e=None) -> None:
         tabs = list(self.centerTabview._tab_dict.keys())

@@ -40,6 +40,7 @@ class nameError(error):
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
+{self.stage}
 [Name Error] Ln {self.line}, Col {self.column}:
 '{self.name}' is not defined
 '''
