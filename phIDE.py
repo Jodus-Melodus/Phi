@@ -623,7 +623,7 @@ class App(ctk.CTk):
                 if self.intelliSenseBox.winfo_ismapped():
                     self.intelliSenseBox.place_forget()
                 endIndex = min(len(self.snippets), i + size + 1)
-            items = list(self.snippets.copy().keys())
+            items = self.snippets
             self.snippetMenu.items = items[startIndex:endIndex]
             self.snippetMenu.place(x=x, y=y+30)
 

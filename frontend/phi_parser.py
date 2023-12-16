@@ -510,7 +510,10 @@ class Parser:
         if self.get().type != TT.assignmentOperator:
             if self.get().type in (TT.eof, TT.lineend):
                 self.eat()
-            return variableDeclarationExpressionNode(datatype, identifier, self.datetypeMap[datatype], constant, self.line, self.column)
+            if datatype in ('int', 'string', 'real', 'array', 'object', 'bool', 'lambda'):
+                return variableDeclarationExpressionNode(datatype, identifier, self.datetypeMap[datatype], constant, self.line, self.column)
+            else:
+                return syntaxError(self, "Expected a variable declaration", self.column, self.line)
         else:
             self.eat()
             statement = self.parseStatement()

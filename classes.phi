@@ -1,0 +1,8 @@
+
+export obj classes = {
+    class:fn ~(attrs, values){
+        obj cls = {}
+
+
+    }
+}
