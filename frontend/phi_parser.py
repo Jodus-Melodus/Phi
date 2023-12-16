@@ -371,7 +371,7 @@ class Parser:
 
         if self.get().type == TT.openParenthesis:
             self.eat()
-            if self.get().type in ('int', 'real', 'str'):
+            if self.get().type in ('int', 'real', 'string'):
                 declaration = self.parseVariableDeclaration()
                 if isinstance(declaration, error):
                     return declaration
