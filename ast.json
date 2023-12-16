@@ -2,47 +2,105 @@
     "kind": "program",
     "body": [
         {
-            "kind": "exportExpression",
+            "kind": "importExpression",
             "value": {
-                "kind": "variableDeclarationExpression",
-                "datatype": "object",
-                "identifier": "classes",
-                "value": {
-                    "kind": "objectLiteral",
-                    "properties": [
-                        {
-                            "kind": "propertyLiteral",
-                            "key": "class",
-                            "value": {
-                                "kind": "functionDeclaration",
-                                "name": "~",
-                                "parameters": [
-                                    {
-                                        "kind": "identifier",
-                                        "symbol": "attrs"
-                                    },
-                                    {
-                                        "kind": "identifier",
-                                        "symbol": "values"
-                                    }
-                                ],
-                                "body": [
-                                    {
-                                        "kind": "variableDeclarationExpression",
-                                        "datatype": "object",
-                                        "identifier": "cls",
-                                        "value": {
-                                            "kind": "objectLiteral",
-                                            "properties": []
-                                        },
-                                        "constant": "False"
-                                    }
-                                ]
-                            }
+                "kind": "identifier",
+                "symbol": "classes"
+            }
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "array",
+            "identifier": "attrs",
+            "value": {
+                "kind": "arrayLiteral",
+                "items": [
+                    {
+                        "kind": "itemLiteral",
+                        "index": 0,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "a"
                         }
-                    ]
+                    }
+                ]
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "array",
+            "identifier": "values",
+            "value": {
+                "kind": "arrayLiteral",
+                "items": [
+                    {
+                        "kind": "itemLiteral",
+                        "index": 0,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 3
+                        }
+                    }
+                ]
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "assignmentExpression",
+            "assigne": {
+                "kind": "memberExpression",
+                "object": {
+                    "kind": "identifier",
+                    "symbol": "classes"
                 },
-                "constant": "False"
+                "property": {
+                    "kind": "identifier",
+                    "symbol": "attrs"
+                }
+            },
+            "value": {
+                "kind": "identifier",
+                "symbol": "attrs"
+            }
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "object",
+            "identifier": "x",
+            "value": {
+                "kind": "callExpression",
+                "arguments": [
+                    {
+                        "kind": "identifier",
+                        "symbol": "values"
+                    }
+                ],
+                "caller": {
+                    "kind": "memberExpression",
+                    "object": {
+                        "kind": "identifier",
+                        "symbol": "classes"
+                    },
+                    "property": {
+                        "kind": "identifier",
+                        "symbol": "class"
+                    }
+                }
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "x"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
             }
         }
     ]

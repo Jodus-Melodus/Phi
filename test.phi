@@ -1,6 +1,32 @@
+import classes
+
+array attrs = ['a']
+array values = [3]
+
+classes.attrs = attrs
+
+obj x = classes.class(values)
+
+output(x)
 
 
-real a1 = 5.23
-real a2 = 12.1
 
-output(a1 + a2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
