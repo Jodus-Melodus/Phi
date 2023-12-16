@@ -5,141 +5,23 @@
             "kind": "importExpression",
             "value": {
                 "kind": "identifier",
-                "symbol": "classes"
+                "symbol": "MATH"
             }
-        },
-        {
-            "kind": "assignmentExpression",
-            "assigne": {
-                "kind": "memberExpression",
-                "object": {
-                    "kind": "identifier",
-                    "symbol": "classes"
-                },
-                "property": {
-                    "kind": "identifier",
-                    "symbol": "attrs"
-                },
-                "computed": "True"
-            },
-            "value": {
-                "kind": "arrayLiteral",
-                "items": [
-                    {
-                        "kind": "itemLiteral",
-                        "index": 0,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "name"
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 1,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "age"
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 2,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "sayHi"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "lambda",
-            "identifier": "sayHi",
-            "value": {
-                "kind": "functionDeclaration",
-                "name": "~",
-                "parameters": [],
-                "body": [
-                    {
-                        "kind": "returnExpression",
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "hi"
-                        }
-                    }
-                ]
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "array",
-            "identifier": "values",
-            "value": {
-                "kind": "arrayLiteral",
-                "items": [
-                    {
-                        "kind": "itemLiteral",
-                        "index": 0,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "John"
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 1,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 32
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 2,
-                        "value": {
-                            "kind": "identifier",
-                            "symbol": "sayHi"
-                        }
-                    }
-                ]
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "object",
-            "identifier": "person",
-            "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "identifier",
-                        "symbol": "values"
-                    }
-                ],
-                "caller": {
-                    "kind": "memberExpression",
-                    "object": {
-                        "kind": "identifier",
-                        "symbol": "classes"
-                    },
-                    "property": {
-                        "kind": "identifier",
-                        "symbol": "class"
-                    },
-                    "computed": "True"
-                }
-            },
-            "constant": "False"
         },
         {
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "identifier",
-                    "symbol": "person"
+                    "kind": "memberExpression",
+                    "object": {
+                        "kind": "identifier",
+                        "symbol": "MATH"
+                    },
+                    "property": {
+                        "kind": "identifier",
+                        "symbol": "pi"
+                    },
+                    "computed": "True"
                 }
             ],
             "caller": {
@@ -148,17 +30,36 @@
             }
         },
         {
+            "kind": "assignmentExpression",
+            "assigne": {
+                "kind": "memberExpression",
+                "object": {
+                    "kind": "identifier",
+                    "symbol": "math"
+                },
+                "property": {
+                    "kind": "identifier",
+                    "symbol": "pi"
+                },
+                "computed": "True"
+            },
+            "value": {
+                "kind": "realLiteral",
+                "value": 34.2
+            }
+        },
+        {
             "kind": "callExpression",
             "arguments": [
                 {
                     "kind": "memberExpression",
                     "object": {
                         "kind": "identifier",
-                        "symbol": "person"
+                        "symbol": "math"
                     },
                     "property": {
                         "kind": "identifier",
-                        "symbol": "name"
+                        "symbol": "pi"
                     },
                     "computed": "True"
                 }

@@ -194,6 +194,8 @@ class Interpreter:
             else:
                 prop = self.evaluate(member.property, env)
             currentValue: dict = env.lookup(varName)
+            if isinstance(currentValue, error):
+                return currentValue
             currentValue.properties[prop] = self.evaluate(assignmentExpression.value, env)
             return env.assignVariable(varName.symbol, currentValue)
         else:
@@ -543,13 +545,17 @@ class Interpreter:
             elif isinstance(importExpression.name, identifierNode):
                 name = importExpression.name.symbol
 
+            path = path.lower()
             if os.path.exists(f'{path}.phi'):
                 with open(f'{path}.phi', 'r') as f:
                     code = '\n'.join(f.readlines())
 
                 code = run(code)
                 if isinstance(code, exportValue):
-                    return env.declareVariable(name, code.value, False)
+                    if name.isupper():
+                        return env.declareVariable(name, code.value, True)
+                    else:
+                        return env.declareVariable(name, code.value, False)
                 else:
                     return nullValue()
             else:

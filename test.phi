@@ -1,20 +1,9 @@
-import classes
+import MATH
 
-classes.attrs = ['name', 'age', 'sayHi']
+output(MATH.pi)
 
-lambda sayHi = fn ~(){<- "hi"}
+MATH.pi = 34.2
 
-array values = ["John", 32, sayHi]
-obj person = classes.class(values)
-
-
-output(person)
-
-
-output(person.name)
-output(person.age)
-output(person.sayHi())
-
-
+output(MATH.pi)
 
 
