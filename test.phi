@@ -1,4 +1,6 @@
 
 
+real a1 = 5.23
+real a2 = 12.1
 
-output("hello world")
+output(a1 + a2)

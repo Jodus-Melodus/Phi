@@ -13,35 +13,6 @@
                 "kind": "identifier",
                 "symbol": "output"
             }
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "binaryExpression",
-                    "left": {
-                        "kind": "binaryExpression",
-                        "left": {
-                            "kind": "integerLiteral",
-                            "value": 4
-                        },
-                        "operand": "+",
-                        "right": {
-                            "kind": "integerLiteral",
-                            "value": 2
-                        }
-                    },
-                    "operand": "-",
-                    "right": {
-                        "kind": "integerLiteral",
-                        "value": 2
-                    }
-                }
-            ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "output"
-            }
         }
     ]
 }
