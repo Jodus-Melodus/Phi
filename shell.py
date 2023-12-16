@@ -3,7 +3,7 @@ from frontend.phi_lexer import *
 from frontend.phi_parser import *
 from backend.phi_interpreter import *
 from backend.phi_environment import *
-import json, os, keyboard
+import json, os
 
 ran = False
 
