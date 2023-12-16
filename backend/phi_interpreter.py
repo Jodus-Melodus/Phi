@@ -193,7 +193,7 @@ class Interpreter:
             currentValue: dict = env.lookup(varName)
             currentValue.properties[prop] = self.evaluate(
                 assignmentExpression.value, env)
-            return env.assignVariable(varName, currentValue)
+            return env.assignVariable(varName.symbol, currentValue)
         else:
             return syntaxError(self, 'Expected an identifier.', assignmentExpression.assigne.column, assignmentExpression.assigne.line)
 
@@ -273,7 +273,16 @@ class Interpreter:
         return nullValue()
 
     def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
-        obj: objectValue = env.lookup(member.object)
+        if isinstance(member.object, memberExpressionNode):
+            x = self.evaluate(member.object, env)
+        else:
+            x = member.object
+        
+        if not isinstance(x, (objectValue, arrayValue, stringValue)):
+            obj: objectValue = env.lookup(x)
+        else:
+            obj = x
+
 
         if isinstance(obj, objectValue):
             if isinstance(member.property, identifierNode):
@@ -521,7 +530,7 @@ class Interpreter:
 
                 code = run(code)
                 if isinstance(code, exportValue):
-                    return env.declareVariable(name, code.value, True)
+                    return env.declareVariable(name, code.value, False)
                 else:
                     return nullValue()
             else:
