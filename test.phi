@@ -1,31 +1,19 @@
 import classes
 
-array attrs = ['a']
-array values = [3]
+classes.attrs = ['name', 'age', 'sayHi']
 
-classes.attrs = attrs
+lambda sayHi = fn ~(){<- "hi"}
 
-obj x = classes.class(values)
-
-output(x)
+array values = ["John", 32, sayHi]
+obj person = classes.class(values)
 
 
+output(person)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+output(person.name)
+output(person.age)
+output(person.sayHi())
 
 
 

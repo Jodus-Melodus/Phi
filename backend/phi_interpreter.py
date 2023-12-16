@@ -189,10 +189,12 @@ class Interpreter:
         elif isinstance(assignmentExpression.assigne, memberExpressionNode):
             member: memberExpressionNode = assignmentExpression.assigne
             varName = member.object
-            prop = member.property.symbol
+            if assignmentExpression.assigne.computed:
+                prop = member.property.symbol
+            else:
+                prop = self.evaluate(member.property, env)
             currentValue: dict = env.lookup(varName)
-            currentValue.properties[prop] = self.evaluate(
-                assignmentExpression.value, env)
+            currentValue.properties[prop] = self.evaluate(assignmentExpression.value, env)
             return env.assignVariable(varName.symbol, currentValue)
         else:
             return syntaxError(self, 'Expected an identifier.', assignmentExpression.assigne.column, assignmentExpression.assigne.line)
@@ -286,14 +288,31 @@ class Interpreter:
 
         if isinstance(obj, objectValue):
             if isinstance(member.property, identifierNode):
+                if isinstance(list(obj.properties.keys())[0], stringValue):
+                    old = obj.properties.copy()
+                    new = {}
+                    for key in old:
+                        if isinstance(key, stringValue):
+                            new[key.value] = old[key]
+                    obj.properties = new
+
                 if member.property.symbol in obj.methods:
                     return obj.methods[member.property.symbol]
-                elif member.property.symbol not in obj.properties:
-                    return keyError(self, member.property.symbol, member.object.symbol, member.property.column, member.property.line)
+                elif member.property.symbol in obj.properties:
+                    return obj.properties[member.property.symbol]
+                else:
+                    v = self.evaluate(member.property, env)
+                    if isinstance(v, error):
+                        return v
+                    elif v.value in obj.properties:
+                        return obj.properties[v.value]
+                    else:
+                        return keyError(self, v, obj, v.column, v.line)
 
-                elif isinstance(member.property, stringValue):
-                    return obj.properties[member.property.value]
-                return obj.properties[member.property.symbol]
+            elif isinstance(member.property, stringLiteralNode):
+                return obj.properties[member.property.value]
+            else:
+                return typeError(self, "Expected an identifier or a string value", self.column, self.line)
         elif isinstance(obj, (arrayValue, stringValue)):
             if isinstance(member.property, integerLiteralNode):
                 if member.property.value not in obj.items:

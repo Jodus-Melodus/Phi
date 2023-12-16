@@ -709,7 +709,7 @@ class Parser:
             operand = self.eat()
 
             if operand.type == TT.period:
-                computed = False
+                computed = True
                 prop = self.parsePrimaryExpression()
                 if prop != None:
                     if isinstance(prop, error):
@@ -717,7 +717,7 @@ class Parser:
                     if prop.kind != ('identifier'):
                         return syntaxError(self, "Invalid syntax", self.column, self.line)
             else:
-                computed = True
+                computed = False
                 prop = self.parseExpression()
                 if isinstance(prop, error):
                     return prop

@@ -354,7 +354,8 @@ class memberExpressionNode(Node):
         return str({
             'kind': self.kind,
             'object': self.object,
-            'property': self.property
+            'property': self.property,
+            'computed':str(self.computed)
         })
 
 

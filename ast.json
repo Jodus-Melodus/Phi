@@ -9,9 +9,19 @@
             }
         },
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "array",
-            "identifier": "attrs",
+            "kind": "assignmentExpression",
+            "assigne": {
+                "kind": "memberExpression",
+                "object": {
+                    "kind": "identifier",
+                    "symbol": "classes"
+                },
+                "property": {
+                    "kind": "identifier",
+                    "symbol": "attrs"
+                },
+                "computed": "True"
+            },
             "value": {
                 "kind": "arrayLiteral",
                 "items": [
@@ -20,7 +30,42 @@
                         "index": 0,
                         "value": {
                             "kind": "stringLiteral",
-                            "value": "a"
+                            "value": "name"
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 1,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "age"
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 2,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "sayHi"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "lambda",
+            "identifier": "sayHi",
+            "value": {
+                "kind": "functionDeclaration",
+                "name": "~",
+                "parameters": [],
+                "body": [
+                    {
+                        "kind": "returnExpression",
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "hi"
                         }
                     }
                 ]
@@ -38,8 +83,24 @@
                         "kind": "itemLiteral",
                         "index": 0,
                         "value": {
+                            "kind": "stringLiteral",
+                            "value": "John"
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 1,
+                        "value": {
                             "kind": "integerLiteral",
-                            "value": 3
+                            "value": 32
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 2,
+                        "value": {
+                            "kind": "identifier",
+                            "symbol": "sayHi"
                         }
                     }
                 ]
@@ -47,27 +108,9 @@
             "constant": "False"
         },
         {
-            "kind": "assignmentExpression",
-            "assigne": {
-                "kind": "memberExpression",
-                "object": {
-                    "kind": "identifier",
-                    "symbol": "classes"
-                },
-                "property": {
-                    "kind": "identifier",
-                    "symbol": "attrs"
-                }
-            },
-            "value": {
-                "kind": "identifier",
-                "symbol": "attrs"
-            }
-        },
-        {
             "kind": "variableDeclarationExpression",
             "datatype": "object",
-            "identifier": "x",
+            "identifier": "person",
             "value": {
                 "kind": "callExpression",
                 "arguments": [
@@ -85,7 +128,8 @@
                     "property": {
                         "kind": "identifier",
                         "symbol": "class"
-                    }
+                    },
+                    "computed": "True"
                 }
             },
             "constant": "False"
@@ -95,7 +139,28 @@
             "arguments": [
                 {
                     "kind": "identifier",
-                    "symbol": "x"
+                    "symbol": "person"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
+            }
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "memberExpression",
+                    "object": {
+                        "kind": "identifier",
+                        "symbol": "person"
+                    },
+                    "property": {
+                        "kind": "identifier",
+                        "symbol": "name"
+                    },
+                    "computed": "True"
                 }
             ],
             "caller": {
