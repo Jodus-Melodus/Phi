@@ -8,7 +8,7 @@ if sys.platform == "win32":
 additionalFiles = [
     'syntax.json',
     'snippets',
-    'main.py',
+    'shell.py',
     'settings.json',
     'math.phi'
 ]

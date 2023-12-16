@@ -505,7 +505,7 @@ class Interpreter:
         return exportValue(self.evaluate(exportExpression.value, env), exportExpression.line, exportExpression.column)
 
     def evaluateImportExpression(self, importExpression: importNode, env: environment):
-        from main import run
+        from shell import run
         path = importExpression.value
         if isinstance(path, identifierNode):
             path = path.symbol

@@ -1,7 +1,7 @@
 import json
 import sys
 import re
-import main
+import shell
 import time
 import customtkinter as ctk
 from customtkinter import filedialog
@@ -466,7 +466,7 @@ class App(ctk.CTk):
 
             currentCode = editor.get('0.0', 'end')
 
-            warning = main.incrementalParsing(currentCode)
+            warning = shell.incrementalParsing(currentCode)
             self.warnings.configure(state='normal')
             self.warnings.delete('0.0', 'end')
             self.warnings.configure(state='disabled')
@@ -518,7 +518,7 @@ class App(ctk.CTk):
                 if self.intelliSenseBox.winfo_ismapped():
                     self.intelliSenseTrigger()
 
-            warning = main.incrementalParsing(currentCode)
+            warning = shell.incrementalParsing(currentCode)
             self.warnings.configure(state='normal')
             self.warnings.delete('0.0', 'end')
             self.warnings.configure(state='disabled')
@@ -1031,7 +1031,7 @@ class App(ctk.CTk):
                 sourceCode = ''.join(f.readlines())
             start = time.time()
             self.console['state'] = 'normal'
-            error = main.run(sourceCode)
+            error = shell.run(sourceCode)
             if error:
                 editor = self.currentTab
                 if editor:

@@ -2,18 +2,46 @@
     "kind": "program",
     "body": [
         {
-            "kind": "ifStatement",
-            "conditionLeft": {
-                "kind": "integerLiteral",
-                "value": 3
-            },
-            "operand": ">",
-            "conditionRight": {
-                "kind": "integerLiteral",
-                "value": 1
-            },
-            "body": [],
-            "elsebody": []
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "stringLiteral",
+                    "value": "hello world"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
+            }
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "binaryExpression",
+                    "left": {
+                        "kind": "binaryExpression",
+                        "left": {
+                            "kind": "integerLiteral",
+                            "value": 4
+                        },
+                        "operand": "+",
+                        "right": {
+                            "kind": "integerLiteral",
+                            "value": 2
+                        }
+                    },
+                    "operand": "-",
+                    "right": {
+                        "kind": "integerLiteral",
+                        "value": 2
+                    }
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
+            }
         }
     ]
 }
