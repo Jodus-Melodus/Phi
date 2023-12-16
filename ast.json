@@ -5,68 +5,28 @@
             "kind": "importExpression",
             "value": {
                 "kind": "identifier",
-                "symbol": "MATH"
+                "symbol": "debug"
             }
         },
         {
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "memberExpression",
-                    "object": {
-                        "kind": "identifier",
-                        "symbol": "MATH"
-                    },
-                    "property": {
-                        "kind": "identifier",
-                        "symbol": "pi"
-                    },
-                    "computed": "True"
+                    "kind": "stringLiteral",
+                    "value": "hi"
                 }
             ],
             "caller": {
-                "kind": "identifier",
-                "symbol": "output"
-            }
-        },
-        {
-            "kind": "assignmentExpression",
-            "assigne": {
                 "kind": "memberExpression",
                 "object": {
                     "kind": "identifier",
-                    "symbol": "math"
+                    "symbol": "debug"
                 },
                 "property": {
                     "kind": "identifier",
-                    "symbol": "pi"
+                    "symbol": "log"
                 },
                 "computed": "True"
-            },
-            "value": {
-                "kind": "realLiteral",
-                "value": 34.2
-            }
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "memberExpression",
-                    "object": {
-                        "kind": "identifier",
-                        "symbol": "math"
-                    },
-                    "property": {
-                        "kind": "identifier",
-                        "symbol": "pi"
-                    },
-                    "computed": "True"
-                }
-            ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "output"
             }
         }
     ]

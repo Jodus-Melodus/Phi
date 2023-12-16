@@ -277,7 +277,7 @@ class Interpreter:
         return nullValue()
 
     def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
-        if isinstance(member.object, memberExpressionNode):
+        if isinstance(member.object, (memberExpressionNode, stringLiteralNode)):
             x = self.evaluate(member.object, env)
         else:
             x = member.object

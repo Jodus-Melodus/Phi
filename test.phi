@@ -1,9 +1,8 @@
-import MATH
+import debug
 
-output(MATH.pi)
+debug.log(43 + 2)
 
-MATH.pi = 34.2
+debug.warning("This is unstable")
 
-output(MATH.pi)
-
+debug.error("An error occured")
 
