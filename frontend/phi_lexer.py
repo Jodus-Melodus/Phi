@@ -69,7 +69,7 @@ class TokenType:
 
 TT = TokenType()
 DIGITS = '12345678890'
-ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-'
+ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 KEYWORDS = {
     'fn': TT.fn,
@@ -302,7 +302,7 @@ class Lexer:
 
                         while len(self.sourceCode) > 0:
                             char = self.get()
-                            if char in ALPHABET + '1234567890':
+                            if char in ALPHABET + '_-1234567890':
                                 name += char
                             else:
                                 break
