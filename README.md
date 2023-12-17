@@ -24,7 +24,7 @@ The exe can be located in the [Shell](Shell) folder.
 
 The exe can be located in the [phIDE](phIDE) folder.
 
-## NOTE !!!!!!!
+## NOTE
 
 Please do not move the executables out of their folders! You can make a shortcut otherwise it will not run.
 
