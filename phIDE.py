@@ -573,7 +573,9 @@ class App(ctk.CTk):
             if len(self.snippetMenus[self.centerTabview.get()].items) > 0:
                 editor = self.currentTab
                 if editor:
-                    snippet = self.snippets[list(self.snippets.keys())[self.snippetMenus[self.centerTabview.get()].currentSelectedIndex]]
+                    items = self.snippetMenus[self.centerTabview.get()].items
+                    index = self.snippetMenus[self.centerTabview.get()].currentSelectedIndex
+                    snippet = self.snippets[items[index]]
                     currentIndex = editor.index('insert -1l lineend')
                     wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
                     word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
@@ -624,8 +626,9 @@ class App(ctk.CTk):
                 if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
                     self.intelliSenseBoxes[self.centerTabview.get()].place_forget()
                 endIndex = min(len(self.snippets), i + size + 1)
-            items = list(self.snippets.keys())
-            self.snippetMenus[self.centerTabview.get()].items = items[startIndex:endIndex]
+                words = list(self.snippets.keys())
+
+            self.snippetMenus[self.centerTabview.get()].items = words[startIndex:endIndex]
             self.snippetMenus[self.centerTabview.get()].place(x=x, y=y+30)
 
     def loadSnippets(self) -> None:
@@ -661,7 +664,7 @@ class App(ctk.CTk):
 
 # IntelliSense
     def intelliSenseUpKeyPress(self, e=None) -> None:
-        if hasattr(self, 'intelliSenseBox'):
+        if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
             if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
                 editor = self.currentTab
                 if editor:
@@ -672,7 +675,7 @@ class App(ctk.CTk):
                         self.intelliSenseWords) - 1
                 self.intelliSenseTrigger()
 
-        if hasattr(self, 'snippetMenu'):
+        if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
             if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
                 editor = self.currentTab
                 if editor:
@@ -680,11 +683,11 @@ class App(ctk.CTk):
                 self.snippetMenus[self.centerTabview.get()].currentSelectedIndex -= 1
                 if self.snippetMenus[self.centerTabview.get()].currentSelectedIndex < 0:
                     self.snippetMenus[self.centerTabview.get()].currentSelectedIndex = len(
-                        self.snippets) - 1
+                        self.snippetMenus[self.centerTabview.get()].items) - 1
                 self.showSnippets()
 
     def intelliSenseDownKeyPress(self, e=None) -> None:
-        if hasattr(self, 'intelliSenseBox'):
+        if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
             if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
                 editor = self.currentTab
                 if editor:
@@ -694,13 +697,13 @@ class App(ctk.CTk):
                     self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex = 0
                 self.intelliSenseTrigger()
 
-        if hasattr(self, 'snippetMenu'):
+        if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
             if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
                 editor = self.currentTab
                 if editor:
                     editor.mark_set('insert', editor.index('insert -1l lineend'))
                 self.snippetMenus[self.centerTabview.get()].currentSelectedIndex += 1
-                if self.snippetMenus[self.centerTabview.get()].currentSelectedIndex >= len(self.snippets):
+                if self.snippetMenus[self.centerTabview.get()].currentSelectedIndex >= len(self.snippetMenus[self.centerTabview.get()].items):
                     self.snippetMenus[self.centerTabview.get()].currentSelectedIndex = 0
                 self.showSnippets()
 
