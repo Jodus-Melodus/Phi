@@ -560,11 +560,12 @@ class Interpreter:
                 name = importExpression.name.symbol
 
             path = path.lower()
-            if os.path.exists(f'{path}.phi'):
-                with open(f'{path}.phi', 'r') as f:
+            path = f'Modules/{path}.phi'
+            if os.path.exists(path):
+                with open(path, 'r') as f:
                     code = '\n'.join(f.readlines())
 
-                code = run(code, path + '.phi')
+                code = run(code, path)
                 if isinstance(code, exportValue):
                     if name.isupper():
                         return env.declareVariable(name, code.value, True)

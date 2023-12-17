@@ -10,7 +10,11 @@ additionalFiles = [
     'snippets',
     'shell.py',
     'settings.json',
-    'phi-theme.json'
+    'phi-theme.json',
+    'Modules',
+    'frontend',
+    'backend',
+    'ExamplePrograms'
 ]
 
 exe = Executable(

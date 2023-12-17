@@ -1,10 +1,4 @@
+import math
 
 
-str x = "hello\nworld\t\thi"
-
-output(x)
-
-
-
-
-
+output(math.e)
