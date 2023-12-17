@@ -786,4 +786,4 @@ class Parser:
                 else:
                     return syntaxError(self.filePath, self, "Expected an identifier", self.column, self.line)
             case _:
-                return syntaxError(self.filePath, self, f"Invalid token '{self.get()}' found", self.column, self.line)
+                return syntaxError(self.filePath, self, f"Invalid token '{self.get().type}' found", self.column, self.line)
