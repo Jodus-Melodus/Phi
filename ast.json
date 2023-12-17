@@ -12,8 +12,16 @@
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "stringLiteral",
-                    "value": "hi"
+                    "kind": "binaryExpression",
+                    "left": {
+                        "kind": "integerLiteral",
+                        "value": 43
+                    },
+                    "operand": "+",
+                    "right": {
+                        "kind": "integerLiteral",
+                        "value": 2
+                    }
                 }
             ],
             "caller": {
@@ -25,6 +33,48 @@
                 "property": {
                     "kind": "identifier",
                     "symbol": "log"
+                },
+                "computed": "True"
+            }
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "stringLiteral",
+                    "value": "This is unstable"
+                }
+            ],
+            "caller": {
+                "kind": "memberExpression",
+                "object": {
+                    "kind": "identifier",
+                    "symbol": "debug"
+                },
+                "property": {
+                    "kind": "identifier",
+                    "symbol": "warning"
+                },
+                "computed": "True"
+            }
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "stringLiteral",
+                    "value": "An error occured"
+                }
+            ],
+            "caller": {
+                "kind": "memberExpression",
+                "object": {
+                    "kind": "identifier",
+                    "symbol": "debug"
+                },
+                "property": {
+                    "kind": "identifier",
+                    "symbol": "error"
                 },
                 "computed": "True"
             }
