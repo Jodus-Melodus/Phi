@@ -1,0 +1,83 @@
+{
+    ".phi": {
+        "keywords": [
+            "#3d81ff",
+            "(?<!\\w)(output|for|in|case|match|input|throw|each|try|catch|continue|break|type|while|if|int|Real|Int|Str|as|lambda|real|import|export|obj|array|bool|str|items|now|length|wait|hash|fn|do|else|append|keys|join|format)(?!\\w)",
+            [
+                "output",
+                "input",
+                "type",
+                "while",
+                "break",
+                "case",
+                "match",
+                "throw",
+                "continue",
+                "each",
+                "for",
+                "if",
+                "int",
+                "real",
+                "str",
+                "Int",
+                "Str",
+                "Real",
+                "obj",
+                "array",
+                "now",
+                "wait",
+                "root",
+                "fn",
+                "do",
+                "try",
+                "catch",
+                "else",
+                "hash",
+                "lambda",
+                "bool",
+                "export",
+                "import",
+                "as",
+                ".length",
+                ".append",
+                ".join",
+                ".format",
+                ".items",
+                ".keys"
+            ]
+        ],
+        "symbols": [
+            "#ffb617",
+            "(==|!=|&|\\||<-|<=|>=|<|>|{|}|\\[|\\]|\\(|\\)|\\+=|-=|\\*=|\/=|%=|\\^=|\\+|-|\\*|\/|%|\\^|)",
+            []
+        ],
+        "numbers": [
+            "#ec00a5",
+            "\b\\d+\b",
+            []
+        ],
+        "strings": [
+            "#52ff5b",
+            "(\"(.*?)\"|'(.*?)')",
+            []
+        ],
+        "comments": [
+            "#6b6b6b",
+            "#.*",
+            []
+        ],
+        "errors": [
+            "#bb0000",
+            "(?<!\\w)(syntaxError|keyError|nameError|notImplementerError|invalidCharacterError|typeError|zeroDivisionError)(?!\\w)",
+            [
+                "syntaxError",
+                "keyError",
+                "nameError",
+                "notImplementerError",
+                "invalidCharacterError",
+                "typeError",
+                "zeroDivisionError"
+            ]
+        ]
+    }
+}
