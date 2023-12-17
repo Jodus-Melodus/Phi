@@ -468,7 +468,7 @@ class App(ctk.CTk):
 
             currentCode = editor.get('0.0', 'end')
 
-            warning = shell.incrementalParsing(currentCode)
+            warning = shell.incrementalParsing(currentCode, self.currentPath)
             self.warnings.configure(state='normal')
             self.warnings.delete('0.0', 'end')
             self.warnings.configure(state='disabled')
@@ -520,7 +520,7 @@ class App(ctk.CTk):
                 if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
                     self.intelliSenseTrigger()
 
-            warning = shell.incrementalParsing(currentCode)
+            warning = shell.incrementalParsing(currentCode, self.currentPath)
             self.warnings.configure(state='normal')
             self.warnings.delete('0.0', 'end')
             self.warnings.configure(state='disabled')
@@ -1032,7 +1032,7 @@ class App(ctk.CTk):
                 sourceCode = ''.join(f.readlines())
             start = time.time()
             self.console['state'] = 'normal'
-            error = shell.run(sourceCode)
+            error = shell.run(sourceCode, self.currentPath)
             if error:
                 editor = self.currentTab
                 if editor:

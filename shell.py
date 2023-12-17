@@ -7,14 +7,14 @@ import json, os
 
 ran = False
 
-def incrementalParsing(sourceCode:str, x=False):
+def incrementalParsing(sourceCode:str, filePath:str='', x=False):
     global ran, environment
-    environment = createGlobalEnvironment()
-    lexer = Lexer(sourceCode)
+    environment = createGlobalEnvironment(filePath=filePath)
+    lexer = Lexer(sourceCode, filePath)
     tokens = lexer.tokenize()
     if isinstance(tokens, error):
         return tokens
-    parser = Parser(tokens)
+    parser = Parser(tokens, filePath)
     ast = parser.genAST()
     if isinstance(ast, error):
         return ast
@@ -29,9 +29,9 @@ def incrementalParsing(sourceCode:str, x=False):
     else:
         return ''
 
-def run(sourceCode:str) -> None|error:
-    ast = incrementalParsing(sourceCode, True)
-    interpreter = Interpreter()
+def run(sourceCode:str, filePath:str='') -> None|error:
+    ast = incrementalParsing(sourceCode, filePath, True)
+    interpreter = Interpreter(filePath)
     res = interpreter.evaluate(ast, environment)
     if isinstance(res, (error, exportValue)):
         return res
@@ -60,7 +60,7 @@ if __name__ == '__main__':
                     if os.path.isfile(filePath):
                         with open(filePath, 'r') as f:
                             sourceCode = f.read()
-                            res = run(sourceCode)
+                            res = run(sourceCode, filePath)
                             if isinstance(res, error):
                                 print(res)
                     else:

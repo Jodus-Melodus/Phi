@@ -119,22 +119,17 @@
                                                 },
                                                 "operand": "+=",
                                                 "value": {
-                                                    "kind": "identifier",
-                                                    "symbol": "key"
+                                                    "kind": "memberExpression",
+                                                    "object": {
+                                                        "kind": "identifier",
+                                                        "symbol": "key"
+                                                    },
+                                                    "property": {
+                                                        "kind": "identifier",
+                                                        "symbol": "i"
+                                                    },
+                                                    "computed": "False"
                                                 }
-                                            },
-                                            {
-                                                "kind": "arrayLiteral",
-                                                "items": [
-                                                    {
-                                                        "kind": "itemLiteral",
-                                                        "index": 0,
-                                                        "value": {
-                                                            "kind": "identifier",
-                                                            "symbol": "i"
-                                                        }
-                                                    }
-                                                ]
                                             },
                                             {
                                                 "kind": "assignmentBinaryExpression",
@@ -156,22 +151,17 @@
                                                 },
                                                 "operand": "+=",
                                                 "value": {
-                                                    "kind": "identifier",
-                                                    "symbol": "values"
+                                                    "kind": "memberExpression",
+                                                    "object": {
+                                                        "kind": "identifier",
+                                                        "symbol": "values"
+                                                    },
+                                                    "property": {
+                                                        "kind": "identifier",
+                                                        "symbol": "i"
+                                                    },
+                                                    "computed": "False"
                                                 }
-                                            },
-                                            {
-                                                "kind": "arrayLiteral",
-                                                "items": [
-                                                    {
-                                                        "kind": "itemLiteral",
-                                                        "index": 0,
-                                                        "value": {
-                                                            "kind": "identifier",
-                                                            "symbol": "i"
-                                                        }
-                                                    }
-                                                ]
                                             },
                                             {
                                                 "kind": "assignmentBinaryExpression",

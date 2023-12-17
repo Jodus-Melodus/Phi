@@ -21,8 +21,8 @@ dataTypeTable = {
 
 
 class Interpreter:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, filePath:str='') -> None:
+        self.filePath = filePath
 
     def __str__(self) -> str:
         return 'Interpreter'
@@ -96,7 +96,7 @@ class Interpreter:
         elif isinstance(left, arrayValue):
             return self.evaluateArrayAppendBinaryExpression(left, right, binaryOperation.operand)
         else:
-            return syntaxError(self, "Cannot preform this operation.", right.column, right.line)
+            return typeError(self.filePath, self, f"Incompatible types. '{left.type}' and '{right.type}'", right.column, right.line)
 
     def evaluateArrayAppendBinaryExpression(self, left: arrayValue, right, operand: str) -> arrayValue:
         match operand:
@@ -105,28 +105,28 @@ class Interpreter:
                 left.items[index] = right
                 return arrayValue(left.items)
             case _:
-                return syntaxError(self, "Cannot preform this operation on arrays.", right.column, right.line)
+                return syntaxError(self.filePath, self, "Cannot preform this operation on arrays.", right.column, right.line)
 
     def evaluateObjectBinaryExpression(self, left: objectValue, right: objectValue, operand: str) -> objectValue:
         match operand:
             case '+':
                 return objectValue(left.properties.update(right.properties))
             case _:
-                return syntaxError(self, "Cannot preform this operation on objects.", right.column, right.line)
+                return syntaxError(self.filePath, self, "Cannot preform this operation on objects.", right.column, right.line)
 
     def evaluateArrayBinaryExpression(self, left: arrayValue, right: arrayValue, operand: str) -> arrayValue:
         match operand:
             case '+':
                 return arrayValue(left.items + right.items)
             case _:
-                return syntaxError(self, "Cannot preform this operation on arrays.", right.column, right.line)
+                return syntaxError(self.filePath, self, "Cannot preform this operation on arrays.", right.column, right.line)
 
     def evaluateStringBinaryExpression(self, left: stringValue, right: stringValue | integerValue | realValue, operand: str) -> stringValue:
         match operand:
             case '+':
-                return stringValue(left.value + right.value)
+                return stringValue(left.value + str(right.value))
             case _:
-                return syntaxError(self, "Cannot preform this operation on strings.", right.column, right.line)
+                return syntaxError(self.filePath, self, "Cannot preform this operation on strings.", right.column, right.line)
 
     def evaluateNumericBinaryExpression(self, left: integerValue | realValue, right: integerValue | realValue, operand: str) -> realValue:
         match operand:
@@ -149,7 +149,7 @@ class Interpreter:
                 if right.value != 0:
                     return realValue(left.value / right.value)
                 else:
-                    return zeroDivisionError(self, right.column, right.line)
+                    return zeroDivisionError(self.filePath, self, right.column, right.line)
             case '^':
                 if isinstance(left, realValue) or isinstance(right, realValue):
                     return realValue(left.value ** right.value)
@@ -159,14 +159,14 @@ class Interpreter:
                 if right.value != 0:
                     return integerValue(left.value % right.value)
                 else:
-                    return zeroDivisionError(self, right.column, right.line)
+                    return zeroDivisionError(self.filePath, self, right.column, right.line)
             case '//':
                 if right.value != 0:
                     return integerValue(left.value // right.value)
                 else:
-                    return zeroDivisionError(self, right.column, right.line)
+                    return zeroDivisionError(self.filePath, self, right.column, right.line)
             case _:
-                return syntaxError(self, "Cannot preform this operation on numbers", right.column, right.line)
+                return syntaxError(self.filePath, self, "Cannot preform this operation on numbers", right.column, right.line)
 
 # --------------------------------------------------------------------------------------------------------------------------------
 
@@ -184,7 +184,7 @@ class Interpreter:
                 return value
             if value.type == currentValue.type:
                 return env.assignVariable(varName, value)
-            return syntaxError(self, f"'{value.type}' is incompatible with '{currentValue.type}'", value.column, value.line)
+            return syntaxError(self.filePath, self, f"'{value.type}' is incompatible with '{currentValue.type}'", value.column, value.line)
 
         elif isinstance(assignmentExpression.assigne, memberExpressionNode):
             member: memberExpressionNode = assignmentExpression.assigne
@@ -199,7 +199,7 @@ class Interpreter:
             currentValue.properties[prop] = self.evaluate(assignmentExpression.value, env)
             return env.assignVariable(varName.symbol, currentValue)
         else:
-            return syntaxError(self, 'Expected an identifier.', assignmentExpression.assigne.column, assignmentExpression.assigne.line)
+            return syntaxError(self.filePath, self, 'Expected an identifier.', assignmentExpression.assigne.column, assignmentExpression.assigne.line)
 
     def evaluateVariableDeclarationExpression(self, declaration: variableDeclarationExpressionNode, env: environment) -> None:
         value = self.evaluate(declaration.value, env)
@@ -208,7 +208,7 @@ class Interpreter:
 
         if dataTypeTable[declaration.dataType] == type(value):
             return env.declareVariable(declaration.identifier, value, declaration.constant)
-        return syntaxError(self, f"'{value.type}' is incompatible with '{declaration.dataType}'", value.column, value.line)
+        return syntaxError(self.filePath, self, f"'{value.type}' is incompatible with '{declaration.dataType}'", value.column, value.line)
 
     def evaluateFunctionDeclaration(self, declaration: functionDeclarationExpressionNode, env: environment) -> None:
         fn = function(declaration.name, declaration.parameters,
@@ -263,7 +263,7 @@ class Interpreter:
                 else:
                     column = fn.column
                     line = fn.line
-                return syntaxError(self, f'Insufficient arguments provided. Expected {len(fn.parameters)}, but received {len(args)}', column, line)
+                return syntaxError(self.filePath, self, f'Insufficient arguments provided. Expected {len(fn.parameters)}, but received {len(args)}', column, line)
 
             result = nullValue()
             for statement in fn.body:
@@ -273,7 +273,7 @@ class Interpreter:
                 if isinstance(statement, returnNode):
                     return result
         else:
-            return syntaxError(self, f"'{fn.type}' is not a function", fn.column, fn.line)
+            return syntaxError(self.filePath, self, f"'{fn.type}' is not a function", fn.column, fn.line)
         return nullValue()
 
     def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
@@ -309,16 +309,16 @@ class Interpreter:
                     elif v.value in obj.properties:
                         return obj.properties[v.value]
                     else:
-                        return keyError(self, v, obj, v.column, v.line)
+                        return keyError(self.filePath, self, v, obj, v.column, v.line)
 
             elif isinstance(member.property, stringLiteralNode):
                 return obj.properties[member.property.value]
             else:
-                return typeError(self, "Expected an identifier or a string value", self.column, self.line)
+                return typeError(self.filePath, self, f"Expected an identifier or a string value got {member.property}", self.column, self.line)
         elif isinstance(obj, (arrayValue, stringValue)):
             if isinstance(member.property, integerLiteralNode):
                 if member.property.value not in obj.items:
-                    return keyError(self, member.property.value, member.object.symbol, member.property.column, member.property.line)
+                    return keyError(self.filePath, self, member.property.value, member.object.symbol, member.property.column, member.property.line)
 
                 elif isinstance(member.property, integerLiteralNode):
                     return obj.items[member.property.value]
@@ -333,11 +333,11 @@ class Interpreter:
                     if value in obj.items:
                         return obj.items[value]
                     else:
-                        return syntaxError(self, f"'{member.property.symbol}' is not a valid method or property.", member.column, member.line)
+                        return syntaxError(self.filePath, self, f"'{member.property.symbol}' is not a valid method or property.", member.column, member.line)
             else:
-                return syntaxError(self, f"'{member.property.symbol}' is not valid.", member.column, member.line)
+                return syntaxError(self.filePath, self, f"'{member.property.symbol}' is not valid.", member.column, member.line)
         else:
-            return keyError(self, member.property, member.object.symbol, member.property.column, member.property.line)
+            return keyError(self.filePath, self, member.property.symbol, member.object.symbol, member.property.column, member.property.line)
 
     def evaluateIfStatement(self, ifStatement: ifStatementNode, env: environment) -> None:
         left: RuntimeValue = self.evaluate(ifStatement.conditionLeft, env)
@@ -519,6 +519,8 @@ class Interpreter:
                 currValue.value, expr.column, expr.line)
         elif isinstance(currValue, stringValue):
             currentValue = stringLiteralNode(currValue.value, expr.column, expr.line)
+        else:
+            return typeError(self.filePath, self, f"Incompatible type '{currValue}'", expr.column, expr.line)
         
 
         binexpr = binaryExpressionNode(
@@ -531,6 +533,10 @@ class Interpreter:
             v = realLiteralNode(newValue.value, expr.line, expr.column)
         elif isinstance(newValue, integerValue):
             v = integerLiteralNode(newValue.value, expr.line, expr.column)
+        elif isinstance(newValue, stringValue):
+            v = stringLiteralNode(newValue.value, expr.column, expr.line)
+        else:
+            return typeError(self.filePath, self, f"Incompatible types. '{currentValue}' and '{newValue}'", expr.column, expr.line)
 
         return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, v), env)
 
@@ -553,7 +559,7 @@ class Interpreter:
                 with open(f'{path}.phi', 'r') as f:
                     code = '\n'.join(f.readlines())
 
-                code = run(code)
+                code = run(code, path + '.phi')
                 if isinstance(code, exportValue):
                     if name.isupper():
                         return env.declareVariable(name, code.value, True)
@@ -562,7 +568,7 @@ class Interpreter:
                 else:
                     return nullValue()
             else:
-                return fileNotFoundError(self, f'{path}.phi', importExpression.column, importExpression.line)
+                return fileNotFoundError(self.filePath, self, f'{path}.phi', importExpression.column, importExpression.line)
 
     def evaluateTryStatement(self, tryStatement: tryNode, env: environment) -> None:
         result = nullValue()
@@ -598,19 +604,19 @@ class Interpreter:
     def evaluateThrowStatement(self, throwStmt: throwNode, env: environment) -> None:
         match throwStmt.error.symbol:
             case 'syntaxError':
-                return syntaxError('', '', throwStmt.column, throwStmt.line)
+                return syntaxError(self.filePath, '', '', throwStmt.column, throwStmt.line)
             case 'zeroDivisionError':
-                return zeroDivisionError('', throwStmt.column, throwStmt.line)
+                return zeroDivisionError(self.filePath, '', throwStmt.column, throwStmt.line)
             case 'typeError':
-                return typeError('', '', throwStmt.column, throwStmt.line)
+                return typeError(self.filePath, '', '', throwStmt.column, throwStmt.line)
             case 'keyError':
-                return keyError('', '', '', throwStmt.column, throwStmt.line)
+                return keyError(self.filePath, '', '', '', throwStmt.column, throwStmt.line)
             case 'notImplementedError':
-                return notImplementedError('', '', throwStmt.column, throwStmt.line)
+                return notImplementedError(self.filePath, '', '', throwStmt.column, throwStmt.line)
             case 'invalidCharacterError':
-                return invalidCharacterError('', '', throwStmt.column, throwStmt.line)
+                return invalidCharacterError(self.filePath, '', '', throwStmt.column, throwStmt.line)
             case 'nameError':
-                return nameError('', '', throwStmt.column, throwStmt.line)
+                return nameError(self.filePath, '', '', throwStmt.column, throwStmt.line)
 
     def evaluateMatchStatement(self, matchStmt: matchNode, env: environment) -> None:
         value = self.evaluate(matchStmt.value, env)
@@ -690,4 +696,4 @@ class Interpreter:
             case 'nullLiteral':
                 return nullValue()
             case _:
-                return notImplementedError(self, astNode.kind, astNode.column, astNode.line)
+                return notImplementedError(self.filePath, self, astNode.kind, astNode.column, astNode.line)

@@ -32,13 +32,13 @@ def stringFormat(args, string:stringValue) -> stringValue:
     return stringValue(output)
 
 def objectItems(obj:objectValue) -> arrayValue:
-    items = []
-    for key in obj.properties:
-        items.append(obj.properties[key])
+    items = {}
+    for i, key in enumerate(obj.properties):
+        items[i] = obj.properties[key]
     return arrayValue(items, obj.line, obj.column)
 
 def objectKeys(obj:objectValue) -> arrayValue:
-    items = []
-    for key in obj.properties:
-        items.append(key)
+    items = {}
+    for i, key in enumerate(obj.properties):
+        items[i] = stringValue(key, obj.line, obj.column)
     return arrayValue(items, obj.line, obj.column)

@@ -5,7 +5,8 @@ import sys
 from frontend.astNodes import *
 
 class environment:
-    def __init__(self, parent=None) -> None:
+    def __init__(self, parent=None, filePath:str='') -> None:
+        self.filePath = filePath
         self.parent = parent
         self.variables = {}
         self.constants = {}
@@ -23,15 +24,15 @@ class environment:
         if varName in self.variables:
             self.variables[varName] = varValue
         elif varName in self.constants:
-            return syntaxError(self, "Can't assign a new value to a constant", 0, 0)
+            return syntaxError(self.filePath, self, "Can't assign a new value to a constant", 0, 0)
         else:
-            return nameError(self, varName, 0, 0)
+            return nameError(self.filePath, self, varName, 0, 0)
 
         return varValue
 
     def declareVariable(self, varName: str, varValue, constant:bool=False) -> None:
         if ((varName in self.variables) or (varName in self.constants)) and (varName != '~'):
-            return syntaxError(self, f"Variable '{varName}' already defined.", 0, 0)
+            return syntaxError(self.filePath, self, f"Variable '{varName}' already defined.", 0, 0)
         else:
             if constant:
                 self.constants[varName] = varValue
@@ -48,7 +49,7 @@ class environment:
         elif varName in self.variables:
             return env.variables[varName]
         else:
-            return nameError(self, varName, var.column, var.line)
+            return nameError(self.filePath, self, varName, var.column, var.line)
 
     def resolve(self, varName: str) -> None:
         if varName in self.variables:
@@ -57,24 +58,24 @@ class environment:
             return self
         
         if self.parent == None:
-            return nameError(self, varName, 0, 0)
+            return nameError(self.filePath, self, varName, 0, 0)
         else:
             return self.parent.resolve(varName)
 
-def createGlobalEnvironment(parent=None) -> environment:
-    env = environment(parent)
+def createGlobalEnvironment(parent=None, filePath:str='') -> environment:
+    env = environment(parent, filePath)
     # functions
-    env.declareVariable('output', nativeFunction(lambda args, scope : sys.stdout.write(str(bif.output(args[0])) + '\n')), True)
-    env.declareVariable('input', nativeFunction(lambda args, scope : bif.in_(args[0])), True)
-    env.declareVariable('type', nativeFunction(lambda args, scope : bif.type_(args[0])), True)
-    env.declareVariable('hash', nativeFunction(lambda args, scope : bif.hash(args[0])), True)
-    env.declareVariable('Str', nativeFunction(lambda args, scope: bif.hardCastStr(args[0])), True)
-    env.declareVariable('Int', nativeFunction(lambda args, scope: bif.hardCastInt(args[0])), True)
-    env.declareVariable('Real', nativeFunction(lambda args, scope: bif.hardCastReal(args[0])), True)
+    env.declareVariable('output', nativeFunction(lambda args, scope : sys.stdout.write(str(bif.output(filePath, args[0])) + '\n')), True)
+    env.declareVariable('input', nativeFunction(lambda args, scope : bif.in_(filePath, args[0])), True)
+    env.declareVariable('type', nativeFunction(lambda args, scope : bif.type_(filePath, args[0])), True)
+    env.declareVariable('hash', nativeFunction(lambda args, scope : bif.hash(filePath, args[0])), True)
+    env.declareVariable('Str', nativeFunction(lambda args, scope: bif.hardCastStr(filePath, args[0])), True)
+    env.declareVariable('Int', nativeFunction(lambda args, scope: bif.hardCastInt(filePath, args[0])), True)
+    env.declareVariable('Real', nativeFunction(lambda args, scope: bif.hardCastReal(filePath, args[0])), True)
 
     # Move to modules
-    env.declareVariable('now', nativeFunction(lambda args, scope : bif.now()), True)
-    env.declareVariable('wait', nativeFunction(lambda args, scope : bif.wait(args[0])), True)
+    env.declareVariable('now', nativeFunction(lambda args, scope : bif.now(filePath, )), True)
+    env.declareVariable('wait', nativeFunction(lambda args, scope : bif.wait(filePath, args[0])), True)
 
     # variables
     env.declareVariable('_', nullValue(), True)

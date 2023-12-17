@@ -6,7 +6,7 @@ from hashlib import *
 import sys
 import math
 
-def output(arg) -> str:
+def output(file, arg) -> str:
     if isinstance(arg, (integerValue, booleanValue, nullValue, realValue)):
         return arg.value
     if isinstance(arg, stringValue):
@@ -25,54 +25,54 @@ def output(arg) -> str:
     else:
         return arg
 
-def in_(arg:stringValue) -> stringValue:
+def in_(file, arg:stringValue) -> stringValue:
     sys.stdout.write(arg.value)
     return stringValue(sys.stdin.readline().strip(), arg.line, arg.column)
 
-def now() -> integerValue:
+def now(file, ) -> integerValue:
     return integerValue(time())
 
-def type_(arg:RuntimeValue) -> stringValue:
+def type_(file, arg:RuntimeValue) -> stringValue:
     return stringValue(arg.type)
     
-def wait(seconds) -> None:
+def wait(file, seconds) -> None:
     sleep(int(seconds.value))
 
-def hash(data:stringValue) -> stringValue:
+def hash(file, data:stringValue) -> stringValue:
     d = data.value.encode('utf-8')
     return stringValue(sha256(d).hexdigest(), data.line, data.column)
 
-def absoluteValue(value:integerValue|realValue) -> integerValue|realValue:
+def absoluteValue(file, value:integerValue|realValue) -> integerValue|realValue:
     if isinstance(value, integerValue):
         return integerValue(abs(value.value), value.line, value.column)
     elif isinstance(value, realValue):
         return realValue(abs(value.value), value.line, value.column)
     else:
-        return typeError('Built-in Functions', value, value.column, value.line)
+        return typeError(file, 'Built-in Functions', value, value.column, value.line)
 
-def _round(value:realValue) -> integerValue:
+def _round(file, value:realValue) -> integerValue:
     return integerValue(round(value.value))
 
-def _floor(value:realValue) -> integerValue:
+def _floor(file, value:realValue) -> integerValue:
     return integerValue(math.floor(value.value))
 
-def _ceil(value:realValue) -> integerValue:
+def _ceil(file, value:realValue) -> integerValue:
     return integerValue(math.ceil(value.value))
 
-def hardCastStr(value:RuntimeValue) -> stringValue:
+def hardCastStr(file, value:RuntimeValue) -> stringValue:
     return stringValue(value.value, value.line, value.column)
 
-def hardCastInt(value:RuntimeValue) -> integerValue:
+def hardCastInt(file, value:RuntimeValue) -> integerValue:
     try:
         v = int(value.value)
         return integerValue(v, value.line, value.column)
     except ValueError:
-        return typeError("Integer Casting", value, value.column, value.line)
+        return typeError(file, "Integer Casting", value, value.column, value.line)
 
-def hardCastReal(value:RuntimeValue) -> realValue:
+def hardCastReal(file, value:RuntimeValue) -> realValue:
     try:
         v = float(value.value)
         return realValue(v, value.line, value.column)
     except ValueError:
-        return typeError("Float Casting", value, value.column, value.line)
+        return typeError(file, "Float Casting", value, value.column, value.line)
 

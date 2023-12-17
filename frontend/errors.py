@@ -9,21 +9,22 @@ def errorArrows(column: int) -> str:
 
 
 class error:
-    def __init__(self, column, line) -> None:
+    def __init__(self, file:str='', column:int=0, line:int=0) -> None:
+        self.file = file
         self.column = column
         self.line = line
 
 
 class syntaxError(error):
-    def __init__(self, stage: str, msg: str, column: int, line: int) -> None:
-        super().__init__(column, line)
+    def __init__(self, file:str, stage: str, msg: str, column: int, line: int) -> None:
+        super().__init__(file, column, line)
         self.stage = stage
         self.msg = msg
         self.type = 'syntaxError'
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
-[Syntax Error] Ln {self.line}, Col {self.column}:
+[Syntax Error] Ln {self.line}, Col {self.column} in {self.file}:
 {self.msg}
 '''
 
@@ -32,30 +33,29 @@ class syntaxError(error):
 
 
 class nameError(error):
-    def __init__(self, stage: str, name: str, column: int, line: int) -> None:
-        super().__init__(column, line)
+    def __init__(self, file:str, stage: str, name: str, column: int, line: int) -> None:
+        super().__init__(file, column, line)
         self.stage = stage
         self.name = name
         self.type = 'nameError'
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
-{self.stage}
-[Name Error] Ln {self.line}, Col {self.column}:
+[Name Error] Ln {self.line}, Col {self.column} in {self.file}:
 '{self.name}' is not defined
 '''
 
 
 class invalidCharacterError(error):
-    def __init__(self, stage: str, character: str, column: int, line: int) -> None:
-        super().__init__(column, line)
+    def __init__(self, file:str, stage: str, character: str, column: int, line: int) -> None:
+        super().__init__(file, column, line)
         self.stage = stage
         self.character = character
         self.type = 'invalidCharacterError'
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
-[Invalid Character Error] Ln {self.line}, Col {self.column}:
+[Invalid Character Error] Ln {self.line}, Col {self.column} in {self.file}:
 '{self.character}' is not a valid character
 '''
 
@@ -64,22 +64,22 @@ class invalidCharacterError(error):
 
 
 class notImplementedError(error):
-    def __init__(self, stage: str, msg: str, column: int, line: int) -> None:
-        super().__init__(column, line)
+    def __init__(self, file:str, stage: str, msg: str, column: int, line: int) -> None:
+        super().__init__(file, column, line)
         self.stage = stage
         self.msg = msg
         self.type = 'notImplementedError'
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
-[Not Implemented Error] Ln {self.line}, Col {self.column}:
+[Not Implemented Error] Ln {self.line}, Col {self.column} in {self.file}:
 '{self.msg}' is not yet Implemented
 '''
 
 
 class keyError(error):
-    def __init__(self, stage: str, key, obj, column: int, line: int) -> None:
-        super().__init__(column, line)
+    def __init__(self, file:str, stage: str, key, obj, column: int, line: int) -> None:
+        super().__init__(file, column, line)
         self.stage = stage
         self.key = key
         self.obj = obj
@@ -87,46 +87,46 @@ class keyError(error):
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
-[Key Error] Ln {self.line}, Col {self.column}:
+[Key Error] Ln {self.line}, Col {self.column} in {self.file}:
 '{self.key}' is not a valid key for '{self.obj}'
 '''
 
 
 class typeError(error):
-    def __init__(self, stage: str, type, column: int, line: int) -> None:
-        super().__init__(column, line)
+    def __init__(self, file:str, stage: str, msg:str, column: int, line: int) -> None:
+        super().__init__(file, column, line)
         self.stage = stage
-        self.type = type
+        self.msg = msg
         self.type = 'typeError'
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
-{self.stage}[Type Error] Ln {self.line}, Col {self.column}:
-'{self.type}' is not a valid type
+[Type Error] Ln {self.line}, Col {self.column} in {self.file}:
+{self.msg}
 '''
 
 
 class zeroDivisionError(error):
-    def __init__(self, stage: str, column: int, line: int) -> None:
-        super().__init__(column, line)
+    def __init__(self, file:str, stage: str, column: int, line: int) -> None:
+        super().__init__(file, column, line)
         self.stage = stage
         self.type = 'zeroDivisionError'
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
-[Zero Division Error] Ln {self.line}, Col {self.column}:
+[Zero Division Error] Ln {self.line}, Col {self.column} in {self.file}:
 Cannot divide by zero
 '''
 
 class fileNotFoundError(error):
-    def __init__(self, stage: str, file: str, column: int, line: int) -> None:
-        super().__init__(column, line)
+    def __init__(self, file:str, stage: str, file_: str, column: int, line: int) -> None:
+        super().__init__(file, column, line)
         self.stage = stage
-        self.file = file
+        self.file_ = file_
         self.type = 'fileNotFoundError'
 
     def __repr__(self) -> str:
         return f'''{errorArrows(self.column)}
-[File Not Found Error] Ln {self.line}, Col {self.column}:
-File '{self.file}' not found
+[File Not Found Error] Ln {self.line}, Col {self.column} in {self.file}:
+File '{self.file_}' not found
 '''

@@ -113,7 +113,8 @@ class Token:
 
 
 class Lexer:
-    def __init__(self, sourceCode: str):
+    def __init__(self, sourceCode: str, filePath:str=''):
+        self.filePath = filePath
         self.sourceCode = sourceCode
         self.index = 0
         self.line = 1
@@ -213,7 +214,7 @@ class Lexer:
                         string += self.get()
                         self.eat()
                         if self.sourceCode == '':
-                            return syntaxError(self, "Expected a '\"'", self.column, self.line)
+                            return syntaxError(self.filePath, self, "Expected a '\"'", self.column, self.line)
                     self.eat()
                     tokens.append(Token(TT.stringValue, string,
                                   self.index, self.column, self.line))
@@ -224,7 +225,7 @@ class Lexer:
                         string += self.get()
                         self.eat()
                         if self.sourceCode == '':
-                            return syntaxError(self, "Expected a '''", self.column, self.line)
+                            return syntaxError(self.filePath, self, "Expected a '''", self.column, self.line)
                     self.eat()
                     tokens.append(Token(TT.stringValue, string,
                                   self.index, self.column, self.line))
@@ -243,7 +244,7 @@ class Lexer:
                                       self.index, self.column, self.line))
                         self.eat()
                     else:
-                        return invalidCharacterError(self, char, self.column, self.line)
+                        return invalidCharacterError(self.filePath, self, char, self.column, self.line)
                 case '<':
                     self.eat()
                     if self.get() == '-':
@@ -285,7 +286,7 @@ class Lexer:
                                     number += char
                                     decimal += 1
                                 else:
-                                    return syntaxError(self, "Found two '.' ", self.column, self.line)
+                                    return syntaxError(self.filePath, self, "Found two '.' ", self.column, self.line)
                             else:
                                 break
                             self.eat()
@@ -315,7 +316,7 @@ class Lexer:
                             tokens.append(
                                 Token(TT.identifier, name, self.index, self.column, self.line))
                     else:
-                        return invalidCharacterError(self, char, self.column, self.line)
+                        return invalidCharacterError(self.filePath, self, char, self.column, self.line)
 
         tokens.append(Token(TT.eof, 'eof', self.index +
                       1, self.column + 1, self.line))
