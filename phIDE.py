@@ -573,12 +573,13 @@ class App(ctk.CTk):
             if len(self.snippetMenus[self.centerTabview.get()].items) > 0:
                 editor = self.currentTab
                 if editor:
-                    items = self.snippetMenus[self.centerTabview.get()].items
-                    index = self.snippetMenus[self.centerTabview.get()].currentSelectedIndex
-                    snippet = self.snippets[items[index]]
+                    snippet = self.snippetsDict[self.snippets[self.snippetMenus[self.centerTabview.get(
+                    )].currentSelectedIndex]]
                     currentIndex = editor.index('insert -1l lineend')
-                    wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
-                    word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
+                    wordStart = editor.search(
+                        r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+                    word = editor.get(wordStart, currentIndex).strip(
+                        ' \n\t\r({[]})')
                     startPos = f'{currentIndex.split(".")[0]}.{int(currentIndex.split(".")[1]) - len(word)}'
                     editor.delete(startPos, 'insert')
                     editor.insert(startPos, snippet)
@@ -589,9 +590,10 @@ class App(ctk.CTk):
     def insertSnippet(self, snippetName: str) -> None:
         editor = self.currentTab
         if editor:
-            snippet = self.snippets[snippetName]
+            snippet = self.snippetsDict[snippetName]
             currentIndex = editor.index('insert -1l lineend')
-            wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+            wordStart = editor.search(
+                r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
             word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
             startPos = f'{currentIndex.split(".")[0]}.{int(currentIndex.split(".")[1]) - len(word)}'
             editor.delete(startPos, 'insert')
@@ -604,6 +606,7 @@ class App(ctk.CTk):
         editor = self.currentTab
         if editor:
             self.snippetMenus[self.centerTabview.get()].place_forget()
+            self.snippets = list(self.snippetsDict.keys())
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
             wordStart = editor.search(
@@ -611,29 +614,34 @@ class App(ctk.CTk):
             word = editor.get(wordStart, currentIndex).strip(' \n\t\r{[()]}')
 
             size = 4
-            i = self.snippetMenus[self.centerTabview.get()].currentSelectedIndex
+            i = self.snippetMenus[self.centerTabview.get()
+                                  ].currentSelectedIndex
             startIndex = max(0, i)
             if word:
                 words = []
                 for w in self.snippets:
                     if w.startswith(word):
                         words.append(w)
-                if len(words) > 0:
+                self.snippets = words
+                if len(self.snippets) > 0:
                     if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
-                        self.intelliSenseBoxes[self.centerTabview.get()].place_forget()
-                    endIndex = min(len(words), i + size + 1)
+                        self.intelliSenseBoxes[self.centerTabview.get(
+                        )].place_forget()
+                    endIndex = min(len(self.snippets), i + size + 1)
             else:
                 if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
-                    self.intelliSenseBoxes[self.centerTabview.get()].place_forget()
+                    self.intelliSenseBoxes[self.centerTabview.get(
+                    )].place_forget()
                 endIndex = min(len(self.snippets), i + size + 1)
-                words = list(self.snippets.keys())
 
-            self.snippetMenus[self.centerTabview.get()].items = words[startIndex:endIndex]
+            self.snippetMenus[self.centerTabview.get(
+            )].items = self.snippets[startIndex:endIndex]
             self.snippetMenus[self.centerTabview.get()].place(x=x, y=y+30)
 
     def loadSnippets(self) -> None:
         with open(f'snippets/{self.currentLanguage[1:]}.json') as f:
-            self.snippets = json.load(f)
+            self.snippetsDict = json.load(f)
+            self.snippets = list(self.snippetsDict.keys())
 
 # Syntax
     def loadLanguageSyntax(self) -> None:
@@ -668,8 +676,10 @@ class App(ctk.CTk):
             if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
                 editor = self.currentTab
                 if editor:
-                    editor.mark_set('insert', editor.index('insert +1l lineend'))
-                self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex -= 1
+                    editor.mark_set(
+                        'insert', editor.index('insert +1l lineend'))
+                self.intelliSenseBoxes[self.centerTabview.get(
+                )].currentSelectedIndex -= 1
                 if self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex < 0:
                     self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex = len(
                         self.intelliSenseWords) - 1
@@ -679,11 +689,13 @@ class App(ctk.CTk):
             if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
                 editor = self.currentTab
                 if editor:
-                    editor.mark_set('insert', editor.index('insert +1l lineend'))
-                self.snippetMenus[self.centerTabview.get()].currentSelectedIndex -= 1
+                    editor.mark_set(
+                        'insert', editor.index('insert +1l lineend'))
+                self.snippetMenus[self.centerTabview.get()
+                                  ].currentSelectedIndex -= 1
                 if self.snippetMenus[self.centerTabview.get()].currentSelectedIndex < 0:
                     self.snippetMenus[self.centerTabview.get()].currentSelectedIndex = len(
-                        self.snippetMenus[self.centerTabview.get()].items) - 1
+                        self.snippets) - 1
                 self.showSnippets()
 
     def intelliSenseDownKeyPress(self, e=None) -> None:
@@ -691,20 +703,26 @@ class App(ctk.CTk):
             if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
                 editor = self.currentTab
                 if editor:
-                    editor.mark_set('insert', editor.index('insert -1l lineend'))
-                self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex += 1
+                    editor.mark_set(
+                        'insert', editor.index('insert -1l lineend'))
+                self.intelliSenseBoxes[self.centerTabview.get(
+                )].currentSelectedIndex += 1
                 if self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex >= len(self.intelliSenseWords):
-                    self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex = 0
+                    self.intelliSenseBoxes[self.centerTabview.get(
+                    )].currentSelectedIndex = 0
                 self.intelliSenseTrigger()
 
         if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
             if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
                 editor = self.currentTab
                 if editor:
-                    editor.mark_set('insert', editor.index('insert -1l lineend'))
-                self.snippetMenus[self.centerTabview.get()].currentSelectedIndex += 1
-                if self.snippetMenus[self.centerTabview.get()].currentSelectedIndex >= len(self.snippetMenus[self.centerTabview.get()].items):
-                    self.snippetMenus[self.centerTabview.get()].currentSelectedIndex = 0
+                    editor.mark_set(
+                        'insert', editor.index('insert -1l lineend'))
+                self.snippetMenus[self.centerTabview.get()
+                                  ].currentSelectedIndex += 1
+                if self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex >= len(self.snippets):
+                    self.snippetMenus[self.centerTabview.get()
+                                      ].currentSelectedIndex = 0
                 self.showSnippets()
 
     def intelliSenseTrigger(self, e=None) -> None:
@@ -715,11 +733,13 @@ class App(ctk.CTk):
                 self.languageSyntaxPatterns[self.currentLanguage]['keywords'][2] + self.variables + self.languageSyntaxPatterns[self.currentLanguage]['errors'][2]))))
             x, y, _, _ = editor.bbox(editor.index('insert'))
             currentIndex = editor.index('insert')
-            wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+            wordStart = editor.search(
+                r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
             word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[.]})')
 
             size = 4
-            i = self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex
+            i = self.intelliSenseBoxes[self.centerTabview.get(
+            )].currentSelectedIndex
             startIndex = max(0, i)
             if word:
                 words = []
@@ -730,7 +750,8 @@ class App(ctk.CTk):
                 if len(self.intelliSenseWords) > 0:
                     # Hide snippetMenu if present
                     if self.snippetMenus[self.centerTabview.get()].winfo_ismapped():
-                        self.snippetMenus[self.centerTabview.get()].place_forget()
+                        self.snippetMenus[self.centerTabview.get()
+                                          ].place_forget()
                     endIndex = min(len(self.intelliSenseWords), i + size + 1)
             else:
                 # Hide snippetMenu if present
@@ -738,7 +759,8 @@ class App(ctk.CTk):
                     self.snippetMenus[self.centerTabview.get()].place_forget()
                 endIndex = min(len(self.intelliSenseWords), i + size + 1)
 
-            self.intelliSenseBoxes[self.centerTabview.get()].items = self.intelliSenseWords[startIndex:endIndex]
+            self.intelliSenseBoxes[self.centerTabview.get(
+            )].items = self.intelliSenseWords[startIndex:endIndex]
             self.intelliSenseBoxes[self.centerTabview.get()].place(x=x, y=y+30)
 
     def intelliSenseEnterInsert(self, e=None) -> None:
@@ -746,22 +768,27 @@ class App(ctk.CTk):
             if len(self.intelliSenseBoxes[self.centerTabview.get()].items) > 0:
                 editor = self.currentTab
                 if editor:
-                    selectedWord = self.intelliSenseWords[self.intelliSenseBoxes[self.centerTabview.get()].currentSelectedIndex]
+                    selectedWord = self.intelliSenseWords[self.intelliSenseBoxes[self.centerTabview.get(
+                    )].currentSelectedIndex]
                     currentIndex = editor.index('insert -1l lineend')
-                    wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
-                    word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
+                    wordStart = editor.search(
+                        r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+                    word = editor.get(wordStart, currentIndex).strip(
+                        ' \n\t\r({[]})')
                     startPos = f'{currentIndex.split(".")[0]}.{int(currentIndex.split(".")[1]) - len(word)}'
                     editor.delete(startPos, 'insert')
                     editor.insert(startPos, selectedWord)
                     editor.focus_set()
-                    self.intelliSenseBoxes[self.centerTabview.get()].place_forget()
+                    self.intelliSenseBoxes[self.centerTabview.get(
+                    )].place_forget()
                     self.updateSyntax()
 
     def intelliSenseClickInsert(self, selected) -> None:
         editor = self.currentTab
         if editor:
             currentIndex = editor.index('insert')
-            wordStart = editor.search(r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
+            wordStart = editor.search(
+                r'(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)', currentIndex, backwards=True, regexp=True)
             word = editor.get(wordStart, currentIndex).strip(' \n\t\r({[]})')
             startPos = f'{currentIndex.split(".")[0]}.{int(currentIndex.split(".")[1]) - len(word)}'
             editor.delete(startPos, 'insert')
