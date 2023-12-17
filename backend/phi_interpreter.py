@@ -517,6 +517,9 @@ class Interpreter:
         elif isinstance(currValue, realValue):
             currentValue = realLiteralNode(
                 currValue.value, expr.column, expr.line)
+        elif isinstance(currValue, stringValue):
+            currentValue = stringLiteralNode(currValue.value, expr.column, expr.line)
+        
 
         binexpr = binaryExpressionNode(
             currentValue, expr.operand[0], expr.value, expr.line, expr.column)

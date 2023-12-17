@@ -1,6 +1,9 @@
+import pp
 
+obj x = {
+	a:1,
+	b:3
+}
 
+output(pp.obj_(x))
 
-str x = "hello\world"
-
-output(x)
