@@ -1,8 +1,6 @@
-import debug
 
-debug.log(43 + 2)
 
-debug.warning("This is unstable")
 
-debug.error("An error occured")
+str x = "hello\world"
 
+output(x)

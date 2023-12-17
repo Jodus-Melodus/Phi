@@ -6,16 +6,18 @@ from hashlib import *
 import sys
 import math
 
-def out(arg) -> str:
-    if isinstance(arg, (integerValue, stringValue, booleanValue, nullValue, realValue)):
+def output(arg) -> str:
+    if isinstance(arg, (integerValue, booleanValue, nullValue, realValue)):
         return arg.value
+    if isinstance(arg, stringValue):
+        return arg.value.replace('\\', '\n')
     elif isinstance(arg, objectValue):
         result = '{'
         for prop, value in arg.properties.items():
-            result += f"{out(prop)}: {out(value)}, "
+            result += f"{output(prop)}: {output(value)}, "
         return result.rstrip(', ') + '}'
     elif isinstance(arg, arrayValue):
-        res = '[' + ', '.join(map(str, map(out, arg.items.values()))) + ']'
+        res = '[' + ', '.join(map(str, map(output, arg.items.values()))) + ']'
         return res
     elif isinstance(arg, function):
         parameters = [parameter.symbol for parameter in arg.parameters]

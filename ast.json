@@ -5,78 +5,322 @@
             "kind": "importExpression",
             "value": {
                 "kind": "identifier",
-                "symbol": "debug"
+                "symbol": "pp"
             }
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "object",
+            "identifier": "object",
+            "value": {
+                "kind": "objectLiteral",
+                "properties": [
+                    {
+                        "kind": "propertyLiteral",
+                        "key": "a",
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 1
+                        }
+                    },
+                    {
+                        "kind": "propertyLiteral",
+                        "key": "b",
+                        "value": {
+                            "kind": "objectLiteral",
+                            "properties": [
+                                {
+                                    "kind": "propertyLiteral",
+                                    "key": "c",
+                                    "value": {
+                                        "kind": "integerLiteral",
+                                        "value": 2
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "array",
+            "identifier": "arr",
+            "value": {
+                "kind": "arrayLiteral",
+                "items": [
+                    {
+                        "kind": "itemLiteral",
+                        "index": 0,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 1
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 1,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 9
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 2,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 3
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 3,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 8
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 4,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 27
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 5,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 92
+                        }
+                    }
+                ]
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "int",
+            "identifier": "integer",
+            "value": {
+                "kind": "integerLiteral",
+                "value": 3
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "real",
+            "identifier": "float",
+            "value": {
+                "kind": "realLiteral",
+                "value": 1.23
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "bool",
+            "identifier": "boolean",
+            "value": {
+                "kind": "identifier",
+                "symbol": "T"
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "string",
+            "identifier": "string",
+            "value": {
+                "kind": "stringLiteral",
+                "value": "Hello, World!"
+            },
+            "constant": "False"
         },
         {
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "binaryExpression",
-                    "left": {
-                        "kind": "integerLiteral",
-                        "value": 43
-                    },
-                    "operand": "+",
-                    "right": {
-                        "kind": "integerLiteral",
-                        "value": 2
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "object"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "pp"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "obj_"
+                        },
+                        "computed": "True"
                     }
                 }
             ],
             "caller": {
-                "kind": "memberExpression",
-                "object": {
-                    "kind": "identifier",
-                    "symbol": "debug"
-                },
-                "property": {
-                    "kind": "identifier",
-                    "symbol": "log"
-                },
-                "computed": "True"
+                "kind": "identifier",
+                "symbol": "output"
             }
         },
         {
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "stringLiteral",
-                    "value": "This is unstable"
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "arr"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "pp"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "array_"
+                        },
+                        "computed": "True"
+                    }
                 }
             ],
             "caller": {
-                "kind": "memberExpression",
-                "object": {
-                    "kind": "identifier",
-                    "symbol": "debug"
-                },
-                "property": {
-                    "kind": "identifier",
-                    "symbol": "warning"
-                },
-                "computed": "True"
+                "kind": "identifier",
+                "symbol": "output"
             }
         },
         {
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "stringLiteral",
-                    "value": "An error occured"
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "integer"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "pp"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "int_"
+                        },
+                        "computed": "True"
+                    }
                 }
             ],
             "caller": {
-                "kind": "memberExpression",
-                "object": {
-                    "kind": "identifier",
-                    "symbol": "debug"
-                },
-                "property": {
-                    "kind": "identifier",
-                    "symbol": "error"
-                },
-                "computed": "True"
+                "kind": "identifier",
+                "symbol": "output"
+            }
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "float"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "pp"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "real_"
+                        },
+                        "computed": "True"
+                    }
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
+            }
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "boolean"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "pp"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "bool_"
+                        },
+                        "computed": "True"
+                    }
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
+            }
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "string"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "pp"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "str_"
+                        },
+                        "computed": "True"
+                    }
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
             }
         }
     ]

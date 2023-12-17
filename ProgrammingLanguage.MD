@@ -58,6 +58,8 @@ The following operators are supported in Phi:
 - `$` String format character
 - `~` Used to name anonymous function
 - `<-` Return operator
+- `\` New line character
+
 # Datatypes
 ## Variables and Constants
 - ### Variable:

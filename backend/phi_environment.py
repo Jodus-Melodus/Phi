@@ -64,7 +64,7 @@ class environment:
 def createGlobalEnvironment(parent=None) -> environment:
     env = environment(parent)
     # functions
-    env.declareVariable('output', nativeFunction(lambda args, scope : sys.stdout.write(str(bif.out(args[0])) + '\n')), True)
+    env.declareVariable('output', nativeFunction(lambda args, scope : sys.stdout.write(str(bif.output(args[0])) + '\n')), True)
     env.declareVariable('input', nativeFunction(lambda args, scope : bif.in_(args[0])), True)
     env.declareVariable('type', nativeFunction(lambda args, scope : bif.type_(args[0])), True)
     env.declareVariable('hash', nativeFunction(lambda args, scope : bif.hash(args[0])), True)
