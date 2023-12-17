@@ -2,214 +2,26 @@
     "kind": "program",
     "body": [
         {
-            "kind": "exportExpression",
+            "kind": "variableDeclarationExpression",
+            "datatype": "string",
+            "identifier": "x",
             "value": {
-                "kind": "variableDeclarationExpression",
-                "datatype": "object",
-                "identifier": "pp",
-                "value": {
-                    "kind": "objectLiteral",
-                    "properties": [
-                        {
-                            "kind": "propertyLiteral",
-                            "key": "obj_",
-                            "value": {
-                                "kind": "functionDeclaration",
-                                "name": "~",
-                                "parameters": [
-                                    {
-                                        "kind": "identifier",
-                                        "symbol": "object"
-                                    }
-                                ],
-                                "body": [
-                                    {
-                                        "kind": "variableDeclarationExpression",
-                                        "datatype": "string",
-                                        "identifier": "result",
-                                        "value": {
-                                            "kind": "stringLiteral",
-                                            "value": "{\\"
-                                        },
-                                        "constant": "False"
-                                    },
-                                    {
-                                        "kind": "variableDeclarationExpression",
-                                        "datatype": "array",
-                                        "identifier": "key",
-                                        "value": {
-                                            "kind": "callExpression",
-                                            "arguments": [],
-                                            "caller": {
-                                                "kind": "memberExpression",
-                                                "object": {
-                                                    "kind": "identifier",
-                                                    "symbol": "object"
-                                                },
-                                                "property": {
-                                                    "kind": "identifier",
-                                                    "symbol": "keys"
-                                                },
-                                                "computed": "True"
-                                            }
-                                        },
-                                        "constant": "False"
-                                    },
-                                    {
-                                        "kind": "variableDeclarationExpression",
-                                        "datatype": "array",
-                                        "identifier": "values",
-                                        "value": {
-                                            "kind": "callExpression",
-                                            "arguments": [],
-                                            "caller": {
-                                                "kind": "memberExpression",
-                                                "object": {
-                                                    "kind": "identifier",
-                                                    "symbol": "object"
-                                                },
-                                                "property": {
-                                                    "kind": "identifier",
-                                                    "symbol": "items"
-                                                },
-                                                "computed": "True"
-                                            }
-                                        },
-                                        "constant": "False"
-                                    },
-                                    {
-                                        "kind": "forStatement",
-                                        "declaration": {
-                                            "kind": "variableDeclarationExpression",
-                                            "datatype": "int",
-                                            "identifier": "i",
-                                            "value": {
-                                                "kind": "integerLiteral",
-                                                "value": 0
-                                            },
-                                            "constant": "False"
-                                        },
-                                        "conditionLeft": {
-                                            "kind": "identifier",
-                                            "symbol": "i"
-                                        },
-                                        "operand": "<",
-                                        "conditionRight": {
-                                            "kind": "callExpression",
-                                            "arguments": [],
-                                            "caller": {
-                                                "kind": "memberExpression",
-                                                "object": {
-                                                    "kind": "identifier",
-                                                    "symbol": "key"
-                                                },
-                                                "property": {
-                                                    "kind": "identifier",
-                                                    "symbol": "length"
-                                                },
-                                                "computed": "True"
-                                            }
-                                        },
-                                        "body": [
-                                            {
-                                                "kind": "assignmentBinaryExpression",
-                                                "assigne": {
-                                                    "kind": "identifier",
-                                                    "symbol": "result"
-                                                },
-                                                "operand": "+=",
-                                                "value": {
-                                                    "kind": "memberExpression",
-                                                    "object": {
-                                                        "kind": "identifier",
-                                                        "symbol": "key"
-                                                    },
-                                                    "property": {
-                                                        "kind": "identifier",
-                                                        "symbol": "i"
-                                                    },
-                                                    "computed": "False"
-                                                }
-                                            },
-                                            {
-                                                "kind": "assignmentBinaryExpression",
-                                                "assigne": {
-                                                    "kind": "identifier",
-                                                    "symbol": "result"
-                                                },
-                                                "operand": "+=",
-                                                "value": {
-                                                    "kind": "stringLiteral",
-                                                    "value": ":"
-                                                }
-                                            },
-                                            {
-                                                "kind": "assignmentBinaryExpression",
-                                                "assigne": {
-                                                    "kind": "identifier",
-                                                    "symbol": "result"
-                                                },
-                                                "operand": "+=",
-                                                "value": {
-                                                    "kind": "memberExpression",
-                                                    "object": {
-                                                        "kind": "identifier",
-                                                        "symbol": "values"
-                                                    },
-                                                    "property": {
-                                                        "kind": "identifier",
-                                                        "symbol": "i"
-                                                    },
-                                                    "computed": "False"
-                                                }
-                                            },
-                                            {
-                                                "kind": "assignmentBinaryExpression",
-                                                "assigne": {
-                                                    "kind": "identifier",
-                                                    "symbol": "result"
-                                                },
-                                                "operand": "+=",
-                                                "value": {
-                                                    "kind": "stringLiteral",
-                                                    "value": "\\"
-                                                }
-                                            }
-                                        ],
-                                        "step": {
-                                            "kind": "assignmentBinaryExpression",
-                                            "assigne": {
-                                                "kind": "identifier",
-                                                "symbol": "i"
-                                            },
-                                            "operand": "+=",
-                                            "value": {
-                                                "kind": "integerLiteral",
-                                                "value": 1
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "kind": "returnExpression",
-                                        "value": {
-                                            "kind": "binaryExpression",
-                                            "left": {
-                                                "kind": "identifier",
-                                                "symbol": "result"
-                                            },
-                                            "operand": "+",
-                                            "right": {
-                                                "kind": "stringLiteral",
-                                                "value": "}"
-                                            }
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                },
-                "constant": "False"
+                "kind": "stringLiteral",
+                "value": "hello\\nworld\thi"
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "x"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
             }
         }
     ]

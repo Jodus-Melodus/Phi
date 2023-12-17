@@ -18,6 +18,11 @@ dataTypeTable = {
     'bool': booleanValue,
     'lambda': function
 }
+valueTypeTable = {
+    'integerValue': ['integerValue', 'realValue'],
+    'realValue':['realValue', 'integerValue'],
+    'stringValue':['stringValue']
+}
 
 
 class Interpreter:
@@ -182,9 +187,9 @@ class Interpreter:
             value = self.evaluate(assignmentExpression.value, env)
             if isinstance(value, error):
                 return value
-            if value.type == currentValue.type:
+            if value.type in valueTypeTable[value.type]:
                 return env.assignVariable(varName, value)
-            return syntaxError(self.filePath, self, f"'{value.type}' is incompatible with '{currentValue.type}'", value.column, value.line)
+            return typeError(self.filePath, self, f"'{value.type}' is incompatible with '{currentValue.type}'", value.column, value.line)
 
         elif isinstance(assignmentExpression.assigne, memberExpressionNode):
             member: memberExpressionNode = assignmentExpression.assigne
@@ -208,7 +213,7 @@ class Interpreter:
 
         if dataTypeTable[declaration.dataType] == type(value):
             return env.declareVariable(declaration.identifier, value, declaration.constant)
-        return syntaxError(self.filePath, self, f"'{value.type}' is incompatible with '{declaration.dataType}'", value.column, value.line)
+        return typeError(self.filePath, self, f"'{value.type}' is incompatible with '{declaration.dataType}'", value.column, value.line)
 
     def evaluateFunctionDeclaration(self, declaration: functionDeclarationExpressionNode, env: environment) -> None:
         fn = function(declaration.name, declaration.parameters,

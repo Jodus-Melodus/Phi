@@ -10,7 +10,9 @@ def output(file, arg) -> str:
     if isinstance(arg, (integerValue, booleanValue, nullValue, realValue)):
         return arg.value
     if isinstance(arg, stringValue):
-        return arg.value.replace('\\', '\n')
+        for a, b in [('\\n', '\n'), ('\\t', '\t')]:
+            arg.value = arg.value.replace(a, b)
+        return arg.value
     elif isinstance(arg, objectValue):
         result = '{'
         for prop, value in arg.properties.items():
@@ -25,7 +27,7 @@ def output(file, arg) -> str:
     else:
         return arg
 
-def in_(file, arg:stringValue) -> stringValue:
+def input(file, arg:stringValue) -> stringValue:
     sys.stdout.write(arg.value)
     return stringValue(sys.stdin.readline().strip(), arg.line, arg.column)
 

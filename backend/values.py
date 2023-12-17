@@ -47,7 +47,7 @@ class realValue(RuntimeValue):
 
 
 class stringValue(RuntimeValue):
-    def __init__(self, value, line: int = -1, column: int = -1) -> None:
+    def __init__(self, value:str, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         import backend.builtInMethods as bim
         self.type = 'stringValue'

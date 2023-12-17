@@ -66,7 +66,7 @@ def createGlobalEnvironment(parent=None, filePath:str='') -> environment:
     env = environment(parent, filePath)
     # functions
     env.declareVariable('output', nativeFunction(lambda args, scope : sys.stdout.write(str(bif.output(filePath, args[0])) + '\n')), True)
-    env.declareVariable('input', nativeFunction(lambda args, scope : bif.in_(filePath, args[0])), True)
+    env.declareVariable('input', nativeFunction(lambda args, scope : bif.input(filePath, args[0])), True)
     env.declareVariable('type', nativeFunction(lambda args, scope : bif.type_(filePath, args[0])), True)
     env.declareVariable('hash', nativeFunction(lambda args, scope : bif.hash(filePath, args[0])), True)
     env.declareVariable('Str', nativeFunction(lambda args, scope: bif.hardCastStr(filePath, args[0])), True)

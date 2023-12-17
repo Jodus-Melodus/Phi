@@ -1,0 +1,9 @@
+
+
+str x = "hello\nworld\t\thi"
+
+output(x)
+
+
+
+
