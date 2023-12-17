@@ -297,12 +297,12 @@ class Lexer:
                             tokens.append(Token(TT.realValue, float(
                                 number), self.index, self.column, self.line))
 
-                    elif char in ALPHABET:
+                    else:
                         name = ''
 
                         while len(self.sourceCode) > 0:
                             char = self.get()
-                            if char in ALPHABET + '_-1234567890':
+                            if char not in '\n\t \'"/?,.<>:;[]{(*&^%$#@!~`+=\|)}':
                                 name += char
                             else:
                                 break
@@ -314,8 +314,6 @@ class Lexer:
                         else:
                             tokens.append(
                                 Token(TT.identifier, name, self.index, self.column, self.line))
-                    else:
-                        return invalidCharacterError(self, char, self.column, self.line)
 
         tokens.append(Token(TT.eof, 'eof', self.index +
                       1, self.column + 1, self.line))
