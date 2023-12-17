@@ -9,7 +9,8 @@ additionalFiles = [
     'syntax.json',
     'snippets',
     'shell.py',
-    'settings.json'
+    'settings.json',
+    'phi-theme.json'
 ]
 
 exe = Executable(
