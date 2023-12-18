@@ -297,8 +297,8 @@ class App(ctk.CTk):
         self.bind('<Control-o>', self.openFiles)
         self.bind('<Control-s>', self.saveFile)
         self.bind('<Control-n>', self.newFile)
-        self.bind('<Control-h>', self.toggleFindAndReplace)
         self.bind('<Control-z>', self.undo)
+        self.bind('<Control-h>', self.toggleFindAndReplace)
         self.bind('<Control-g>', self.toggleGoToMenu)
         self.bind('<Control-m>', self.toggleMulticursorMenu)
 # Triple Character Sequence
@@ -373,9 +373,8 @@ class App(ctk.CTk):
         if tabName not in self.centerTabview._tab_dict:
             tab = self.centerTabview.add(tabName)
 
-            editor = ctk.CTkTextbox(tab, font=self.textBoxFont)
-            editor.configure(tabs=40)
-            editor.configure(wrap='none')
+            editor = ctk.CTkTextbox(
+                tab, font=self.textBoxFont, undo=True, maxundo=-1, spacing1=2, spacing3=2, wrap='none', tabs='1c')
 
             for tag in self.languageSyntaxPatterns[self.currentLanguage]:
                 editor.tag_config(
@@ -1104,12 +1103,18 @@ class App(ctk.CTk):
     def undo(self, e=None) -> None:
         editor = self.currentTab
         if editor:
-            editor.edit_undo()
+            try:
+                editor.edit_undo()
+            except:
+                pass
 
     def redo(self, e=None) -> None:
         editor = self.currentTab
         if editor:
-            editor.edit_redo()
+            try:
+                editor.edit_redo()
+            except:
+                pass
 
 
 if __name__ == '__main__':
