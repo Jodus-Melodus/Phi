@@ -1,0 +1,27 @@
+# Phi includes if statements
+
+int a = 4
+int b = 2
+
+if (a == b) {
+    output("a is equal to b")
+} else {
+    output("a is not equal to b")
+}
+
+if (a > b) {
+    output("a is larger than b")
+} else {
+    if (a < b) {
+        output("a is smaller than b")
+    } else {
+        output("a is equal to b")
+    }
+}
+
+if (a == b) {
+    output("a is equal to b")
+}
+
+
+

@@ -1,0 +1,23 @@
+# How to check primes.
+
+fn isPrime(number) {
+    array factors = []
+    int i = 2
+
+    while (i < number){
+        if (number % i == 0){
+            factors = factors + i
+        }
+        i += 1
+    }
+
+    <- if (factors.length() == 0){
+        <- T
+    } else {
+        <- F
+    }
+}
+
+output(isPrime(97))
+
+
