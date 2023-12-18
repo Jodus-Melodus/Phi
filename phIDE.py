@@ -109,7 +109,7 @@ class Dialog:
 
 class App(ctk.CTk):
     def __init__(self) -> None:
-        ctk.set_default_color_theme(f"Themes/{settings['theme']}.json")
+        ctk.set_default_color_theme(f"Themes/{settings['theme']}/theme.json")
         super().__init__()
         self.title('phIDE')
         self.state('zoomed')
@@ -653,7 +653,7 @@ class App(ctk.CTk):
 
 # Syntax
     def loadLanguageSyntax(self) -> None:
-        path = f"Themes/{settings['theme']}-syntax.json"
+        path = f"Themes/{settings['theme']}/syntax.json"
         if os.path.exists(path):
             with open(path, 'r') as f:
                 self.languageSyntaxPatterns = json.load(f)
