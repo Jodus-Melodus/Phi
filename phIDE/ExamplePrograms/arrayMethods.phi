@@ -1,9 +1,0 @@
-# These methods are built in to Phi
-
-array a = [1, 2, 3, 4, 5]
-
-a.append(6)
-output(a)
-
-int len = a.length()
-output(len)
