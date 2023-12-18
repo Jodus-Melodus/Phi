@@ -6,7 +6,7 @@ from hashlib import *
 import sys
 import math
 
-def output(file, arg) -> str:
+def output(arg, file:str='') -> str:
     if isinstance(arg, (integerValue, booleanValue, nullValue, realValue)):
         return arg.value
     if isinstance(arg, stringValue):

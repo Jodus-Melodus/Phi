@@ -578,7 +578,7 @@ class Interpreter:
                 else:
                     return nullValue()
             else:
-                return fileNotFoundError(self.filePath, self, f'{path}.phi', importExpression.column, importExpression.line)
+                return fileNotFoundError(self.filePath, self, f'{path}', importExpression.column, importExpression.line)
 
     def evaluateTryStatement(self, tryStatement: tryNode, env: environment) -> None:
         result = nullValue()
