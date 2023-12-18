@@ -109,7 +109,7 @@ class Dialog:
 
 class App(ctk.CTk):
     def __init__(self) -> None:
-        ctk.set_default_color_theme('phi-theme.json')
+        ctk.set_default_color_theme(f"Themes/{settings['theme']}.json")
         super().__init__()
         self.title('phIDE')
         self.state('zoomed')
@@ -141,7 +141,6 @@ class App(ctk.CTk):
         self.cursors = []
         self.variables = []
 
-        self.loadLanguageSyntax()
         # Frames
         self.leftPanel = ctk.CTkFrame(self, width=200)
         self.rightPanel = ctk.CTkFrame(self, width=200)
@@ -210,8 +209,8 @@ class App(ctk.CTk):
         self.replaceEntry = ctk.CTkEntry(
             self.findAndReplacePanel, placeholder_text='Replace', font=self.buttonFont)
         # ComboBox
-        self.currentLanguageCombo = ctk.CTkOptionMenu(self.menuBar, height=20, values=[
-                                                      x for x in self.languageSyntaxPatterns], font=self.buttonFont)
+        self.currentLanguageCombo = ctk.CTkOptionMenu(
+            self.menuBar, height=20, font=self.buttonFont, values=[''])
         # Other
         sys.stdin = TerminalRedirect(self.console)
         sys.stdout = TerminalRedirect(self.console)
@@ -366,6 +365,7 @@ class App(ctk.CTk):
 
     def addTab(self, path: str) -> None:
         self.currentPath = path
+        self.loadLanguageSyntax()
         self.currentLanguage = '.' + path.split('/')[-1].split('.')[-1]
         self.currentLanguageCombo.set(self.currentLanguage)
 
@@ -376,36 +376,40 @@ class App(ctk.CTk):
             editor = ctk.CTkTextbox(
                 tab, font=self.textBoxFont, undo=True, maxundo=-1, spacing1=2, spacing3=2, wrap='none', tabs='1c')
 
-            for tag in self.languageSyntaxPatterns[self.currentLanguage]:
-                editor.tag_config(
-                    tag, foreground=self.languageSyntaxPatterns[self.currentLanguage][tag][0])
-            editor.tag_config('error', foreground=settings['error-tag-foreground-color'],
-                              background=settings['error-tag-background-color'], underline=settings['error-tag-underline'])
-            editor.tag_config('similar', foreground=settings['similar-tag-foreground-color'],
-                              background=settings['similar-tag-background-color'], underline=settings['similar-tag-underline'])
-            editor.tag_config('sel', foreground=settings['selected-tag-foreground-color'],
-                              background=settings['selected-tag-background-color'], underline=settings['selected-tag-underline'])
-            editor.tag_config('warning', foreground=settings['warning-tag-foreground-color'],
-                              background=settings['warning-tag-background-color'], underline=settings['warning-tag-underline'])
+            if self.currentLanguage in self.languageSyntaxPatterns:
+                for tag in self.languageSyntaxPatterns[self.currentLanguage]:
+                    editor.tag_config(
+                        tag, foreground=self.languageSyntaxPatterns[self.currentLanguage][tag][0])
+                editor.tag_config('error', foreground=settings['error-tag-foreground-color'],
+                                  background=settings['error-tag-background-color'], underline=settings['error-tag-underline'])
+                editor.tag_config('similar', foreground=settings['similar-tag-foreground-color'],
+                                  background=settings['similar-tag-background-color'], underline=settings['similar-tag-underline'])
+                editor.tag_config('sel', foreground=settings['selected-tag-foreground-color'],
+                                  background=settings['selected-tag-background-color'], underline=settings['selected-tag-underline'])
+                editor.tag_config('warning', foreground=settings['warning-tag-foreground-color'],
+                                  background=settings['warning-tag-background-color'], underline=settings['warning-tag-underline'])
 
-            editor.pack(expand=True, fill='both')
+                editor.pack(expand=True, fill='both')
 
-            self.intelliSenseBoxes[tabName] = Dropdown(editor, 300, 100, [
-            ], self.intelliSenseClickInsert, 2, 2, settings['intelliSense-menu-color'])
-            self.snippetMenus[tabName] = Dropdown(
-                editor, 300, 100, [], self.insertSnippet, 2, 2, settings['snippet-menu-color'])
-            editor.bind('<KeyPress>', self.editorPress)
+                self.intelliSenseBoxes[tabName] = Dropdown(editor, 300, 100, [
+                ], self.intelliSenseClickInsert, 2, 2, settings['intelliSense-menu-color'])
+                self.snippetMenus[tabName] = Dropdown(
+                    editor, 300, 100, [], self.insertSnippet, 2, 2, settings['snippet-menu-color'])
+                editor.bind('<KeyPress>', self.editorPress)
 
-            self.openEditors[tabName] = editor
-            self.tabNamesPaths[tabName] = path
+                self.openEditors[tabName] = editor
+                self.tabNamesPaths[tabName] = path
 
-            with open(path, 'r') as f:
-                for ln, line in enumerate(f.readlines()):
-                    editor.insert('end', line)
-                    self.updateSyntax(line, ln + 1)
+                with open(path, 'r') as f:
+                    for ln, line in enumerate(f.readlines()):
+                        editor.insert('end', line)
+                        self.updateSyntax(line, ln + 1)
 
-            self.code = editor.get('0.0', 'end')
-            self.loadSnippets()
+                self.code = editor.get('0.0', 'end')
+                self.loadSnippets()
+            else:
+                Dialog(self, 'Error', 'File extention not supported.',
+                       self.centerx, self.centery)
         else:
             Dialog(self, 'Error', 'Cannot open two files with the same name.',
                    self.centerx, self.centery)
@@ -466,27 +470,28 @@ class App(ctk.CTk):
 
             currentCode = editor.get('0.0', 'end')
 
-            warning = shell.incrementalParsing(currentCode, self.currentPath)
-            self.warnings.configure(state='normal')
-            self.warnings.delete('0.0', 'end')
-            self.warnings.configure(state='disabled')
-            if warning != '':
-                line = warning.line
-                editor.tag_add('warning', f'{line}.0', f'{line}.end')
-                if warning.warningMessage() not in self.warnings.get('0.0', 'end'):
-                    self.warnings.configure(state='normal')
-                    self.warnings.insert('end', warning.warningMessage())
-                    self.warnings.configure(state='disabled')
+            if self.currentLanguage == '.phi':
+                warning = shell.incrementalParsing(currentCode, self.currentPath)
+                self.warnings.configure(state='normal')
+                self.warnings.delete('0.0', 'end')
+                self.warnings.configure(state='disabled')
+                if warning != '':
+                    line = warning.line
+                    editor.tag_add('warning', f'{line}.0', f'{line}.end')
+                    if warning.warningMessage() not in self.warnings.get('0.0', 'end'):
+                        self.warnings.configure(state='normal')
+                        self.warnings.insert('end', warning.warningMessage())
+                        self.warnings.configure(state='disabled')
 
-            warnings = self.warnings.get('0.0', 'end').strip().split('\n')
-            tabs = list(self.bottomTabview._tab_dict.keys())
-            currentName = tabs[1]
-            if (len(warnings) > 0) and (warnings[0] != ''):
-                newName = f'Warnings({len(warnings)})'
-            else:
-                newName = 'Warnings'
-            if newName not in self.bottomTabview._tab_dict.keys():
-                self.bottomTabview.rename(currentName, newName)
+                warnings = self.warnings.get('0.0', 'end').strip().split('\n')
+                tabs = list(self.bottomTabview._tab_dict.keys())
+                currentName = tabs[1]
+                if (len(warnings) > 0) and (warnings[0] != ''):
+                    newName = f'Warnings({len(warnings)})'
+                else:
+                    newName = 'Warnings'
+                if newName not in self.bottomTabview._tab_dict.keys():
+                    self.bottomTabview.rename(currentName, newName)
 
         self.updateMultiCursors(e)
         self.updateSyntax()
@@ -637,14 +642,26 @@ class App(ctk.CTk):
             self.snippetMenus[self.centerTabview.get()].place(x=x, y=y+30)
 
     def loadSnippets(self) -> None:
-        with open(f'snippets/{self.currentLanguage[1:]}.json') as f:
-            self.snippetsDict = json.load(f)
-            self.snippets = list(self.snippetsDict.keys())
+        path = f'snippets/{self.currentLanguage[1:]}.json'
+        if os.path.exists(path):
+            with open(path, 'r') as f:
+                self.snippetsDict = json.load(f)
+                self.snippets = list(self.snippetsDict.keys())
+        else:
+            Dialog(self, 'Error', 'Failed to load snippets.',
+                   self.centerx, self.centery)
 
 # Syntax
     def loadLanguageSyntax(self) -> None:
-        with open('syntax.json', 'r') as f:
-            self.languageSyntaxPatterns = json.load(f)
+        path = f"Themes/{settings['theme']}-syntax.json"
+        if os.path.exists(path):
+            with open(path, 'r') as f:
+                self.languageSyntaxPatterns = json.load(f)
+            self.currentLanguageCombo.configure(
+                values=self.languageSyntaxPatterns)
+        else:
+            Dialog(self, 'Error', 'Failed to open syntax file.',
+                   self.centerx, self.centery)
 
     def updateSyntax(self, line: str = None, lnIndex: int = None) -> None:
         editor = self.currentTab
@@ -1033,25 +1050,29 @@ class App(ctk.CTk):
 
     def run(self, e=None) -> None:
         self.saveFile()
-        if self.currentPath != '':
-            with open(self.currentPath, 'r') as f:
-                sourceCode = ''.join(f.readlines())
-            start = time.time()
-            self.console['state'] = 'normal'
-            error = shell.run(sourceCode, self.currentPath)
-            if error:
-                editor = self.currentTab
-                if editor:
-                    line = error.line
-                    editor.tag_add('error', f'{line}.0', f'{line}.end')
-                    text = editor.get(f'{line}.0', f'{line}.end')
-                    print(text)
-                    print(error)
-                    self.error = error
-            self.console['state'] = 'disabled'
-            end = time.time()
-            print(f"\nProcess finished in {end - start} seconds.")
-            print('-'*60)
+        if self.currentLanguage == '.phi':
+            if self.currentPath != '':
+                with open(self.currentPath, 'r') as f:
+                    sourceCode = ''.join(f.readlines())
+                start = time.time()
+                self.console['state'] = 'normal'
+                error = shell.run(sourceCode, self.currentPath)
+                if error:
+                    editor = self.currentTab
+                    if editor:
+                        line = error.line
+                        editor.tag_add('error', f'{line}.0', f'{line}.end')
+                        text = editor.get(f'{line}.0', f'{line}.end')
+                        print(text)
+                        print(error)
+                        self.error = error
+                self.console['state'] = 'disabled'
+                end = time.time()
+                print(f"\nProcess finished in {end - start} seconds.")
+                print('-'*60)
+        else:
+            Dialog(self, 'Error', 'Run only supports .phi files',
+                   self.centerx, self.centery)
 
     def commentLine(self, e=None) -> None:
         editor = self.currentTab
@@ -1084,11 +1105,13 @@ class App(ctk.CTk):
         self.saved = True
 
     def newFile(self, e=None) -> None:
-        self.currentPath = filedialog.asksaveasfilename(
+        path = filedialog.asksaveasfilename(
             title='Select a file', filetypes=[('Phi File', '*.phi'), ('All Files', '*.*')])
-        with open(self.currentPath, 'w') as f:
-            f.write('')
-        self.addTab(self.currentPath)
+        if os.path.exists(path):
+            self.currentPath = path
+            with open(self.currentPath, 'w') as f:
+                f.write('')
+            self.addTab(self.currentPath)
 
     def copy(self, e=None) -> None:
         editor = self.currentTab

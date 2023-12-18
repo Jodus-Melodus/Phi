@@ -14,5 +14,6 @@
     "warning-tag-background-color": "",
     "warning-tag-underline": 1,
     "intelliSense-menu-color": "#ff00ff",
-    "snippet-menu-color": "#3366ff"
+    "snippet-menu-color": "#3366ff",
+    "theme":"night-owl"
 }

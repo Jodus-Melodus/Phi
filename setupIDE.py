@@ -6,15 +6,14 @@ if sys.platform == "win32":
     base = "Win32GUI"
 
 additionalFiles = [
-    'syntax.json',
     'snippets',
     'shell.py',
     'settings.json',
-    'phi-theme.json',
     'Modules',
     'frontend',
     'backend',
-    'ExamplePrograms'
+    'ExamplePrograms',
+    'Themes'
 ]
 
 exe = Executable(
