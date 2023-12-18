@@ -2,27 +2,23 @@
     "kind": "program",
     "body": [
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "string",
-            "identifier": "x",
+            "kind": "importExpression",
             "value": {
-                "kind": "stringLiteral",
-                "value": "hello\\nworld\\t\\thi"
-            },
-            "constant": "False"
+                "kind": "identifier",
+                "symbol": "math"
+            }
         },
         {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "identifier",
-                    "symbol": "x"
-                }
-            ],
-            "caller": {
+            "kind": "memberExpression",
+            "object": {
                 "kind": "identifier",
-                "symbol": "output"
-            }
+                "symbol": "math"
+            },
+            "property": {
+                "kind": "identifier",
+                "symbol": "pi"
+            },
+            "computed": "True"
         }
     ]
 }
