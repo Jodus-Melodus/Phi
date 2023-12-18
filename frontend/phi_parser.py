@@ -772,18 +772,30 @@ class Parser:
                 return exportNode(value, self.line, self.column)
             case TT._import:
                 self.eat()
-                if self.get().type == TT.identifier:
-                    value = self.parseStatement()
-                    if isinstance(value, error):
-                        return value
-
-                    if self.get().type == TT._as:
-                        self.eat()
-                        name = self.parsePrimaryExpression()
-                        return importNode(name, value, self.line, self.column)
+                names = []
+                values = []
+                while self.get().type != TT.lineend:
+                    if self.get().type in (TT.identifier, TT.stringValue):
+                        value = self.parsePrimaryExpression()
+                        name = value
+                        if isinstance(value, error):
+                            return value
+                        
+                        values.append(value)
+                        if self.get().type == TT._as:
+                            self.eat()
+                            name = self.parsePrimaryExpression()
+                            names.append(name)
+                        elif self.get().type == TT.comma:
+                            self.eat()
+                            names.append(name)
+                        else:
+                            names.append(name)
+                            break
                     else:
-                        return importNode(nullValue(), value, self.line, self.column)
-                else:
-                    return syntaxError(self.filePath, self, "Expected an identifier", self.column, self.line)
+                        return syntaxError(self.filePath, self, "Expected an identifier or a stringValue", self.column, self.line)
+                
+                return importNode(names, values, self.line, self.column)
+
             case _:
                 return syntaxError(self.filePath, self, f"Invalid token '{self.get().type}' found", self.column, self.line)

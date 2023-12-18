@@ -3,10 +3,42 @@
     "body": [
         {
             "kind": "importExpression",
-            "value": {
-                "kind": "identifier",
-                "symbol": "math"
-            }
+            "names": [
+                {
+                    "kind": "identifier",
+                    "symbol": "math"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "debug"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "class"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "pp"
+                }
+            ],
+            "values": [
+                {
+                    "kind": "identifier",
+                    "symbol": "math"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "debug"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "class"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "pp"
+                }
+            ]
         },
         {
             "kind": "memberExpression",

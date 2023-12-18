@@ -550,14 +550,18 @@ class Interpreter:
 
     def evaluateImportExpression(self, importExpression: importNode, env: environment):
         from shell import run
-        path = importExpression.value
-        if isinstance(path, identifierNode):
-            path = path.symbol
 
-            if isinstance(importExpression.name, nullValue):
-                name = path
-            elif isinstance(importExpression.name, identifierNode):
-                name = importExpression.name.symbol
+        for i in range(len(importExpression.values)):
+            path = importExpression.values[i]
+
+            if isinstance(path, identifierNode):
+                path = path.symbol
+            elif isinstance(path, stringValue):
+                path = path.value
+            else:
+                return syntaxError(self.filePath, self, "Expected an identifier or a stringValue", importExpression.column, importExpression.line)
+
+            name = importExpression.names[i].symbol
 
             path = path.lower()
             path = f'Modules/{path}.phi'

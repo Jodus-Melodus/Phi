@@ -401,16 +401,17 @@ class exportNode(Node):
 
 
 class importNode(Node):
-    def __init__(self, name, value, line: int, column: int) -> None:
+    def __init__(self, names, values:list, line: int, column: int) -> None:
         super().__init__(line, column)
-        self.name = name
+        self.names = names
         self.kind = 'importExpression'
-        self.value = value
+        self.values = values
 
     def __repr__(self) -> str:
         return str({
             'kind': self.kind,
-            'value': self.value
+            'names':self.names,
+            'values': self.values
         })
 
 
