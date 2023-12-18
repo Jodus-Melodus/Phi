@@ -551,6 +551,7 @@ class Interpreter:
     def evaluateImportExpression(self, importExpression: importNode, env: environment):
         from shell import run
 
+        result = nullValue()
         for i in range(len(importExpression.values)):
             path = importExpression.values[i]
 
@@ -572,13 +573,14 @@ class Interpreter:
                 code = run(code, path)
                 if isinstance(code, exportValue):
                     if name.isupper():
-                        return env.declareVariable(name, code.value, True)
+                        result = env.declareVariable(name, code.value, True)
                     else:
-                        return env.declareVariable(name, code.value, False)
+                        result = env.declareVariable(name, code.value, False)
                 else:
-                    return nullValue()
+                    result = nullValue()
             else:
                 return fileNotFoundError(self.filePath, self, f'{path}', importExpression.column, importExpression.line)
+        return result
 
     def evaluateTryStatement(self, tryStatement: tryNode, env: environment) -> None:
         result = nullValue()

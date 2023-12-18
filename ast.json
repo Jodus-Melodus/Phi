@@ -41,16 +41,56 @@
             ]
         },
         {
-            "kind": "memberExpression",
-            "object": {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "math"
+                }
+            ],
+            "caller": {
                 "kind": "identifier",
-                "symbol": "math"
-            },
-            "property": {
+                "symbol": "output"
+            }
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "debug"
+                }
+            ],
+            "caller": {
                 "kind": "identifier",
-                "symbol": "pi"
-            },
-            "computed": "True"
+                "symbol": "output"
+            }
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "class"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
+            }
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "pp"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
+            }
         }
     ]
 }

@@ -1,12 +1,10 @@
 import math, debug, class, pp
 
 
-output(math)
-output(debug)
-output(class)
-output(pp)
-
-
+output(pp.obj_(math))
+output(pp.obj_(debug))
+output(pp.obj_(class))
+output(pp.obj_(pp))
 
 
 
