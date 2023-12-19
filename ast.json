@@ -44,8 +44,25 @@
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "identifier",
-                    "symbol": "math"
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "math"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "pp"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "obj_"
+                        },
+                        "computed": "True"
+                    }
                 }
             ],
             "caller": {
@@ -57,8 +74,25 @@
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "identifier",
-                    "symbol": "debug"
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "debug"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "pp"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "obj_"
+                        },
+                        "computed": "True"
+                    }
                 }
             ],
             "caller": {
@@ -70,8 +104,25 @@
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "identifier",
-                    "symbol": "class"
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "class"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "pp"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "obj_"
+                        },
+                        "computed": "True"
+                    }
                 }
             ],
             "caller": {
@@ -83,8 +134,25 @@
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "identifier",
-                    "symbol": "pp"
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "pp"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "pp"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "obj_"
+                        },
+                        "computed": "True"
+                    }
                 }
             ],
             "caller": {
