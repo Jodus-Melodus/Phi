@@ -7,7 +7,7 @@ exe = Executable(
 
 setup(
     name='phiShell',
-    version='1.3.0',
+    version='1.3.1',
     description='phi shell',
     executables=[exe],
 )
