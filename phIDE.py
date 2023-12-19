@@ -144,13 +144,14 @@ class App(ctk.CTk):
 
         # Frames
         self.leftPanel = ctk.CTkFrame(self, width=200)
-        self.rightPanel = ctk.CTkFrame(self, width=200)
+        self.rightPanel = ctk.CTkScrollableFrame(self)
         self.bottomPanel = ctk.CTkFrame(self)
         self.centerPanel = ctk.CTkFrame(self)
         self.gotoPanel = ctk.CTkFrame(self.rightPanel)
         self.findAndReplacePanel = ctk.CTkFrame(self.rightPanel)
         self.multiCursorPanel = ctk.CTkFrame(self.rightPanel)
         self.menuBar = ctk.CTkFrame(self, height=20)
+        self.availableModulesPanel = ctk.CTkFrame(self.rightPanel)
         # Tabviews
         self.centerTabview = ctk.CTkTabview(
             self.centerPanel, self.width*self.screenRatio, height=self.height*self.screenRatio)
@@ -167,6 +168,7 @@ class App(ctk.CTk):
             self.warningTab, font=self.textBoxFont, state='disabled')
         self.multiCursorText = ctk.CTkTextbox(
             self.multiCursorPanel, font=self.textBoxFont)
+        self.availableModulesText = ctk.CTkTextbox(self.availableModulesPanel, font=self.textBoxFont)
         # Buttons
         self.clearConsoleButton = ctk.CTkButton(
             self.consoleButtons, text='Clear', command=self.clearConsole, width=50, height=20, font=self.buttonFont)
@@ -202,6 +204,7 @@ class App(ctk.CTk):
             self.findAndReplacePanel, text='Find', font=self.buttonFont)
         self.replaceLabel = ctk.CTkLabel(
             self.findAndReplacePanel, text='Replace', font=self.buttonFont)
+        self.availableModulesLabel = ctk.CTkLabel(self.availableModulesPanel, text='Available Modules', font=self.buttonFont)
         # Entries
         self.gotoEntry = ctk.CTkEntry(
             self.gotoPanel, placeholder_text='Go to line', font=self.buttonFont)
@@ -217,6 +220,9 @@ class App(ctk.CTk):
         sys.stdout = TerminalRedirect(self.console)
         sys.stderr = TerminalRedirect(self.console)
 
+        self.availableModulesLabel.pack(padx=self.padx, pady=self.pady, side='top', anchor='nw')
+        self.availableModulesText.pack(padx=self.padx, pady=self.pady, expand=True)
+        self.availableModulesText.configure(state='disabled')
         self.multiCursorLabel.pack(
             padx=self.padx, pady=self.pady, side='top', anchor='nw')
         self.multiCursorText.pack(padx=self.padx, pady=self.pady, expand=True)
@@ -256,9 +262,9 @@ class App(ctk.CTk):
         self.copyErrorButton.pack(padx=self.padx, pady=self.pady)
 
         self.rightPanel.pack(padx=self.padx, pady=self.pady,
-                             fill='both', expand=True, side='right', anchor='e')
+                             fill='both', side='right', anchor='e')
         self.leftPanel.pack(padx=self.padx, pady=self.pady,
-                            fill='both', expand=True, side='left', anchor='w')
+                            fill='both', side='left', anchor='w')
         self.centerPanel.pack(
             padx=self.padx, pady=self.pady, fill='both', expand=True)
         self.bottomPanel.pack(padx=self.padx, pady=self.pady,
@@ -306,6 +312,7 @@ class App(ctk.CTk):
 # Triple Character Sequence
         self.bind('<Control-Shift-z>', self.redo)
         self.bind('<Control-Shift-Tab>', self.prevTab)
+        self.bind('<Control-Alt-m>', self.toggleAvailableModules)
 # Mouse Click
         self.bind('<Button-1>', self.mouseClickUpdate)
         self.bind('<ButtonRelease-1>', self.highlightSelected)
@@ -314,6 +321,7 @@ class App(ctk.CTk):
         self.bind('<Button-3>', self.rightClickMenuClick)
 
         self.mainloop()
+
 
     def pageTop(self, e=None) -> None:
         """Scroll to the top of the text widget."""
@@ -326,6 +334,25 @@ class App(ctk.CTk):
         editor = self.currentTab
         if editor:
             editor.see('end')
+            
+    def toggleAvailableModules(self, e=None) -> None:
+        """Toggle the visibility of available modules."""
+
+        availableModules = os.listdir('Modules')
+        self.availableModulesText.configure(state='normal')
+        self.availableModulesText.delete('1.0', 'end')
+        self.availableModulesText.insert('end', '\n'.join(availableModules))
+        self.availableModulesText.configure(state='disabled')
+
+        if self.availableModulesPanel.winfo_ismapped():
+            self.availableModulesPanel.pack_forget()
+            editor = self.currentTab
+            if editor:
+                editor.focus_set()
+        else:
+            self.availableModulesPanel.pack(padx=self.padx, pady=self.pady*5)
+            self.findEntry.focus_set()
+        
 
     def showHelp(self, e=None) -> None:
         helpWindow = ctk.CTkToplevel()
