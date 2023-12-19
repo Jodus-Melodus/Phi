@@ -1,5 +1,0 @@
-# Phi has it's own built-in in and output functions
-
-str x = input("> ")    # Assigns the variable 'x' to the string value of the input from the terminal
-
-output(x)  # Prints/Displays the value in the terminal

@@ -1,7 +1,0 @@
-# You can write and import your own modules. See 'exports.phi' to see how to write your own.
-
-import exports
-
-output(exports.hi)
-
-output(exports.add(5, 4))
