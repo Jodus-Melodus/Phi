@@ -1,0 +1,15 @@
+export obj debug = {
+    log:fn ~(msg){
+		output("[log] $".format(msg))
+	},
+	warning:fn ~(msg){
+		output("[warning] $".format(msg))
+	},
+	error:fn ~(msg){
+		output("[error] $".format(msg))
+	},
+	info:fn ~(msg){
+		output("[info] $".format(msg))
+	}
+}
+

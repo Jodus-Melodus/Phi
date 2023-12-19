@@ -17,6 +17,13 @@ additionalFiles = [
     'phi.ico'
 ]
 
+options = {
+    'build_exe': {
+        'include_files':additionalFiles,
+        'build_exe': 'phIDE'
+    }
+}
+
 exe = Executable(
     script="phIDE.py",
     base=base,
@@ -28,9 +35,5 @@ setup(
     version='1.3.1',
     description='phi IDE',
     executables=[exe],
-    options={
-        'build_exe':{
-            'include_files':additionalFiles
-        }
-    }
+    options=options
 )

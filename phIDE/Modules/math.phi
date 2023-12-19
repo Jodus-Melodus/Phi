@@ -1,0 +1,23 @@
+
+
+export obj math = {
+    pi:3.1415926535897932384,
+    phi:1.61803398874989484820,
+    e:2.71828182845904509079,
+    root:fn ~(r,i){<-r^(1/i)},
+    abs:fn ~(v){<-(v^2)^0.5},
+	power:fn ~(v,e){<-v^e},
+    round:fn ~(v,d){<-Int(v*(10^d)+0.5)/(10^d)},
+    floor:fn ~(v){<-Int(v)},
+    ceil:fn ~(v){<-if(v>Int(v)){<-Int(v)+1}else{<-Int(v)}},
+    factorial:fn ~(v){int p=1 while(v>0){p*=v v -=1}<-p},
+    gcd:fn ~(a,b){real temp=b while(b!=0){b=a%b a=temp temp=b}<-a},
+    lcm:fn ~(a,b){real x=(((a*b)^2)^0.5)real temp=b while(b!=0){b=a%b a=temp temp=b}<-x//a},
+    rad:fn ~(v){<-v*(3.1415926535897932384/180)},
+    deg:fn ~(v){<-v*(180/3.1415926535897932384)}
+}
+
+
+
+
+

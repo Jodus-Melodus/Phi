@@ -1,0 +1,6 @@
+# You can create your own modules.
+
+export obj name = {
+    hi:"hello world",
+    add:fn ~(a, b){<- a + b}
+}

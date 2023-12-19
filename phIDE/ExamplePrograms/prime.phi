@@ -1,0 +1,39 @@
+fn factors(number){
+	array fac = []
+	int i = 1
+
+	while (i <= number){
+		if (number % i == 0){
+			fac.append(i)
+		}
+		i += 1
+	}
+	<- fac
+}
+
+fn checkPrime(number){
+	array facs = factors(number)
+
+	<- if (facs.length() == 2){
+		<- 1
+	} else {
+		<- 0
+	}
+}
+
+fn calcNPrimes(n){
+	array primes = []
+	int j = 1
+	
+	while (n > 0){
+		if (checkPrime(j) == 1){
+			primes.append(j)
+			n -= 1
+		}
+		j += 1
+	}
+	<- primes
+}
+
+
+output(calcNPrimes(50))
