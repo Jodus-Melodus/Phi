@@ -307,6 +307,8 @@ class App(ctk.CTk):
         self.bind('<Control-h>', self.toggleFindAndReplace)
         self.bind('<Control-g>', self.toggleGoToMenu)
         self.bind('<Control-m>', self.toggleMulticursorMenu)
+        self.bind('<Control-Home>', self.pageTop)
+        self.bind('<Control-End>', self.pageBottom)
 # Triple Character Sequence
         self.bind('<Control-Shift-z>', self.redo)
         self.bind('<Control-Shift-Tab>', self.prevTab)
@@ -320,6 +322,19 @@ class App(ctk.CTk):
 
         self.mainloop()
 
+
+    def pageTop(self, e=None) -> None:
+        """Scroll to the top of the text widget."""
+        editor = self.currentTab
+        if editor:
+            editor.see('1.0')
+
+    def pageBottom(self, e=None) -> None:
+        """Scroll to the bottom of the text widget."""
+        editor = self.currentTab
+        if editor:
+            editor.see('end')
+            
     def toggleAvailableModules(self, e=None) -> None:
         """Toggle the visibility of available modules."""
 
@@ -338,7 +353,6 @@ class App(ctk.CTk):
             self.availableModulesPanel.pack(padx=self.padx, pady=self.pady*5)
             self.findEntry.focus_set()
         
-
 
     def showHelp(self, e=None) -> None:
         helpWindow = ctk.CTkToplevel()
@@ -499,7 +513,8 @@ class App(ctk.CTk):
             currentCode = editor.get('0.0', 'end')
 
             if self.currentLanguage == '.phi':
-                warning = shell.incrementalParsing(currentCode, self.currentPath)
+                warning = shell.incrementalParsing(
+                    currentCode, self.currentPath)
                 self.warnings.configure(state='normal')
                 self.warnings.delete('0.0', 'end')
                 self.warnings.configure(state='disabled')
