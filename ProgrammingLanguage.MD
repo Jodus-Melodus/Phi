@@ -22,6 +22,7 @@ The following keywords are reserved in the Phi programming language:
 - `obj` - Declare an object value
 - `array` - Declare an array value
 - `lambda` - Used to assign a function
+- `unknown` - Used when the data type is unknown
 - `if` - [Conditional statement](#if-else-statements)
 - `else` - Else clause for [conditional statements](#if-else-statements)
 - `while` - [While loops](#while-loops)
@@ -377,6 +378,22 @@ o.update({"gender":"male"})
 ```
 
 The `update` function adds one or more attributes to the object. If an attribute already exists it will be overwritten. The return value is null.
+
+### Unknown
+
+```phi
+unknown x = 3
+unknown y = "Hello"
+unknown z = {a:7, b:4}
+```
+
+Result:
+
+```phi
+3
+Hello
+{a: 7, b: 4}
+```
 
 ## Statments
 
