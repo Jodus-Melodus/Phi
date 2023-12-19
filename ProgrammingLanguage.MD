@@ -114,7 +114,7 @@ int x = 2
 real y = 2.1
 ```
 
-- #### Operations:
+- #### Operations
 
 ```phi
 int x = 2 + 4 / 2 * 9 - 5 % 3^2
@@ -141,7 +141,7 @@ str y = "123 - 2"
 str z = "Testing 123"
 ```
 
-- #### Length
+- #### String Length
 
 ```phi
 str x = "hello world"
@@ -188,7 +188,7 @@ array a = [1, 2, 3]
 array b = ["hello", 12, ["world", 9.2]]
 ```
 
-- #### Length
+- #### Array Length
 
 ```phi
 array a = [1, 4, "hello"]
@@ -449,15 +449,20 @@ hello world
 
 Reads input from user and returns it as string.
 Example usage:
-```
+
+```phi
 str input = input("> ")
 ```
+
 Input (user):
-```
+
+```phi
 1234567890
 ```
+
 Output:
-```
+
+```phi
 1234567890
 ```
 
@@ -465,11 +470,14 @@ Output:
 
 Returns current date and time as a real value.
 Example usage:
-```
+
+```phi
 int today = now()
 ```
+
 Output:
-```
+
+```phi
 375612369804852324361987698
 ```
 
@@ -477,7 +485,8 @@ Output:
 
 Pauses execution for specified amount of seconds.
 Example usage:
-```
+
+```phi
 wait(1) # waits for one second
 ```
 
@@ -485,53 +494,56 @@ wait(1) # waits for one second
 
 Calculates nth root of radicand.
 Example usage:
-```
+
+```phi
 root(16, 2) # calculates square root of 16
 ```
+
 Output:
-```
+
+```phi
 4
 ```
 
 #### `hash`(data)
 
 Generate hash code for data(sha256)
-```
+
+```phi
 str hsh = hash("Hello World!")
 ```
-
 
 ### User Defined Functions
 
 Functions are defined using the `fn` keyword followed by its name and parameters in parentheses. The function body is enclosed within curly braces.
 
+- #### Creating functions with parameters and return values
 
-- #### Creating functions with parameters and return values:
-
-```
+```phi
 fn add(x, y){
     <- x + y
 }
 ```
 
-- #### Calling functions:
+- #### Calling functions
 
-```
+```phi
 int result = add(2, 5)
 ```
+
 Result:
-```
+
+```phi
 7
 ```
 
 ### If Else statements
 
-#### Conditions:
-
+#### Conditions
 
 - ##### True
 
-```
+```phi
 (T)
 (T | F)
 ("hello" != "world")
@@ -542,7 +554,7 @@ Result:
 
 - ##### False
 
-```
+```phi
 (T & F)
 (F)
 (5 == 2)
@@ -551,23 +563,25 @@ Result:
 ("hello" == "world")
 ```
 
-#### Simple if else statement:
+#### Simple if else statement
 
-```
+```phi
 if (T) {
     <- "True"
 } else {
     <- "False"
 }
 ```
+
 Result:
-```
+
+```phi
 True
 ```
 
-#### Nested if else statement:
+#### Nested if else statement
 
-```
+```phi
 if (F) {
     <- "First False"
 } else {
@@ -578,15 +592,18 @@ if (F) {
     }
 }
 ```
+
 Result:
-```
+
+```phi
 Second True
 ```
 
 ### Case Statements
 
 Case statements are similar to if else statements, but they can handle multiple conditions. They work by comparing a value with different cases and executing the code block of the value if it matches. The code block is a default code block and does not need to return a value. You can use any datatype.
-```
+
+```phi
 int x = 3
 
 str r = match x {
@@ -599,8 +616,10 @@ str r = match x {
 
 output(r)
 ```
+
 Result:
-```
+
+```phi
 three
 ```
 
@@ -608,36 +627,40 @@ three
 
 Conditions are the same as [if statements](#if-else-statements)
 
-#### Looping until a condition is met.
+#### Looping until a condition is met
 
-```
+```phi
 int a = 0
 while (a < 2) {
     output(a)
     a += 1
 }
 ```
+
 Result:
-```
+
+```phi
 0
 1
 ```
 
-#### Infinite loop example.
+#### Infinite loop example
 
-```
+```phi
 int b = 0
 while (T) {
     output(b)
     b += 1
 }
 ```
+
 This will run forever, as the while loop's condition always evaluates to true (`T`).
 
 #### While Loop with break
 
 To exit early from a loop you can use `break`.
-```
+
+```phi
 int c = 0
 while (T) {
     output(c)
@@ -647,8 +670,10 @@ while (T) {
     }
 }
 ```
+
 Result:
-```
+
+```phi
 0
 1
 2
@@ -659,7 +684,8 @@ Result:
 #### While Loops with continue
 
 `continue` skips the rest of the current iteration and jumps directly to the next one.
-```
+
+```phi
 d = 0
 while (T) {
     d += 1
@@ -669,8 +695,10 @@ while (T) {
     output("I am odd!")
 }
 ```
+
 Result:
-```
+
+```phi
 I am odd!
 I am odd!
 I am odd!
@@ -680,34 +708,39 @@ I am odd!
 
 For loops have three parts separated by colons (`,`)
 
-#### Example of a for loop.
+#### Example of a for loop
 
-```
+```phi
 for (int i = 0, i < 5, i += 1){
     output(i)
 }
 ```
+
 Result:
-```
+
+```phi
 0
 1
 2
 3
 4
 ```
+
 The variable `i` starts at 0 and continues until it is no longer less than 5. After each iteration, `i` is incremented.
 
 #### For Loop with break
 
-```
+```phi
 for (int j = 0; j < 10; j++){
     if (j == 5){
         break
     }
 }
 ```
+
 Result:
-```
+
+```phi
 0
 1
 2
@@ -718,15 +751,18 @@ Result:
 #### For Loop with continue
 
 The `continue` statement skips the rest of the code in the current iteration and moves on to the next one.
-```
+
+```phi
 for (k = 0; k <= 9; k++) {
     if (k % 2 == 0) {
         continue
     }
 }
 ```
+
 Result:
-```
+
+```phi
 1
 3
 5
@@ -737,15 +773,18 @@ Result:
 ### For-Each Loops
 
 For-each loops are used when you want to perform an action on each element in a collection without having to manually iterate through it using an index.
-```
+
+```phi
 array a = [6, 4, 29, 234, 1209, 98203, 12, 0, 2]
 
 for each (int i in a){
     output(i)
 }
 ```
+
 Result:
-```
+
+```phi
 6
 4
 29
@@ -761,26 +800,29 @@ Result:
 
 The do-while loop works similarly to the while loop, but it runs at least once before checking the condition.
 
-##### Example of a do-while loop.
+#### Example of a do-while loop
 
-```
+```phi
 int c = 0
 do {
     output(c)
     c += 1
 } while (c < 3)
 ```
+
 Result:
-```
+
+```phi
 0
 1
 2
 ```
+
 Do-while loops can be useful when you want to ensure that your code block executes at least once regardless of whether or not the condition is false.
 
 #### Do-While Loop with break
 
-```
+```phi
 int j = 0
 do {
     j += 1
@@ -789,8 +831,10 @@ do {
     }
 } while (T)
 ```
+
 Result:
-```
+
+```phi
 1
 2
 3
@@ -800,7 +844,7 @@ Result:
 
 #### Do-While Loop with continue
 
-```
+```phi
 int k = 0
 do {
     k += 1
@@ -810,8 +854,10 @@ do {
     output(k)
 } while (k < 10)
 ```
+
 Result:
-```
+
+```phi
 1
 3
 5
@@ -823,44 +869,51 @@ Result:
 
 ### Importing a module
 
-```
-import math
-import math as m
+```phi
+import math as m, debug as d
+import math, debug
 ```
 
 ### Accessing a module's functions
 
-```
+```phi
 output(math.root(16, 2))
 output(m.root(16, 2))
 ```
+
 Result:
-```
+
+```phi
 4
 4
 ```
 
 ### Accessing a module's variables
 
-```
+```phi
 output(math.pi)
 ```
+
 Result:
-```
+
+```phi
 3.141592653589793
 ```
 
 ### Exporting a module
 
 Also the format for the modules
-```
+
+```phi
 export obj name = {
     variable:value,
     function:value
 }
 ```
+
 Example:
-```
+
+```phi
 export obj math = {
     pi:3.141592653589793,
     root:fn r(radicand, index){<- radicand ^ (1 / index)}
@@ -872,21 +925,25 @@ export obj math = {
 ### Try-Catch
 
 The try block is where you put the code that might throw an error. The catch block is where you handle it if there is one.
-```
+
+```phi
 try {
     int x = 5 / 0
 } catch (zeroDivisionError) {
     output("Can't devide a number by 0")
 }
 ```
+
 Result:
-```
+
+```phi
 Can't divide a number by 0
 ```
 
 ### Throw
 
 You can also throw an error if something goes wrong in your code. This is useful when you want to handle errors yourself instead of letting them crash your program.
-```
+
+```phi
 throw syntaxError
 ```

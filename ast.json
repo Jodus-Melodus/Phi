@@ -2,199 +2,132 @@
     "kind": "program",
     "body": [
         {
-            "kind": "importExpression",
-            "names": [
-                {
-                    "kind": "identifier",
-                    "symbol": "class"
-                }
-            ],
-            "values": [
-                {
-                    "kind": "identifier",
-                    "symbol": "class"
-                }
-            ]
+            "kind": "variableDeclarationExpression",
+            "datatype": "object",
+            "identifier": "x",
+            "value": {
+                "kind": "objectLiteral",
+                "properties": [
+                    {
+                        "kind": "propertyLiteral",
+                        "key": "a",
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 3
+                        }
+                    },
+                    {
+                        "kind": "propertyLiteral",
+                        "key": "b",
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 9
+                        }
+                    }
+                ]
+            },
+            "constant": "False"
         },
         {
-            "kind": "assignmentExpression",
-            "assigne": {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "objectLiteral",
+                    "properties": [
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "c",
+                            "value": {
+                                "kind": "integerLiteral",
+                                "value": 2
+                            }
+                        },
+                        {
+                            "kind": "propertyLiteral",
+                            "key": "d",
+                            "value": {
+                                "kind": "integerLiteral",
+                                "value": 0
+                            }
+                        }
+                    ]
+                }
+            ],
+            "caller": {
                 "kind": "memberExpression",
                 "object": {
                     "kind": "identifier",
-                    "symbol": "class"
+                    "symbol": "x"
                 },
                 "property": {
                     "kind": "identifier",
-                    "symbol": "attrs"
+                    "symbol": "update"
                 },
                 "computed": "True"
-            },
-            "value": {
-                "kind": "arrayLiteral",
-                "items": [
-                    {
-                        "kind": "itemLiteral",
-                        "index": 0,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "name"
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 1,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "age"
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 2,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "city"
-                        }
-                    }
-                ]
             }
         },
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "array",
-            "identifier": "values",
-            "value": {
-                "kind": "arrayLiteral",
-                "items": []
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "assignmentExpression",
-            "assigne": {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "x"
+                }
+            ],
+            "caller": {
                 "kind": "identifier",
-                "symbol": "values"
-            },
-            "value": {
-                "kind": "arrayLiteral",
-                "items": [
-                    {
-                        "kind": "itemLiteral",
-                        "index": 0,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "john"
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 1,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 32
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 2,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "new york"
-                        }
-                    }
-                ]
+                "symbol": "output"
             }
         },
         {
             "kind": "variableDeclarationExpression",
             "datatype": "object",
-            "identifier": "person1",
+            "identifier": "a",
             "value": {
-                "kind": "callExpression",
-                "arguments": [
+                "kind": "objectLiteral",
+                "properties": [
                     {
-                        "kind": "identifier",
-                        "symbol": "values"
-                    }
-                ],
-                "caller": {
-                    "kind": "memberExpression",
-                    "object": {
-                        "kind": "identifier",
-                        "symbol": "class"
-                    },
-                    "property": {
-                        "kind": "identifier",
-                        "symbol": "init"
-                    },
-                    "computed": "True"
-                }
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "assignmentExpression",
-            "assigne": {
-                "kind": "identifier",
-                "symbol": "values"
-            },
-            "value": {
-                "kind": "arrayLiteral",
-                "items": [
-                    {
-                        "kind": "itemLiteral",
-                        "index": 0,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "mary"
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 1,
+                        "kind": "propertyLiteral",
+                        "key": "a",
                         "value": {
                             "kind": "integerLiteral",
-                            "value": 23
+                            "value": 2
                         }
                     },
                     {
-                        "kind": "itemLiteral",
-                        "index": 2,
+                        "kind": "propertyLiteral",
+                        "key": "b",
                         "value": {
-                            "kind": "stringLiteral",
-                            "value": "cape horn"
+                            "kind": "integerLiteral",
+                            "value": 34
                         }
                     }
                 ]
-            }
+            },
+            "constant": "False"
         },
         {
             "kind": "variableDeclarationExpression",
             "datatype": "object",
-            "identifier": "person2",
+            "identifier": "b",
             "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "identifier",
-                        "symbol": "values"
-                    }
-                ],
-                "caller": {
-                    "kind": "memberExpression",
-                    "object": {
-                        "kind": "identifier",
-                        "symbol": "class"
-                    },
-                    "property": {
-                        "kind": "identifier",
-                        "symbol": "init"
-                    },
-                    "computed": "True"
-                }
+                "kind": "identifier",
+                "symbol": "a"
             },
             "constant": "False"
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "b"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
+            }
         }
     ]
 }
