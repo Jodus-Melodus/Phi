@@ -2,82 +2,199 @@
     "kind": "program",
     "body": [
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "object",
-            "identifier": "x",
+            "kind": "importExpression",
+            "names": [
+                {
+                    "kind": "identifier",
+                    "symbol": "class"
+                }
+            ],
+            "values": [
+                {
+                    "kind": "identifier",
+                    "symbol": "class"
+                }
+            ]
+        },
+        {
+            "kind": "assignmentExpression",
+            "assigne": {
+                "kind": "memberExpression",
+                "object": {
+                    "kind": "identifier",
+                    "symbol": "class"
+                },
+                "property": {
+                    "kind": "identifier",
+                    "symbol": "attrs"
+                },
+                "computed": "True"
+            },
             "value": {
-                "kind": "objectLiteral",
-                "properties": [
+                "kind": "arrayLiteral",
+                "items": [
                     {
-                        "kind": "propertyLiteral",
-                        "key": "a",
+                        "kind": "itemLiteral",
+                        "index": 0,
                         "value": {
-                            "kind": "integerLiteral",
-                            "value": 3
+                            "kind": "stringLiteral",
+                            "value": "name"
                         }
                     },
                     {
-                        "kind": "propertyLiteral",
-                        "key": "b",
+                        "kind": "itemLiteral",
+                        "index": 1,
                         "value": {
-                            "kind": "integerLiteral",
-                            "value": 9
+                            "kind": "stringLiteral",
+                            "value": "age"
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 2,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "city"
                         }
                     }
                 ]
+            }
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "array",
+            "identifier": "values",
+            "value": {
+                "kind": "arrayLiteral",
+                "items": []
             },
             "constant": "False"
         },
         {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "objectLiteral",
-                    "properties": [
-                        {
-                            "kind": "propertyLiteral",
-                            "key": "c",
-                            "value": {
-                                "kind": "integerLiteral",
-                                "value": 2
-                            }
-                        },
-                        {
-                            "kind": "propertyLiteral",
-                            "key": "d",
-                            "value": {
-                                "kind": "integerLiteral",
-                                "value": 0
-                            }
+            "kind": "assignmentExpression",
+            "assigne": {
+                "kind": "identifier",
+                "symbol": "values"
+            },
+            "value": {
+                "kind": "arrayLiteral",
+                "items": [
+                    {
+                        "kind": "itemLiteral",
+                        "index": 0,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "john"
                         }
-                    ]
-                }
-            ],
-            "caller": {
-                "kind": "memberExpression",
-                "object": {
-                    "kind": "identifier",
-                    "symbol": "x"
-                },
-                "property": {
-                    "kind": "identifier",
-                    "symbol": "update"
-                },
-                "computed": "True"
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 1,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 32
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 2,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "new york"
+                        }
+                    }
+                ]
             }
         },
         {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "identifier",
-                    "symbol": "x"
+            "kind": "variableDeclarationExpression",
+            "datatype": "object",
+            "identifier": "person1",
+            "value": {
+                "kind": "callExpression",
+                "arguments": [
+                    {
+                        "kind": "identifier",
+                        "symbol": "values"
+                    }
+                ],
+                "caller": {
+                    "kind": "memberExpression",
+                    "object": {
+                        "kind": "identifier",
+                        "symbol": "class"
+                    },
+                    "property": {
+                        "kind": "identifier",
+                        "symbol": "init"
+                    },
+                    "computed": "True"
                 }
-            ],
-            "caller": {
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "assignmentExpression",
+            "assigne": {
                 "kind": "identifier",
-                "symbol": "output"
+                "symbol": "values"
+            },
+            "value": {
+                "kind": "arrayLiteral",
+                "items": [
+                    {
+                        "kind": "itemLiteral",
+                        "index": 0,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "mary"
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 1,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 23
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 2,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "cape horn"
+                        }
+                    }
+                ]
             }
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "object",
+            "identifier": "person2",
+            "value": {
+                "kind": "callExpression",
+                "arguments": [
+                    {
+                        "kind": "identifier",
+                        "symbol": "values"
+                    }
+                ],
+                "caller": {
+                    "kind": "memberExpression",
+                    "object": {
+                        "kind": "identifier",
+                        "symbol": "class"
+                    },
+                    "property": {
+                        "kind": "identifier",
+                        "symbol": "init"
+                    },
+                    "computed": "True"
+                }
+            },
+            "constant": "False"
         }
     ]
 }
