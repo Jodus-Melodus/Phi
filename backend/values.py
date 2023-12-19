@@ -105,7 +105,9 @@ class objectValue(RuntimeValue):
         self.properties = properties
         self.methods = {
             'items': nativeFunction(lambda args, scope: bim.objectItems(self)),
-            'keys': nativeFunction(lambda args, scope: bim.objectKeys(self))
+            'keys': nativeFunction(lambda args, scope: bim.objectKeys(self)),
+            'update': nativeFunction(lambda args, scope: bim.objectUpdate(self, args[0])),
+            'hasAttr': nativeFunction(lambda args, scope: bim.objectHasAttr(self, args[0]))
         }
 
     def __repr__(self) -> str:
