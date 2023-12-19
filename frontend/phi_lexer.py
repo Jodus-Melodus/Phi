@@ -41,6 +41,7 @@ class TokenType:
 
         # keywords
         self._continue = 'continue'
+        self.unknown = 'unknown'
         self._lambda = 'lambda'
         self._import = 'import'
         self.string = 'string'
@@ -69,7 +70,7 @@ class TokenType:
 
 TT = TokenType()
 DIGITS = '12345678890'
-ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-'
 
 KEYWORDS = {
     'fn': TT.fn,
@@ -96,7 +97,8 @@ KEYWORDS = {
     'catch': TT.catch,
     'throw':TT.throw,
     'case':TT._case,
-    'match':TT._match
+    'match':TT._match,
+    'unknown':TT.unknown
 }
 
 
@@ -303,7 +305,7 @@ class Lexer:
 
                         while len(self.sourceCode) > 0:
                             char = self.get()
-                            if char in ALPHABET + '_-1234567890':
+                            if char in ALPHABET + '1234567890':
                                 name += char
                             else:
                                 break

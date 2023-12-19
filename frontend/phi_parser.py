@@ -28,7 +28,8 @@ class Parser:
             'array':arrayLiteralNode([], self.line, self.column),
             'object':objectLiteralNode([], self.line, self.column),
             'bool':identifierNode('F', self.line, self.column),
-            'lambda':nullLiteralNode(self.line, self.column)
+            'lambda':nullLiteralNode(self.line, self.column),
+            'unknown':nullLiteralNode(self.line, self.column)
         }
 
     def __str__(self) -> str:
@@ -81,6 +82,8 @@ class Parser:
                 return self.parseVariableDeclaration()
             case TT.fn:
                 return self.parseFunctionDeclaration()
+            case TT.unknown:
+                return self.parseVariableDeclaration()
             case TT._if:
                 return self.parseIfStatement()
             case TT._while:
@@ -519,7 +522,7 @@ class Parser:
         if self.get().type != TT.assignmentOperator:
             if self.get().type in (TT.eof, TT.lineend):
                 self.eat()
-            if datatype in ('int', 'string', 'real', 'array', 'object', 'bool', 'lambda'):
+            if datatype in ('int', 'string', 'real', 'array', 'object', 'bool', 'lambda', 'unknown'):
                 return variableDeclarationExpressionNode(datatype, identifier, self.datetypeMap[datatype], constant, self.line, self.column)
             else:
                 return syntaxError(self.filePath, self, "Expected a variable declaration", self.column, self.line)

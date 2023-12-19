@@ -1,4 +1,8 @@
 
 
-throw syntaxError "an error occured"
 
+unknown a = _
+int b = a
+
+
+output(type(b))

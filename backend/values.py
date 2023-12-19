@@ -18,6 +18,21 @@ class nullValue(RuntimeValue):
             'type': self.type,
             'value': self.value
         })
+    
+
+class unknownValue(RuntimeValue):
+    def __init__(self, value, line:int=-1, column:int=-1) -> None:
+        super().__init__()
+        self.type = 'unknownValue'
+        self.value = value
+        self.line = line
+        self.column = column
+
+    def __repr__(self) -> str:
+        return str({
+            'type': self.type,
+            'value': self.value
+        })
 
 
 class integerValue(RuntimeValue):

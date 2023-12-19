@@ -34,6 +34,19 @@ class realLiteralNode(Node):
             'kind': self.kind,
             'value': self.value
         })
+    
+
+class unknownLiteralNode(Node):
+    def __init__(self, value, line: int, column: int) -> None:
+        super().__init__(line, column)
+        self.kind = 'unknownLiteral'
+        self.value = value
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'value': self.value
+        })
 
 
 class integerLiteralNode(Node):

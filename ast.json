@@ -2,15 +2,14 @@
     "kind": "program",
     "body": [
         {
-            "kind": "throwStatement",
-            "error": {
-                "kind": "identifier",
-                "symbol": "syntaxError"
+            "kind": "variableDeclarationExpression",
+            "datatype": "unknown",
+            "identifier": "a",
+            "value": {
+                "kind": "integerLiteral",
+                "value": 4
             },
-            "msg": {
-                "kind": "stringLiteral",
-                "value": "error"
-            }
+            "constant": "False"
         }
     ]
 }

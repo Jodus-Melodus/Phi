@@ -9,24 +9,16 @@ booleanTable = {
     'F': False
 }
 
-dataTypeTable = {
-    'int': integerValue,
-    'real': realValue,
-    'string': stringValue,
-    'object': objectValue,
-    'array': arrayValue,
-    'bool': booleanValue,
-    'lambda': function
-}
 valueTypeTable = {
-    'integerValue': ['integerValue', 'realValue'],
-    'realValue': ['realValue', 'integerValue'],
-    'stringValue': ['stringValue'],
-    'arrayValue': ['arrayValue'],
-    'nullValue': ['nullValue'],
-    'booleanValue': ['booleanValue'],
-    'objectValue': ['objectValue'],
-    'function': ['function'],
+    'integerValue': ['integerValue', 'realValue', 'unknownValue'],
+    'realValue': ['realValue', 'integerValue', 'unknownValue'],
+    'stringValue': ['stringValue', 'unknownValue'],
+    'arrayValue': ['arrayValue', 'unknownValue'],
+    'nullValue': ['nullValue', 'unknownValue'],
+    'booleanValue': ['booleanValue', 'unknownValue'],
+    'objectValue': ['objectValue', 'unknownValue'],
+    'function': ['function', 'unknownValue'],
+    'unknownValue': ['integerValue', 'realValue', 'booleanValue', 'objectValue', 'function', 'stringValue', 'nullValue', 'arrayValue', 'unknownValue']
 }
 
 
@@ -190,8 +182,10 @@ class Interpreter:
             if isinstance(currentValue, error):
                 return currentValue
             value = self.evaluate(assignmentExpression.value, env)
+            
             if isinstance(value, error):
                 return value
+            
             if value.type in valueTypeTable[value.type]:
                 return env.assignVariable(varName, value)
             return typeError(self.filePath, self, f"'{value.type}' is incompatible with '{currentValue.type}'", value.column, value.line)
@@ -217,7 +211,7 @@ class Interpreter:
         if isinstance(value, error):
             return value
 
-        if dataTypeTable[declaration.dataType] == type(value):
+        if value.type in valueTypeTable[value.type]:
             return env.declareVariable(declaration.identifier, value, declaration.constant)
         return typeError(self.filePath, self, f"'{value.type}' is incompatible with '{declaration.dataType}'", value.column, value.line)
 
@@ -710,6 +704,8 @@ class Interpreter:
                 return realValue(astNode.value, astNode.line, astNode.column)
             case 'stringLiteral':
                 return stringValue(astNode.value, astNode.line, astNode.column)
+            case 'unknownLiteral':
+                return unknownValue(astNode.value, astNode.line, astNode.column)
             case 'nullLiteral':
                 return nullValue()
             case _:
