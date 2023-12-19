@@ -1,15 +1,20 @@
 # Phi: A Dynamic Scripting Language
-Welcome to Phi, a dynamic scripting language designed for flexibility and ease of use.
 
+Welcome to Phi, a dynamic scripting language designed for flexibility and ease of use.
 
 ## Conventions
 
 - All code should be indented using 4 spaces.
 - All code should be written using [Camel Case](https://en.wikipedia.org/wiki/Camel_case) although other cases are supported.
-# Reporting Issues
+
+## Reporting Issues
+
 If you encounter any unexpected behavior while using Phi, please report it promptly. Include a screenshot and a detailed description to help us improve.
-# Keywords
+
+## Keywords
+
 The following keywords are reserved in the Phi programming language:
+
 - `int` - Declare an integer
 - `real` - Declare a floating-point number
 - `str` - Declare a string value
@@ -24,13 +29,18 @@ The following keywords are reserved in the Phi programming language:
 - `fn` - Declare a new [function](#user-defined-functions)
 - `import` - [Import](#importing-a-module) a module
 - `export` - [Export](#exporting-a-module) a value
-- `break` - Terminates the loop. Works for [while loop](#loop-with-break), [do while loop](#loop-with-break-1) and [for loop](#for-loop)
+- `break` - Terminates the loop. Works for [while loop](#while-loop-with-break), [do while loop](#do-while-loop-with-break) and [for loop](#for-loop-with-break)
 - `continue` - Skips to the next iteration of the loop
 - All other [built-in functions](#built-in-functions) and methods are also reserved words.
-# Comments
+
+## Comments
+
 Comments start with `#` symbol and continue until end of line.
-# Operators
+
+## Operators
+
 The following operators are supported in Phi:
+
 - `=` Assignment operator
 - `+` Addition
 - `-` Subtraction
@@ -62,47 +72,51 @@ The following operators are supported in Phi:
 - `<-` Return operator
 - `\` New line character
 
-# Datatypes
+## Datatypes
 
-## Variables and Constants
+### Variables and Constants
 
+- #### Variable
 
-- ### Variable:
-
-```
+```phi
 int x = 10
 ```
+
 This will create the variable and give it a value of 0
-```
+
+```phi
 int x
 ```
 
-- ### Constant:
+- #### Constant
 
-```
+```phi
 int X = 10
 ```
+
 This will create the variable and give it a value of 0
-```
+
+```phi
 int X
 ```
 
-## Built-in Constants
+### Built-in Constants
 
 The following constants are built into the system:
-* `_`: Represents an empty value or nothingness.
-* `T` / `F`: Boolean values representing true/false conditions.
 
-## Integer/Real
+- `_`: Represents an empty value or nothingness.
+- `T` / `F`: Boolean values representing true/false conditions.
 
-```
+### Integer/Real
+
+```phi
 int x = 2
 real y = 2.1
 ```
 
-- ### Operations:
+- #### Operations:
 
-```
+```phi
 int x = 2 + 4 / 2 * 9 - 5 % 3^2
 x += 3
 x -= 4
@@ -112,76 +126,84 @@ x %= 7
 x ^= 2
 ```
 
-## Booleans
+### Booleans
 
-```
+```phi
 bool x = T
 bool y = F
 ```
 
-## Strings
+### Strings
 
-```
+```phi
 str x = "Hello, world"
 str y = "123 - 2"
 str z = "Testing 123"
 ```
 
-- ### Length:
+- #### Length
 
-```
+```phi
 str x = "hello world"
 int result = x.length()
 ```
-Result: 
-```
+
+Result:
+
+```phi
 11
 ```
 
-- ### Format:
+- #### Format
 
-```
+```phi
 str result = "Hello $ world $".format("there", 500)
 ```
+
 Result:
-```
+
+```phi
 "Hello there world 500"
 ```
 
-- ### Concatenation:
+- #### Concatenation
 
-```
+```phi
 str x = "hello"
 str y = " world"
 str result = x + y
 str += " !"
 ```
+
 Result:
-```
+
+```phi
 "hello world !"
 ```
 
-## Arrays
+### Arrays
 
-```
+```phi
 array a = [1, 2, 3]
 array b = ["hello", 12, ["world", 9.2]]
 ```
 
-- ### Length:
+- #### Length
 
-```
+```phi
 array a = [1, 4, "hello"]
 int result = a.length()
 ```
+
 Result:
-```
+
+```phi
 3
 ```
 
-- ### Append:
+- #### Append
 
-```
+```phi
 array a = [1, 2, "hello"]
 a.append(9.12)
 # OR
@@ -189,34 +211,40 @@ a = a.append(9.12)
 # OR
 a += 9.12
 ```
+
 Result:
-```
+
+```phi
 [1, 2, "hello", 9.12]
 ```
 
-- ### Join:
+- #### Join
 
-```
+```phi
 array arr = [1, 2, "hello"]
 str result = arr.join(", ")
 ```
+
 Result:
-```
+
+```phi
 "1, 2, hello"
 ```
 
-- ### Indexing:
+- #### Indexing
 
-```
+```phi
 array arr = [1, 5, 90]
 int result = arr[2]
 ```
+
 Result:
-```
+
+```phi
 90
 ```
 
-## Objects
+### Objects
 
 See [Functions](#user-defined-functions)
 
@@ -230,7 +258,7 @@ obj o = {
 }
 ```
 
-- ### Accessing properties
+- #### Accessing properties
 
 ```phi
 int result = o.age
@@ -242,7 +270,7 @@ Result:
 30
 ```
 
-- ### Adding new properties
+- #### Adding new properties
 
 ```phi
 o.newProperty = "I am a new property"
@@ -261,7 +289,7 @@ Result:
 }
 ```
 
-- ### Accessing methods
+- #### Accessing methods
 
 ```phi
 IDK result = o.method()
@@ -273,7 +301,7 @@ Result:
 Hello
 ```
 
-- ### Adding new Methods
+- #### Adding new Methods
 
 ```phi
 o.newMethod = fn name(){<-"New method"}
@@ -292,7 +320,7 @@ Result:
 }
 ```
 
-- ### Getting list of keys
+- #### Getting list of keys
 
 ```phi
 array result = o.keys()
@@ -311,7 +339,7 @@ Result:
 ]
 ```
 
-- ### Getting list of values
+- #### Getting list of values
 
 ```phi
 array result = o.values()
@@ -330,7 +358,7 @@ Result:
 ]
 ```
 
-- ### Checking if an object has a key (returns boolean)
+- #### Checking if an object has a key (returns boolean)
 
 ```phi
 boolean result = o.hasAttr("age")
@@ -342,7 +370,7 @@ Result:
 T
 ```
 
-- ### Adding new attribute to the object
+- #### Adding new attribute to the object
 
 ```phi
 o.update({"gender":"male"})
@@ -350,11 +378,11 @@ o.update({"gender":"male"})
 
 The `update` function adds one or more attributes to the object. If an attribute already exists it will be overwritten. The return value is null.
 
-# Statments
+## Statments
 
-## Built-in Functions
+### Built-in Functions
 
-### `Int()`
+#### `Int()`
 
 Return a integer version of the input.
 
@@ -370,7 +398,7 @@ i1 = 34
 i2 = 43
 ```
 
-### `Real()`
+#### `Real()`
 
 Return a real version of the input.
 
@@ -386,7 +414,7 @@ r1 = 34.56
 r2 = 34.0
 ```
 
-### `Str()`
+#### `Str()`
 
 Return a string version of the input.=
 
@@ -402,7 +430,7 @@ s1 = "23"
 s2 = "64.2"
 ```
 
-### `output()`
+#### `output()`
 
 Prints the output of any type to console.
 Example usage:
@@ -417,7 +445,7 @@ Output:
 hello world
 ```
 
-### `input()`
+#### `input()`
 
 Reads input from user and returns it as string.
 Example usage:
@@ -433,7 +461,7 @@ Output:
 1234567890
 ```
 
-### `now()`
+#### `now()`
 
 Returns current date and time as a real value.
 Example usage:
@@ -445,7 +473,7 @@ Output:
 375612369804852324361987698
 ```
 
-### `wait()`
+#### `wait()`
 
 Pauses execution for specified amount of seconds.
 Example usage:
@@ -453,7 +481,7 @@ Example usage:
 wait(1) # waits for one second
 ```
 
-### `root`(radicand, index)
+#### `root`(radicand, index)
 
 Calculates nth root of radicand.
 Example usage:
@@ -465,7 +493,7 @@ Output:
 4
 ```
 
-### `hash`(data)
+#### `hash`(data)
 
 Generate hash code for data(sha256)
 ```
@@ -473,12 +501,12 @@ str hsh = hash("Hello World!")
 ```
 
 
-## User Defined Functions
+### User Defined Functions
 
 Functions are defined using the `fn` keyword followed by its name and parameters in parentheses. The function body is enclosed within curly braces.
 
 
-- ### Creating functions with parameters and return values:
+- #### Creating functions with parameters and return values:
 
 ```
 fn add(x, y){
@@ -486,7 +514,7 @@ fn add(x, y){
 }
 ```
 
-- ### Calling functions:
+- #### Calling functions:
 
 ```
 int result = add(2, 5)
@@ -496,13 +524,12 @@ Result:
 7
 ```
 
-## If Else statements
+### If Else statements
+
+#### Conditions:
 
 
-### Conditions:
-
-
-- #### True
+- ##### True
 
 ```
 (T)
@@ -513,7 +540,7 @@ Result:
 (5 > 2)
 ```
 
-- #### False
+- ##### False
 
 ```
 (T & F)
@@ -524,7 +551,7 @@ Result:
 ("hello" == "world")
 ```
 
-- ### Simple if else statement:
+#### Simple if else statement:
 
 ```
 if (T) {
@@ -538,7 +565,7 @@ Result:
 True
 ```
 
-- ### Nested if else statement:
+#### Nested if else statement:
 
 ```
 if (F) {
@@ -556,7 +583,7 @@ Result:
 Second True
 ```
 
-## Case Statements
+### Case Statements
 
 Case statements are similar to if else statements, but they can handle multiple conditions. They work by comparing a value with different cases and executing the code block of the value if it matches. The code block is a default code block and does not need to return a value. You can use any datatype.
 ```
@@ -577,11 +604,11 @@ Result:
 three
 ```
 
-## While Loops
+### While Loops
 
 Conditions are the same as [if statements](#if-else-statements)
 
-- ### Looping until a condition is met.
+#### Looping until a condition is met.
 
 ```
 int a = 0
@@ -596,7 +623,7 @@ Result:
 1
 ```
 
-- ### Infinite loop example.
+#### Infinite loop example.
 
 ```
 int b = 0
@@ -607,7 +634,7 @@ while (T) {
 ```
 This will run forever, as the while loop's condition always evaluates to true (`T`).
 
-- ### While Loop with break
+#### While Loop with break
 
 To exit early from a loop you can use `break`.
 ```
@@ -629,7 +656,7 @@ Result:
 4
 ```
 
-- ### While Loops with continue
+#### While Loops with continue
 
 `continue` skips the rest of the current iteration and jumps directly to the next one.
 ```
@@ -649,11 +676,11 @@ I am odd!
 I am odd!
 ```
 
-## For Loops
+### For Loops
 
 For loops have three parts separated by colons (`,`)
 
-- ### Example of a for loop.
+#### Example of a for loop.
 
 ```
 for (int i = 0, i < 5, i += 1){
@@ -670,7 +697,7 @@ Result:
 ```
 The variable `i` starts at 0 and continues until it is no longer less than 5. After each iteration, `i` is incremented.
 
-- ### For Loop with break
+#### For Loop with break
 
 ```
 for (int j = 0; j < 10; j++){
@@ -688,7 +715,7 @@ Result:
 4
 ```
 
-- ### For Loop with continue
+#### For Loop with continue
 
 The `continue` statement skips the rest of the code in the current iteration and moves on to the next one.
 ```
@@ -707,7 +734,7 @@ Result:
 9
 ```
 
-## For-Each Loops
+### For-Each Loops
 
 For-each loops are used when you want to perform an action on each element in a collection without having to manually iterate through it using an index.
 ```
@@ -730,11 +757,11 @@ Result:
 2
 ```
 
-## Do-While Loops
+### Do-While Loops
 
 The do-while loop works similarly to the while loop, but it runs at least once before checking the condition.
 
-- ### Example of a do-while loop.
+##### Example of a do-while loop.
 
 ```
 int c = 0
@@ -751,7 +778,7 @@ Result:
 ```
 Do-while loops can be useful when you want to ensure that your code block executes at least once regardless of whether or not the condition is false.
 
-- ### Do-While Loop with break
+#### Do-While Loop with break
 
 ```
 int j = 0
@@ -771,7 +798,7 @@ Result:
 5
 ```
 
-- ### Do-While Loop with continue
+#### Do-While Loop with continue
 
 ```
 int k = 0
@@ -791,16 +818,17 @@ Result:
 7
 9
 ```
-# Modules
 
-## Importing a module
+## Modules
+
+### Importing a module
 
 ```
 import math
 import math as m
 ```
 
-## Accessing a module's functions
+### Accessing a module's functions
 
 ```
 output(math.root(16, 2))
@@ -812,7 +840,7 @@ Result:
 4
 ```
 
-## Accessing a module's variables
+### Accessing a module's variables
 
 ```
 output(math.pi)
@@ -822,7 +850,7 @@ Result:
 3.141592653589793
 ```
 
-## Exporting a module
+### Exporting a module
 
 Also the format for the modules
 ```
@@ -838,9 +866,10 @@ export obj math = {
     root:fn r(radicand, index){<- radicand ^ (1 / index)}
 }
 ```
-# Error Handling
 
-## Try-Catch
+## Error Handling
+
+### Try-Catch
 
 The try block is where you put the code that might throw an error. The catch block is where you handle it if there is one.
 ```
@@ -855,7 +884,7 @@ Result:
 Can't divide a number by 0
 ```
 
-## Throw
+### Throw
 
 You can also throw an error if something goes wrong in your code. This is useful when you want to handle errors yourself instead of letting them crash your program.
 ```

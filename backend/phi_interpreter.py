@@ -20,13 +20,18 @@ dataTypeTable = {
 }
 valueTypeTable = {
     'integerValue': ['integerValue', 'realValue'],
-    'realValue':['realValue', 'integerValue'],
-    'stringValue':['stringValue']
+    'realValue': ['realValue', 'integerValue'],
+    'stringValue': ['stringValue'],
+    'arrayValue': ['arrayValue'],
+    'nullValue': ['nullValue'],
+    'booleanValue': ['booleanValue'],
+    'objectValue': ['objectValue'],
+    'function': ['function'],
 }
 
 
 class Interpreter:
-    def __init__(self, filePath:str='') -> None:
+    def __init__(self, filePath: str = '') -> None:
         self.filePath = filePath
 
     def __str__(self) -> str:
@@ -201,7 +206,8 @@ class Interpreter:
             currentValue: dict = env.lookup(varName)
             if isinstance(currentValue, error):
                 return currentValue
-            currentValue.properties[prop] = self.evaluate(assignmentExpression.value, env)
+            currentValue.properties[prop] = self.evaluate(
+                assignmentExpression.value, env)
             return env.assignVariable(varName.symbol, currentValue)
         else:
             return syntaxError(self.filePath, self, 'Expected an identifier.', assignmentExpression.assigne.column, assignmentExpression.assigne.line)
@@ -286,12 +292,11 @@ class Interpreter:
             x = self.evaluate(member.object, env)
         else:
             x = member.object
-        
+
         if not isinstance(x, (objectValue, arrayValue, stringValue)):
             obj: objectValue = env.lookup(x)
         else:
             obj = x
-
 
         if isinstance(obj, objectValue):
             if isinstance(member.property, identifierNode):
@@ -523,10 +528,10 @@ class Interpreter:
             currentValue = realLiteralNode(
                 currValue.value, expr.column, expr.line)
         elif isinstance(currValue, stringValue):
-            currentValue = stringLiteralNode(currValue.value, expr.column, expr.line)
+            currentValue = stringLiteralNode(
+                currValue.value, expr.column, expr.line)
         else:
             return typeError(self.filePath, self, f"Incompatible type '{currValue}'", expr.column, expr.line)
-        
 
         binexpr = binaryExpressionNode(
             currentValue, expr.operand[0], expr.value, expr.line, expr.column)
