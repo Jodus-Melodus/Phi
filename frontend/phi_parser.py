@@ -161,9 +161,15 @@ class Parser:
             err = self.parsePrimaryExpression()
             if isinstance(err, error):
                 return err
+            if self.get().type == TT.stringValue:
+                msg = self.parsePrimaryExpression()
+                if isinstance(msg, error):
+                    return msg
+            else:
+                return syntaxError(self.filePath, self, "Expected a message", self.column, self.line)
         else:
             return syntaxError(self.filePath, self, "Expected an identifier", self.column, self.line)
-        return throwNode(err, self.line, self.column)
+        return throwNode(err, msg, self.line, self.column)
     
     def parseTryStatement(self) -> None:
         self.eat()

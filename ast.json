@@ -2,131 +2,14 @@
     "kind": "program",
     "body": [
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "object",
-            "identifier": "x",
-            "value": {
-                "kind": "objectLiteral",
-                "properties": [
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "a",
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 3
-                        }
-                    },
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "b",
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 9
-                        }
-                    }
-                ]
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "objectLiteral",
-                    "properties": [
-                        {
-                            "kind": "propertyLiteral",
-                            "key": "c",
-                            "value": {
-                                "kind": "integerLiteral",
-                                "value": 2
-                            }
-                        },
-                        {
-                            "kind": "propertyLiteral",
-                            "key": "d",
-                            "value": {
-                                "kind": "integerLiteral",
-                                "value": 0
-                            }
-                        }
-                    ]
-                }
-            ],
-            "caller": {
-                "kind": "memberExpression",
-                "object": {
-                    "kind": "identifier",
-                    "symbol": "x"
-                },
-                "property": {
-                    "kind": "identifier",
-                    "symbol": "update"
-                },
-                "computed": "True"
-            }
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "identifier",
-                    "symbol": "x"
-                }
-            ],
-            "caller": {
+            "kind": "throwStatement",
+            "error": {
                 "kind": "identifier",
-                "symbol": "output"
-            }
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "object",
-            "identifier": "a",
-            "value": {
-                "kind": "objectLiteral",
-                "properties": [
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "a",
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 2
-                        }
-                    },
-                    {
-                        "kind": "propertyLiteral",
-                        "key": "b",
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 34
-                        }
-                    }
-                ]
+                "symbol": "syntaxError"
             },
-            "constant": "False"
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "object",
-            "identifier": "b",
-            "value": {
-                "kind": "identifier",
-                "symbol": "a"
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "identifier",
-                    "symbol": "b"
-                }
-            ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "output"
+            "msg": {
+                "kind": "stringLiteral",
+                "value": "error"
             }
         }
     ]

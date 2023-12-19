@@ -945,5 +945,5 @@ Can't divide a number by 0
 You can also throw an error if something goes wrong in your code. This is useful when you want to handle errors yourself instead of letting them crash your program.
 
 ```phi
-throw syntaxError
+throw syntaxError "message"
 ```

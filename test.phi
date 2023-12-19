@@ -1,20 +1,4 @@
 
 
-obj x = {
-	a:3,
-	b:9
-}
+throw syntaxError "an error occured"
 
-x.update({c:2, d:0})
-
-
-output(x)
-
-obj a = {
-	a:2,
-	b:34
-}
-
-obj b = a
-
-output(b)

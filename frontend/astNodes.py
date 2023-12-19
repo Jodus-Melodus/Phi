@@ -455,15 +455,17 @@ class tryNode(Node):
 
 
 class throwNode(Node):
-    def __init__(self, error, line: int, column: int) -> None:
+    def __init__(self, error, message:str, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'throwStatement'
         self.error = error
+        self.msg = message
 
     def __repr__(self) -> str:
         return str({
             'kind': self.kind,
-            'error': self.error
+            'error': self.error,
+            'msg':self.msg
         })
 
 

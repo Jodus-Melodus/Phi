@@ -621,19 +621,19 @@ class Interpreter:
     def evaluateThrowStatement(self, throwStmt: throwNode, env: environment) -> None:
         match throwStmt.error.symbol:
             case 'syntaxError':
-                return syntaxError(self.filePath, '', '', throwStmt.column, throwStmt.line)
+                return syntaxError(self.filePath, '', throwStmt.msg.value, throwStmt.column, throwStmt.line)
             case 'zeroDivisionError':
                 return zeroDivisionError(self.filePath, '', throwStmt.column, throwStmt.line)
             case 'typeError':
-                return typeError(self.filePath, '', '', throwStmt.column, throwStmt.line)
+                return typeError(self.filePath, '', throwStmt.msg.value, throwStmt.column, throwStmt.line)
             case 'keyError':
                 return keyError(self.filePath, '', '', '', throwStmt.column, throwStmt.line)
             case 'notImplementedError':
-                return notImplementedError(self.filePath, '', '', throwStmt.column, throwStmt.line)
+                return notImplementedError(self.filePath, '', throwStmt.msg.value, throwStmt.column, throwStmt.line)
             case 'invalidCharacterError':
-                return invalidCharacterError(self.filePath, '', '', throwStmt.column, throwStmt.line)
+                return invalidCharacterError(self.filePath, '', throwStmt.msg.value, throwStmt.column, throwStmt.line)
             case 'nameError':
-                return nameError(self.filePath, '', '', throwStmt.column, throwStmt.line)
+                return nameError(self.filePath, '', throwStmt.msg.value, throwStmt.column, throwStmt.line)
 
     def evaluateMatchStatement(self, matchStmt: matchNode, env: environment) -> None:
         value = self.evaluate(matchStmt.value, env)
