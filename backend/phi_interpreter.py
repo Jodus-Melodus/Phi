@@ -21,7 +21,12 @@ dataTypeTable = {
 valueTypeTable = {
     'integerValue': ['integerValue', 'realValue'],
     'realValue':['realValue', 'integerValue'],
-    'stringValue':['stringValue']
+    'stringValue':['stringValue'],
+    'arrayValue':['arrayValue'],
+    'nullValue':['nullValue'],
+    'booleanValue':['booleanValue'],
+    'objectValue':['objectValue'],
+    'function':['function'],
 }
 
 
