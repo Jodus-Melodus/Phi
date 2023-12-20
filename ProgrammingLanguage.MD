@@ -892,6 +892,8 @@ import math as m, debug as d
 import math, debug
 ```
 
+Phi will first check if there is a module with the name then it will check if there is a file in the directory where the current file is located.
+
 ### Accessing a module's functions
 
 ```phi

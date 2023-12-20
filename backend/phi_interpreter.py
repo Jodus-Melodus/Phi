@@ -601,7 +601,8 @@ class Interpreter:
                     return syntaxError(self.filePath, self, "Expected an identifier or a stringValue", importExpression.column, importExpression.line)
 
                 name = importExpression.names[i].symbol
-                file = path.lower() + '.phi'
+                dir = '/'.join(self.filePath.split('/')[:-1])
+                file = dir + '/' + path.lower() + '.phi'
 
                 if os.path.exists(file):
                     with open(file, 'r') as f:

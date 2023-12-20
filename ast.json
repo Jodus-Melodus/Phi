@@ -6,15 +6,195 @@
             "names": [
                 {
                     "kind": "identifier",
-                    "symbol": "a"
+                    "symbol": "class"
                 }
             ],
             "values": [
                 {
                     "kind": "identifier",
-                    "symbol": "a"
+                    "symbol": "class"
                 }
             ]
+        },
+        {
+            "kind": "assignmentExpression",
+            "assigne": {
+                "kind": "memberExpression",
+                "object": {
+                    "kind": "identifier",
+                    "symbol": "class"
+                },
+                "property": {
+                    "kind": "identifier",
+                    "symbol": "attrs"
+                },
+                "computed": "True"
+            },
+            "value": {
+                "kind": "arrayLiteral",
+                "items": [
+                    {
+                        "kind": "itemLiteral",
+                        "index": 0,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "name"
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 1,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "age"
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 2,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "city"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "array",
+            "identifier": "values",
+            "value": {
+                "kind": "arrayLiteral",
+                "items": []
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "assignmentExpression",
+            "assigne": {
+                "kind": "identifier",
+                "symbol": "values"
+            },
+            "value": {
+                "kind": "arrayLiteral",
+                "items": [
+                    {
+                        "kind": "itemLiteral",
+                        "index": 0,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "john"
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 1,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 32
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 2,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "new york"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "object",
+            "identifier": "person1",
+            "value": {
+                "kind": "callExpression",
+                "arguments": [
+                    {
+                        "kind": "identifier",
+                        "symbol": "values"
+                    }
+                ],
+                "caller": {
+                    "kind": "memberExpression",
+                    "object": {
+                        "kind": "identifier",
+                        "symbol": "class"
+                    },
+                    "property": {
+                        "kind": "identifier",
+                        "symbol": "init"
+                    },
+                    "computed": "True"
+                }
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "assignmentExpression",
+            "assigne": {
+                "kind": "identifier",
+                "symbol": "values"
+            },
+            "value": {
+                "kind": "arrayLiteral",
+                "items": [
+                    {
+                        "kind": "itemLiteral",
+                        "index": 0,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "mary"
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 1,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 23
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 2,
+                        "value": {
+                            "kind": "stringLiteral",
+                            "value": "cape horn"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "object",
+            "identifier": "person2",
+            "value": {
+                "kind": "callExpression",
+                "arguments": [
+                    {
+                        "kind": "identifier",
+                        "symbol": "values"
+                    }
+                ],
+                "caller": {
+                    "kind": "memberExpression",
+                    "object": {
+                        "kind": "identifier",
+                        "symbol": "class"
+                    },
+                    "property": {
+                        "kind": "identifier",
+                        "symbol": "init"
+                    },
+                    "computed": "True"
+                }
+            },
+            "constant": "False"
         }
     ]
 }
