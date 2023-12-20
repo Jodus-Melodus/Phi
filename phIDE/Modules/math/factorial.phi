@@ -1,9 +1,0 @@
-export fn factorial(v){
-    int p = 1
-    
-    while(v > 0){
-        p *= v
-        v -= 1
-    }
-    <- p
-}

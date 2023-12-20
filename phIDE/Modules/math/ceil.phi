@@ -1,7 +1,0 @@
-export fn ceil(v){
-    <- if(v > Int(v)){
-        <- Int(v) + 1
-    } else {
-        <- Int(v)
-    }
-}

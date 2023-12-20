@@ -1,3 +1,0 @@
-export fn power(v, e){
-    <- v^e
-}

@@ -1,3 +1,0 @@
-export fn root(r, i){
-    <- r^(1 / i)
-}
