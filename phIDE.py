@@ -963,7 +963,17 @@ class App(ctk.CTk):
             self.findEntry.focus_set()
 
     def findAndReplace(self, e=None) -> None:
-        pass
+        find = self.findEntry.get()
+        replace = self.replaceEntry.get()
+
+        editor = self.currentTab
+        if editor:
+            editorText = editor.get('1.0', 'end')
+            updatedText = editorText.replace(find, replace)
+
+            editor.delete('1.0', 'end')
+            editor.insert('1.0', updatedText)
+
 
 # Shortcuts
     def multiCursor(self, e=None) -> None:
