@@ -182,10 +182,10 @@ class Interpreter:
             if isinstance(currentValue, error):
                 return currentValue
             value = self.evaluate(assignmentExpression.value, env)
-            
+
             if isinstance(value, error):
                 return value
-            
+
             if value.type in valueTypeTable[value.type]:
                 return env.assignVariable(varName, value)
             return typeError(self.filePath, self, f"'{value.type}' is incompatible with '{currentValue.type}'", value.column, value.line)
@@ -268,7 +268,7 @@ class Interpreter:
                 else:
                     column = fn.column
                     line = fn.line
-                return syntaxError(self.filePath, self, f'Insufficient arguments provided. Expected {len(fn.parameters)}, but received {len(args)}', column, line)
+                return syntaxError(self.filePath, self, f"Insufficient arguments provided. Expected {len(fn.parameters)}, but received {len(args)}\nExpected [{', '.join([i.symbol for i in fn.parameters])}]", column, line)
 
             result = nullValue()
             for statement in fn.body:
@@ -569,11 +569,11 @@ class Interpreter:
             path = f'Modules/{path}'
 
             module = objectValue({})
-            
+
             if os.path.exists(path):
                 filenames = [f for f in os.listdir(path) if os.path.isfile(
                     os.path.join(path, f))]
-                
+
                 for file in filenames:
                     if file.endswith('.phi'):
                         n = file.split('.')[0]
@@ -584,7 +584,7 @@ class Interpreter:
 
                         code = run(code, file)
                         if isinstance(code, exportValue):
-                            module.properties.update({n : code.value})
+                            module.properties.update({n: code.value})
 
                 if name.isupper():
                     result = env.declareVariable(name, module, True)
@@ -611,9 +611,11 @@ class Interpreter:
                     code = run(code, file)
                     if isinstance(code, exportValue):
                         if name.isupper():
-                            result = env.declareVariable(name, code.value, True)
+                            result = env.declareVariable(
+                                name, code.value, True)
                         else:
-                            result = env.declareVariable(name, code.value, False)
+                            result = env.declareVariable(
+                                name, code.value, False)
                 else:
                     return fileNotFoundError(self.filePath, self, f'{path}', importExpression.column, importExpression.line)
         return result

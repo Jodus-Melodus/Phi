@@ -77,6 +77,25 @@
                         },
                         "property": {
                             "kind": "identifier",
+                            "symbol": "city"
+                        },
+                        "computed": "True"
+                    },
+                    "value": {
+                        "kind": "identifier",
+                        "symbol": "city"
+                    }
+                },
+                {
+                    "kind": "assignmentExpression",
+                    "assigne": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "self"
+                        },
+                        "property": {
+                            "kind": "identifier",
                             "symbol": "sayHi"
                         },
                         "computed": "True"
@@ -84,51 +103,49 @@
                     "value": {
                         "kind": "functionDeclaration",
                         "name": "~",
-                        "parameters": [],
+                        "parameters": [
+                            {
+                                "kind": "identifier",
+                                "symbol": "self"
+                            }
+                        ],
                         "body": [
                             {
                                 "kind": "callExpression",
                                 "arguments": [
                                     {
-                                        "kind": "identifier",
-                                        "symbol": "self"
+                                        "kind": "callExpression",
+                                        "arguments": [
+                                            {
+                                                "kind": "memberExpression",
+                                                "object": {
+                                                    "kind": "identifier",
+                                                    "symbol": "self"
+                                                },
+                                                "property": {
+                                                    "kind": "identifier",
+                                                    "symbol": "name"
+                                                },
+                                                "computed": "True"
+                                            }
+                                        ],
+                                        "caller": {
+                                            "kind": "memberExpression",
+                                            "object": {
+                                                "kind": "stringLiteral",
+                                                "value": "$ says hi"
+                                            },
+                                            "property": {
+                                                "kind": "identifier",
+                                                "symbol": "format"
+                                            },
+                                            "computed": "True"
+                                        }
                                     }
                                 ],
                                 "caller": {
                                     "kind": "identifier",
                                     "symbol": "output"
-                                }
-                            },
-                            {
-                                "kind": "returnExpression",
-                                "value": {
-                                    "kind": "callExpression",
-                                    "arguments": [
-                                        {
-                                            "kind": "memberExpression",
-                                            "object": {
-                                                "kind": "identifier",
-                                                "symbol": "self"
-                                            },
-                                            "property": {
-                                                "kind": "identifier",
-                                                "symbol": "name"
-                                            },
-                                            "computed": "True"
-                                        }
-                                    ],
-                                    "caller": {
-                                        "kind": "memberExpression",
-                                        "object": {
-                                            "kind": "stringLiteral",
-                                            "value": "$ says hi"
-                                        },
-                                        "property": {
-                                            "kind": "identifier",
-                                            "symbol": "format"
-                                        },
-                                        "computed": "True"
-                                    }
                                 }
                             }
                         ]
@@ -152,7 +169,7 @@
                 "arguments": [
                     {
                         "kind": "stringLiteral",
-                        "value": "bob"
+                        "value": "john"
                     },
                     {
                         "kind": "integerLiteral",
@@ -161,6 +178,10 @@
                     {
                         "kind": "stringLiteral",
                         "value": "New York"
+                    },
+                    {
+                        "kind": "integerLiteral",
+                        "value": 34
                     }
                 ],
                 "caller": {
@@ -178,14 +199,6 @@
                     "symbol": "Bob"
                 }
             ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "output"
-            }
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [],
             "caller": {
                 "kind": "memberExpression",
                 "object": {
