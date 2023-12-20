@@ -254,9 +254,9 @@ class Interpreter:
             result = fn.call(args, env)
             return result
         elif isinstance(fn, function):
-            scope = createGlobalEnvironment(fn.declarationEnvironment)
-            for variable in env.variables:
-                scope.declareVariable(variable, env.variables[variable])
+            scope = createGlobalEnvironment(env)
+            # for variable in env.variables:
+            #     scope.declareVariable(variable, env.variables[variable])
 
             if len(fn.parameters) == len(args):
                 for i in range(len(fn.parameters)):

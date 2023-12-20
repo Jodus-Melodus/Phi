@@ -44,9 +44,11 @@ class environment:
     def lookup(self, var:identifierNode) -> None:
         varName = var.symbol
         env = self.resolve(varName)
-        if varName in self.constants:
+        if isinstance(env, error):
+            return env
+        if varName in env.constants:
             return env.constants[varName]
-        elif varName in self.variables:
+        elif varName in env.variables:
             return env.variables[varName]
         else:
             return nameError(self.filePath, self, varName, var.column, var.line)
