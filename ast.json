@@ -6,49 +6,15 @@
             "names": [
                 {
                     "kind": "identifier",
-                    "symbol": "math"
+                    "symbol": "a"
                 }
             ],
             "values": [
                 {
                     "kind": "identifier",
-                    "symbol": "math"
+                    "symbol": "a"
                 }
             ]
-        },
-        {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "callExpression",
-                    "arguments": [
-                        {
-                            "kind": "integerLiteral",
-                            "value": 36
-                        },
-                        {
-                            "kind": "integerLiteral",
-                            "value": 12
-                        }
-                    ],
-                    "caller": {
-                        "kind": "memberExpression",
-                        "object": {
-                            "kind": "identifier",
-                            "symbol": "math"
-                        },
-                        "property": {
-                            "kind": "identifier",
-                            "symbol": "gcd"
-                        },
-                        "computed": "True"
-                    }
-                }
-            ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "output"
-            }
         }
     ]
 }

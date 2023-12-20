@@ -591,7 +591,30 @@ class Interpreter:
                 else:
                     result = env.declareVariable(name, module, False)
             else:
-                return fileNotFoundError(self.filePath, self, f'{path}', importExpression.column, importExpression.line)
+                path = importExpression.values[i]
+
+                if isinstance(path, identifierNode):
+                    path = path.symbol
+                elif isinstance(path, stringValue):
+                    path = path.value
+                else:
+                    return syntaxError(self.filePath, self, "Expected an identifier or a stringValue", importExpression.column, importExpression.line)
+
+                name = importExpression.names[i].symbol
+                file = path.lower() + '.phi'
+
+                if os.path.exists(file):
+                    with open(file, 'r') as f:
+                        code = '\n'.join(f.readlines())
+
+                    code = run(code, file)
+                    if isinstance(code, exportValue):
+                        if name.isupper():
+                            result = env.declareVariable(name, code.value, True)
+                        else:
+                            result = env.declareVariable(name, code.value, False)
+                else:
+                    return fileNotFoundError(self.filePath, self, f'{path}', importExpression.column, importExpression.line)
         return result
 
     def evaluateTryStatement(self, tryStatement: tryNode, env: environment) -> None:
