@@ -1,8 +1,10 @@
 
 
 
-unknown a = _
+unknown a = ?
 int b = a
 
 
 output(type(b))
+
+

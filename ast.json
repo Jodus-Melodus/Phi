@@ -6,10 +6,42 @@
             "datatype": "unknown",
             "identifier": "a",
             "value": {
-                "kind": "integerLiteral",
-                "value": 4
+                "kind": "identifier",
+                "symbol": "_"
             },
             "constant": "False"
+        },
+        {
+            "kind": "variableDeclarationExpression",
+            "datatype": "int",
+            "identifier": "b",
+            "value": {
+                "kind": "identifier",
+                "symbol": "a"
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "identifier",
+                            "symbol": "b"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "type"
+                    }
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
+            }
         }
     ]
 }

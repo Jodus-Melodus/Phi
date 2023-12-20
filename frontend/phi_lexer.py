@@ -70,7 +70,7 @@ class TokenType:
 
 TT = TokenType()
 DIGITS = '12345678890'
-ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-'
+ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-?'
 
 KEYWORDS = {
     'fn': TT.fn,

@@ -79,6 +79,7 @@ def createGlobalEnvironment(parent=None, filePath:str='') -> environment:
 
     # variables
     env.declareVariable('_', nullValue(), True)
+    env.declareVariable('?', unknownValue(nullValue()))
     env.declareVariable('T', booleanValue("T"), True)
     env.declareVariable('F', booleanValue("F"), True)
     
