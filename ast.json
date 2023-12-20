@@ -6,7 +6,7 @@
             "names": [
                 {
                     "kind": "identifier",
-                    "symbol": "f"
+                    "symbol": "math"
                 }
             ],
             "values": [
@@ -20,8 +20,18 @@
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "memberExpression",
-                    "object": {
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "integerLiteral",
+                            "value": 36
+                        },
+                        {
+                            "kind": "integerLiteral",
+                            "value": 12
+                        }
+                    ],
+                    "caller": {
                         "kind": "memberExpression",
                         "object": {
                             "kind": "identifier",
@@ -29,15 +39,10 @@
                         },
                         "property": {
                             "kind": "identifier",
-                            "symbol": "test"
+                            "symbol": "gcd"
                         },
                         "computed": "True"
-                    },
-                    "property": {
-                        "kind": "identifier",
-                        "symbol": "a"
-                    },
-                    "computed": "True"
+                    }
                 }
             ],
             "caller": {

@@ -683,9 +683,9 @@ class Parser:
     def parseArguments(self) -> None:
         if self.get().type == TT.openParenthesis:
             self.eat()
+            args = []
             if self.get().type == TT.closeParenthesis:
                 self.eat()
-                args = []
                 return []
             else:
                 args = self.parseArgumentsList()

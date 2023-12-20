@@ -1,9 +1,4 @@
-import math as f
+import math
 
-output(f.test.a)
-
-
-
-
-
+output(math)
 
