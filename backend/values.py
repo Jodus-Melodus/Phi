@@ -148,7 +148,7 @@ class nativeFunction(RuntimeValue):
 class function(RuntimeValue):
     def __init__(self, name, parameters: list, declarationEnvironment, body: list, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
-        self.type = 'FunctionValue'
+        self.type = 'functionValue'
         self.name = name
         self.parameters = parameters
         self.declarationEnvironment = declarationEnvironment

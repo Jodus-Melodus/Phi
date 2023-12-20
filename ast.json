@@ -2,199 +2,219 @@
     "kind": "program",
     "body": [
         {
-            "kind": "importExpression",
-            "names": [
+            "kind": "functionDeclaration",
+            "name": "Person",
+            "parameters": [
                 {
                     "kind": "identifier",
-                    "symbol": "class"
+                    "symbol": "name"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "age"
+                },
+                {
+                    "kind": "identifier",
+                    "symbol": "city"
                 }
             ],
-            "values": [
+            "body": [
                 {
-                    "kind": "identifier",
-                    "symbol": "class"
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "object",
+                    "identifier": "self",
+                    "value": {
+                        "kind": "objectLiteral",
+                        "properties": []
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "assignmentExpression",
+                    "assigne": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "self"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "name"
+                        },
+                        "computed": "True"
+                    },
+                    "value": {
+                        "kind": "identifier",
+                        "symbol": "name"
+                    }
+                },
+                {
+                    "kind": "assignmentExpression",
+                    "assigne": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "self"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "age"
+                        },
+                        "computed": "True"
+                    },
+                    "value": {
+                        "kind": "identifier",
+                        "symbol": "age"
+                    }
+                },
+                {
+                    "kind": "variableDeclarationExpression",
+                    "datatype": "lambda",
+                    "identifier": "sayHi",
+                    "value": {
+                        "kind": "functionDeclaration",
+                        "name": "~",
+                        "parameters": [
+                            {
+                                "kind": "identifier",
+                                "symbol": "s"
+                            }
+                        ],
+                        "body": [
+                            {
+                                "kind": "callExpression",
+                                "arguments": [
+                                    {
+                                        "kind": "callExpression",
+                                        "arguments": [
+                                            {
+                                                "kind": "memberExpression",
+                                                "object": {
+                                                    "kind": "identifier",
+                                                    "symbol": "s"
+                                                },
+                                                "property": {
+                                                    "kind": "identifier",
+                                                    "symbol": "name"
+                                                },
+                                                "computed": "True"
+                                            }
+                                        ],
+                                        "caller": {
+                                            "kind": "memberExpression",
+                                            "object": {
+                                                "kind": "stringLiteral",
+                                                "value": "$ says hi"
+                                            },
+                                            "property": {
+                                                "kind": "identifier",
+                                                "symbol": "format"
+                                            },
+                                            "computed": "True"
+                                        }
+                                    }
+                                ],
+                                "caller": {
+                                    "kind": "identifier",
+                                    "symbol": "output"
+                                }
+                            }
+                        ]
+                    },
+                    "constant": "False"
+                },
+                {
+                    "kind": "assignmentExpression",
+                    "assigne": {
+                        "kind": "memberExpression",
+                        "object": {
+                            "kind": "identifier",
+                            "symbol": "self"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "sayHi"
+                        },
+                        "computed": "True"
+                    },
+                    "value": {
+                        "kind": "callExpression",
+                        "arguments": [
+                            {
+                                "kind": "identifier",
+                                "symbol": "self"
+                            }
+                        ],
+                        "caller": {
+                            "kind": "identifier",
+                            "symbol": "sayHi"
+                        }
+                    }
+                },
+                {
+                    "kind": "returnExpression",
+                    "value": {
+                        "kind": "identifier",
+                        "symbol": "self"
+                    }
                 }
             ]
         },
         {
-            "kind": "assignmentExpression",
-            "assigne": {
+            "kind": "variableDeclarationExpression",
+            "datatype": "object",
+            "identifier": "Bob",
+            "value": {
+                "kind": "callExpression",
+                "arguments": [
+                    {
+                        "kind": "stringLiteral",
+                        "value": "bob"
+                    },
+                    {
+                        "kind": "integerLiteral",
+                        "value": 23
+                    },
+                    {
+                        "kind": "stringLiteral",
+                        "value": "New York"
+                    }
+                ],
+                "caller": {
+                    "kind": "identifier",
+                    "symbol": "Person"
+                }
+            },
+            "constant": "False"
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "Bob"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
+            }
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [],
+            "caller": {
                 "kind": "memberExpression",
                 "object": {
                     "kind": "identifier",
-                    "symbol": "class"
+                    "symbol": "Bob"
                 },
                 "property": {
                     "kind": "identifier",
-                    "symbol": "attrs"
+                    "symbol": "sayHi"
                 },
                 "computed": "True"
-            },
-            "value": {
-                "kind": "arrayLiteral",
-                "items": [
-                    {
-                        "kind": "itemLiteral",
-                        "index": 0,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "name"
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 1,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "age"
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 2,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "city"
-                        }
-                    }
-                ]
             }
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "array",
-            "identifier": "values",
-            "value": {
-                "kind": "arrayLiteral",
-                "items": []
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "assignmentExpression",
-            "assigne": {
-                "kind": "identifier",
-                "symbol": "values"
-            },
-            "value": {
-                "kind": "arrayLiteral",
-                "items": [
-                    {
-                        "kind": "itemLiteral",
-                        "index": 0,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "john"
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 1,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 32
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 2,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "new york"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "object",
-            "identifier": "person1",
-            "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "identifier",
-                        "symbol": "values"
-                    }
-                ],
-                "caller": {
-                    "kind": "memberExpression",
-                    "object": {
-                        "kind": "identifier",
-                        "symbol": "class"
-                    },
-                    "property": {
-                        "kind": "identifier",
-                        "symbol": "init"
-                    },
-                    "computed": "True"
-                }
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "assignmentExpression",
-            "assigne": {
-                "kind": "identifier",
-                "symbol": "values"
-            },
-            "value": {
-                "kind": "arrayLiteral",
-                "items": [
-                    {
-                        "kind": "itemLiteral",
-                        "index": 0,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "mary"
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 1,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 23
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 2,
-                        "value": {
-                            "kind": "stringLiteral",
-                            "value": "cape horn"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "object",
-            "identifier": "person2",
-            "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "identifier",
-                        "symbol": "values"
-                    }
-                ],
-                "caller": {
-                    "kind": "memberExpression",
-                    "object": {
-                        "kind": "identifier",
-                        "symbol": "class"
-                    },
-                    "property": {
-                        "kind": "identifier",
-                        "symbol": "init"
-                    },
-                    "computed": "True"
-                }
-            },
-            "constant": "False"
         }
     ]
 }

@@ -17,7 +17,7 @@ valueTypeTable = {
     'nullValue': ['nullValue', 'unknownValue'],
     'booleanValue': ['booleanValue', 'unknownValue'],
     'objectValue': ['objectValue', 'unknownValue'],
-    'function': ['function', 'unknownValue'],
+    'functionValue': ['functionValue', 'unknownValue'],
     'unknownValue': ['integerValue', 'realValue', 'booleanValue', 'objectValue', 'function', 'stringValue', 'nullValue', 'arrayValue', 'unknownValue']
 }
 
