@@ -287,6 +287,9 @@ class Interpreter:
         else:
             x = member.object
 
+        if isinstance(x, error):
+            return x
+
         if not isinstance(x, (objectValue, arrayValue, stringValue)):
             obj: objectValue = env.lookup(x)
         else:
@@ -562,21 +565,31 @@ class Interpreter:
                 return syntaxError(self.filePath, self, "Expected an identifier or a stringValue", importExpression.column, importExpression.line)
 
             name = importExpression.names[i].symbol
-
             path = path.lower()
-            path = f'Modules/{path}.phi'
-            if os.path.exists(path):
-                with open(path, 'r') as f:
-                    code = '\n'.join(f.readlines())
+            path = f'Modules/{path}'
 
-                code = run(code, path)
-                if isinstance(code, exportValue):
-                    if name.isupper():
-                        result = env.declareVariable(name, code.value, True)
-                    else:
-                        result = env.declareVariable(name, code.value, False)
+            module = objectValue({})
+            
+            if os.path.exists(path):
+                filenames = [f for f in os.listdir(path) if os.path.isfile(
+                    os.path.join(path, f))]
+                
+                for file in filenames:
+                    if file.endswith('.phi'):
+                        n = file.split('.')[0]
+                        file = path + '/' + file
+
+                        with open(file, 'r') as f:
+                            code = '\n'.join(f.readlines())
+
+                        code = run(code, file)
+                        if isinstance(code, exportValue):
+                            module.properties.update({n : code.value})
+
+                if name.isupper():
+                    result = env.declareVariable(name, module, True)
                 else:
-                    result = nullValue()
+                    result = env.declareVariable(name, module, False)
             else:
                 return fileNotFoundError(self.filePath, self, f'{path}', importExpression.column, importExpression.line)
         return result

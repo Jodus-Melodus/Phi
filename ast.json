@@ -2,40 +2,42 @@
     "kind": "program",
     "body": [
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "unknown",
-            "identifier": "a",
-            "value": {
-                "kind": "identifier",
-                "symbol": "_"
-            },
-            "constant": "False"
-        },
-        {
-            "kind": "variableDeclarationExpression",
-            "datatype": "int",
-            "identifier": "b",
-            "value": {
-                "kind": "identifier",
-                "symbol": "a"
-            },
-            "constant": "False"
+            "kind": "importExpression",
+            "names": [
+                {
+                    "kind": "identifier",
+                    "symbol": "f"
+                }
+            ],
+            "values": [
+                {
+                    "kind": "identifier",
+                    "symbol": "math"
+                }
+            ]
         },
         {
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "callExpression",
-                    "arguments": [
-                        {
+                    "kind": "memberExpression",
+                    "object": {
+                        "kind": "memberExpression",
+                        "object": {
                             "kind": "identifier",
-                            "symbol": "b"
-                        }
-                    ],
-                    "caller": {
+                            "symbol": "math"
+                        },
+                        "property": {
+                            "kind": "identifier",
+                            "symbol": "test"
+                        },
+                        "computed": "True"
+                    },
+                    "property": {
                         "kind": "identifier",
-                        "symbol": "type"
-                    }
+                        "symbol": "a"
+                    },
+                    "computed": "True"
                 }
             ],
             "caller": {

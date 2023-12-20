@@ -1,10 +1,9 @@
+import math as f
+
+output(f.test.a)
 
 
 
-unknown a = ?
-int b = a
 
-
-output(type(b))
 
 
