@@ -32,7 +32,7 @@ exe = Executable(
 
 setup(
     name='phIDE',
-    version='1.3.1',
+    version='1.4.0',
     description='phi IDE',
     executables=[exe],
     options=options

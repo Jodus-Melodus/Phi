@@ -1,0 +1,16 @@
+# You can create case/switch statements in phi. The code block is a normal code block so you don't have to return anything. It works for all datatypes.
+
+int x = 1
+
+str a = match x {
+	case 1 {output("hello")}
+	case 2 {<- "hello"}
+	case 3 {<- "hi"}
+}
+
+output(a)
+
+
+
+
+

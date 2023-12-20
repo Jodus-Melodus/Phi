@@ -1,0 +1,10 @@
+export fn gcd(a, b){
+	real temp = b
+	
+	while(b != 0){
+		b = a % b
+		a = temp
+		temp = b
+	}
+	<- a
+}

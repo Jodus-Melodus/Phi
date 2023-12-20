@@ -1,0 +1,3 @@
+export fn round(v, d){
+    <- Int(v * (10^d) + 0.5) / (10^d)
+}
