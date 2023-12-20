@@ -6,6 +6,7 @@ import time
 import customtkinter as ctk
 from customtkinter import filedialog
 import os
+import threading
 
 with open('settings.json', 'r') as f:
     settings = json.load(f)
@@ -168,7 +169,8 @@ class App(ctk.CTk):
             self.warningTab, font=self.textBoxFont, state='disabled')
         self.multiCursorText = ctk.CTkTextbox(
             self.multiCursorPanel, font=self.textBoxFont)
-        self.availableModulesText = ctk.CTkTextbox(self.availableModulesPanel, font=self.textBoxFont)
+        self.availableModulesText = ctk.CTkTextbox(
+            self.availableModulesPanel, font=self.textBoxFont)
         # Buttons
         self.clearConsoleButton = ctk.CTkButton(
             self.consoleButtons, text='Clear', command=self.clearConsole, width=50, height=20, font=self.buttonFont)
@@ -204,7 +206,8 @@ class App(ctk.CTk):
             self.findAndReplacePanel, text='Find', font=self.buttonFont)
         self.replaceLabel = ctk.CTkLabel(
             self.findAndReplacePanel, text='Replace', font=self.buttonFont)
-        self.availableModulesLabel = ctk.CTkLabel(self.availableModulesPanel, text='Available Modules', font=self.buttonFont)
+        self.availableModulesLabel = ctk.CTkLabel(
+            self.availableModulesPanel, text='Available Modules', font=self.buttonFont)
         # Entries
         self.gotoEntry = ctk.CTkEntry(
             self.gotoPanel, placeholder_text='Go to line', font=self.buttonFont)
@@ -220,8 +223,10 @@ class App(ctk.CTk):
         sys.stdout = TerminalRedirect(self.console)
         sys.stderr = TerminalRedirect(self.console)
 
-        self.availableModulesLabel.pack(padx=self.padx, pady=self.pady, side='top', anchor='nw')
-        self.availableModulesText.pack(padx=self.padx, pady=self.pady, expand=True)
+        self.availableModulesLabel.pack(
+            padx=self.padx, pady=self.pady, side='top', anchor='nw')
+        self.availableModulesText.pack(
+            padx=self.padx, pady=self.pady, expand=True)
         self.availableModulesText.configure(state='disabled')
         self.multiCursorLabel.pack(
             padx=self.padx, pady=self.pady, side='top', anchor='nw')
@@ -322,7 +327,6 @@ class App(ctk.CTk):
 
         self.mainloop()
 
-
     def pageTop(self, e=None) -> None:
         """Scroll to the top of the text widget."""
         editor = self.currentTab
@@ -334,7 +338,7 @@ class App(ctk.CTk):
         editor = self.currentTab
         if editor:
             editor.see('end')
-            
+
     def toggleAvailableModules(self, e=None) -> None:
         """Toggle the visibility of available modules."""
 
@@ -352,7 +356,6 @@ class App(ctk.CTk):
         else:
             self.availableModulesPanel.pack(padx=self.padx, pady=self.pady*5)
             self.findEntry.focus_set()
-        
 
     def showHelp(self, e=None) -> None:
         helpWindow = ctk.CTkToplevel()
@@ -392,7 +395,7 @@ class App(ctk.CTk):
     @property
     def currentTab(self) -> ctk.CTkTextbox:
         tabName = self.centerTabview.get()
-        if tabName != '':
+        if (tabName != '') and (tabName in self.openEditors):
             return self.openEditors[tabName]
 
     def copyErrorMessage(self) -> None:
@@ -417,6 +420,10 @@ class App(ctk.CTk):
 
             editor = ctk.CTkTextbox(
                 tab, font=self.textBoxFont, undo=True, maxundo=-1, spacing1=2, spacing3=2, wrap='none', tabs='1c')
+            
+            t = threading.Thread(target=self.updateSyntax)
+            t.daemon = True
+            t.start()
 
             if self.currentLanguage in self.languageSyntaxPatterns:
                 for tag in self.languageSyntaxPatterns[self.currentLanguage]:
@@ -443,9 +450,8 @@ class App(ctk.CTk):
                 self.tabNamesPaths[tabName] = path
 
                 with open(path, 'r') as f:
-                    for ln, line in enumerate(f.readlines()):
+                    for line in f.readlines():
                         editor.insert('end', line)
-                        self.updateSyntax(line, ln + 1)
 
                 self.code = editor.get('0.0', 'end')
                 self.loadSnippets()
@@ -537,7 +543,6 @@ class App(ctk.CTk):
                     self.bottomTabview.rename(currentName, newName)
 
         self.updateMultiCursors(e)
-        self.updateSyntax()
 
         if hasattr(self, 'intelliSenseBox'):
             if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped():
@@ -631,7 +636,6 @@ class App(ctk.CTk):
                     editor.insert(startPos, snippet)
                     editor.focus_set()
                     self.snippetMenus[self.centerTabview.get()].place_forget()
-                    self.updateSyntax()
 
     def insertSnippet(self, snippetName: str) -> None:
         editor = self.currentTab
@@ -646,7 +650,6 @@ class App(ctk.CTk):
             editor.insert(startPos, snippet)
             editor.focus_set()
             self.snippetMenus[self.centerTabview.get()].place_forget()
-            self.updateSyntax()
 
     def showSnippets(self, e=None) -> None:
         editor = self.currentTab
@@ -711,22 +714,22 @@ class App(ctk.CTk):
         if editor:
             for tag in self.languageSyntaxPatterns[self.currentLanguage]:
                 pattern = self.languageSyntaxPatterns[self.currentLanguage][tag][1]
-                if not line:
-                    currLineEnd = editor.index('insert lineend')
-                    currLine = currLineEnd.split('.')[0]
-                    editor.tag_remove(tag, f'{currLine}.0', f'{currLine}.end')
-                    text = editor.get(
-                        f"{currLineEnd.split('.')[0]}.0", currLineEnd)
-                else:
-                    text = line
-                    currLine = lnIndex
-                matches = [(match.start(), match.end())
-                           for match in re.finditer(pattern, text, re.MULTILINE)]
-                for start, end in matches:
-                    editor.tag_add(
-                        tag, f'{currLine}.{start}', f'{currLine}.{end}')
-                    editor.tag_remove(
-                        'error', f'{currLine}.0', f'{currLine}.end')
+                editor.tag_remove(tag, '0.0', 'end')
+
+                first_visible_index = editor.index("@0,0")
+                last_visible_index = editor.index("@0," + str(editor.winfo_height()))
+
+                for ln in range(int(first_visible_index.split('.')[0]), int(last_visible_index.split('.')[0])):
+                    text = editor.get(f"{ln}.0", f"{ln}.end")
+                    matches = [(match.start(), match.end())
+                               for match in re.finditer(pattern, text, re.MULTILINE)]
+
+                    for start, end in matches:
+                        editor.tag_add(
+                            tag, f'{ln}.{start}', f'{ln}.{end}')
+                        
+        time.sleep(0.1)
+        self.updateSyntax()
 
 # IntelliSense
     def intelliSenseUpKeyPress(self, e=None) -> None:
@@ -839,7 +842,6 @@ class App(ctk.CTk):
                     editor.focus_set()
                     self.intelliSenseBoxes[self.centerTabview.get(
                     )].place_forget()
-                    self.updateSyntax()
 
     def intelliSenseClickInsert(self, selected) -> None:
         editor = self.currentTab
@@ -853,7 +855,6 @@ class App(ctk.CTk):
             editor.insert(startPos, selected)
             editor.focus_set()
             self.intelliSenseBoxes[self.centerTabview.get()].place_forget()
-            self.updateSyntax()
 
 # Menu Bar
     def rightClickMenuClick(self, e=None) -> None:
@@ -1130,7 +1131,6 @@ class App(ctk.CTk):
             else:
                 editor.insert(startPosition, '# ')
             editor.tag_remove('sel', '0.0', 'end')
-            self.updateSyntax()
 
     def saveFile(self, e=None) -> None:
         self.currentPath = self.tabNamesPaths[self.centerTabview.get()]

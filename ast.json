@@ -178,10 +178,6 @@
                     {
                         "kind": "stringLiteral",
                         "value": "New York"
-                    },
-                    {
-                        "kind": "integerLiteral",
-                        "value": 34
                     }
                 ],
                 "caller": {
