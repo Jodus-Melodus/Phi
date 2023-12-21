@@ -1,28 +1,7 @@
-fn Person(name, surname, city){
-	obj self
-
-	self.name = name
-	self.surname = surname
-	self.city = city
-
-	self.sayHi = fn ~(self){
-		output("$ $ says hi".format(self.name, self.surname))
-	}
-	
-	<- self
-}
-
-obj Bob = Person("john", "bob", "New York")
-
-Bob.sayHi(Bob)
+import a
 
 
-
-
-
-
-
-
+output(a)
 
 
 

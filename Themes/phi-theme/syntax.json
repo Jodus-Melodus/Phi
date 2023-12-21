@@ -2,7 +2,7 @@
     ".phi": {
         "keywords": [
             "#3d81ff",
-            "(?<!\\w)(output|unknown|hasAttr|for|in|case|update|match|input|throw|each|try|catch|continue|break|type|while|if|int|Real|Int|Str|as|lambda|real|import|export|obj|array|bool|str|items|now|length|wait|hash|fn|do|else|append|keys|join|format)(?!\\w)",
+            "(?<!\\w)(output|unknown|hasAttr|for|in|readFile|case|update|match|input|throw|each|try|catch|continue|break|type|while|if|int|Real|Int|Str|as|lambda|real|import|export|obj|array|bool|str|items|now|length|wait|hash|fn|do|else|append|keys|join|format)(?!\\w)",
             [
                 "output",
                 "input",
@@ -11,6 +11,7 @@
                 "while",
                 "break",
                 "case",
+                "readFile",
                 "match",
                 "throw",
                 "continue",
@@ -83,7 +84,7 @@
             ]
         ]
     },
-    ".json":{
+    ".json": {
         "symbols": [
             "#ffb617",
             "(:|\")",
@@ -95,5 +96,5 @@
             []
         ]
     },
-    ".txt":{}
+    ".txt": {}
 }

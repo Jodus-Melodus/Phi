@@ -31,7 +31,7 @@ def input(file, arg:stringValue) -> stringValue:
     sys.stdout.write(arg.value)
     return stringValue(sys.stdin.readline().strip(), arg.line, arg.column)
 
-def now(file, ) -> integerValue:
+def now(file) -> integerValue:
     return integerValue(time())
 
 def type_(file, arg:RuntimeValue) -> stringValue:
@@ -52,15 +52,6 @@ def absoluteValue(file, value:integerValue|realValue) -> integerValue|realValue:
     else:
         return typeError(file, 'Built-in Functions', value, value.column, value.line)
 
-def _round(file, value:realValue) -> integerValue:
-    return integerValue(round(value.value))
-
-def _floor(file, value:realValue) -> integerValue:
-    return integerValue(math.floor(value.value))
-
-def _ceil(file, value:realValue) -> integerValue:
-    return integerValue(math.ceil(value.value))
-
 def hardCastStr(file, value:RuntimeValue) -> stringValue:
     return stringValue(value.value, value.line, value.column)
 
@@ -78,3 +69,9 @@ def hardCastReal(file, value:RuntimeValue) -> realValue:
     except ValueError:
         return typeError(file, "Float Casting", value, value.column, value.line)
 
+def readFile(file, value:stringValue) -> arrayValue:    
+    path = value.value
+    f = open(path, 'r').readlines()
+    v = {f.index(i) : stringValue(i, value.line, value.column) for i in f}
+
+    return arrayValue(v, value.line, value.column)

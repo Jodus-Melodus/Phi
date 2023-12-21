@@ -2,187 +2,24 @@
     "kind": "program",
     "body": [
         {
-            "kind": "functionDeclaration",
-            "name": "Person",
-            "parameters": [
-                {
-                    "kind": "identifier",
-                    "symbol": "name"
-                },
-                {
-                    "kind": "identifier",
-                    "symbol": "age"
-                },
-                {
-                    "kind": "identifier",
-                    "symbol": "city"
-                }
-            ],
-            "body": [
-                {
-                    "kind": "variableDeclarationExpression",
-                    "datatype": "object",
-                    "identifier": "self",
-                    "value": {
-                        "kind": "objectLiteral",
-                        "properties": []
-                    },
-                    "constant": "False"
-                },
-                {
-                    "kind": "assignmentExpression",
-                    "assigne": {
-                        "kind": "memberExpression",
-                        "object": {
-                            "kind": "identifier",
-                            "symbol": "self"
-                        },
-                        "property": {
-                            "kind": "identifier",
-                            "symbol": "name"
-                        },
-                        "computed": "True"
-                    },
-                    "value": {
-                        "kind": "identifier",
-                        "symbol": "name"
-                    }
-                },
-                {
-                    "kind": "assignmentExpression",
-                    "assigne": {
-                        "kind": "memberExpression",
-                        "object": {
-                            "kind": "identifier",
-                            "symbol": "self"
-                        },
-                        "property": {
-                            "kind": "identifier",
-                            "symbol": "age"
-                        },
-                        "computed": "True"
-                    },
-                    "value": {
-                        "kind": "identifier",
-                        "symbol": "age"
-                    }
-                },
-                {
-                    "kind": "assignmentExpression",
-                    "assigne": {
-                        "kind": "memberExpression",
-                        "object": {
-                            "kind": "identifier",
-                            "symbol": "self"
-                        },
-                        "property": {
-                            "kind": "identifier",
-                            "symbol": "city"
-                        },
-                        "computed": "True"
-                    },
-                    "value": {
-                        "kind": "identifier",
-                        "symbol": "city"
-                    }
-                },
-                {
-                    "kind": "assignmentExpression",
-                    "assigne": {
-                        "kind": "memberExpression",
-                        "object": {
-                            "kind": "identifier",
-                            "symbol": "self"
-                        },
-                        "property": {
-                            "kind": "identifier",
-                            "symbol": "sayHi"
-                        },
-                        "computed": "True"
-                    },
-                    "value": {
-                        "kind": "functionDeclaration",
-                        "name": "~",
-                        "parameters": [
-                            {
-                                "kind": "identifier",
-                                "symbol": "self"
-                            }
-                        ],
-                        "body": [
-                            {
-                                "kind": "callExpression",
-                                "arguments": [
-                                    {
-                                        "kind": "callExpression",
-                                        "arguments": [
-                                            {
-                                                "kind": "memberExpression",
-                                                "object": {
-                                                    "kind": "identifier",
-                                                    "symbol": "self"
-                                                },
-                                                "property": {
-                                                    "kind": "identifier",
-                                                    "symbol": "name"
-                                                },
-                                                "computed": "True"
-                                            }
-                                        ],
-                                        "caller": {
-                                            "kind": "memberExpression",
-                                            "object": {
-                                                "kind": "stringLiteral",
-                                                "value": "$ says hi"
-                                            },
-                                            "property": {
-                                                "kind": "identifier",
-                                                "symbol": "format"
-                                            },
-                                            "computed": "True"
-                                        }
-                                    }
-                                ],
-                                "caller": {
-                                    "kind": "identifier",
-                                    "symbol": "output"
-                                }
-                            }
-                        ]
-                    }
-                },
-                {
-                    "kind": "returnExpression",
-                    "value": {
-                        "kind": "identifier",
-                        "symbol": "self"
-                    }
-                }
-            ]
-        },
-        {
             "kind": "variableDeclarationExpression",
-            "datatype": "object",
-            "identifier": "Bob",
+            "datatype": "array",
+            "identifier": "a",
             "value": {
                 "kind": "callExpression",
                 "arguments": [
                     {
                         "kind": "stringLiteral",
-                        "value": "john"
-                    },
-                    {
-                        "kind": "integerLiteral",
-                        "value": 23
+                        "value": "a.phi"
                     },
                     {
                         "kind": "stringLiteral",
-                        "value": "New York"
+                        "value": "r"
                     }
                 ],
                 "caller": {
                     "kind": "identifier",
-                    "symbol": "Person"
+                    "symbol": "open"
                 }
             },
             "constant": "False"
@@ -191,21 +28,30 @@
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "identifier",
-                    "symbol": "Bob"
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "memberExpression",
+                            "object": {
+                                "kind": "identifier",
+                                "symbol": "a"
+                            },
+                            "property": {
+                                "kind": "integerLiteral",
+                                "value": 0
+                            },
+                            "computed": "False"
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "type"
+                    }
                 }
             ],
             "caller": {
-                "kind": "memberExpression",
-                "object": {
-                    "kind": "identifier",
-                    "symbol": "Bob"
-                },
-                "property": {
-                    "kind": "identifier",
-                    "symbol": "sayHi"
-                },
-                "computed": "True"
+                "kind": "identifier",
+                "symbol": "output"
             }
         }
     ]

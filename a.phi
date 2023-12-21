@@ -1,1 +1,5 @@
-export int a = 3
+export array text = [
+    "Hello world",
+    "123",
+    "hi"
+]

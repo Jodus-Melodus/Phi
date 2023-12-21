@@ -130,3 +130,17 @@ class fileNotFoundError(error):
 [File Not Found Error] Ln {self.line}, Col {self.column} in {self.file}:
 File '{self.file_}' not found
 '''
+    
+
+class valueError(error):
+    def __init__(self, file: str, stage: str, value, column: int, line: int) -> None:
+        super().__init__(file, column, line)
+        self.stage = stage
+        self.value = value
+        self.type = 'valueError'
+
+    def __repr__(self) -> str:
+        return f'''{errorArrows(self.column)}
+[Value Error] Ln {self.line}, Col {self.column} in {self.file}:
+Invalid value : '{self.value}'
+'''

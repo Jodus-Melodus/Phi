@@ -175,3 +175,15 @@ class exportValue(RuntimeValue):
             'type': self.type,
             'value': self.value
         })
+
+class fileValue(RuntimeValue):
+    def __init__(self, value:stringValue, line: int = -1, column: int = -1) -> None:
+        super().__init__(line, column)
+        self.type = 'fileValue'
+        self.value = value
+
+    def __repr__(self) -> str:
+        return str({
+            'type': self.type,
+            'value': self.value
+        })

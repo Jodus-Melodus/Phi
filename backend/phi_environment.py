@@ -74,6 +74,7 @@ def createGlobalEnvironment(parent=None, filePath:str='') -> environment:
     env.declareVariable('Str', nativeFunction(lambda args, scope: bif.hardCastStr(filePath, args[0])), True)
     env.declareVariable('Int', nativeFunction(lambda args, scope: bif.hardCastInt(filePath, args[0])), True)
     env.declareVariable('Real', nativeFunction(lambda args, scope: bif.hardCastReal(filePath, args[0])), True)
+    env.declareVariable('readFile', nativeFunction(lambda args, scope: bif.readFile(filePath, args[0], args[1])), True)
 
     # Move to modules
     env.declareVariable('now', nativeFunction(lambda args, scope : bif.now(filePath, )), True)

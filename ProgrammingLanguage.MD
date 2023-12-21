@@ -967,3 +967,40 @@ You can also throw an error if something goes wrong in your code. This is useful
 ```phi
 throw syntaxError "message"
 ```
+
+This will throw an error with the message `"message"`
+
+## File handling
+
+### Reading
+
+```phi
+array contents = readFile("test.txt")
+```
+
+Reads all lines from `test.txt` and stores them in the array `contents`
+
+#### Creative way to achive the same
+
+```phi
+# text.phi
+
+export array text = [
+    "Hello, World!",
+    "This is read text"
+]
+```
+
+```phi
+# main.phi
+
+import text
+
+output(text)
+```
+
+Output:
+
+```phi
+["Hello, World!", "This is read text"]
+```
