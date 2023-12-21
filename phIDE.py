@@ -8,8 +8,11 @@ from customtkinter import filedialog
 import os
 import threading
 
-with open('settings.json', 'r') as f:
-    settings = json.load(f)
+if os.path.exists('settings.json'):
+    with open('settings.json', 'r') as f:
+        settings = json.load(f)
+else:
+    exit()
 
 
 class TerminalRedirect:
