@@ -42,7 +42,7 @@ class Parser:
 
     def get(self) -> Token:
         if len(self.tokens) == 0:
-            return Token(TT.eof, '', 0, self.column, self.line)
+            return Token(TT.eof, '', self.column, self.line)
         return self.tokens[0]
 
     def genAST(self) -> programNode:
