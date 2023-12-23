@@ -3,18 +3,20 @@ from frontend.phi_lexer import *
 from frontend.phi_parser import *
 from backend.phi_interpreter import *
 from backend.phi_environment import *
-import json, os
+import json
+import os
 
 ran = False
 
-def incrementalParsing(sourceCode:str, filePath:str='', x=False):
+
+def incrementalParsing(source_code: str, file_path: str = '', x=False):
     global ran, environment
-    environment = createGlobalEnvironment(filePath=filePath)
-    lexer = Lexer(sourceCode, filePath)
+    environment = createGlobalEnvironment(file_path)
+    lexer = Lexer(source_code, file_path)
     tokens = lexer.tokenize()
     if isinstance(tokens, error):
         return tokens
-    parser = Parser(tokens, filePath)
+    parser = Parser(tokens, file_path)
     ast = parser.genAST()
     if isinstance(ast, error):
         return ast
@@ -29,12 +31,14 @@ def incrementalParsing(sourceCode:str, filePath:str='', x=False):
     else:
         return ''
 
-def run(sourceCode:str, filePath:str='') -> None|error:
-    ast = incrementalParsing(sourceCode, filePath, True)
-    interpreter = Interpreter(filePath)
+
+def run(source_code: str, file_path: str = '') -> None | error:
+    ast = incrementalParsing(source_code, file_path, True)
+    interpreter = Interpreter(file_path)
     res = interpreter.evaluate(ast, environment)
     if isinstance(res, (error, exportValue)):
         return res
+
 
 if __name__ == '__main__':
     while True:
@@ -56,11 +60,11 @@ if __name__ == '__main__':
                 if len(parameters) == 0:
                     print('Expected a filepath')
                 elif len(parameters) == 1:
-                    filePath = parameters[0]
-                    if os.path.isfile(filePath):
-                        with open(filePath, 'r') as f:
-                            sourceCode = f.read()
-                            res = run(sourceCode, filePath)
+                    file_path = parameters[0]
+                    if os.path.isfile(file_path):
+                        with open(file_path, 'r') as f:
+                            source_code = f.read()
+                            res = run(source_code, file_path)
                             if isinstance(res, error):
                                 print(res)
                     else:
@@ -79,8 +83,3 @@ if __name__ == '__main__':
                 print(helpMessage)
             case _:
                 print(f"'{cmd}' is not a valid command")
-            
-
-
-
-

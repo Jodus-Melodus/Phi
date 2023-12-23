@@ -365,7 +365,8 @@ class App(ctk.CTk):
         helpWindow.title('phIDE - Help')
         helpText = ctk.CTkTextbox(helpWindow, font=self.textBoxFont)
         helpText.pack(expand=True, fill='both')
-        text = """        F1 -                    Show this menu
+        text = """\
+        F1 -                    Show this menu
         F5 -                    Run current file
         Enter -                 Select first intellisense word
         Ctrl + Backspace -      Deletes entire word

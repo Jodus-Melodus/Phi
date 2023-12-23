@@ -2,16 +2,6 @@ from frontend.phi_lexer import Token, TT
 from frontend.astNodes import *
 from frontend.errors import *
 
-# Prescidence orders
-# assignment
-# object
-# additive
-# multiplicative
-# call
-# member
-# primary
-
-
 class Parser:
     def __init__(self, tokens: list, filePath:str='') -> None:
         self.filePath = filePath
