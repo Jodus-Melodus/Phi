@@ -1,3 +1,10 @@
+.sidepanel {
+    background-color: rgb(49, 49, 49);
+    padding: 5px;
+    width: fit-content;
+    height: auto;
+}
+
 .menupanel {
     background-color: rgb(41, 41, 41);
     width: 300px;
@@ -5,12 +12,18 @@
     margin-right: auto;
 }
 
-.sidepanel {
-    background-color: rgb(68, 68, 68);
-    padding: 5px;
-    width: fit-content;
-    height: auto;
+.aboutpanel {
+    background-color: rgb(41, 41, 41);
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
 }
+
+.sidepanelheadings {
+    color: rgb(170, 170, 170);
+    padding: 5px;
+}
+
 
 body {
     background-color: rgb(34, 34, 34);
@@ -19,6 +32,10 @@ body {
 ul {
     list-style-type: disc;
     color: rgb(145, 145, 145);
+}
+
+li {
+    padding: 5px;
 }
 
 a {
