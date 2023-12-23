@@ -3,50 +3,24 @@
     "body": [
         {
             "kind": "variableDeclarationExpression",
-            "datatype": "array",
+            "datatype": "int",
             "identifier": "a",
             "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "stringLiteral",
-                        "value": "a.phi"
-                    },
-                    {
-                        "kind": "stringLiteral",
-                        "value": "r"
-                    }
-                ],
-                "caller": {
-                    "kind": "identifier",
-                    "symbol": "open"
-                }
+                "kind": "integerLiteral",
+                "value": 3
             },
             "constant": "False"
+        },
+        {
+            "kind": "delete",
+            "variable": "a"
         },
         {
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "callExpression",
-                    "arguments": [
-                        {
-                            "kind": "memberExpression",
-                            "object": {
-                                "kind": "identifier",
-                                "symbol": "a"
-                            },
-                            "property": {
-                                "kind": "integerLiteral",
-                                "value": 0
-                            },
-                            "computed": "False"
-                        }
-                    ],
-                    "caller": {
-                        "kind": "identifier",
-                        "symbol": "type"
-                    }
+                    "kind": "identifier",
+                    "symbol": "a"
                 }
             ],
             "caller": {

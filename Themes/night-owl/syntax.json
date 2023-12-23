@@ -2,7 +2,7 @@
     ".phi": {
         "keywords": [
             "#3d81ff",
-            "(?<!\\w)(output|for|readFile|update|hasAttr|unknown|in|case|match|input|throw|each|try|catch|continue|break|type|while|if|int|Real|Int|Str|as|lambda|real|import|export|obj|array|bool|str|items|now|length|wait|hash|fn|do|else|append|keys|join|format)(?!\\w)",
+            "(?<!\\w)(output|for|readFile|del|update|hasAttr|unknown|in|case|match|input|throw|each|try|catch|continue|break|type|while|if|int|Real|Int|Str|as|lambda|real|import|export|obj|array|bool|str|items|now|length|wait|hash|fn|do|else|append|keys|join|format)(?!\\w)",
             [
                 "output",
                 "input",
@@ -11,6 +11,7 @@
                 "break",
                 "case",
                 "match",
+                "del",
                 "throw",
                 "unknown",
                 "continue",

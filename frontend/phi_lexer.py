@@ -66,6 +66,7 @@ class TokenType:
         self.throw = 'throw'
         self._case = 'case'
         self._match = 'match'
+        self._del = 'del'
 
 
 TT = TokenType()
@@ -98,7 +99,8 @@ KEYWORDS = {
     'throw':TT.throw,
     'case':TT._case,
     'match':TT._match,
-    'unknown':TT.unknown
+    'unknown':TT.unknown,
+    'del':TT._del
 }
 
 

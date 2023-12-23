@@ -63,6 +63,11 @@ class environment:
             return nameError(self.filePath, self, varName, 0, 0)
         else:
             return self.parent.resolve(varName)
+        
+    def deleteVariable(self, varName:str) -> None:
+        env = self.resolve(varName)
+        del env.variables[varName]
+
 
 def createGlobalEnvironment(parent=None, filePath:str='') -> environment:
     env = environment(parent, filePath)

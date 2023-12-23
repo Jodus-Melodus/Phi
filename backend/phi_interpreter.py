@@ -685,6 +685,10 @@ class Interpreter:
                         break
                 return result
         return nullValue()
+    
+    def evaluateDeleteStatement(self, delete:deleteNode, env:environment) -> None:
+        env.deleteVariable(delete.variable)
+        return nullValue()
 
     def evaluate(self, astNode, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | None:
         if isinstance(astNode, (str, float, int, error)):
@@ -734,6 +738,8 @@ class Interpreter:
                 return self.evaluateThrowStatement(astNode, env)
             case 'matchStatement':
                 return self.evaluateMatchStatement(astNode, env)
+            case 'delete':
+                return self.evaluateDeleteStatement(astNode, env)
 
             case 'integerLiteral':
                 return integerValue(astNode.value, astNode.line, astNode.column)

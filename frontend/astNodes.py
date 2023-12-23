@@ -509,3 +509,15 @@ class caseNode(Node):
             'value': self.value,
             'body': self.body
         })
+    
+class deleteNode(Node):
+    def __init__(self, variable, line: int, column: int) -> None:
+        super().__init__(line, column)
+        self.kind = 'delete'
+        self.variable = variable
+
+    def __repr__(self) -> str:
+        return str({
+            'kind': self.kind,
+            'variable': self.variable
+        })

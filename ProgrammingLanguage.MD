@@ -555,6 +555,17 @@ Result:
 7
 ```
 
+### Delete statements
+
+Delete statement removes variable from memory. It's important to use it when you don't need a value anymore to free up some memory.
+
+```phi
+int a = 3
+del a
+```
+
+After this statement, variable 'a' will be deleted from the memory. Trying to access it after deleting will cause an error.
+
 ### If Else statements
 
 #### Conditions

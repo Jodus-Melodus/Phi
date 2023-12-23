@@ -98,11 +98,21 @@ class Parser:
                 return self.parseThrowStatement()
             case TT._match:
                 return self.parseMatchStatement()
+            case TT._del:
+                return self.parseDeleteStatement()
             case _:
                 return self.parseExpression()
 
     def parseExpression(self) -> None:
         return self.parseAssignmentExpression()
+
+    def parseDeleteStatement(self) -> None:
+        self.eat()
+        if self.get().type == TT.identifier:
+            v = self.eat().value
+            return deleteNode(v, self.line, self.column)
+        else:
+            return syntaxError(self.filePath, self, "Expected an identifier", self.column, self.line)
     
     def parseMatchStatement(self) -> None:
         self.eat()
