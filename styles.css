@@ -6,6 +6,7 @@
     height: 100px;
     top: 0;
     font-size: 20px;
+    z-index: 1;
 }
 
 .menubartablerow {
@@ -42,4 +43,37 @@ body a:hover {
 a {
     text-decoration: none;
     color: rgb(255, 255, 255);
+    transition: color 0.2s ease, text-decorator 0.2s ease;
+}
+
+.codeblock {
+    background-color: rgb(29, 29, 29);
+    display: inline-block;
+    padding: 8px;
+    border-radius: 8px;
+    width: 600px;
+}
+
+.sidepanel {
+    float: left;
+    width: 20%;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    height: 100vh;
+    top: 100px;
+    margin-bottom: 100px;
+    background-color: rgb(46, 46, 46);
+}
+
+.maindocweb {
+    float: right;
+    width: 80%;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    height: fit-content;
+    top: 100px;
+    margin-bottom: 100px;
+    background-color: rgb(29, 29, 29);
 }
