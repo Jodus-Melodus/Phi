@@ -1,43 +1,24 @@
-.sidepanel {
-    background-color: rgb(49, 49, 49);
-    padding: 5px;
-    width: fit-content;
-    height: auto;
-}
-
-.menupanel {
+.menubar {
     background-color: rgb(41, 41, 41);
-    width: 300px;
-    margin-left: auto;
-    margin-right: auto;
+    text-align: center;
+    height: 100px;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    position: sticky;
 }
 
-.aboutpanel {
-    background-color: rgb(41, 41, 41);
-    width: 300px;
-    margin-left: auto;
-    margin-right: auto;
+.footerlinklist {
+    list-style-type: none;
 }
-
-.sidepanelheadings {
-    color: rgb(170, 170, 170);
-    padding: 5px;
-}
-
 
 body {
     background-color: rgb(34, 34, 34);
-}
-
-ul {
-    list-style-type: disc;
-    color: rgb(145, 145, 145);
-}
-
-li {
-    padding: 5px;
+    font-family: sans-serif;
+    color: rgb(255, 255, 255);
 }
 
 a {
-    color: rgb(141, 0, 160);
+    color: rgb(236, 93, 255);
 }
