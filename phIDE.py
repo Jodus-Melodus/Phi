@@ -722,7 +722,7 @@ class App(ctk.CTk):
                 first_visible_index = editor.index("@0,0")
                 last_visible_index = editor.index("@0," + str(editor.winfo_height()))
 
-                for ln in range(int(first_visible_index.split('.')[0]), int(last_visible_index.split('.')[0])):
+                for ln in range(int(first_visible_index.split('.')[0]), int(last_visible_index.split('.')[0]) + 1):
                     text = editor.get(f"{ln}.0", f"{ln}.end")
                     matches = [(match.start(), match.end())
                                for match in re.finditer(pattern, text, re.MULTILINE)]
