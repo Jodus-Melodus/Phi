@@ -1,8 +1,26 @@
 .menupanel {
     background-color: rgb(41, 41, 41);
     width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sidepanel {
+    background-color: rgb(68, 68, 68);
+    padding: 5px;
+    width: fit-content;
+    height: auto;
 }
 
 body {
     background-color: rgb(34, 34, 34);
+}
+
+ul {
+    list-style-type: disc;
+    color: rgb(145, 145, 145);
+}
+
+a {
+    color: rgb(141, 0, 160);
 }
