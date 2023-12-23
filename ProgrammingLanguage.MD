@@ -2,11 +2,6 @@
 
 Welcome to Phi, a dynamic scripting language designed for flexibility and ease of use.
 
-## Conventions
-
-- All code should be indented using 4 spaces.
-- All code should be written using [Camel Case](https://en.wikipedia.org/wiki/Camel_case) although other cases are supported.
-
 ## Reporting Issues
 
 If you encounter any unexpected behavior while using Phi, please report it promptly. Include a screenshot and a detailed description to help us improve.
@@ -174,7 +169,7 @@ Result:
 str x = "hello"
 str y = " world"
 str result = x + y
-str += " !"
+result += " !"
 ```
 
 Result:
@@ -256,7 +251,7 @@ obj o = {
     age: 30,
     city: "New York",
     property: value,
-    method: fn name(){<-"Hello"}
+    method: fn name() {<- "Hello"}
 }
 ```
 
@@ -286,7 +281,7 @@ Result:
     age: 30,
     city: "New York",
     property: value,
-    method: fn name(){<-},
+    method: fn name() {},
     newProperty: "I am a new property"
 }
 ```
@@ -306,7 +301,7 @@ Hello
 - #### Adding new Methods
 
 ```phi
-o.newMethod = fn name(){<-"New method"}
+o.newMethod = fn name(){<- "New method"}
 ```
 
 Result:
@@ -318,7 +313,7 @@ Result:
     city: "New York",
     property: value,
     method: fn name(){<-},
-    newMethod: fn name(){<-"New method"}
+    newMethod: fn name(){<- "New method"}
 }
 ```
 
@@ -355,8 +350,8 @@ Result:
     30,
     "New York",
     value,
-    fn name(){<-},
-    fn name(){<-"New method"}
+    fn name(){},
+    fn name(){<- "New method"}
 ]
 ```
 
@@ -375,7 +370,7 @@ T
 - #### Adding new attribute to the object
 
 ```phi
-o.update({"gender":"male"})
+o.update({"gender" : "male"})
 ```
 
 The `update` function adds one or more attributes to the object. If an attribute already exists it will be overwritten. The return value is null.
@@ -385,7 +380,7 @@ The `update` function adds one or more attributes to the object. If an attribute
 ```phi
 unknown x = 3
 unknown y = "Hello"
-unknown z = {a:7, b:4}
+unknown z = {a : 7, b : 4}
 ```
 
 Result:
@@ -393,7 +388,7 @@ Result:
 ```phi
 3
 Hello
-{a: 7, b: 4}
+{a : 7, b : 4}
 ```
 
 ## Statments
@@ -505,22 +500,7 @@ Pauses execution for specified amount of seconds.
 Example usage:
 
 ```phi
-wait(1) # waits for one second
-```
-
-#### `root`(radicand, index)
-
-Calculates nth root of radicand.
-Example usage:
-
-```phi
-root(16, 2) # calculates square root of 16
-```
-
-Output:
-
-```phi
-4
+wait(1)    # waits for one second
 ```
 
 #### `hash`(data)
@@ -538,9 +518,7 @@ Functions are defined using the `fn` keyword followed by its name and parameters
 - #### Creating functions with parameters and return values
 
 ```phi
-fn add(x, y){
-    <- x + y
-}
+fn add(x, y) {<- x + y}
 ```
 
 - #### Calling functions
@@ -595,11 +573,7 @@ After this statement, variable 'a' will be deleted from the memory. Trying to ac
 #### Simple if else statement
 
 ```phi
-if (T) {
-    <- "True"
-} else {
-    <- "False"
-}
+if (T) {<- "True"} else {<- "False"}
 ```
 
 Result:
@@ -760,7 +734,7 @@ The variable `i` starts at 0 and continues until it is no longer less than 5. Af
 #### For Loop with break
 
 ```phi
-for (int j = 0; j < 10; j++){
+for (int j = 0; j < 10; j += 1){
     if (j == 5){
         break
     }
@@ -782,7 +756,7 @@ Result:
 The `continue` statement skips the rest of the code in the current iteration and moves on to the next one.
 
 ```phi
-for (k = 0; k <= 9; k++) {
+for (k = 0; k <= 9; k += 1) {
     if (k % 2 == 0) {
         continue
     }
@@ -937,8 +911,8 @@ Also the format for the modules
 
 ```phi
 export obj name = {
-    variable:value,
-    function:value
+    variable : value,
+    function : value
 }
 ```
 
@@ -946,8 +920,8 @@ Example:
 
 ```phi
 export obj math = {
-    pi:3.141592653589793,
-    root:fn r(radicand, index){<- radicand ^ (1 / index)}
+    pi : 3.141592653589793,
+    root : fn r(radicand, index) {<- radicand^(1 / index)}
 }
 ```
 
