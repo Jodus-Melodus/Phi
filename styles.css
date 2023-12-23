@@ -1,16 +1,31 @@
 .menubar {
+    position: fixed;
+    width: 100%;
     background-color: rgb(41, 41, 41);
     text-align: center;
     height: 100px;
+    top: 0;
     font-size: 20px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    position: sticky;
+}
+
+.menubartablerow {
+    text-align: left;
 }
 
 .footerlinklist {
     list-style-type: none;
+}
+
+.footertablerow {
+    text-align: center;
+}
+
+.mainwebsite {
+    height: 2000px;
+    background-color: rgb(27, 27, 27);
+    position: relative;
+    top: 100px;
+    margin-bottom: 100px;
 }
 
 body {
@@ -19,6 +34,12 @@ body {
     color: rgb(255, 255, 255);
 }
 
-a {
+body a:hover {
+    text-decoration: underline;
     color: rgb(236, 93, 255);
+}
+
+a {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
 }
