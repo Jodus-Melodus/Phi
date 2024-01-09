@@ -33,45 +33,41 @@ class Interpreter:
         res = False
         if isinstance(right, nullValue):
             if isinstance(left, (realValue, integerValue)):
-                if left.value != 0:
-                    res = booleanValue('T')
-                else:
-                    res = booleanValue('F')
+                res = booleanValue('T') if left.value != 0 else booleanValue('F')
             elif isinstance(left, booleanValue):
-                res = True if left.value == 'T' else False
+                res = left.value == 'T'
             elif isinstance(left, stringValue):
                 res = left.value != ''
+        elif isinstance(left, (realValue, integerValue)) and isinstance(right, (realValue, integerValue)):
+            match operand:
+                case '==':
+                    res = left.value == right.value
+                case '>':
+                    res = left.value > right.value
+                case '<':
+                    res = left.value < right.value
+                case '>=':
+                    res = left.value >= right.value
+                case '<=':
+                    res = left.value <= right.value
+                case '!=':
+                    res = left.value != right.value
+        elif isinstance(left, booleanValue) and isinstance(right, booleanValue):
+            match operand:
+                case '&':
+                    res = booleanTable[left.value] and booleanTable[right.value]
+                case '|':
+                    res = booleanTable[left.value] or booleanTable[right.value]
+                case '!=':
+                    res = booleanTable[left.value] != booleanTable[right.value]
+        elif isinstance(left, stringValue) and isinstance(right, stringValue):
+            match operand:
+                case '==':
+                    res = left.value == right.value
+                case '!=':
+                    res = left.value != right.value
         else:
-            if isinstance(left, (realValue, integerValue)) and isinstance(right, (realValue, integerValue)):
-                match operand:
-                    case '==':
-                        res = left.value == right.value
-                    case '>':
-                        res = left.value > right.value
-                    case '<':
-                        res = left.value < right.value
-                    case '>=':
-                        res = left.value >= right.value
-                    case '<=':
-                        res = left.value <= right.value
-                    case '!=':
-                        res = left.value != right.value
-            elif isinstance(left, booleanValue) and isinstance(right, booleanValue):
-                match operand:
-                    case '&':
-                        res = booleanTable[left.value] and booleanTable[right.value]
-                    case '|':
-                        res = booleanTable[left.value] or booleanTable[right.value]
-                    case '!=':
-                        res = booleanTable[left.value] != booleanTable[right.value]
-            elif isinstance(left, stringValue) and isinstance(right, stringValue):
-                match operand:
-                    case '==':
-                        res = left.value == right.value
-                    case '!=':
-                        res = left.value != right.value
-            else:
-                return syntaxError(self.file_path, self, "Invalid contidion", right.column, right.line)
+            return syntaxError(self.file_path, self, "Invalid contidion", right.column, right.line)
         return res
 
     def evaluateProgram(self, program: programNode, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | bool | None:

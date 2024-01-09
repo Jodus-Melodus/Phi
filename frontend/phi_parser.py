@@ -11,7 +11,7 @@ class Parser:
         self.column = 0
         self.line = 0
 
-        self.datetypeMap = {
+        self.datatypeMap = {
             'int':integerLiteralNode(0, self.line, self.column),
             'real':realLiteralNode(0.0, self.line, self.column),
             'string':stringLiteralNode('', self.line, self.column),
@@ -523,7 +523,7 @@ class Parser:
             if self.get().type in (TT.eof, TT.lineend):
                 self.eat()
             if datatype in ('int', 'string', 'real', 'array', 'object', 'bool', 'lambda', 'unknown'):
-                return variableDeclarationExpressionNode(datatype, identifier, self.datetypeMap[datatype], constant, self.line, self.column)
+                return variableDeclarationExpressionNode(datatype, identifier, self.datatypeMap[datatype], constant, self.line, self.column)
             else:
                 return syntaxError(self.filePath, self, "Expected a variable declaration", self.column, self.line)
         else:
@@ -556,8 +556,6 @@ class Parser:
     def parseObjectExpression(self) -> None:
         if self.get().type != TT.openBrace:
             value = self.parseArrayExpression()
-            if isinstance(value, error):
-                return value
             return value
         else:
             self.eat()

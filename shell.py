@@ -26,10 +26,7 @@ def incrementalParsing(source_code: str, file_path: str = '', x=False):
             f.write(json.dumps(json.loads(str(ast).replace("'", '"')), indent=4))
         ran = True
 
-    if x:
-        return ast
-    else:
-        return ''
+    return ast if x else ''
 
 
 def run(source_code: str, file_path: str = '') -> None | error:
