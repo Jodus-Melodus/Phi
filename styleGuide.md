@@ -49,7 +49,7 @@ int x = 5     # This initializes the variable x to 5
 - Function signatures (the part before the `{`) should be on a single line:
 
 ```phi
-functionName(parameter1, parameter2, ...) {
+fn functionName(parameter1, parameter2, ...) {
 
 }
 ```
