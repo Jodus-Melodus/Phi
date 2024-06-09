@@ -1,10 +1,7 @@
 
 
 int a = 3
-
-del a
-
-
 output(a)
 
+output(e)
 

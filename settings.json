@@ -1,19 +1,47 @@
 {
-    "font-family": "Fira Code",
-    "font-size": 12,
+    "editor-font-size": 12,
+    "console-font-size": 10,
+    "button-font-size": 12,
+
+    "editor-font-weight": "bold",
+    "console-font-weight": "bold",
+    "button-font-weight": "bold",
+
+    "editor-font-family": "Fira Code",
+    "console-font-family": "Fira Code",
+    "button-font-family": "Fira Code",
+    
+    "editor-font-slant":"roman",
+    "console-font-slant":"roman",
+    "button-font-slant":"roman",
+    
+    "editor-font-underline": false,
+    "console-font-underline": false,
+    "button-font-underline": false,
+    
+    "editor-font-overstrike": false,
+    "console-font-overstrike": false,
+    "button-font-overstrike": false,
+
     "error-tag-background-color": "#990000",
-    "error-tag-foreground-color": "",
-    "error-tag-underline": 0,
     "similar-tag-background-color": "#595959",
-    "similar-tag-foreground-color": "",
-    "similar-tag-underline": 0,
     "selected-tag-background-color": "#595959",
-    "selected-tag-foreground-color": "",
-    "selected-tag-underline": 0,
     "warning-tag-foreground-color": "#ebd834",
-    "warning-tag-background-color": "",
-    "warning-tag-underline": 1,
     "intelliSense-menu-color": "#ff00ff",
     "snippet-menu-color": "#3366ff",
+
+    "error-tag-underline": 0,
+    "similar-tag-underline": 0,
+    "selected-tag-underline": 0,
+    "warning-tag-underline": 1,
+
+    "error-tag-foreground-color": "",
+    "similar-tag-foreground-color": "",
+    "selected-tag-foreground-color": "",
+    "warning-tag-background-color": "",
+
+    "y-padding":5,
+    "x-padding":5,
+
     "theme": "phi-theme"
 }

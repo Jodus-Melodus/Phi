@@ -1,30 +1,25 @@
 from backend.values import *
 from frontend.errors import *
 
-
-def append(array: arrayValue, value: RuntimeValue) -> arrayValue:
-    newIndex = len(array.items)
-    array.items[newIndex] = value
+def array_append(array: ArrayValue, value: RuntimeValue) -> ArrayValue:
+    new_index = len(array.items)
+    array.items[new_index] = value
     return array
 
+def array_length(array: ArrayValue) -> IntegerValue:
+    return IntegerValue(len(array.items))
 
-def arrayLength(array: arrayValue) -> integerValue:
-    return integerValue(len(array.items))
-
-
-def arrayJoin(array: arrayValue, join_character: stringValue) -> stringValue:
-    if isinstance(join_character, stringValue):
+def array_join(array: ArrayValue, join_character: StringValue) -> StringValue:
+    if isinstance(join_character, StringValue):
         array_values = [v.value for v in array.items.values()]
-        return stringValue(join_character.value.join(map(str, array_values)))
+        return StringValue(join_character.value.join(map(str, array_values)))
     else:
-        return typeError('', 'Method', join_character, join_character.column, join_character.line)
+        return TypeError('', 'Method', join_character, join_character.column, join_character.line)
 
+def string_length(string: StringValue) -> IntegerValue:
+    return IntegerValue(len(string.value))
 
-def stringLength(string: stringValue) -> integerValue:
-    return integerValue(len(string.value))
-
-
-def stringFormat(args, string: stringValue) -> stringValue:
+def string_format(args, string: StringValue) -> StringValue:
     formatted_string = ''
     s: str = string.value
     i = 0
@@ -34,37 +29,35 @@ def stringFormat(args, string: stringValue) -> stringValue:
             i += 1
         else:
             formatted_string += j
-    return stringValue(formatted_string)
+    return StringValue(formatted_string)
 
 # Objects
-def objectItems(obj: objectValue) -> arrayValue:
-    object_property_values = {}
-    for i, key in enumerate(obj.properties):
-        object_property_values[i] = obj.properties[key]
-    return arrayValue(object_property_values, obj.line, obj.column)
+def object_items(obj: ObjectValue) -> ArrayValue:
+    object_property_values = {
+        i: obj.properties[key] for i, key in enumerate(obj.properties)
+    }
+    return ArrayValue(object_property_values, obj.line, obj.column)
 
+def object_keys(obj: ObjectValue) -> ArrayValue:
+    object_property_keys = {
+        i: StringValue(key, obj.line, obj.column)
+        for i, key in enumerate(obj.properties)
+    }
+    return ArrayValue(object_property_keys, obj.line, obj.column)
 
-def objectKeys(obj: objectValue) -> arrayValue:
-    object_property_keys = {}
-    for i, key in enumerate(obj.properties):
-        object_property_keys[i] = stringValue(key, obj.line, obj.column)
-    return arrayValue(object_property_keys, obj.line, obj.column)
+def object_update(obj: ObjectValue, new_properties) -> NullValue:
+    if not isinstance(new_properties, ObjectValue):
+        return TypeError('', 'Method', f"Expected an objectValue but received a '{new_properties.type}'", new_properties.column, new_properties.line)
+    object_new_properties = {**new_properties.properties}
+    obj.properties.update(object_new_properties)
+    return NullValue()
 
-
-def objectUpdate(obj: objectValue, new_properties) -> nullValue:
-    if isinstance(new_properties, objectValue):
-        object_new_properties = {**new_properties.properties}
-        obj.properties.update(object_new_properties)
-    else:
-        return typeError('', 'Method', f"Expected an objectValue but received a '{new_properties.type}'", new_properties.column, new_properties.line)
-    return nullValue()
-
-def objectHasAttr(obj:objectValue, attribute):
-    if isinstance(attribute, stringValue):
-        attrName = attribute.value
-        if attrName not in obj.properties:
-            return booleanValue('F')
-        else:
-            return booleanValue('T')
-    else:
-        return typeError('', 'Method', f"Expected an stringValue but received a '{attribute.type}'", attribute.column, attribute.line)
+def object_has_attribute(obj:ObjectValue, attribute):
+    if not isinstance(attribute, StringValue):
+        return TypeError('', 'Method', f"Expected an stringValue but received a '{attribute.type}'", attribute.column, attribute.line)
+    attribute_name = attribute.value
+    return (
+        BooleanValue('F')
+        if attribute_name not in obj.properties
+        else BooleanValue('T')
+    )

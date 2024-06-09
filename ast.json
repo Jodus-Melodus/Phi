@@ -12,15 +12,24 @@
             "constant": "False"
         },
         {
-            "kind": "delete",
-            "variable": "a"
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "a"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
+            }
         },
         {
             "kind": "callExpression",
             "arguments": [
                 {
                     "kind": "identifier",
-                    "symbol": "a"
+                    "symbol": "e"
                 }
             ],
             "caller": {

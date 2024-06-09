@@ -1,4 +1,4 @@
-from frontend.errors import error
+from frontend.errors import Error
 from frontend.phi_lexer import *
 from frontend.phi_parser import *
 from backend.phi_interpreter import *
@@ -8,17 +8,17 @@ import os
 
 ran = False
 
-
-def incrementalParsing(source_code: str, file_path: str = '', x=False):
-    global ran, environment
-    environment = createGlobalEnvironment(file_path)
+# Parsing for the IDE to allow error checking while typing
+def incremental_parsing(source_code: str, file_path: str = '', x=False):
+    global ran, Environment
+    Environment = create_global_environment(file_path)
     lexer = Lexer(source_code, file_path)
     tokens = lexer.tokenize()
-    if isinstance(tokens, error):
+    if isinstance(tokens, Error):
         return tokens
     parser = Parser(tokens, file_path)
-    ast = parser.genAST()
-    if isinstance(ast, error):
+    ast = parser.generate_AST()
+    if isinstance(ast, Error):
         return ast
 
     if not ran:
@@ -28,14 +28,13 @@ def incrementalParsing(source_code: str, file_path: str = '', x=False):
 
     return ast if x else ''
 
-
-def run(source_code: str, file_path: str = '') -> None | error:
-    ast = incrementalParsing(source_code, file_path, True)
+# Run code
+def run(source_code: str, file_path: str = '') -> None | Error:
+    ast = incremental_parsing(source_code, file_path, True)
     interpreter = Interpreter(file_path)
-    res = interpreter.evaluate(ast, environment)
-    if isinstance(res, (error, exportValue)):
+    res = interpreter.evaluate(ast, Environment)
+    if isinstance(res, (Error, ExportValue)):
         return res
-
 
 if __name__ == '__main__':
     while True:
@@ -49,7 +48,7 @@ if __name__ == '__main__':
                     if not code:
                         break
                     res = run(code)
-                    if isinstance(res, error):
+                    if isinstance(res, Error):
                         print(res)
             case 'exit':
                 exit()
@@ -62,7 +61,7 @@ if __name__ == '__main__':
                         with open(file_path, 'r') as f:
                             source_code = f.read()
                             res = run(source_code, file_path)
-                            if isinstance(res, error):
+                            if isinstance(res, Error):
                                 print(res)
                     else:
                         print('File not found')

@@ -1,13 +1,10 @@
-
-
 class RuntimeValue:
     def __init__(self, line: int = -1, column: int = -1) -> None:
         self.line = line
         self.column = column
         self.type = 'runtimeValue'
 
-
-class nullValue(RuntimeValue):
+class NullValue(RuntimeValue):
     def __init__(self) -> None:
         super().__init__()
         self.type = 'nullValue'
@@ -18,9 +15,8 @@ class nullValue(RuntimeValue):
             'type': self.type,
             'value': self.value
         })
-    
 
-class unknownValue(RuntimeValue):
+class UnknownValue(RuntimeValue):
     def __init__(self, value, line:int=-1, column:int=-1) -> None:
         super().__init__()
         self.type = 'unknownValue'
@@ -34,8 +30,7 @@ class unknownValue(RuntimeValue):
             'value': self.value
         })
 
-
-class integerValue(RuntimeValue):
+class IntegerValue(RuntimeValue):
     def __init__(self, value, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.type = 'integerValue'
@@ -47,8 +42,7 @@ class integerValue(RuntimeValue):
             'value': self.value
         })
 
-
-class realValue(RuntimeValue):
+class RealValue(RuntimeValue):
     def __init__(self, value, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.type = 'realValue'
@@ -60,16 +54,15 @@ class realValue(RuntimeValue):
             'value': self.value
         })
 
-
-class stringValue(RuntimeValue):
+class StringValue(RuntimeValue):
     def __init__(self, value:str, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         import backend.builtInMethods as bim
         self.type = 'stringValue'
         self.value = value
         self.methods = {
-            'length': nativeFunction(lambda args, scope: bim.stringLength(self)),
-            'format': nativeFunction(lambda args, scope: bim.stringFormat(args, self))
+            'length': NativeFunction(lambda args, scope: bim.string_length(self)),
+            'format': NativeFunction(lambda args, scope: bim.string_format(args, self))
         }
 
     def __repr__(self) -> str:
@@ -78,8 +71,7 @@ class stringValue(RuntimeValue):
             'value': self.value
         })
 
-
-class booleanValue(RuntimeValue):
+class BooleanValue(RuntimeValue):
     def __init__(self, value='F') -> None:
         super().__init__()
         self.type = 'booleanValue'
@@ -91,17 +83,16 @@ class booleanValue(RuntimeValue):
             'value': self.value
         })
 
-
-class arrayValue(RuntimeValue):
+class ArrayValue(RuntimeValue):
     def __init__(self, items: dict, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         import backend.builtInMethods as bim
         self.type = 'arrayValue'
         self.items = items
         self.methods = {
-            'append': nativeFunction(lambda args, scope: bim.append(self, args[0])),
-            'length': nativeFunction(lambda args, scope: bim.arrayLength(self)),
-            'join': nativeFunction(lambda args, scope: bim.arrayJoin(self, args[0]))
+            'append': NativeFunction(lambda args, scope: bim.append(self, args[0])),
+            'length': NativeFunction(lambda args, scope: bim.array_length(self)),
+            'join': NativeFunction(lambda args, scope: bim.array_join(self, args[0]))
         }
 
     def __repr__(self) -> str:
@@ -111,18 +102,17 @@ class arrayValue(RuntimeValue):
             'methods': self.methods
         })
 
-
-class objectValue(RuntimeValue):
+class ObjectValue(RuntimeValue):
     def __init__(self, properties: dict, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         import backend.builtInMethods as bim
         self.type = 'objectValue'
         self.properties = properties
         self.methods = {
-            'items': nativeFunction(lambda args, scope: bim.objectItems(self)),
-            'keys': nativeFunction(lambda args, scope: bim.objectKeys(self)),
-            'update': nativeFunction(lambda args, scope: bim.objectUpdate(self, args[0])),
-            'hasAttr': nativeFunction(lambda args, scope: bim.objectHasAttr(self, args[0]))
+            'items': NativeFunction(lambda args, scope: bim.object_items(self)),
+            'keys': NativeFunction(lambda args, scope: bim.object_keys(self)),
+            'update': NativeFunction(lambda args, scope: bim.object_update(self, args[0])),
+            'hasAttr': NativeFunction(lambda args, scope: bim.object_has_attribute(self, args[0]))
         }
 
     def __repr__(self) -> str:
@@ -131,8 +121,7 @@ class objectValue(RuntimeValue):
             'properties': self.properties
         })
 
-
-class nativeFunction(RuntimeValue):
+class NativeFunction(RuntimeValue):
     def __init__(self, call) -> None:
         super().__init__()
         self.type = 'nativeFunctionValue'
@@ -145,13 +134,13 @@ class nativeFunction(RuntimeValue):
         })
 
 
-class function(RuntimeValue):
-    def __init__(self, name, parameters: list, declarationEnvironment, body: list, line: int = -1, column: int = -1) -> None:
+class Function(RuntimeValue):
+    def __init__(self, name, parameters: list, declaration_environment, body: list, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.type = 'functionValue'
         self.name = name
         self.parameters = parameters
-        self.declarationEnvironment = declarationEnvironment
+        self.declaration_environment = declaration_environment
         self.body = body
 
     def __repr__(self) -> str:
@@ -159,12 +148,11 @@ class function(RuntimeValue):
             'type': self.type,
             'name': self.name,
             'parameters': self.parameters,
-            'declarationEnvironment': self.declarationEnvironment,
+            'declarationEnvironment': self.declaration_environment,
             'body': self.body
         })
 
-
-class exportValue(RuntimeValue):
+class ExportValue(RuntimeValue):
     def __init__(self, value, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.type = 'exportValue'
@@ -176,8 +164,8 @@ class exportValue(RuntimeValue):
             'value': self.value
         })
 
-class fileValue(RuntimeValue):
-    def __init__(self, value:stringValue, line: int = -1, column: int = -1) -> None:
+class FileValue(RuntimeValue):
+    def __init__(self, value:StringValue, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.type = 'fileValue'
         self.value = value

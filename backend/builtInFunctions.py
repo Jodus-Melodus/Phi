@@ -6,63 +6,62 @@ from hashlib import *
 import sys
 
 def output(value, file_path:str='') -> str:
-    if isinstance(value, (integerValue, booleanValue, nullValue, realValue)):
+    if isinstance(value, (IntegerValue, BooleanValue, NullValue, RealValue)):
         return value.value
-    if isinstance(value, stringValue):
+    if isinstance(value, StringValue):
         for a, b in [('\\n', '\n'), ('\\t', '\t')]:
             value.value = value.value.replace(a, b)
         return value.value
-    elif isinstance(value, objectValue):
+    elif isinstance(value, ObjectValue):
         result = '{'
         for prop, value in value.properties.items():
             result += f"{output(prop)}: {output(value)}, "
         return result.rstrip(', ') + '}'
-    elif isinstance(value, arrayValue):
-        res = '[' + ', '.join(map(str, map(output, value.items.values()))) + ']'
-        return res
-    elif isinstance(value, function):
+    elif isinstance(value, ArrayValue):
+        return '[' + ', '.join(map(str, map(output, value.items.values()))) + ']'
+    elif isinstance(value, Function):
         parameters = [parameter.symbol for parameter in value.parameters]
         return f"fn {value.name}({', '.join(parameters)})"
     else:
         return value
 
-def input(file_path, arg:stringValue) -> stringValue:
+def input(file_path, arg:StringValue) -> StringValue:
     sys.stdout.write(arg.value)
-    return stringValue(sys.stdin.readline().strip(), arg.line, arg.column)
+    return StringValue(sys.stdin.readline().strip(), arg.line, arg.column)
 
-def now(file_path) -> integerValue:
-    return integerValue(time())
+def now(file_path) -> IntegerValue:
+    return IntegerValue(time())
 
-def type_(file_path, arg:RuntimeValue) -> stringValue:
-    return stringValue(arg.type)
+def type_(file_path, arg:RuntimeValue) -> StringValue:
+    return StringValue(arg.type)
     
 def wait(file_path, seconds) -> None:
     sleep(int(seconds.value))
 
-def hash(file_path, data:stringValue) -> stringValue:
+def hash(file_path, data:StringValue) -> StringValue:
     d = data.value.encode('utf-8')
-    return stringValue(sha256(d).hexdigest(), data.line, data.column)
+    return StringValue(sha256(d).hexdigest(), data.line, data.column)
 
-def hardCastStr(file_path, value:RuntimeValue) -> stringValue:
-    return stringValue(value.value, value.line, value.column)
+def hard_cast_string(file_path, value:RuntimeValue) -> StringValue:
+    return StringValue(value.value, value.line, value.column)
 
-def hardCastInt(file_path, value:RuntimeValue) -> integerValue:
+def hard_cast_integer(file_path, value:RuntimeValue) -> IntegerValue:
     try:
         v = int(value.value)
-        return integerValue(v, value.line, value.column)
+        return IntegerValue(v, value.line, value.column)
     except ValueError:
-        return typeError(file_path, "Integer Casting", value, value.column, value.line)
+        return TypeError(file_path, "Integer Casting", value, value.column, value.line)
 
-def hardCastReal(file_path, value:RuntimeValue) -> realValue:
+def hard_cast_real(file_path, value:RuntimeValue) -> RealValue:
     try:
         v = float(value.value)
-        return realValue(v, value.line, value.column)
+        return RealValue(v, value.line, value.column)
     except ValueError:
-        return typeError(file_path, "Float Casting", value, value.column, value.line)
+        return TypeError(file_path, "Float Casting", value, value.column, value.line)
 
-def readfile_path(file_path, value:stringValue) -> arrayValue:    
+def read_file(file_path, value:StringValue) -> ArrayValue:    
     path = value.value
     f = open(path, 'r').readlines()
-    v = {f.index(i) : stringValue(i, value.line, value.column) for i in f}
+    v = {f.index(i) : StringValue(i, value.line, value.column) for i in f}
 
-    return arrayValue(v, value.line, value.column)
+    return ArrayValue(v, value.line, value.column)

@@ -1,15 +1,15 @@
 from backend.values import *
 from frontend.astNodes import *
 from frontend.errors import *
-from backend.phi_environment import environment, createGlobalEnvironment
+from backend.phi_environment import Environment, create_global_environment
 import os
 
-booleanTable = {
+boolean_table = {
     'T': True,
     'F': False
 }
 
-valueTypeTable = {
+value_type_table = {
     'integerValue': ['integerValue', 'realValue', 'unknownValue'],
     'realValue': ['realValue', 'integerValue', 'unknownValue'],
     'stringValue': ['stringValue', 'unknownValue'],
@@ -29,16 +29,16 @@ class Interpreter:
     def __str__(self) -> str:
         return 'Interpreter'
 
-    def checkCondition(self, left: RuntimeValue, operand: str, right: RuntimeValue) -> bool:
+    def check_condition(self, left: RuntimeValue, operand: str, right: RuntimeValue) -> bool:
         res = False
-        if isinstance(right, nullValue):
-            if isinstance(left, (realValue, integerValue)):
-                res = booleanValue('T') if left.value != 0 else booleanValue('F')
-            elif isinstance(left, booleanValue):
+        if isinstance(right, NullValue):
+            if isinstance(left, (RealValue, IntegerValue)):
+                res = BooleanValue('T') if left.value != 0 else BooleanValue('F')
+            elif isinstance(left, BooleanValue):
                 res = left.value == 'T'
-            elif isinstance(left, stringValue):
+            elif isinstance(left, StringValue):
                 res = left.value != ''
-        elif isinstance(left, (realValue, integerValue)) and isinstance(right, (realValue, integerValue)):
+        elif isinstance(left, (RealValue, IntegerValue)) and isinstance(right, (RealValue, IntegerValue)):
             match operand:
                 case '==':
                     res = left.value == right.value
@@ -52,211 +52,209 @@ class Interpreter:
                     res = left.value <= right.value
                 case '!=':
                     res = left.value != right.value
-        elif isinstance(left, booleanValue) and isinstance(right, booleanValue):
+        elif isinstance(left, BooleanValue) and isinstance(right, BooleanValue):
             match operand:
                 case '&':
-                    res = booleanTable[left.value] and booleanTable[right.value]
+                    res = boolean_table[left.value] and boolean_table[right.value]
                 case '|':
-                    res = booleanTable[left.value] or booleanTable[right.value]
+                    res = boolean_table[left.value] or boolean_table[right.value]
                 case '!=':
-                    res = booleanTable[left.value] != booleanTable[right.value]
-        elif isinstance(left, stringValue) and isinstance(right, stringValue):
+                    res = boolean_table[left.value] != boolean_table[right.value]
+        elif isinstance(left, StringValue) and isinstance(right, StringValue):
             match operand:
                 case '==':
                     res = left.value == right.value
                 case '!=':
                     res = left.value != right.value
         else:
-            return syntaxError(self.file_path, self, "Invalid contidion", right.column, right.line)
+            return SyntaxError(self.file_path, self, "Invalid contidion", right.column, right.line)
         return res
 
-    def evaluateProgram(self, program: programNode, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | bool | None:
-        lastEvaluated = nullValue()
+    def evaluate_program(self, program: ProgramNode, env: Environment) -> NullValue | IntegerValue | ObjectValue | ArrayValue | StringValue | bool | None:
+        last_evaluated = NullValue()
 
         for statement in program.body:
-            lastEvaluated = self.evaluate(statement, env)
-            if isinstance(lastEvaluated, error):
-                return lastEvaluated
+            last_evaluated = self.evaluate(statement, env)
+            if isinstance(last_evaluated, Error):
+                return last_evaluated
 
-        return lastEvaluated
+        return last_evaluated
 
-    def evaluateBinaryExpression(self, binaryOperation: binaryExpressionNode, env: environment) -> integerValue | nullValue:
-        left = self.evaluate(binaryOperation.left, env)
-        if isinstance(left, error):
+    def evaluate_binary_expression(self, binary_operation: BinaryExpressionNode, env: Environment) -> IntegerValue | NullValue:
+        left = self.evaluate(binary_operation.left, env)
+        if isinstance(left, Error):
             return left
-        right = self.evaluate(binaryOperation.right, env)
-        if isinstance(right, error):
+        right = self.evaluate(binary_operation.right, env)
+        if isinstance(right, Error):
             return right
 
-        if isinstance(left, (realValue, integerValue)) and isinstance(right, (realValue, integerValue)):
-            return self.evaluateNumericBinaryExpression(left, right, binaryOperation.operand)
-        elif isinstance(left, stringValue) and isinstance(right, (stringValue, (realValue, integerValue))):
-            return self.evaluateStringBinaryExpression(left, right, binaryOperation.operand)
+        if isinstance(left, (RealValue, IntegerValue)) and isinstance(right, (RealValue, IntegerValue)):
+            return self.evaluate_numeric_binary_expression(left, right, binary_operation.operand)
+        elif isinstance(left, StringValue) and isinstance(right, (StringValue, (RealValue, IntegerValue))):
+            return self.evaluate_string_binary_expression(left, right, binary_operation.operand)
 
-        elif isinstance(left, arrayValue):
-            return self.evaluateArrayAppendBinaryExpression(left, right, binaryOperation.operand)
+        elif isinstance(left, ArrayValue):
+            return self.evaluate_array_append_binary_expression(left, right, binary_operation.operand)
         else:
-            return typeError(self.file_path, self, f"Incompatible types. '{left.type}' and '{right.type}'", right.column, right.line)
+            return TypeError(self.file_path, self, f"Incompatible types. '{left.type}' and '{right.type}'", right.column, right.line)
 
-    def evaluateArrayAppendBinaryExpression(self, left: arrayValue, right, operand: str) -> arrayValue:
+    def evaluate_array_append_binary_expression(self, left: ArrayValue, right, operand: str) -> ArrayValue:
         match operand:
             case '+':
                 index = len(left.items)
                 left.items[index] = right
-                return arrayValue(left.items)
+                return ArrayValue(left.items)
             case _:
-                return syntaxError(self.file_path, self, "Cannot preform this operation on arrays.", right.column, right.line)
+                return SyntaxError(self.file_path, self, "Cannot preform this operation on arrays.", right.column, right.line)
 
-    def evaluateObjectBinaryExpression(self, left: objectValue, right: objectValue, operand: str) -> objectValue:
+    def evaluate_object_binary_expression(self, left: ObjectValue, right: ObjectValue, operand: str) -> ObjectValue:
         match operand:
             case '+':
-                return objectValue(left.properties.update(right.properties))
+                return ObjectValue(left.properties.update(right.properties))
             case _:
-                return syntaxError(self.file_path, self, "Cannot preform this operation on objects.", right.column, right.line)
+                return SyntaxError(self.file_path, self, "Cannot preform this operation on objects.", right.column, right.line)
 
-    def evaluateArrayBinaryExpression(self, left: arrayValue, right: arrayValue, operand: str) -> arrayValue:
+    def evaluate_array_binary_expression(self, left: ArrayValue, right: ArrayValue, operand: str) -> ArrayValue:
         match operand:
             case '+':
-                return arrayValue(left.items + right.items)
+                return ArrayValue(left.items + right.items)
             case _:
-                return syntaxError(self.file_path, self, "Cannot preform this operation on arrays.", right.column, right.line)
+                return SyntaxError(self.file_path, self, "Cannot preform this operation on arrays.", right.column, right.line)
 
-    def evaluateStringBinaryExpression(self, left: stringValue, right: stringValue | integerValue | realValue, operand: str) -> stringValue:
+    def evaluate_string_binary_expression(self, left: StringValue, right: StringValue | IntegerValue | RealValue, operand: str) -> StringValue:
         match operand:
             case '+':
-                return stringValue(left.value + str(right.value))
+                return StringValue(left.value + str(right.value))
             case _:
-                return syntaxError(self.file_path, self, "Cannot preform this operation on strings.", right.column, right.line)
+                return SyntaxError(self.file_path, self, "Cannot preform this operation on strings.", right.column, right.line)
 
-    def evaluateNumericBinaryExpression(self, left: integerValue | realValue, right: integerValue | realValue, operand: str) -> realValue:
+    def evaluate_numeric_binary_expression(self, left: IntegerValue | RealValue, right: IntegerValue | RealValue, operand: str) -> RealValue:
         match operand:
             case '+':
-                if isinstance(left, realValue) or isinstance(right, realValue):
-                    return realValue(left.value + right.value)
+                if isinstance(left, RealValue) or isinstance(right, RealValue):
+                    return RealValue(left.value + right.value)
                 else:
-                    return integerValue(left.value + right.value)
+                    return IntegerValue(left.value + right.value)
             case '-':
-                if isinstance(left, realValue) or isinstance(right, realValue):
-                    return realValue(left.value - right.value)
+                if isinstance(left, RealValue) or isinstance(right, RealValue):
+                    return RealValue(left.value - right.value)
                 else:
-                    return integerValue(left.value - right.value)
+                    return IntegerValue(left.value - right.value)
             case '*':
-                if isinstance(left, realValue) or isinstance(right, realValue):
-                    return realValue(left.value * right.value)
+                if isinstance(left, RealValue) or isinstance(right, RealValue):
+                    return RealValue(left.value * right.value)
                 else:
-                    return integerValue(left.value * right.value)
+                    return IntegerValue(left.value * right.value)
             case '/':
                 if right.value != 0:
-                    return realValue(left.value / right.value)
+                    return RealValue(left.value / right.value)
                 else:
-                    return zeroDivisionError(self.file_path, self, right.column, right.line)
+                    return ZeroDivisionError(self.file_path, self, right.column, right.line)
             case '^':
-                if isinstance(left, realValue) or isinstance(right, realValue):
-                    return realValue(left.value ** right.value)
+                if isinstance(left, RealValue) or isinstance(right, RealValue):
+                    return RealValue(left.value ** right.value)
                 else:
-                    return integerValue(left.value ** right.value)
+                    return IntegerValue(left.value ** right.value)
             case '%':
                 if right.value != 0:
-                    return integerValue(left.value % right.value)
+                    return IntegerValue(left.value % right.value)
                 else:
-                    return zeroDivisionError(self.file_path, self, right.column, right.line)
+                    return ZeroDivisionError(self.file_path, self, right.column, right.line)
             case '//':
                 if right.value != 0:
-                    return integerValue(left.value // right.value)
+                    return IntegerValue(left.value // right.value)
                 else:
-                    return zeroDivisionError(self.file_path, self, right.column, right.line)
+                    return ZeroDivisionError(self.file_path, self, right.column, right.line)
             case _:
-                return syntaxError(self.file_path, self, "Cannot preform this operation on numbers", right.column, right.line)
+                return SyntaxError(self.file_path, self, "Cannot preform this operation on numbers", right.column, right.line)
 
 # --------------------------------------------------------------------------------------------------------------------------------
 
-    def evaluateIdentifierExpression(self, identifier: identifierNode, env: environment) -> None:
+    def evaluate_identifier_expression(self, identifier: IdentifierNode, env: Environment) -> None:
         return env.lookup(identifier)
 
-    def evaluateAssignmentExpression(self, assignmentExpression: assignmentExpressionNode, env: environment) -> None:
-        if isinstance(assignmentExpression.assigne, identifierNode):
-            varName = assignmentExpression.assigne.symbol
-            currentValue = env.lookup(assignmentExpression.assigne)
-            if isinstance(currentValue, error):
-                return currentValue
-            value = self.evaluate(assignmentExpression.value, env)
-
-            if isinstance(value, error):
-                return value
-
-            if value.type in valueTypeTable[value.type]:
-                return env.assignVariable(varName, value)
-            return typeError(self.file_path, self, f"'{value.type}' is incompatible with '{currentValue.type}'", value.column, value.line)
-
-        elif isinstance(assignmentExpression.assigne, memberExpressionNode):
-            member: memberExpressionNode = assignmentExpression.assigne
+    def evaluate_assignment_expression(self, assignment_expression: AssignmentExpressionNode, env: Environment) -> None:
+        if isinstance(assignment_expression.assigne, IdentifierNode):
+            return self.process_variable_assignment(
+                assignment_expression, env
+            )
+        elif isinstance(assignment_expression.assigne, MemberExpressionNode):
+            member: MemberExpressionNode = assignment_expression.assigne
             varName = member.object
-            if assignmentExpression.assigne.computed:
+            if assignment_expression.assigne.computed:
                 prop = member.property.symbol
             else:
                 prop = self.evaluate(member.property, env)
-            currentValue: dict = env.lookup(varName)
-            if isinstance(currentValue, error):
-                return currentValue
-            currentValue.properties[prop] = self.evaluate(
-                assignmentExpression.value, env)
-            return env.assignVariable(varName.symbol, currentValue)
+            current_value: dict = env.lookup(varName)
+            if isinstance(current_value, Error):
+                return current_value
+            current_value.properties[prop] = self.evaluate(
+                assignment_expression.value, env)
+            return env.assign_variable(varName.symbol, current_value)
         else:
-            return syntaxError(self.file_path, self, 'Expected an identifier.', assignmentExpression.assigne.column, assignmentExpression.assigne.line)
+            return SyntaxError(self.file_path, self, 'Expected an identifier.', assignment_expression.assigne.column, assignment_expression.assigne.line)
 
-    def evaluateVariableDeclarationExpression(self, declaration: variableDeclarationExpressionNode, env: environment) -> None:
-        value = self.evaluate(declaration.value, env)
-        if isinstance(value, error):
+    def process_variable_assignment(self, assignment_expression, env):
+        varName = assignment_expression.assigne.symbol
+        current_value = env.lookup(assignment_expression.assigne)
+        if isinstance(current_value, Error):
+            return current_value
+        value = self.evaluate(assignment_expression.value, env)
+
+        if isinstance(value, Error):
             return value
 
-        if value.type in valueTypeTable[value.type]:
-            return env.declareVariable(declaration.identifier, value, declaration.constant)
-        return typeError(self.file_path, self, f"'{value.type}' is incompatible with '{declaration.dataType}'", value.column, value.line)
+        if value.type in value_type_table[value.type]:
+            return env.assignVariable(varName, value)
+        return TypeError(self.file_path, self, f"'{value.type}' is incompatible with '{current_value.type}'", value.column, value.line)
 
-    def evaluateFunctionDeclaration(self, declaration: functionDeclarationExpressionNode, env: environment) -> None:
-        fn = function(declaration.name, declaration.parameters,
+    def evaluate_variable_declaration_expression(self, declaration: VariableDeclarationExpressionNode, env: Environment) -> None:
+        value = self.evaluate(declaration.value, env)
+        if isinstance(value, Error):
+            return value
+
+        if value.type in value_type_table[value.type]:
+            return env.declare_variable(declaration.identifier, value, declaration.constant)
+        return TypeError(self.file_path, self, f"'{value.type}' is incompatible with '{declaration.dataType}'", value.column, value.line)
+
+    def evaluate_function_declaration(self, declaration: FunctionDeclarationExpressionNode, env: Environment) -> None:
+        fn = Function(declaration.name, declaration.parameters,
                       env, declaration.body)
-        return env.declareVariable(declaration.name, fn)
+        return env.declare_variable(declaration.name, fn)
 
-    def evaluateObjectExpression(self, object: objectLiteralNode, env: environment) -> objectValue:
+    def evaluate_object_expression(self, object: ObjectLiteralNode, env: Environment) -> ObjectValue:
         properties = {}
 
         for prop in object.properties:
             a = self.evaluate(prop.value, env)
-            if isinstance(a, error):
+            if isinstance(a, Error):
                 return a
             properties[prop.key] = a
-        obj = objectValue(properties, object.line, object.column)
-        return obj
+        return ObjectValue(properties, object.line, object.column)
 
-    def evaluateArrayExpression(self, array: arrayLiteralNode, env: environment) -> arrayValue:
-        items = {}
+    def evaluate_array_expression(self, array: ArrayLiteralNode, env: Environment) -> ArrayValue:
+        items = {item.index: self.evaluate(item.value, env) for item in array.items}
+        return ArrayValue(items, array.line, array.column)
 
-        for item in array.items:
-            items[item.index] = self.evaluate(item.value, env)
-        arr = arrayValue(items, array.line, array.column)
-        return arr
-
-    def evaluateCallExpression(self, callExpr: callExpression, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | bool | None:
+    def evaluate_call_expression(self, call_expression: CallExpression, env: Environment) -> NullValue | IntegerValue | ObjectValue | ArrayValue | StringValue | bool | None:
         args = []
-        for arg in callExpr.arguments:
+        for arg in call_expression.arguments:
             a = self.evaluate(arg, env)
-            if isinstance(a, error):
+            if isinstance(a, Error):
                 return a
             args.append(a)
-        fn: nativeFunction | function = self.evaluate(callExpr.caller, env)
-        if isinstance(fn, error):
+        fn: NativeFunction | Function = self.evaluate(call_expression.caller, env)
+        if isinstance(fn, Error):
             return fn
 
-        if isinstance(fn, nativeFunction):
-            result = fn.call(args, env)
-            return result
-        elif isinstance(fn, function):
-            scope = createGlobalEnvironment(env)
+        if isinstance(fn, NativeFunction):
+            return fn.call(args, env)
+        elif isinstance(fn, Function):
+            scope = create_global_environment(env)
 
             if len(fn.parameters) == len(args):
                 for i in range(len(fn.parameters)):
-                    scope.declareVariable(fn.parameters[i].symbol, args[i])
+                    scope.declare_variable(fn.parameters[i].symbol, args[i])
             else:
                 if len(fn.parameters) > 0:
                     column = fn.parameters[-1].column
@@ -264,41 +262,39 @@ class Interpreter:
                 else:
                     column = fn.column
                     line = fn.line
-                return syntaxError(self.file_path, self, f"Insufficient arguments provided. Expected {len(fn.parameters)}, but received {len(args)}\nExpected [{', '.join([i.symbol for i in fn.parameters])}]", column, line)
+                return SyntaxError(self.file_path, self, f"Insufficient arguments provided. Expected {len(fn.parameters)}, but received {len(args)}\nExpected [{', '.join([i.symbol for i in fn.parameters])}]", column, line)
 
-            result = nullValue()
+            # Loop through funcion body and evalute the code
+            result = NullValue()
             for statement in fn.body:
                 result = self.evaluate(statement, scope)
-                if isinstance(result, error):
+                if isinstance(result, Error):
                     return result
-                if isinstance(statement, returnNode):
+                if isinstance(statement, ReturnNode):
                     return result
         else:
-            return syntaxError(self.file_path, self, f"'{fn.type}' is not a function", fn.column, fn.line)
-        return nullValue()
+            return SyntaxError(self.file_path, self, f"'{fn.type}' is not a function", fn.column, fn.line)
+        return NullValue()
 
-    def evaluateMemberExpression(self, member: memberExpressionNode, env: environment) -> None:
-        if isinstance(member.object, (memberExpressionNode, stringLiteralNode)):
+    def evaluate_member_expression(self, member: MemberExpressionNode, env: Environment) -> None:
+        if isinstance(member.object, (MemberExpressionNode, StringLiteralNode)):
             x = self.evaluate(member.object, env)
         else:
             x = member.object
 
-        if isinstance(x, error):
+        if isinstance(x, Error):
             return x
 
-        if not isinstance(x, (objectValue, arrayValue, stringValue)):
-            obj: objectValue = env.lookup(x)
+        if not isinstance(x, (ObjectValue, ArrayValue, StringValue)):
+            obj: ObjectValue = env.lookup(x)
         else:
             obj = x
 
-        if isinstance(obj, objectValue):
-            if isinstance(member.property, identifierNode):
-                if isinstance(list(obj.properties.keys())[0], stringValue):
+        if isinstance(obj, ObjectValue):
+            if isinstance(member.property, IdentifierNode):
+                if isinstance(list(obj.properties.keys())[0], StringValue):
                     old = obj.properties.copy()
-                    new = {}
-                    for key in old:
-                        if isinstance(key, stringValue):
-                            new[key.value] = old[key]
+                    new = {key.value: old[key] for key in old if isinstance(key, StringValue)}
                     obj.properties = new
 
                 if member.property.symbol in obj.methods:
@@ -307,264 +303,262 @@ class Interpreter:
                     return obj.properties[member.property.symbol]
                 else:
                     v = self.evaluate(member.property, env)
-                    if isinstance(v, error):
+                    if isinstance(v, Error):
                         return v
                     elif v.value in obj.properties:
                         return obj.properties[v.value]
                     else:
-                        return keyError(self.file_path, self, v, obj, v.column, v.line)
+                        return KeyError(self.file_path, self, v, obj, v.column, v.line)
 
-            elif isinstance(member.property, stringLiteralNode):
+            elif isinstance(member.property, StringLiteralNode):
                 return obj.properties[member.property.value]
             else:
-                return typeError(self.file_path, self, f"Expected an identifier or a string value got {member.property}", self.column, self.line)
-        elif isinstance(obj, (arrayValue, stringValue)):
-            if isinstance(member.property, integerLiteralNode):
+                return TypeError(self.file_path, self, f"Expected an identifier or a string value got {member.property}", self.column, self.line)
+        elif isinstance(obj, (ArrayValue, StringValue)):
+            if isinstance(member.property, IntegerLiteralNode):
                 if member.property.value not in obj.items:
-                    return keyError(self.file_path, self, member.property.value, member.object.symbol, member.property.column, member.property.line)
+                    return KeyError(self.file_path, self, member.property.value, member.object.symbol, member.property.column, member.property.line)
 
-                elif isinstance(member.property, integerLiteralNode):
+                else:
                     return obj.items[member.property.value]
-            elif isinstance(member.property, identifierNode):
+            elif isinstance(member.property, IdentifierNode):
                 if member.property.symbol in obj.methods:
                     return obj.methods[member.property.symbol]
-                else:
-                    value = self.evaluate(member.property, env)
-                    if isinstance(value, error):
-                        return value
-                    value = value.value
-                    if value in obj.items:
-                        return obj.items[value]
-                    else:
-                        return syntaxError(self.file_path, self, f"'{member.property.symbol}' is not a valid method or property.", member.column, member.line)
+                value = self.evaluate(member.property, env)
+                if isinstance(value, Error):
+                    return value
+                value = value.value
+                return (
+                    obj.items[value]
+                    if value in obj.items
+                    else SyntaxError(
+                        self.file_path,
+                        self,
+                        f"'{member.property.symbol}' is not a valid method or property.",
+                        member.column,
+                        member.line,
+                    )
+                )
             else:
-                return syntaxError(self.file_path, self, f"'{member.property.symbol}' is not valid.", member.column, member.line)
+                return SyntaxError(self.file_path, self, f"'{member.property.symbol}' is not valid.", member.column, member.line)
         else:
-            return keyError(self.file_path, self, member.property.symbol, member.object.symbol, member.property.column, member.property.line)
+            return KeyError(self.file_path, self, member.property.symbol, member.object.symbol, member.property.column, member.property.line)
 
-    def evaluateIfStatement(self, ifStatement: ifStatementNode, env: environment) -> None:
-        left: RuntimeValue = self.evaluate(ifStatement.conditionLeft, env)
-        if isinstance(left, error):
+    def evaluate_if_statement(self, if_statement: IfStatementNode, env: Environment) -> None:
+        left: RuntimeValue = self.evaluate(if_statement.left_condition, env)
+        if isinstance(left, Error):
             return left
-        if not isinstance(ifStatement.conditionRight, nullValue):
+        if not isinstance(if_statement.right_condition, NullValue):
             right: RuntimeValue = self.evaluate(
-                ifStatement.conditionRight, env)
-            if isinstance(right, error):
+                if_statement.right_condition, env)
+            if isinstance(right, Error):
                 return right
         else:
-            right = nullValue()
+            right = NullValue()
 
         res = False
-        res = self.checkCondition(left, ifStatement.operand, right)
-        if res:
-            result = nullValue()
-            for statement in ifStatement.body:
-                if isinstance(statement, (continueNode, breakNode)):
+        if res := self.check_condition(left, if_statement.operand, right):
+            result = NullValue()
+            for statement in if_statement.body:
+                if isinstance(statement, (ContinueNode, BreakNode)):
                     return statement
                 result = self.evaluate(statement, env)
-                if isinstance(result, (error, returnNode)):
+                if isinstance(result, (Error, ReturnNode)):
                     return result
-        else:
-            if ifStatement.elseBody != []:
-                result = nullValue()
-                for statement in ifStatement.elseBody:
-                    if isinstance(statement, (continueNode, breakNode)):
-                        return statement
-                    result = self.evaluate(statement, env)
-                    if isinstance(result, (error, returnNode)):
-                        return result
-        return nullValue()
+        elif if_statement.else_body != []:
+            result = NullValue()
+            for statement in if_statement.else_body:
+                if isinstance(statement, (ContinueNode, BreakNode)):
+                    return statement
+                result = self.evaluate(statement, env)
+                if isinstance(result, (Error, ReturnNode)):
+                    return result
+        return NullValue()
 
-    def evaluateWhileStatement(self, whileStatement: whileStatementNode, env: environment) -> bool:
+    def evaluate_while_statement(self, while_statement: WhileStatementNode, env: Environment) -> bool:
         while True:
             left: RuntimeValue = self.evaluate(
-                whileStatement.conditionLeft, env)
-            if isinstance(left, error):
+                while_statement.left_condition, env)
+            if isinstance(left, Error):
                 return left
-            if not isinstance(whileStatement.conditionRight, nullValue):
+            if not isinstance(while_statement.right_condition, NullValue):
                 right: RuntimeValue = self.evaluate(
-                    whileStatement.conditionRight, env)
-                if isinstance(right, error):
+                    while_statement.right_condition, env)
+                if isinstance(right, Error):
                     return right
             else:
-                right = nullValue()
+                right = NullValue()
 
             res = False
-            res = self.checkCondition(left, whileStatement.operand, right)
-            if res:
-                result = nullValue()
-                for statement in whileStatement.body:
-                    if isinstance(statement, (error, returnNode, breakNode)):
+            if res := self.check_condition(left, while_statement.operand, right):
+                result = NullValue()
+                for statement in while_statement.body:
+                    if isinstance(statement, (Error, ReturnNode, BreakNode)):
                         return result
-                    if isinstance(result, continueNode):
+                    if isinstance(result, ContinueNode):
                         break
                     result = self.evaluate(statement, env)
-                    if isinstance(result, (error, breakNode)):
+                    if isinstance(result, (Error, BreakNode)):
                         return result
-                    if isinstance(result, continueNode):
+                    if isinstance(result, ContinueNode):
                         break
             else:
-                if whileStatement.elseBody != []:
-                    result = nullValue()
-                    for statement in whileStatement.elseBody:
-                        if isinstance(result, (error, returnNode, breakNode)):
+                if while_statement.else_body != []:
+                    result = NullValue()
+                    for statement in while_statement.else_body:
+                        if isinstance(result, (Error, ReturnNode, BreakNode)):
                             return result
-                        if isinstance(result, continueNode):
+                        if isinstance(result, ContinueNode):
                             break
                         result = self.evaluate(statement, env)
-                        if isinstance(result, (error, breakNode)):
+                        if isinstance(result, (Error, BreakNode)):
                             return result
-                        if isinstance(result, continueNode):
+                        if isinstance(result, ContinueNode):
                             break
                 break
-        return nullValue()
+        return NullValue()
 
-    def evaluateForStatement(self, forLoop: forStatementNode, env: environment) -> None:
-        self.evaluateVariableDeclarationExpression(forLoop.declaration, env)
+    def evaluate_for_statement(self, for_statement: ForStatementNode, env: Environment) -> None:
+        self.evaluate_variable_declaration_expression(for_statement.declaration, env)
 
         while True:
-            left: RuntimeValue = self.evaluate(forLoop.conditionLeft, env)
-            if isinstance(left, error):
+            left: RuntimeValue = self.evaluate(for_statement.left_condition, env)
+            if isinstance(left, Error):
                 return left
-            if not isinstance(forLoop.conditionRight, nullValue):
+            if not isinstance(for_statement.right_condition, NullValue):
                 right: RuntimeValue = self.evaluate(
-                    forLoop.conditionRight, env)
-                if isinstance(right, error):
+                    for_statement.right_condition, env)
+                if isinstance(right, Error):
                     return right
             else:
-                right = nullValue()
+                right = NullValue()
 
             res = False
-            res = self.checkCondition(left, forLoop.operand, right)
-            if res:
-                result = nullValue()
-                for statement in forLoop.body:
-                    if isinstance(statement, (error, returnNode, breakNode)):
-                        return result
-                    result = self.evaluate(statement, env)
-                    if isinstance(result, (error, breakNode)):
-                        return result
-                    if isinstance(result, continueNode):
-                        break
-                result = self.evaluateAssignmentBinaryExpression(
-                    forLoop.step, env)
-            else:
+            if not (res := self.check_condition(left, for_statement.operand, right)):
                 break
-        return nullValue()
-
-    def evaluateForEachStatement(self, forEachLoop: forEachStatementNode, env: environment) -> None:
-        self.evaluateVariableDeclarationExpression(
-            forEachLoop.declaration, env)
-
-        array = self.evaluate(forEachLoop.iterable, env)
-
-        for item in array.items:
-            assignmentExpr = assignmentExpressionNode(identifierNode(
-                forEachLoop.declaration.identifier, forEachLoop.declaration.line, forEachLoop.declaration.column), integerLiteralNode(array.items[item].value, -1, -1))
-            res = self.evaluateAssignmentExpression(assignmentExpr, env)
-            if isinstance(res, error):
-                return res
-
-            result = nullValue()
-            for statement in forEachLoop.body:
-                if isinstance(statement, (error, returnNode, breakNode)):
+            result = NullValue()
+            for statement in for_statement.body:
+                if isinstance(statement, (Error, ReturnNode, BreakNode)):
                     return result
                 result = self.evaluate(statement, env)
-                if isinstance(result, (error, breakNode)):
+                if isinstance(result, (Error, BreakNode)):
                     return result
-                if isinstance(result, continueNode):
+                if isinstance(result, ContinueNode):
+                    break
+            result = self.evaluate_assignment_binary_expression(
+                for_statement.step, env)
+        return NullValue()
+
+    def evaluate_for_each_statement(self, for_each_statement: ForEachStatementNode, env: Environment) -> None:
+        self.evaluate_variable_declaration_expression(
+            for_each_statement.declaration, env)
+
+        array = self.evaluate(for_each_statement.iterable, env)
+
+        for item in array.items:
+            assignment_expression = AssignmentExpressionNode(IdentifierNode(
+                for_each_statement.declaration.identifier, for_each_statement.declaration.line, for_each_statement.declaration.column), IntegerLiteralNode(array.items[item].value, -1, -1))
+            res = self.evaluate_assignment_expression(assignment_expression, env)
+            if isinstance(res, Error):
+                return res
+
+            result = NullValue()
+            for statement in for_each_statement.body:
+                if isinstance(statement, (Error, ReturnNode, BreakNode)):
+                    return result
+                result = self.evaluate(statement, env)
+                if isinstance(result, (Error, BreakNode)):
+                    return result
+                if isinstance(result, ContinueNode):
                     break
 
-        return nullValue()
+        return NullValue()
 
-    def evaluateDoWhileStatement(self, doWhile: doWhileStatementNode, env: environment) -> None:
+    def evaluate_do_while_statement(self, do_while_statement: DoWhileStatementNode, env: Environment) -> None:
         res = True
-        while True:
-            if res:
-                result = nullValue()
-                for statement in doWhile.body:
-                    if isinstance(statement, (returnNode, error, breakNode)):
-                        return result
-                    if isinstance(statement, continueNode):
-                        break
-                    result = self.evaluate(statement, env)
-                    if isinstance(result, (error, breakNode)):
-                        return result
-                    if isinstance(result, continueNode):
-                        break
-
-                left: RuntimeValue = self.evaluate(doWhile.conditionLeft, env)
-                if isinstance(left, error):
+        while res:
+            result = NullValue()
+            for statement in do_while_statement.body:
+                if isinstance(statement, (ReturnNode, Error, BreakNode)):
                     return result
-                if not isinstance(doWhile.conditionRight, nullValue):
-                    right: RuntimeValue = self.evaluate(
-                        doWhile.conditionRight, env)
-                    if isinstance(right, error):
-                        return result
-                else:
-                    right = nullValue()
+                if isinstance(statement, ContinueNode):
+                    break
+                result = self.evaluate(statement, env)
+                if isinstance(result, (Error, BreakNode)):
+                    return result
+                if isinstance(result, ContinueNode):
+                    break
 
-                res = self.checkCondition(left, doWhile.operand, right)
+            left: RuntimeValue = self.evaluate(do_while_statement.conditionLeft, env)
+            if isinstance(left, Error):
+                return result
+            if not isinstance(do_while_statement.conditionRight, NullValue):
+                right: RuntimeValue = self.evaluate(
+                    do_while_statement.conditionRight, env)
+                if isinstance(right, Error):
+                    return result
             else:
-                break
-        return nullValue()
+                right = NullValue()
 
-    def evaluateReturnExpression(self, returnExpression: returnNode, env: environment):
-        return self.evaluate(returnExpression.value, env)
+            res = self.check_condition(left, do_while_statement.operand, right)
+        return NullValue()
 
-    def evaluateAssignmentBinaryExpression(self, expr: assignmentBinaryExpressionNode, env: environment) -> None:
+    def evaluate_return_expression(self, return_expression: ReturnNode, env: Environment):
+        return self.evaluate(return_expression.value, env)
+
+    def evaluate_assignment_binary_expression(self, expr: AssignmentBinaryExpressionNode, env: Environment) -> None:
         currValue = env.lookup(expr.assigne)
-        if isinstance(currValue, integerValue):
-            currentValue = integerLiteralNode(
+        if isinstance(currValue, IntegerValue):
+            current_value = IntegerLiteralNode(
                 currValue.value, expr.column, expr.line)
-        elif isinstance(currValue, realValue):
-            currentValue = realLiteralNode(
+        elif isinstance(currValue, RealValue):
+            current_value = RealLiteralNode(
                 currValue.value, expr.column, expr.line)
-        elif isinstance(currValue, stringValue):
-            currentValue = stringLiteralNode(
+        elif isinstance(currValue, StringValue):
+            current_value = StringLiteralNode(
                 currValue.value, expr.column, expr.line)
         else:
-            return typeError(self.file_path, self, f"Incompatible type '{currValue}'", expr.column, expr.line)
+            return TypeError(self.file_path, self, f"Incompatible type '{currValue}'", expr.column, expr.line)
 
-        binexpr = binaryExpressionNode(
-            currentValue, expr.operand[0], expr.value, expr.line, expr.column)
-        newValue = self.evaluateBinaryExpression(binexpr, env)
+        binexpr = BinaryExpressionNode(
+            current_value, expr.operand[0], expr.value, expr.line, expr.column)
+        newValue = self.evaluate_binary_expression(binexpr, env)
 
-        if isinstance(newValue, error):
+        if isinstance(newValue, Error):
             return newValue
-        elif isinstance(newValue, realValue):
-            v = realLiteralNode(newValue.value, expr.line, expr.column)
-        elif isinstance(newValue, integerValue):
-            v = integerLiteralNode(newValue.value, expr.line, expr.column)
-        elif isinstance(newValue, stringValue):
-            v = stringLiteralNode(newValue.value, expr.column, expr.line)
+        elif isinstance(newValue, RealValue):
+            v = RealLiteralNode(newValue.value, expr.line, expr.column)
+        elif isinstance(newValue, IntegerValue):
+            v = IntegerLiteralNode(newValue.value, expr.line, expr.column)
+        elif isinstance(newValue, StringValue):
+            v = StringLiteralNode(newValue.value, expr.column, expr.line)
         else:
-            return typeError(self.file_path, self, f"Incompatible types. '{currentValue}' and '{newValue}'", expr.column, expr.line)
+            return TypeError(self.file_path, self, f"Incompatible types. '{current_value}' and '{newValue}'", expr.column, expr.line)
 
-        return self.evaluateAssignmentExpression(assignmentExpressionNode(expr.assigne, v), env)
+        return self.evaluate_assignment_expression(AssignmentExpressionNode(expr.assigne, v), env)
 
-    def evaluateExportExpression(self, exportExpression: exportNode, env: environment):
-        return exportValue(self.evaluate(exportExpression.value, env), exportExpression.line, exportExpression.column)
+    def evaluate_export_expression(self, export_expression: ExportNode, env: Environment):
+        return ExportValue(self.evaluate(export_expression.value, env), export_expression.line, export_expression.column)
 
-    def evaluateImportExpression(self, importExpression: importNode, env: environment):
+    def evaluate_import_expression(self, import_expression: ImportNode, env: Environment):
         from shell import run
 
-        result = nullValue()
-        for i in range(len(importExpression.values)):
-            path = importExpression.values[i]
+        result = NullValue()
+        for i in range(len(import_expression.values)):
+            path = import_expression.values[i]
 
-            if isinstance(path, identifierNode):
+            if isinstance(path, IdentifierNode):
                 path = path.symbol
-            elif isinstance(path, stringValue):
+            elif isinstance(path, StringValue):
                 path = path.value
             else:
-                return syntaxError(self.file_path, self, "Expected an identifier or a stringValue", importExpression.column, importExpression.line)
+                return SyntaxError(self.file_path, self, "Expected an identifier or a stringValue", import_expression.column, import_expression.line)
 
-            name = importExpression.names[i].symbol
+            name = import_expression.names[i].symbol
             path = path.lower()
             path = f'Modules/{path}'
 
-            module = objectValue({})
+            module = ObjectValue({})
 
             if os.path.exists(path):
                 filenames = [f for f in os.listdir(path) if os.path.isfile(
@@ -573,181 +567,177 @@ class Interpreter:
                 for file in filenames:
                     if file.endswith('.phi'):
                         n = file.split('.')[0]
-                        file = path + '/' + file
+                        file = f'{path}/{file}'
 
                         with open(file, 'r') as f:
                             code = '\n'.join(f.readlines())
 
                         code = run(code, file)
-                        if isinstance(code, exportValue):
+                        if isinstance(code, ExportValue):
                             module.properties.update({n: code.value})
 
                 if name.isupper():
-                    result = env.declareVariable(name, module, True)
+                    result = env.declare_variable(name, module, True)
                 else:
-                    result = env.declareVariable(name, module, False)
+                    result = env.declare_variable(name, module, False)
             else:
-                path = importExpression.values[i]
+                path = import_expression.values[i]
 
-                if isinstance(path, identifierNode):
+                if isinstance(path, IdentifierNode):
                     path = path.symbol
-                elif isinstance(path, stringValue):
+                elif isinstance(path, StringValue):
                     path = path.value
                 else:
-                    return syntaxError(self.file_path, self, "Expected an identifier or a stringValue", importExpression.column, importExpression.line)
+                    return SyntaxError(self.file_path, self, "Expected an identifier or a stringValue", import_expression.column, import_expression.line)
 
-                name = importExpression.names[i].symbol
-                dir = '/'.join(self.file_path.split('/')[:-1])
-                file = dir + '/' + path.lower() + '.phi'
+                name = import_expression.names[i].symbol
+                directory = '/'.join(self.file_path.split('/')[:-1])
+                file = f'{directory}/{path.lower()}.phi'
 
-                if os.path.exists(file):
-                    with open(file, 'r') as f:
-                        code = '\n'.join(f.readlines())
+                if not os.path.exists(file):
+                    return FileNotFoundError(self.file_path, self, f'{path}', import_expression.column, import_expression.line)
+                with open(file, 'r') as f:
+                    code = '\n'.join(f.readlines())
 
-                    code = run(code, file)
-                    if isinstance(code, exportValue):
-                        if name.isupper():
-                            result = env.declareVariable(
-                                name, code.value, True)
-                        else:
-                            result = env.declareVariable(
-                                name, code.value, False)
-                else:
-                    return fileNotFoundError(self.file_path, self, f'{path}', importExpression.column, importExpression.line)
+                code = run(code, file)
+                if isinstance(code, ExportValue):
+                    result = (
+                        env.declare_variable(name, code.value, True)
+                        if name.isupper()
+                        else env.declare_variable(name, code.value, False)
+                    )
         return result
 
-    def evaluateTryStatement(self, tryStatement: tryNode, env: environment) -> None:
-        result = nullValue()
-        for statement in tryStatement.tryBody:
-            if isinstance(statement, (returnNode, error, breakNode)):
+    def evaluate_try_statement(self, try_statement: TryNode, env: Environment) -> None:
+        result = NullValue()
+        for statement in try_statement.try_body:
+            if isinstance(statement, (ReturnNode, Error, BreakNode)):
                 break
-            if isinstance(statement, continueNode):
+            if isinstance(statement, ContinueNode):
                 break
             result = self.evaluate(statement, env)
-            if isinstance(result, (error, breakNode)):
+            if isinstance(result, (Error, BreakNode)):
                 break
-            if isinstance(result, continueNode):
+            if isinstance(result, ContinueNode):
                 break
 
-        if isinstance(result, error):
-            if result.type == tryStatement.exception.symbol:
-                result = nullValue()
-                for statement in tryStatement.exceptBody:
-                    if isinstance(statement, (error, breakNode)):
-                        return statement
-                    if isinstance(statement, continueNode):
-                        break
-                    result = self.evaluate(statement, env)
-                    if isinstance(result, (error, breakNode)):
-                        return result
-                    if isinstance(result, continueNode):
-                        break
-            else:
-                return result
-        else:
+        if not isinstance(result, Error):
             return result
+        if result.type != try_statement.exception.symbol:
+            return result
+        result = NullValue()
+        for statement in try_statement.exceptBody:
+            if isinstance(statement, (Error, BreakNode)):
+                return statement
+            if isinstance(statement, ContinueNode):
+                break
+            result = self.evaluate(statement, env)
+            if isinstance(result, (Error, BreakNode)):
+                return result
+            if isinstance(result, ContinueNode):
+                break
 
-    def evaluateThrowStatement(self, throwStmt: throwNode, env: environment) -> None:
-        match throwStmt.error.symbol:
+    def evaluate_throw_statement(self, throw_statement: ThrowNode, env: Environment) -> None:
+        match throw_statement.error.symbol:
             case 'syntaxError':
-                return syntaxError(self.file_path, "", throwStmt.msg.value, throwStmt.column, throwStmt.line)
+                return SyntaxError(self.file_path, "", throw_statement.msg.value, throw_statement.column, throw_statement.line)
             case 'zeroDivisionError':
-                return zeroDivisionError(self.file_path, "", throwStmt.column, throwStmt.line)
+                return ZeroDivisionError(self.file_path, "", throw_statement.column, throw_statement.line)
             case 'typeError':
-                return typeError(self.file_path, "", throwStmt.msg.value, throwStmt.column, throwStmt.line)
+                return TypeError(self.file_path, "", throw_statement.msg.value, throw_statement.column, throw_statement.line)
             case 'keyError':
-                return keyError(self.file_path, "", "", "", throwStmt.column, throwStmt.line)
+                return KeyError(self.file_path, "", "", "", throw_statement.column, throw_statement.line)
             case 'notImplementedError':
-                return notImplementedError(self.file_path, "", throwStmt.msg.value, throwStmt.column, throwStmt.line)
+                return NotImplementedError(self.file_path, "", throw_statement.msg.value, throw_statement.column, throw_statement.line)
             case 'invalidCharacterError':
-                return invalidCharacterError(self.file_path, "", throwStmt.msg.value, throwStmt.column, throwStmt.line)
+                return InvalidCharacterError(self.file_path, "", throw_statement.msg.value, throw_statement.column, throw_statement.line)
             case 'nameError':
-                return nameError(self.file_path, "", throwStmt.msg.value, throwStmt.column, throwStmt.line)
+                return NameError(self.file_path, "", throw_statement.msg.value, throw_statement.column, throw_statement.line)
 
-    def evaluateMatchStatement(self, matchStmt: matchNode, env: environment) -> None:
-        value = self.evaluate(matchStmt.value, env)
+    def evaluate_match_statement(self, match_statement: MatchNode, env: Environment) -> None:
+        value = self.evaluate(match_statement.value, env)
 
-        for match in matchStmt.matches:
+        for match in match_statement.matches:
             v = self.evaluate(match.value, env)
             if value.value == v.value:
-                result = nullValue()
+                result = NullValue()
                 for statement in match.body:
-                    if isinstance(statement, (error, breakNode)):
+                    if isinstance(statement, (Error, BreakNode)):
                         return statement
-                    if isinstance(statement, continueNode):
+                    if isinstance(statement, ContinueNode):
                         break
                     result = self.evaluate(statement, env)
-                    if isinstance(result, (error, breakNode, returnNode)):
+                    if isinstance(result, (Error, BreakNode, ReturnNode)):
                         return result
-                    if isinstance(result, continueNode):
+                    if isinstance(result, ContinueNode):
                         break
                 return result
-        return nullValue()
+        return NullValue()
 
-    def evaluateDeleteStatement(self, delete: deleteNode, env: environment) -> None:
-        env.deleteVariable(delete.variable)
-        return nullValue()
+    def evaluate_delete_statement(self, delete_statement: DeleteNode, env: Environment) -> None:
+        env.delete_variable(delete_statement.variable)
+        return NullValue()
 
-    def evaluate(self, astNode, env: environment) -> nullValue | integerValue | objectValue | arrayValue | stringValue | None:
-        if isinstance(astNode, (str, float, int, error)):
+    def evaluate(self, astNode, env: Environment) -> NullValue | IntegerValue | ObjectValue | ArrayValue | StringValue | None:
+        if isinstance(astNode, (str, float, int, Error)):
             return astNode
         match astNode.kind:
             case 'program':
-                return self.evaluateProgram(astNode, env)
+                return self.evaluate_program(astNode, env)
             case 'binaryExpression':
-                return self.evaluateBinaryExpression(astNode, env)
+                return self.evaluate_binary_expression(astNode, env)
             case 'identifier':
-                return self.evaluateIdentifierExpression(astNode, env)
+                return self.evaluate_identifier_expression(astNode, env)
             case 'assignmentExpression':
-                return self.evaluateAssignmentExpression(astNode, env)
+                return self.evaluate_assignment_expression(astNode, env)
             case 'variableDeclarationExpression':
-                return self.evaluateVariableDeclarationExpression(astNode, env)
+                return self.evaluate_variable_declaration_expression(astNode, env)
             case 'functionDeclaration':
-                return self.evaluateFunctionDeclaration(astNode, env)
+                return self.evaluate_function_declaration(astNode, env)
             case 'objectLiteral':
-                return self.evaluateObjectExpression(astNode, env)
+                return self.evaluate_object_expression(astNode, env)
             case 'callExpression':
-                return self.evaluateCallExpression(astNode, env)
+                return self.evaluate_call_expression(astNode, env)
             case 'memberExpression':
-                return self.evaluateMemberExpression(astNode, env)
+                return self.evaluate_member_expression(astNode, env)
             case 'ifStatement':
-                return self.evaluateIfStatement(astNode, env)
+                return self.evaluate_if_statement(astNode, env)
             case 'whileStatement':
-                return self.evaluateWhileStatement(astNode, env)
+                return self.evaluate_while_statement(astNode, env)
             case 'forStatement':
-                return self.evaluateForStatement(astNode, env)
+                return self.evaluate_for_statement(astNode, env)
             case 'forEachStatement':
-                return self.evaluateForEachStatement(astNode, env)
+                return self.evaluate_for_each_statement(astNode, env)
             case 'doWhileStatement':
-                return self.evaluateDoWhileStatement(astNode, env)
+                return self.evaluate_do_while_statement(astNode, env)
             case 'arrayLiteral':
-                return self.evaluateArrayExpression(astNode, env)
+                return self.evaluate_array_expression(astNode, env)
             case 'returnExpression':
-                return self.evaluateReturnExpression(astNode, env)
+                return self.evaluate_return_expression(astNode, env)
             case 'assignmentBinaryExpression':
-                return self.evaluateAssignmentBinaryExpression(astNode, env)
+                return self.evaluate_assignment_binary_expression(astNode, env)
             case 'exportExpression':
-                return self.evaluateExportExpression(astNode, env)
+                return self.evaluate_export_expression(astNode, env)
             case 'importExpression':
-                return self.evaluateImportExpression(astNode, env)
+                return self.evaluate_import_expression(astNode, env)
             case 'tryStatement':
-                return self.evaluateTryStatement(astNode, env)
+                return self.evaluate_try_statement(astNode, env)
             case 'throwStatement':
-                return self.evaluateThrowStatement(astNode, env)
+                return self.evaluate_throw_statement(astNode, env)
             case 'matchStatement':
-                return self.evaluateMatchStatement(astNode, env)
+                return self.evaluate_match_statement(astNode, env)
             case 'delete':
-                return self.evaluateDeleteStatement(astNode, env)
+                return self.evaluate_delete_statement(astNode, env)
 
             case 'integerLiteral':
-                return integerValue(astNode.value, astNode.line, astNode.column)
+                return IntegerValue(astNode.value, astNode.line, astNode.column)
             case 'realLiteral':
-                return realValue(astNode.value, astNode.line, astNode.column)
+                return RealValue(astNode.value, astNode.line, astNode.column)
             case 'stringLiteral':
-                return stringValue(astNode.value, astNode.line, astNode.column)
+                return StringValue(astNode.value, astNode.line, astNode.column)
             case 'unknownLiteral':
-                return unknownValue(astNode.value, astNode.line, astNode.column)
+                return UnknownValue(astNode.value, astNode.line, astNode.column)
             case 'nullLiteral':
-                return nullValue()
+                return NullValue()
             case _:
-                return notImplementedError(self.file_path, self, astNode.kind, astNode.column, astNode.line)
+                return NotImplementedError(self.file_path, self, astNode.kind, astNode.column, astNode.line)
