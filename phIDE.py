@@ -714,7 +714,7 @@ class App(ctk.CTk):
                 editor.pack(expand=True, fill="both")
 
                 self.intelli_sense_boxes[tab_name] = Dropdown(editor, 300, 100, [
-                ], self.intelli_sense_click_insert, 2, 2, settings["intelliSense-menu-color"], self.editor_font)
+                ], self.intelli_sense_click_insert, 2, 2, settings["intelli-sense-menu-color"], self.editor_font)
                 self.snippet_menus[tab_name] = Dropdown(
                     editor, 300, 100, [], self.insert_snippet, 2, 2, settings["snippet-menu-color"], self.editor_font)
                 editor.bind("<KeyPress>", self.editor_press)
@@ -1042,7 +1042,7 @@ class App(ctk.CTk):
             return
         self.intelli_sense_boxes[self.center_tabview.get()].place_forget()
         self.intelli_sense_words = list(sorted(list(set(
-            self.language_syntax_patterns[self.current_language]["keywords"][2] + self.variables + self.language_syntax_patterns[self.currentLanguage]["errors"][2]))))
+            self.language_syntax_patterns[self.current_language]["keywords"][2] + self.variables + self.language_syntax_patterns[self.current_language]["errors"][2]))))
         x, y, _, _ = editor.bbox(editor.index("insert"))
         current_index = editor.index("insert")
         word_start = editor.search(

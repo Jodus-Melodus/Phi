@@ -38,7 +38,7 @@
     "similar-tag-background-color": "#595959",
     "selected-tag-background-color": "#595959",
     "warning-tag-foreground-color": "#ebd834",
-    "intelliSense-menu-color": "#ff00ff",
+    "intelli-sense-menu-color": "#ff00ff",
     "snippet-menu-color": "#3366ff",
 
     "error-tag-underline": 0,
