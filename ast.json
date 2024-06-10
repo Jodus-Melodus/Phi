@@ -25,17 +25,8 @@
             }
         },
         {
-            "kind": "callExpression",
-            "arguments": [
-                {
-                    "kind": "identifier",
-                    "symbol": "e"
-                }
-            ],
-            "caller": {
-                "kind": "identifier",
-                "symbol": "output"
-            }
+            "kind": "identifier",
+            "symbol": "p"
         }
     ]
 }

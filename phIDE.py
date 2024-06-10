@@ -107,7 +107,7 @@ class Dialog:
 # Main application
 class App(ctk.CTk):
     def __init__(self) -> None:
-        ctk.set_default_color_theme(f"Themes/{settings["theme"]}/theme.json")
+        ctk.set_default_color_theme(f"Themes/{settings['theme']}/theme.json")
         super().__init__()
         self.title("phIDE")
         self.state("zoomed")
@@ -136,6 +136,22 @@ class App(ctk.CTk):
             slant=settings["button-font-slant"],
             overstrike=settings["button-font-overstrike"],
             underline=settings["button-font-underline"]
+        )
+        self.label_font = ctk.CTkFont(
+            family=settings["label-font-family"],
+            size=settings["label-font-size"],
+            weight=settings["label-font-weight"],
+            slant=settings["label-font-slant"],
+            overstrike=settings["label-font-overstrike"],
+            underline=settings["label-font-underline"]
+        )
+        self.entry_font = ctk.CTkFont(
+            family=settings["entry-font-family"],
+            size=settings["entry-font-size"],
+            weight=settings["entry-font-weight"],
+            slant=settings["entry-font-slant"],
+            overstrike=settings["entry-font-overstrike"],
+            underline=settings["entry-font-underline"]
         )
         self.width = self.winfo_width()
         self.height = self.winfo_height()
@@ -172,8 +188,15 @@ class App(ctk.CTk):
         self.menu_bar = ctk.CTkFrame(self, height=20)
         self.available_modules_panel = ctk.CTkFrame(self.right_panel)
         # Tabviews
-        self.center_tabview = ctk.CTkTabview(self.center_panel, self.width*self.screen_ratio, height=self.height*self.screen_ratio)
-        self.bottom_tabview = ctk.CTkTabview(self.bottom_panel, width=self.width*self.screen_ratio)
+        self.center_tabview = ctk.CTkTabview(
+            self.center_panel,
+            self.width*self.screen_ratio,
+            height=self.height*self.screen_ratio
+        )
+        self.bottom_tabview = ctk.CTkTabview(
+            self.bottom_panel,
+            width=self.width*self.screen_ratio
+        )
         self.console_tab = self.bottom_tabview.add("Console")
         self.warning_tab = self.bottom_tabview.add("Warnings")
         # Frames
@@ -280,54 +303,58 @@ class App(ctk.CTk):
             command=self.process_menu_shortcuts,
             item_pad_x=2,
             item_pad_y=2,
-            bg_color="#ff00ff",
-            item_font=self.editor_font
+            bg_color=settings["intelli-sense-menu-color"],
+            item_font=self.button_font
         )
         # Labels
         self.status_bar = ctk.CTkLabel(
             self,
             text="",
             height=20,
-            font=self.button_font
+            font=self.label_font
         )
         self.multi_cursor_abel = ctk.CTkLabel(
-            self.multi_cursor_panel, text="Multi-Cursor", font=self.button_font, anchor="nw")
+            self.multi_cursor_panel,
+            text="Multi-Cursor",
+            font=self.label_font,
+            anchor="nw"
+        )
         self.goto_label = ctk.CTkLabel(
             self.goto_panel,
             text="Go To",
-            font=self.button_font,
+            font=self.label_font,
             anchor="nw"
         )
         self.find_label = ctk.CTkLabel(
             self.find_and_replace_panel,
             text="Find",
-            font=self.button_font
+            font=self.label_font
         )
         self.replace_label = ctk.CTkLabel(
             self.find_and_replace_panel,
             text="Replace",
-            font=self.button_font
+            font=self.label_font
         )
         self.available_modules_label = ctk.CTkLabel(
             self.available_modules_panel,
             text="Available Modules",
-            font=self.button_font
+            font=self.label_font
         )
         # Entries
-        self.gotoEntry = ctk.CTkEntry(
+        self.goto_entry = ctk.CTkEntry(
             self.goto_panel,
             placeholder_text="Go to line",
-            font=self.button_font
+            font=self.entry_font
         )
         self.find_entry = ctk.CTkEntry(
             self.find_and_replace_panel,
             placeholder_text="Find",
-            font=self.button_font
+            font=self.entry_font
         )
         self.replace_entry = ctk.CTkEntry(
             self.find_and_replace_panel,
             placeholder_text="Replace",
-            font=self.button_font
+            font=self.entry_font
         )
         # ComboBox
         self.current_language_combo = ctk.CTkOptionMenu(
@@ -342,43 +369,184 @@ class App(ctk.CTk):
         sys.stderr = TerminalRedirect(self.console)
 
         # Pack all the components
-        self.available_modules_label.pack(padx=self.pad_x, pady=self.pad_y, side="top", anchor="nw")
-        self.available_modules_textbox.pack(padx=self.pad_x, pady=self.pad_y, expand=True)
-        self.available_modules_textbox.configure(state="disabled")
-        self.multi_cursor_abel.pack(padx=self.pad_x, pady=self.pad_y, side="top", anchor="nw")
-        self.multi_cursor_textbox.pack(padx=self.pad_x, pady=self.pad_y, expand=True)
-        self.multi_cursor_textbox.configure(state="disabled")
+        self.available_modules_label.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            side="top",
+            anchor="nw"
+        )
+        self.available_modules_textbox.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            expand=True
+        )
+        self.available_modules_textbox.configure(
+            state="disabled"
+        )
+        self.multi_cursor_abel.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            side="top",
+            anchor="nw"
+        )
+        self.multi_cursor_textbox.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            expand=True
+        )
+        self.multi_cursor_textbox.configure(
+            state="disabled"
+        )
 
-        self.menu_bar.pack(padx=self.pad_x, pady=self.pad_y, anchor="w")
-        self.current_language_combo.pack(padx=self.pad_x, pady=self.pad_y, expand=True, anchor="e", side="right")
-        self.file_menu.pack(padx=self.pad_x, pady=self.pad_y,expand=True, anchor="w", side="left")
-        self.edit_menu.pack(padx=self.pad_x, pady=self.pad_y,expand=True, anchor="w", side="left")
-        self.run_menu.pack(padx=self.pad_x, pady=self.pad_y,expand=True, anchor="w", side="left")
+        self.menu_bar.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            anchor="w"
+        )
+        self.current_language_combo.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            expand=True,
+            anchor="e",
+            side="right"
+        )
+        self.file_menu.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            expand=True,
+            anchor="w",
+            side="left"
+        )
+        self.edit_menu.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            expand=True,
+            anchor="w",
+            side="left"
+        )
+        self.run_menu.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            expand=True,
+            anchor="w",
+            side="left"
+        )
 
-        self.goto_label.pack(padx=self.pad_x, pady=self.pad_y,side="top", anchor="nw")
-        self.goto_button.pack(padx=self.pad_x, pady=self.pad_y, side="bottom")
-        self.gotoEntry.pack(padx=self.pad_x, pady=self.pad_y,side="top", expand=True)
+        self.goto_label.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            side="top",
+            anchor="nw"
+        )
+        self.goto_button.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            side="bottom"
+        )
+        self.goto_entry.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            side="top",
+            expand=True
+        )
 
-        self.find_label.pack(padx=self.pad_x, pady=self.pad_y, anchor="nw")
-        self.find_entry.pack(padx=self.pad_x, pady=self.pad_y)
-        self.replace_label.pack(padx=self.pad_x, pady=self.pad_y, anchor="nw")
-        self.replace_entry.pack(padx=self.pad_x, pady=self.pad_y)
-        self.find_and_replace_button.pack(padx=self.pad_x, pady=self.pad_y)
+        self.find_label.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            anchor="nw"
+        )
+        self.find_entry.pack(
+            padx=self.pad_x,
+            pady=self.pad_y
+        )
+        self.replace_label.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            anchor="nw"
+        )
+        self.replace_entry.pack(
+            padx=self.pad_x,
+            pady=self.pad_y
+        )
+        self.find_and_replace_button.pack(
+            padx=self.pad_x,
+            pady=self.pad_y
+        )
 
-        self.status_bar.pack(padx=self.pad_x, pady=self.pad_y, side="bottom", anchor="se", expand=True)
-        self.console_buttons.pack(padx=self.pad_x, pady=self.pad_y, side="right", anchor="n")
-        self.console.pack(padx=self.pad_x, pady=self.pad_y, fill="both", expand=True)
-        self.warnings.pack(padx=self.pad_x, pady=self.pad_y, fill="both", expand=True)
-        self.clear_console_button.pack(padx=self.pad_x, pady=self.pad_y)
-        self.copy_error_button.pack(padx=self.pad_x, pady=self.pad_y)
+        self.status_bar.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            side="bottom",
+            anchor="se",
+            expand=True
+        )
+        self.console_buttons.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            side="right",
+            anchor="n"
+        )
+        self.console.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            fill="both",
+            expand=True
+        )
+        self.warnings.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            fill="both",
+            expand=True
+        )
+        self.clear_console_button.pack(
+            padx=self.pad_x,
+            pady=self.pad_y
+        )
+        self.copy_error_button.pack(
+            padx=self.pad_x,
+            pady=self.pad_y
+        )
 
-        self.right_panel.pack(padx=self.pad_x, pady=self.pad_y, fill="both", side="right", anchor="e")
-        self.left_panel.pack(padx=self.pad_x, pady=self.pad_y, fill="both", side="left", anchor="w")
-        self.center_panel.pack(padx=self.pad_x, pady=self.pad_y, fill="both", expand=True)
-        self.bottom_panel.pack(padx=self.pad_x, pady=self.pad_y, fill="both", expand=True, anchor="s")
+        self.right_panel.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            fill="both",
+            side="right",
+            anchor="e"
+        )
+        self.left_panel.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            fill="both",
+            side="left",
+            anchor="w"
+        )
+        self.center_panel.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            fill="both",
+            expand=True
+        )
+        self.bottom_panel.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            fill="both",
+            expand=True,
+            anchor="s"
+        )
 
-        self.center_tabview.pack(padx=self.pad_x, pady=self.pad_y, expand=True, fill="both")
-        self.bottom_tabview.pack(padx=self.pad_x, pady=self.pad_y, expand=True, fill="both")
+        self.center_tabview.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            expand=True,
+            fill="both"
+        )
+        self.bottom_tabview.pack(
+            padx=self.pad_x,
+            pady=self.pad_y,
+            expand=True,
+            fill="both"
+        )
 
 # Bindings
 # Single Character Sequence
@@ -516,7 +684,15 @@ class App(ctk.CTk):
             tab = self.center_tabview.add(tab_name)
 
             editor = ctk.CTkTextbox(
-                tab, font=self.editor_font, undo=True, maxundo=-1, spacing1=2, spacing3=2, wrap="none", tabs="1c")
+                tab,
+                font=self.editor_font,
+                undo=True,
+                maxundo=-1,
+                spacing1=2,
+                spacing3=2,
+                wrap="none",
+                tabs="1c"
+            )
             
             t = threading.Thread(target=self.update_syntax)
             t.daemon = True
@@ -719,7 +895,7 @@ class App(ctk.CTk):
                     r"(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)", currentIndex, backwards=True, regexp=True)
                 word = editor.get(wordStart, currentIndex).strip(
                     " \n\t\r({[]})")
-                startPos = f"{currentIndex.split(".")[0]}.{int(currentIndex.split(".")[1]) - len(word)}"
+                startPos = f"{currentIndex.split('.')[0]}.{int(currentIndex.split('.')[1]) - len(word)}"
                 editor.delete(startPos, "insert")
                 editor.insert(startPos, snippet)
                 editor.focus_set()
@@ -732,7 +908,7 @@ class App(ctk.CTk):
             word_start = editor.search(
                 r"(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)", current_index, backwards=True, regexp=True)
             word = editor.get(word_start, current_index).strip(" \n\t\r({[]})")
-            start_position = f"{current_index.split(".")[0]}.{int(current_index.split(".")[1]) - len(word)}"
+            start_position = f"{current_index.split('.')[0]}.{int(current_index.split('.')[1]) - len(word)}"
             editor.delete(start_position, "insert")
             editor.insert(start_position, snippet)
             editor.focus_set()
@@ -866,7 +1042,7 @@ class App(ctk.CTk):
             return
         self.intelli_sense_boxes[self.center_tabview.get()].place_forget()
         self.intelli_sense_words = list(sorted(list(set(
-            self.language_syntax_patterns[self.currentLanguage]["keywords"][2] + self.variables + self.language_syntax_patterns[self.currentLanguage]["errors"][2]))))
+            self.language_syntax_patterns[self.current_language]["keywords"][2] + self.variables + self.language_syntax_patterns[self.currentLanguage]["errors"][2]))))
         x, y, _, _ = editor.bbox(editor.index("insert"))
         current_index = editor.index("insert")
         word_start = editor.search(
@@ -897,20 +1073,20 @@ class App(ctk.CTk):
         self.intelli_sense_boxes[self.center_tabview.get()].place(x=x, y=y+30)
 
     def intelli_sense_enter_insert(self, e=None) -> None:
-        if self.intelliSenseBoxes[self.centerTabview.get()].winfo_ismapped() and len(self.intelliSenseBoxes[self.centerTabview.get()].items) > 0:
+        if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped() and len(self.intelli_sense_boxes[self.center_tabview.get()].items) > 0:
             if editor := self.current_tab:
-                selected_word = self.intelliSenseWords[self.intelliSenseBoxes[self.centerTabview.get(
+                selected_word = self.intelli_sense_words[self.intelli_sense_boxes[self.center_tabview.get(
                 )].current_selected_index]
                 current_index = editor.index("insert -1l lineend")
-                wordStart = editor.search(
+                word_start = editor.search(
                     r"(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)", current_index, backwards=True, regexp=True)
-                word = editor.get(wordStart, current_index).strip(
+                word = editor.get(word_start, current_index).strip(
                     " \n\t\r({[]})")
-                start_position = f"{current_index.split(".")[0]}.{int(current_index.split(".")[1]) - len(word)}"
+                start_position = f"{current_index.split('.')[0]}.{int(current_index.split('.')[1]) - len(word)}"
                 editor.delete(start_position, "insert")
                 editor.insert(start_position, selected_word)
                 editor.focus_set()
-                self.intelliSenseBoxes[self.centerTabview.get(
+                self.intelli_sense_boxes[self.center_tabview.get(
                 )].place_forget()
 
     def intelli_sense_click_insert(self, selected) -> None:
@@ -919,7 +1095,7 @@ class App(ctk.CTk):
             word_start = editor.search(
                 r"(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)", current_index, backwards=True, regexp=True)
             word = editor.get(word_start, current_index).strip(" \n\t\r({[]})")
-            start_position = f"{current_index.split(".")[0]}.{int(current_index.split(".")[1]) - len(word)}"
+            start_position = f"{current_index.split('.')[0]}.{int(current_index.split('.')[1]) - len(word)}"
             editor.delete(start_position, "insert")
             editor.insert(start_position, selected)
             editor.focus_set()
@@ -1011,12 +1187,12 @@ class App(ctk.CTk):
                 editor.focus_set()
         else:
             self.goto_panel.pack(padx=self.pad_x, pady=self.pad_y*5)
-            self.gotoEntry.focus_set()
+            self.goto_entry.focus_set()
 
     def goto_click(self) -> None:
         if editor := self.current_tab:
-            lineNumber = int(self.gotoEntry.get())
-            index = f"{lineNumber}.0"
+            line_number = int(self.goto_entry.get())
+            index = f"{line_number}.0"
             editor.see(index)
 
     def toggle_find_and_replace(self, e=None) -> None:
@@ -1051,12 +1227,12 @@ class App(ctk.CTk):
     def indent(self, e=None) -> None:
         if editor := self.current_tab:
             if selected := editor.tag_ranges("sel"):
-                startPosition, endPosition = selected[0].string, selected[1].string
-                startLine = int(startPosition.split(".")[0])
-                endLine = int(endPosition.split(".")[0])
-                while startLine != endLine:
-                    editor.insert(f"{startLine}.0", "\t")
-                    startLine += 1
+                start_position, end_position = selected[0].string, selected[1].string
+                start_line = int(start_position.split(".")[0])
+                endLine = int(end_position.split(".")[0])
+                while start_line != endLine:
+                    editor.insert(f"{start_line}.0", "\t")
+                    start_line += 1
             else:
                 line = editor.index("insert").split(".")[0]
                 editor.insert(f"{line}.0", "\t")
@@ -1094,10 +1270,10 @@ class App(ctk.CTk):
 
     def next_tab(self, e=None) -> None:
         tabs = list(self.center_tabview._tab_dict.keys())
-        newTabIndex = self.center_tabview.index(self.center_tabview.get()) + 1
-        if newTabIndex < len(tabs):
-            newTabName = tabs[newTabIndex]
-            self.center_tabview.set(newTabName)
+        new_tab_index = self.center_tabview.index(self.center_tabview.get()) + 1
+        if new_tab_index < len(tabs):
+            new_tab_name = tabs[new_tab_index]
+            self.center_tabview.set(new_tab_name)
 
     def auto_single_quote(self, e=None) -> None:
         if editor := self.current_tab:
@@ -1126,44 +1302,44 @@ class App(ctk.CTk):
 
     def close_file(self, e=None) -> None:
         self.save_file()
-        tabName = self.center_tabview.get()
-        self.center_tabview.delete(tabName)
+        tab_name = self.center_tabview.get()
+        self.center_tabview.delete(tab_name)
         self.title("phIDE")
 
     def open_folder(self, e=None) -> None:
-        dirPath = ctk.filedialog.askdirectory(title="Select a folder")
+        directory_path = ctk.filedialog.askdirectory(title="Select a folder")
         if files := [
             os.path.join(root, file)
-            for root, dirs, files in os.walk(dirPath)
+            for root, dirs, files in os.walk(directory_path)
             for file in files
         ]:
             for file in files:
                 self.add_tab(file.replace("\\", "/"))
 
     def open_files(self, e=None) -> None:
-        if filePath := ctk.filedialog.askopenfilenames(
+        if file_paths := ctk.filedialog.askopenfilenames(
             title="Select a file",
             filetypes=[("Phi File", "*.phi"), ("All Files", "*.*")],
         ):
-            for file in filePath:
+            for file in file_paths:
                 self.add_tab(file)
 
     def backspace_entire_word(self, e=None) -> None:
         if editor := self.current_tab:
-            currentIndex = editor.index("insert")
-            wordStart = editor.search(
-                r"\s", currentIndex, backwards=True, regexp=True)
-            editor.delete(wordStart, currentIndex)
+            current_index = editor.index("insert")
+            word_start = editor.search(
+                r"\s", current_index, backwards=True, regexp=True)
+            editor.delete(word_start, current_index)
 
     def run(self, e=None) -> None:
         self.save_file()
         if self.current_language == ".phi":
             if self.current_path != "":
                 with open(self.current_path, "r") as f:
-                    sourceCode = "".join(f.readlines())
+                    source_code = "".join(f.readlines())
                 start = time.time()
                 self.console["state"] = "normal"
-                error = shell.run(sourceCode, self.current_path)
+                error = shell.run(source_code, self.current_path)
                 if error:
                     if editor := self.current_tab:
                         line = error.line
@@ -1184,13 +1360,13 @@ class App(ctk.CTk):
         if editor := self.current_tab:
             cursor_position = editor.index("insert")
             line_number = cursor_position.split(".")[0]
-            startPosition = f"{line_number}.0"
-            endPosition = f"{line_number}.2"
-            commented = editor.get(startPosition, endPosition)
+            start_position = f"{line_number}.0"
+            end_position = f"{line_number}.2"
+            commented = editor.get(start_position, end_position)
             if commented == "# ":
-                editor.delete(startPosition, endPosition)
+                editor.delete(start_position, end_position)
             else:
-                editor.insert(startPosition, "# ")
+                editor.insert(start_position, "# ")
             editor.tag_remove("sel", "0.0", "end")
 
     def save_file(self, e=None) -> None:
