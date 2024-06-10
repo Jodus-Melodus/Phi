@@ -1,5 +1,5 @@
 from backend.values import *
-from frontend.astNodes import *
+from frontend.ast_nodes import *
 from frontend.errors import *
 from backend.phi_environment import Environment, create_global_environment
 import os

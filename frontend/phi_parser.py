@@ -1,5 +1,5 @@
 from frontend.phi_lexer import Token, TT
-from frontend.astNodes import *
+from frontend.ast_nodes import *
 from frontend.errors import *
 
 class Parser:

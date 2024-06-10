@@ -57,7 +57,7 @@ class RealValue(RuntimeValue):
 class StringValue(RuntimeValue):
     def __init__(self, value:str, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
-        import backend.builtInMethods as bim
+        import backend.built_in_methods as bim
         self.type = 'stringValue'
         self.value = value
         self.methods = {
@@ -86,7 +86,7 @@ class BooleanValue(RuntimeValue):
 class ArrayValue(RuntimeValue):
     def __init__(self, items: dict, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
-        import backend.builtInMethods as bim
+        import backend.built_in_methods as bim
         self.type = 'arrayValue'
         self.items = items
         self.methods = {
@@ -105,7 +105,7 @@ class ArrayValue(RuntimeValue):
 class ObjectValue(RuntimeValue):
     def __init__(self, properties: dict, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
-        import backend.builtInMethods as bim
+        import backend.built_in_methods as bim
         self.type = 'objectValue'
         self.properties = properties
         self.methods = {
