@@ -1,0 +1,3 @@
+# Phi has it's own built-in input function
+
+str x = input("> ")    # Assigns the variable 'x' to the string value of the input from the terminal
