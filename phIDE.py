@@ -12,7 +12,7 @@ if os.path.exists("settings.json"):
     with open("settings.json", "r") as f:
         settings = json.load(f)
 else:
-    exit("Settings file not found")
+    sys.exit(0)
 
 class TerminalRedirect:
     def __init__(self, textWidget) -> None:
@@ -592,6 +592,9 @@ class App(ctk.CTk):
         self.bind("<Button-2>", self.multi_cursor)
         self.bind("<Control-Button-1>", self.multi_cursor)
         self.bind("<Button-3>", self.right_click_menu_click)
+
+        if len(sys.argv) > 1 and os.path.exists(sys.argv[1]):
+            self.add_tab(os.path.basename(sys.argv[1]))
 
         self.mainloop()
 

@@ -1,8 +1,5 @@
 
 
-int a = 3
-output(a)
+array words = readFile("ast.json")
 
-
-
-p
+output(words)

@@ -74,7 +74,7 @@ def create_global_environment(parent:Environment|None=None, file_path:str='') ->
     env.declare_variable('Str', NativeFunction(lambda args, scope: hard_cast_string(file_path, args[0])), True)
     env.declare_variable('Int', NativeFunction(lambda args, scope: hard_cast_integer(file_path, args[0])), True)
     env.declare_variable('Real', NativeFunction(lambda args, scope: hard_cast_real(file_path, args[0])), True)
-    env.declare_variable('readFile', NativeFunction(lambda args, scope: read_file(file_path, args[0], args[1])), True)
+    env.declare_variable('readFile', NativeFunction(lambda args, scope: read_file(file_path, args[0])), True)
 
     # Move to modules
     env.declare_variable('now', NativeFunction(lambda args, scope : now(file_path, )), True)
