@@ -9,7 +9,7 @@ import os
 ran = False
 
 # Parsing for the IDE to allow error checking while typing
-def incremental_parsing(source_code: str, file_path: str = '', x=False):
+def incremental_parsing(source_code: str, file_path: str = '', x: bool = False):
     global ran, Environment
     Environment = create_global_environment(file_path)
     lexer = Lexer(source_code, file_path)
@@ -69,12 +69,12 @@ if __name__ == '__main__':
                     print('Too many arguments')
             case 'help':
                 helpMessage = '''\
-                Commands:
-                ---------
-                run [filepath]: Runs the code in the given file
-                phi [code]: Executes the given Phi-code
-                exit: Exits the program
-                help: Prints this message
+Commands:
+---------
+exit                    Exits the program
+help                    Prints this message
+phi [code]              Executes the given Phi-code
+run [filepath]          Runs the code in the given file
                 '''
                 print(helpMessage)
             case _:

@@ -1,35 +1,29 @@
 # Phi
 
-Phi is a high-level, statically typed, object-oriented programming language specifically designed to deploy programs quick.
+Phi is a high-level, statically typed, object-oriented scripting language specifically designed to deploy programs quick.
 
-Verify that you have a python interpreter installed and then run the "install.sh" script.
-Here are some examples:
+## Generating the executable
 
-- [python.org](https://www.python.org/)
-- [microsoft store](https://apps.microsoft.com/detail/9NRWMJP3717K?hl=en-za&gl=ZA)
+<p style="color:#ff0000">!! You cannot complete the following steps unless you have the python interpreter installed. !!</p>
+
+### Linux/macOS
+
+Run the [setup.sh](setup.sh) script.
+
+### Windows
+
+Run the [setup.bat](setup.bat) script.
 
 ## Programming Language
 
-[phi](ProgrammingLanguage.MD)
+The documentation and syntax rules for the scripting language can be found [here](programming_language.MD)
 
 ## IDE
 
-[phIDE](phIDE.md)
-
-## Phi Shell
-
-The exe can be located in the [Shell](Shell) folder.
-
-## Phi IDE
-
-The exe can be located in the [phIDE](phIDE) folder.
+The documentation for the IDE can be found [here](phIDE.md)
 
 ## Style Guide
 
-The style guide can be located [here](styleGuide.md).
+The style guide can be found [here](style_guide.md)
 
-## NOTE
-
-Please do not move the executables out of their folders! You can make a shortcut otherwise it will not run.
-
-[back to top](README.md)
+[back to top](readme.md)

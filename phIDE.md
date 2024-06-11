@@ -12,11 +12,11 @@ phIDE provides advanced syntax highlighting for all files, allowing you to easil
 
 ## Support for Multiple Files
 
-phIDE allows you to open multiple files at once, enabling efficient file management and improving productivity. The application displays open files in separate tabs, allowing you to easily switch between them.
+phIDE allows you to open multiple files at once or a folder, enabling efficient file management and improving productivity. The application displays open files in separate tabs, allowing you to easily switch between them.
 
 ## Run Files
 
-phIDE connects to a Phi interpreter when running a file. This ensures that only the current file can be run, preventing potential conflicts with other open files.
+phIDE connects to a Phi interpreter when running a file. It ensures that only the current file can be run, preventing potential conflicts with other open files.
 
 ## Keyboard Shortcuts
 
@@ -36,7 +36,7 @@ phIDE supports the switching of programming languages through a dropdown menu in
 
 ## Themes
 
-The theme of the IDE can be changed in the [settings.json](settings.json) file. This will influence how the IDE looks and the syntax highlighting.
+The theme of the IDE can be changed in the [settings.json](settings.json) file. This will influence how the IDE looks as well as the syntax highlighting.
 
 ## Summary
 

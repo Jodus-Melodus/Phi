@@ -5,54 +5,45 @@
     "editor-font-slant":"roman",
     "editor-font-underline": false,
     "editor-font-overstrike": false,
-    
     "console-font-family": "Fira Code",
     "console-font-size": 10,
     "console-font-weight": "bold",
     "console-font-slant":"roman",
     "console-font-underline": false,
     "console-font-overstrike": false,
-    
     "button-font-family": "Fira Code",
     "button-font-size": 12,
     "button-font-weight": "normal",
     "button-font-slant":"roman",
     "button-font-underline": false,
     "button-font-overstrike": false,
-    
     "label-font-family": "Fira Code",
     "label-font-size": 12,
     "label-font-weight": "bold",
     "label-font-slant": "roman",
     "label-font-underline": false,
     "label-font-overstrike": false,
-
     "entry-font-family": "Fira Code",
     "entry-font-size": 12,
     "entry-font-weight": "bold",
     "entry-font-slant": "roman",
     "entry-font-overstrike": false,
     "entry-font-underline": false,
-
     "error-tag-background-color": "#990000",
     "similar-tag-background-color": "#595959",
     "selected-tag-background-color": "#595959",
     "warning-tag-foreground-color": "#ebd834",
     "intelli-sense-menu-color": "#ff00ff",
     "snippet-menu-color": "#3366ff",
-
     "error-tag-underline": 0,
     "similar-tag-underline": 0,
     "selected-tag-underline": 0,
     "warning-tag-underline": 1,
-
     "error-tag-foreground-color": "",
     "similar-tag-foreground-color": "",
     "selected-tag-foreground-color": "",
     "warning-tag-background-color": "",
-
     "y-padding":5,
     "x-padding":5,
-
     "theme": "phi-theme"
 }

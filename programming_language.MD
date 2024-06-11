@@ -1,10 +1,10 @@
 # Phi: A Dynamic Scripting Language
 
-Welcome to Phi, a dynamic scripting language designed for flexibility and ease of use.
+Welcome to Phi, a high-level, statically typed, object-oriented scripting language specifically designed to deploy programs quick.
 
 ## Reporting Issues
 
-If you encounter any unexpected behavior while using Phi, please report it promptly. Include a screenshot and a detailed description to help us improve.
+If you encounter any unexpected behavior while using Phi, please report it promptly. Include a screenshot and a detailed description to help us improve and fix.
 
 ## Keywords
 
@@ -44,7 +44,7 @@ The following operators are supported in Phi:
 - `/` Division (integer division)
 - `%` Modulus
 - `//` Floor division
-- `^` Power
+- `^` Exponentiation
 - `>` Greater than
 - `<` Less than
 - `>=` Greater than or equal to
@@ -73,25 +73,27 @@ The following operators are supported in Phi:
 
 ### Variables and Constants
 
-- #### Variable
+#### Variable
 
 ```phi
 int x = 10
 ```
 
-This will create the variable and give it a value of 0
+This will declare the variable and give it a value of 0
 
 ```phi
 int x
 ```
 
-- #### Constant
+#### Constant
+
+Constants are in all caps
 
 ```phi
 int X = 10
 ```
 
-This will create the variable and give it a value of 0
+This will declare the variable and give it a value of 0
 
 ```phi
 int X
@@ -111,7 +113,7 @@ int x = 2
 real y = 2.1
 ```
 
-- #### Operations
+#### Operations
 
 ```phi
 int x = 2 + 4 / 2 * 9 - 5 % 3^2
@@ -138,7 +140,7 @@ str y = "123 - 2"
 str z = "Testing 123"
 ```
 
-- #### String Length
+#### String Length
 
 ```phi
 str x = "hello world"
@@ -151,7 +153,7 @@ Result:
 11
 ```
 
-- #### Format
+#### Format
 
 ```phi
 str result = "Hello $ world $".format("there", 500)
@@ -163,7 +165,7 @@ Result:
 "Hello there world 500"
 ```
 
-- #### Concatenation
+#### Concatenation
 
 ```phi
 str x = "hello"
@@ -185,7 +187,7 @@ array a = [1, 2, 3]
 array b = ["hello", 12, ["world", 9.2]]
 ```
 
-- #### Array Length
+#### Array Length
 
 ```phi
 array a = [1, 4, "hello"]
@@ -198,7 +200,7 @@ Result:
 3
 ```
 
-- #### Append
+#### Append
 
 ```phi
 array a = [1, 2, "hello"]
@@ -215,7 +217,7 @@ Result:
 [1, 2, "hello", 9.12]
 ```
 
-- #### Join
+#### Join
 
 ```phi
 array arr = [1, 2, "hello"]
@@ -228,7 +230,7 @@ Result:
 "1, 2, hello"
 ```
 
-- #### Indexing
+#### Indexing
 
 ```phi
 array arr = [1, 5, 90]
@@ -246,7 +248,7 @@ Result:
 See [Functions](#user-defined-functions)
 
 ```phi
-obj o = {
+obj object = {
     name: "John Doe",
     age: 30,
     city: "New York",
@@ -255,10 +257,10 @@ obj o = {
 }
 ```
 
-- #### Accessing properties
+#### Accessing properties
 
 ```phi
-int result = o.age
+int result = object.age
 ```
 
 Result:
@@ -267,10 +269,10 @@ Result:
 30
 ```
 
-- #### Adding new properties
+#### Adding new properties
 
 ```phi
-o.newProperty = "I am a new property"
+object.newProperty = "I am a new property"
 ```
 
 Result:
@@ -286,10 +288,10 @@ Result:
 }
 ```
 
-- #### Accessing methods
+#### Accessing methods
 
 ```phi
-IDK result = o.method()
+IDK result = object.method()
 ```
 
 Result:
@@ -298,10 +300,10 @@ Result:
 Hello
 ```
 
-- #### Adding new Methods
+#### Adding new Methods
 
 ```phi
-o.newMethod = fn name(){<- "New method"}
+object.newMethod = fn name(){<- "New method"}
 ```
 
 Result:
@@ -317,10 +319,10 @@ Result:
 }
 ```
 
-- #### Getting list of keys
+#### Getting list of keys
 
 ```phi
-array result = o.keys()
+array result = object.keys()
 ```
 
 Result:
@@ -336,10 +338,10 @@ Result:
 ]
 ```
 
-- #### Getting list of values
+#### Getting list of values
 
 ```phi
-array result = o.values()
+array result = object.values()
 ```
 
 Result:
@@ -355,10 +357,10 @@ Result:
 ]
 ```
 
-- #### Checking if an object has a key (returns boolean)
+#### Checking if an object has a key (returns boolean)
 
 ```phi
-boolean result = o.hasAttr("age")
+boolean result = object.hasAttr("age")
 ```
 
 Result:
@@ -367,10 +369,10 @@ Result:
 T
 ```
 
-- #### Adding new attribute to the object
+#### Adding new attribute to the object
 
 ```phi
-o.update({"gender" : "male"})
+object.update({"gender" : "male"})
 ```
 
 The `update` function adds one or more attributes to the object. If an attribute already exists it will be overwritten. The return value is null.
@@ -387,7 +389,7 @@ Result:
 
 ```phi
 3
-Hello
+"Hello"
 {a : 7, b : 4}
 ```
 
@@ -395,7 +397,9 @@ Hello
 
 ### Built-in Functions
 
-#### `Int()`
+#### Hardcasting
+
+##### `Int()`
 
 Return a integer version of the input.
 
@@ -411,7 +415,7 @@ i1 = 34
 i2 = 43
 ```
 
-#### `Real()`
+##### `Real()`
 
 Return a real version of the input.
 
@@ -427,7 +431,7 @@ r1 = 34.56
 r2 = 34.0
 ```
 
-#### `Str()`
+##### `Str()`
 
 Return a string version of the input.=
 
@@ -460,7 +464,7 @@ hello world
 
 #### `input()`
 
-Reads input from user and returns it as string.
+Prints the prompt and then reads the input from user and returns it as string.
 Example usage:
 
 ```phi
@@ -515,13 +519,13 @@ str hsh = hash("Hello World!")
 
 Functions are defined using the `fn` keyword followed by its name and parameters in parentheses. The function body is enclosed within curly braces.
 
-- #### Creating functions with parameters and return values
+#### Creating functions with parameters and return values
 
 ```phi
 fn add(x, y) {<- x + y}
 ```
 
-- #### Calling functions
+#### Calling functions
 
 ```phi
 int result = add(2, 5)
@@ -548,7 +552,7 @@ After this statement, variable 'a' will be deleted from the memory. Trying to ac
 
 #### Conditions
 
-- ##### True
+##### True
 
 ```phi
 (T)
@@ -559,7 +563,7 @@ After this statement, variable 'a' will be deleted from the memory. Trying to ac
 (5 > 2)
 ```
 
-- ##### False
+##### False
 
 ```phi
 (T & F)
@@ -573,7 +577,11 @@ After this statement, variable 'a' will be deleted from the memory. Trying to ac
 #### Simple if else statement
 
 ```phi
-if (T) {<- "True"} else {<- "False"}
+if (T) {
+    <- "True"
+} else {
+    <- "False"
+}
 ```
 
 Result:
@@ -705,6 +713,7 @@ Result:
 I am odd!
 I am odd!
 I am odd!
+...
 ```
 
 ### For Loops
@@ -714,7 +723,7 @@ For loops have three parts separated by colons (`,`)
 #### Example of a for loop
 
 ```phi
-for (int i = 0, i < 5, i += 1){
+for (int i = 0, i < 5, i += 1) {
     output(i)
 }
 ```
@@ -734,8 +743,8 @@ The variable `i` starts at 0 and continues until it is no longer less than 5. Af
 #### For Loop with break
 
 ```phi
-for (int j = 0; j < 10; j += 1){
-    if (j == 5){
+for (int j = 0; j < 10; j += 1) {
+    if (j == 5) {
         break
     }
 }
@@ -780,7 +789,7 @@ For-each loops are used when you want to perform an action on each element in a 
 ```phi
 array a = [6, 4, 29, 234, 1209, 98203, 12, 0, 2]
 
-for each (int i in a){
+for each (int i in a) {
     output(i)
 }
 ```

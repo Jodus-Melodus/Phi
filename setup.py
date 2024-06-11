@@ -2,15 +2,18 @@ from cx_Freeze import Executable, setup
 import sys
 
 base = "Win32GUI" if sys.platform == "win32" else None
+
 additionalFiles = [
     "shell.py",
+    "settings.json",
     "ast.json",
+    "themes",
+    "snippets",
+    "modules",
     "frontend",
     "backend",
-    "snippets",
-    "themes",
-    "modules",
-    "examplePrograms"
+    "example_programs",
+    "phi.ico"
 ]
 
 exe = Executable(
