@@ -1308,6 +1308,8 @@ class App(ctk.CTk):
         tab_name = self.center_tabview.get()
         self.center_tabview.delete(tab_name)
         self.title("phIDE")
+        if settings["auto-clear-console-on-close"]:
+            self.clear_console()
 
     def open_folder(self, e=None) -> None:
         directory_path = ctk.filedialog.askdirectory(title="Select a folder")

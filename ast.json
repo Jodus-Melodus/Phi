@@ -3,11 +3,20 @@
     "body": [
         {
             "kind": "variableDeclarationExpression",
-            "datatype": "int",
-            "identifier": "a",
+            "datatype": "array",
+            "identifier": "words",
             "value": {
-                "kind": "integerLiteral",
-                "value": 3
+                "kind": "callExpression",
+                "arguments": [
+                    {
+                        "kind": "stringLiteral",
+                        "value": "ast.json"
+                    }
+                ],
+                "caller": {
+                    "kind": "identifier",
+                    "symbol": "readFile"
+                }
             },
             "constant": "False"
         },
@@ -16,17 +25,13 @@
             "arguments": [
                 {
                     "kind": "identifier",
-                    "symbol": "a"
+                    "symbol": "words"
                 }
             ],
             "caller": {
                 "kind": "identifier",
                 "symbol": "output"
             }
-        },
-        {
-            "kind": "identifier",
-            "symbol": "p"
         }
     ]
 }

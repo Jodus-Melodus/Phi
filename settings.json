@@ -45,5 +45,6 @@
     "warning-tag-background-color": "",
     "y-padding":5,
     "x-padding":5,
-    "theme": "phi-theme"
+    "theme": "phi-theme",
+    "auto-clear-console-on-close": true
 }
