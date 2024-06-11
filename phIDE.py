@@ -1,11 +1,14 @@
 import json
-import sys
+import sys, os
 import re
-import shell
 import time
 import customtkinter as ctk
-import os
 import threading
+
+import shell
+from Dropdown import Dropdown
+from Dialog import Dialog
+from TerminalRedirect import TerminalRedirect
 
 # Checks if the settings file exists
 if os.path.exists("settings.json"):
@@ -13,96 +16,6 @@ if os.path.exists("settings.json"):
         settings = json.load(f)
 else:
     sys.exit(0)
-
-class TerminalRedirect:
-    def __init__(self, textWidget) -> None:
-        self.widget = textWidget
-
-    def write(self, message) -> None:
-        self.widget.configure(state="normal")
-        self.widget.insert("end", message)
-        self.widget.yview_moveto(1)
-        self.widget.update_idletasks()
-        self.widget.configure(state="disabled")
-
-    def readline(self, prompt="") -> str:
-        self.widget.configure(state="normal")
-        self.widget.insert("end", prompt)
-        self.widget.mark_set("input_start", "end-1c")
-        self.widget.mark_set("input_end", "end-1c + 1l")
-        line = self.widget.get("input_start", "input_end")
-        self.widget.delete("input_start", "input_end")
-        self.widget.configure(state="disabled")
-        return line
-
-# Custom dropdown menu
-class Dropdown:
-    def __init__(self, master, width: int, height: int, items: list, command, item_pad_x: int, item_pad_y: int, bg_color: str, item_font: ctk.CTkFont):
-        self.master = master
-        self.width = width
-        self.height = height
-        self.items = items
-        self.command = command
-        self.item_pad_x = item_pad_x
-        self.item_pad_y = item_pad_y
-        self.item_font = item_font
-        self.bg_color = bg_color
-
-        self.ismapped = False
-        self.current_selected_index = 0
-
-        self.frame = ctk.CTkFrame(self.master, width=self.width, height=self.height, bg_color=self.bg_color)
-
-    def winfo_ismapped(self) -> bool:
-        return self.ismapped
-
-    def update(self) -> None:
-        for child in self.frame.winfo_children():
-            child.destroy()
-
-    def place(self, x, y) -> None:
-        self.update()
-        for i, item in enumerate(self.items):
-            btn = ctk.CTkButton(self.frame, text=item, command=lambda item=item: self.command(str(item)), font=self.item_font,
-                                height=14, anchor="w", fg_color="#262626" if i == 0 else "#333333", hover_color="#262626")
-            btn.pack(fill="both", expand=True,
-                     padx=self.item_pad_x, pady=self.item_pad_y)
-        self.frame.place(x=x, y=y)
-        self.ismapped = True
-
-    def place_forget(self) -> None:
-        self.update()
-        self.frame.place_forget()
-        self.ismapped = False
-
-# Custom dialog
-class Dialog:
-    def __init__(self, master, title: str, message: str, x: int, y: int, font: ctk.CTkFont) -> None:
-        self.master = master
-        self.title = title
-        self.message = message
-        self.x = x
-        self.y = y
-        self.width = 500
-        self.height = 250
-        self.font = font
-
-        self.dialog = ctk.CTkFrame(self.master, width=self.width, height=self.height, corner_radius=5)
-        title = ctk.CTkLabel(self.dialog, anchor="nw", text=self.title, font=self.font, text_color="#ee0000")
-        msg = ctk.CTkTextbox(self.dialog, font=self.font)
-        close = ctk.CTkButton(self.dialog, text="Close", command=self._close, font=self.font)
-
-        msg.insert("0.0", self.message)
-        msg.configure(wrap="word", state="disabled")
-
-        title.pack(fill="both", anchor="nw", padx=10, pady=10)
-        msg.pack(fill="both", expand=True, anchor="s", padx=10, pady=10)
-        close.pack(expand=True, anchor="se", padx=10, pady=10)
-
-        self.dialog.place(x=self.x-self.width//4, y=self.y-self.height//2)
-
-    def _close(self) -> None:
-        self.dialog.destroy()
 
 # Main application
 class App(ctk.CTk):
@@ -647,9 +560,10 @@ class App(ctk.CTk):
         Ctrl + V -              Paste last copied word
         Ctrl + Z -              Undo action
         Ctrl + Shift + Z -      Redo action
-        Ctrl + H -              Toggle the find and replace panel
-        Ctrl + G -              Toggle the go to panel
-        Ctrl + M -              Toggle the multi-cursor panel
+        Ctrl + H -              Toggle the find and replace menu
+        Ctrl + G -              Toggle the go to menu
+        Ctrl + M -              Toggle the multi-cursor menu
+        Ctrl + Alt + M          Toggle available module menu
         Ctrl + [ -              Dedent line or selected text
         Ctrl + ] -              Indent line or selected text
         Ctrl + Tab -            Next tab
