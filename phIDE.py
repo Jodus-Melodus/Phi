@@ -6,6 +6,7 @@ import customtkinter as ctk
 import threading
 
 import shell
+from frontend.errors import Error
 from Dropdown import Dropdown
 from Dialog import Dialog
 from TerminalRedirect import TerminalRedirect
@@ -66,6 +67,14 @@ class App(ctk.CTk):
             overstrike=settings["entry-font-overstrike"],
             underline=settings["entry-font-underline"]
         )
+        self.help_window_font = ctk.CTkFont(
+            family=settings["help_window-font-family"],
+            size=settings["help_window-font-size"],
+            weight=settings["help_window-font-weight"],
+            slant=settings["help_window-font-slant"],
+            overstrike=settings["help_window-font-overstrike"],
+            underline=settings["help_window-font-underline"],
+        )
         self.width = self.winfo_width()
         self.height = self.winfo_height()
         self.center_x = self.width // 2
@@ -86,7 +95,6 @@ class App(ctk.CTk):
         self.tab_names_paths = {}
         self.menu_open = False
         self.right_menu_open = False
-        self.saved = False
         self.cursors = []
         self.variables = []
 
@@ -103,12 +111,12 @@ class App(ctk.CTk):
         # Tabviews
         self.center_tabview = ctk.CTkTabview(
             self.center_panel,
-            self.width*self.screen_ratio,
-            height=self.height*self.screen_ratio
+            int(self.width*self.screen_ratio),
+            int(self.height*self.screen_ratio)
         )
         self.bottom_tabview = ctk.CTkTabview(
             self.bottom_panel,
-            width=self.width*self.screen_ratio
+            int(self.width*self.screen_ratio)
         )
         self.console_tab = self.bottom_tabview.add("Console")
         self.warning_tab = self.bottom_tabview.add("Warnings")
@@ -464,7 +472,7 @@ class App(ctk.CTk):
 # Bindings
 # Single Character Sequence
         self.bind("<F1>", self.show_help)
-        self.bind("<F5>", self.run)
+        self.bind("<F5>", self.run_file)
         self.bind("<Return>", self.enter_commands)
         self.bind("<Escape>", self.escape_key_press)
         self.bind("<(>", self.auto_parenthesis)
@@ -509,6 +517,7 @@ class App(ctk.CTk):
         if len(sys.argv) > 1 and os.path.exists(sys.argv[1]):
             self.add_tab(os.path.basename(sys.argv[1]))
 
+    def run(self) -> None:
         self.mainloop()
 
     def page_top(self, e=None) -> None:
@@ -539,45 +548,43 @@ class App(ctk.CTk):
             self.find_entry.focus_set()
 
     def show_help(self, e=None) -> None:
-        help_window = ctk.CTkToplevel()
-        help_window.title("phIDE - Help")
-        help_text = ctk.CTkTextbox(help_window, font=self.editor_font)
-        help_text.pack(expand=True, fill="both")
         text = """\
-        F1 -                    Show this menu
-        F5 -                    Run current file
-        Enter -                 Select first intellisense word
-        Ctrl + Backspace -      Deletes entire word
-        Ctrl + Space -          Manually open intellisense
-        Ctrl + ; -              Show Snippet menu
-        Ctrl + / -              Comment current line
-        Ctrl + K -              Open folder
-        Ctrl + O -              Open file
-        Ctrl + S -              Save current file
-        Ctrl + N -              Creates a new file
-        Ctrl + F4 -             Close current tab
-        Ctrl + C -              Copy selected text
-        Ctrl + V -              Paste last copied word
-        Ctrl + Z -              Undo action
-        Ctrl + Shift + Z -      Redo action
-        Ctrl + H -              Toggle the find and replace menu
-        Ctrl + G -              Toggle the go to menu
-        Ctrl + M -              Toggle the multi-cursor menu
-        Ctrl + Alt + M          Toggle available module menu
-        Ctrl + [ -              Dedent line or selected text
-        Ctrl + ] -              Indent line or selected text
-        Ctrl + Tab -            Next tab
-        Ctrl + Shift + Tab -    Previous Tab
-        Ctrl + Left Click -     Add/remove cursor
-        Middle Click -          Add/remove cursor
-        Esc -                   Hide intelliSense
+F1                  Show this menu
+F5                  Run file
+Enter               Select first intellisense word
+Ctrl + Backspace    Deletes entire word
+Ctrl + Space        Open intellisense
+Ctrl + ;            Snippet menu
+Ctrl + /            Comment  line
+Ctrl + K            Open folder
+Ctrl + O            Open file
+Ctrl + S            Save file
+Ctrl + N            Creates a new file
+Ctrl + F4           Close file
+Ctrl + C            Copy
+Ctrl + V            Paste
+Ctrl + Z            Undo
+Ctrl + Shift + Z    Redo
+Ctrl + H            Rind and replace menu
+Ctrl + G            Go to menu
+Ctrl + M            Multi-cursor menu
+Ctrl + Alt + M      Available module menu
+Ctrl + [            Dedent line
+Ctrl + ]            Indent line
+Ctrl + Tab          Next tab
+Ctrl + Shift + Tab  Previous Tab
+Ctrl + Left Click   Add/remove cursor
+Middle Click        Add/remove cursor
+Esc                 Hide intelliSense
         """
-        help_text.insert("0.0", text)
-        help_text.configure(wrap="none", state="disabled")
+        
+        help_dialog = Dialog(self, "Help", text, self.center_x, self.center_y, self.help_window_font)
+        help_dialog.show()
 
     @property
-    def current_tab(self) -> ctk.CTkTextbox:
+    def current_tab(self) -> ctk.CTkTextbox|None:
         tab_name = self.center_tabview.get()
+
         if (tab_name != "") and (tab_name in self.open_editors):
             return self.open_editors[tab_name]
 
@@ -593,10 +600,13 @@ class App(ctk.CTk):
     def add_tab(self, path: str) -> None:
         self.current_path = path
         self.load_language_syntax()
-        self.current_language = "." + path.split("/")[-1].split(".")[-1]
+        # self.current_language = "." + path.split("/")[-1].split(".")[-1]
+        _, self.current_language = os.path.splitext(path)
         self.current_language_combo.set(self.current_language)
 
-        tab_name = path.split("/")[-1]
+        # tab_name = path.split("/")[-1]
+        tab_name = os.path.basename(path)
+
         if tab_name not in self.center_tabview._tab_dict:
             tab = self.center_tabview.add(tab_name)
 
@@ -646,11 +656,15 @@ class App(ctk.CTk):
                 self.code = editor.get("0.0", "end")
                 self.load_snippets()
             else:
-                Dialog(self, "Error", "File extention not supported.",
-                       self.center_x, self.center_y)
+                error = Dialog(self, "Error", "File extention not supported.",
+                       self.center_x, self.center_y, self.editor_font)
+                error.show()
+                
         else:
-            Dialog(self, "Error", "Cannot open two files with the same name.",
-                   self.center_x, self.center_y)
+            error = Dialog(self, "Error", "Cannot open two files with the same name.",
+                   self.center_x, self.center_y, self.editor_font)
+            error.show()
+            
 
 # Updates
     def increment_index(self, cursor: str) -> str:
@@ -700,6 +714,7 @@ class App(ctk.CTk):
 
     def key_press_update(self, e=None) -> None:
         self.current_language = self.current_language_combo.get()
+
         if editor := self.current_tab:
             self.line, self.column = editor.index("insert").split(".")
             self.status_bar.configure(text=f"Ln {self.line}, Col {self.column}")
@@ -712,17 +727,21 @@ class App(ctk.CTk):
                 self.warnings.configure(state="normal")
                 self.warnings.delete("0.0", "end")
                 self.warnings.configure(state="disabled")
-                if warning != "":
+
+                if warning is Error:
                     line = warning.line
                     editor.tag_add("warning", f"{line}.0", f"{line}.end")
+
                     if warning.warning_message() not in self.warnings.get("0.0", "end"):
                         self.warnings.configure(state="normal")
                         self.warnings.insert("end", warning.warning_message())
                         self.warnings.configure(state="disabled")
 
+                # Update warning tab's name to match total warnings
                 warnings = self.warnings.get("0.0", "end").strip().split("\n")
                 tabs = list(self.bottom_tabview._tab_dict.keys())
                 current_name = tabs[1]
+
                 if (len(warnings) > 0) and (warnings[0] != ""):
                     new_name = f"Warnings({len(warnings)})"
                 else:
@@ -738,8 +757,6 @@ class App(ctk.CTk):
             self.show_snippets()
 
     def editor_press(self, e=None) -> None:
-        self.saved = False
-
         if editor := self.current_tab:
             editor.tag_remove("warning", "0.0", "end")
             current_code = editor.get("0.0", "end")
@@ -759,9 +776,10 @@ class App(ctk.CTk):
             self.warnings.configure(state="normal")
             self.warnings.delete("0.0", "end")
             self.warnings.configure(state="disabled")
-            if warning != "":
+            if warning is Error:
                 line = warning.line
                 editor.tag_add("warning", f"{line}.0", f"{line}.end")
+
                 if warning.warning_message() not in self.warnings.get("0.0", "end"):
                     self.warnings.configure(state="normal")
                     self.warnings.insert("end", warning.warning_message())
@@ -871,22 +889,25 @@ class App(ctk.CTk):
                 self.snippets_dictionary = json.load(f)
                 self.snippets = list(self.snippets_dictionary.keys())
         else:
-            Dialog(self, "Error", "Failed to load snippets.",
-                   self.center_x, self.center_y)
+            error = Dialog(self, "Error", "Failed to load snippets.",
+                   self.center_x, self.center_y, self.editor_font)
+            error.show()
 
 # Syntax
     def load_language_syntax(self) -> None:
         path = f"Themes/{settings['theme']}/syntax.json"
+
         if os.path.exists(path):
             with open(path, "r") as f:
                 self.language_syntax_patterns = json.load(f)
             self.current_language_combo.configure(
                 values=self.language_syntax_patterns)
         else:
-            Dialog(self, "Error", "Failed to open syntax file.",
-                   self.center_x, self.center_y)
+            error = Dialog(self, "Error", "Failed to open syntax file.",
+                   self.center_x, self.center_y, self.editor_font)
+            error.show()
 
-    def update_syntax(self, line: str = None, lnIndex: int = None) -> None:
+    def update_syntax(self) -> None:
         if editor := self.current_tab:
             for tag in self.language_syntax_patterns[self.current_language]:
                 pattern = self.language_syntax_patterns[self.current_language][tag][1]
@@ -957,6 +978,7 @@ class App(ctk.CTk):
     def intelli_sense_trigger(self, e=None) -> None:
         if not (editor := self.current_tab):
             return
+        
         self.intelli_sense_boxes[self.center_tabview.get()].place_forget()
         self.intelli_sense_words = list(sorted(list(set(
             self.language_syntax_patterns[self.current_language]["keywords"][2] + self.variables + self.language_syntax_patterns[self.current_language]["errors"][2]))))
@@ -1019,7 +1041,7 @@ class App(ctk.CTk):
             self.intelli_sense_boxes[self.center_tabview.get()].place_forget()
 
 # Menu Bar
-    def right_click_menu_click(self, e=None) -> None:
+    def right_click_menu_click(self, e) -> None:
         if self.right_menu_open:
             self.right_click_popup.place_forget()
             self.right_menu_open = False
@@ -1029,6 +1051,7 @@ class App(ctk.CTk):
 
     def file_menu_click(self) -> None:
         self.file_menu_popup.set("")
+
         if self.menu_open:
             self.file_menu_popup.place_forget()
             self.edit_menu_popup.place_forget()
@@ -1041,6 +1064,7 @@ class App(ctk.CTk):
 
     def edit_menu_click(self) -> None:
         self.edit_menu_popup.set("")
+
         if self.menu_open:
             self.file_menu_popup.place_forget()
             self.edit_menu_popup.place_forget()
@@ -1053,6 +1077,7 @@ class App(ctk.CTk):
 
     def run_menu_click(self) -> None:
         self.run_menu_popup.set("")
+
         if self.menu_open:
             self.file_menu_popup.place_forget()
             self.edit_menu_popup.place_forget()
@@ -1068,6 +1093,7 @@ class App(ctk.CTk):
         self.edit_menu_popup.place_forget()
         self.run_menu_popup.place_forget()
         self.right_click_popup.place_forget()
+
         match name:
             case "New File":
                 self.new_file()
@@ -1088,7 +1114,7 @@ class App(ctk.CTk):
             case "Comment":
                 self.comment_line()
             case "Run":
-                self.run()
+                self.run_file()
 
 # Side Menus
     def toggle_multi_cursor_menu(self, e=None) -> None:
@@ -1100,6 +1126,7 @@ class App(ctk.CTk):
     def toggle_goto_menu(self, e=None) -> None:
         if self.goto_panel.winfo_ismapped():
             self.goto_panel.pack_forget()
+
             if editor := self.current_tab:
                 editor.focus_set()
         else:
@@ -1115,6 +1142,7 @@ class App(ctk.CTk):
     def toggle_find_and_replace(self, e=None) -> None:
         if self.find_and_replace_panel.winfo_ismapped():
             self.find_and_replace_panel.pack_forget()
+
             if editor := self.current_tab:
                 editor.focus_set()
         else:
@@ -1136,6 +1164,7 @@ class App(ctk.CTk):
     def multi_cursor(self, e=None) -> None:
         if editor := self.current_tab:
             index = editor.index("current")
+
             if index in self.cursors:
                 self.cursors.remove(index)
             else:
@@ -1143,10 +1172,12 @@ class App(ctk.CTk):
 
     def indent(self, e=None) -> None:
         if editor := self.current_tab:
+
             if selected := editor.tag_ranges("sel"):
                 start_position, end_position = selected[0].string, selected[1].string
                 start_line = int(start_position.split(".")[0])
                 endLine = int(end_position.split(".")[0])
+
                 while start_line != endLine:
                     editor.insert(f"{start_line}.0", "\t")
                     start_line += 1
@@ -1157,10 +1188,12 @@ class App(ctk.CTk):
     def dedent(self, e=None) -> None:
         if not (editor := self.current_tab):
             return
+        
         if selected := editor.tag_ranges("sel"):
             start_position, end_position = selected[0].string, selected[1].string
             start_line = int(start_position.split(".")[0])
             end_line = int(end_position.split(".")[0])
+
             while start_line != end_line:
                 curr = editor.get(f"{start_line}.0", f"{start_line}.1")
                 if curr == "\t":
@@ -1169,27 +1202,39 @@ class App(ctk.CTk):
         else:
             line = editor.index("insert").split(".")[0]
             curr = editor.get(f"{line}.0", f"{line}.1")
+
             if curr == "\t":
                 editor.delete(f"{line}.0", f"{line}.1")
 
     def escape_key_press(self, e=None) -> None:
         if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
             self.intelli_sense_boxes[self.center_tabview.get()].place_forget()
+
         if hasattr(self, "snippetMenu") and self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
             self.snippet_menus[self.center_tabview.get()].place_forget()
 
     def previous_tab(self, e=None) -> None:
         tabs = list(self.center_tabview._tab_dict.keys())
         new_tab_index = self.center_tabview.index(self.center_tabview.get()) - 1
+
+        # If the new tab index is within the range of tabs it is decremented otherwise set back to the max to create a loop
         if new_tab_index >= 0:
             new_tab_name = tabs[new_tab_index]
+            self.center_tabview.set(new_tab_name)
+        else:
+            new_tab_name = tabs[len(tabs) - 1]
             self.center_tabview.set(new_tab_name)
 
     def next_tab(self, e=None) -> None:
         tabs = list(self.center_tabview._tab_dict.keys())
         new_tab_index = self.center_tabview.index(self.center_tabview.get()) + 1
+
+        # If the new tab index is within the range of tabs it is incremented otherwise set back to 0 to create a loop
         if new_tab_index < len(tabs):
             new_tab_name = tabs[new_tab_index]
+            self.center_tabview.set(new_tab_name)
+        else:
+            new_tab_name = tabs[0]
             self.center_tabview.set(new_tab_name)
 
     def auto_single_quote(self, e=None) -> None:
@@ -1222,6 +1267,7 @@ class App(ctk.CTk):
         tab_name = self.center_tabview.get()
         self.center_tabview.delete(tab_name)
         self.title("phIDE")
+
         if settings["auto-clear-console-on-close"]:
             self.clear_console()
 
@@ -1233,7 +1279,7 @@ class App(ctk.CTk):
             for file in files
         ]:
             for file in files:
-                self.add_tab(file.replace("\\", "/"))
+                self.add_tab(file)
 
     def open_files(self, e=None) -> None:
         if file_paths := ctk.filedialog.askopenfilenames(
@@ -1250,15 +1296,18 @@ class App(ctk.CTk):
                 r"\s", current_index, backwards=True, regexp=True)
             editor.delete(word_start, current_index)
 
-    def run(self, e=None) -> None:
+    def run_file(self, e=None) -> None:
         self.save_file()
+
         if self.current_language == ".phi":
             if self.current_path != "":
+
                 with open(self.current_path, "r") as f:
                     source_code = "".join(f.readlines())
-                start = time.time()
+
                 self.console["state"] = "normal"
                 error = shell.run(source_code, self.current_path)
+
                 if error:
                     if editor := self.current_tab:
                         line = error.line
@@ -1266,14 +1315,13 @@ class App(ctk.CTk):
                         text = editor.get(f"{line}.0", f"{line}.end")
                         print(text)
                         print(error)
-                        self.error = error
+                        self.error = str(error)
+
                 self.console["state"] = "disabled"
-                end = time.time()
-                print(f"\nProcess finished in {end - start} seconds.")
-                print("-"*60)
         else:
-            Dialog(self, "Error", "Run only supports .phi files",
-                   self.center_x, self.center_y)
+            error = Dialog(self, "Error", "Run only supports .phi files",
+                   self.center_x, self.center_y, self.editor_font)
+            error.show()
 
     def comment_line(self, e=None) -> None:
         if editor := self.current_tab:
@@ -1282,15 +1330,17 @@ class App(ctk.CTk):
             start_position = f"{line_number}.0"
             end_position = f"{line_number}.2"
             commented = editor.get(start_position, end_position)
+
             if commented == "# ":
                 editor.delete(start_position, end_position)
             else:
                 editor.insert(start_position, "# ")
+
             editor.tag_remove("sel", "0.0", "end")
 
     def save_file(self, e=None) -> None:
         self.current_path = self.tab_names_paths[self.center_tabview.get()] or ctk.filedialog.asksaveasfilename(
-                        title="Select a file", filetypes=[("Phi File", "*.phi"), ("All Files", "*.*")])
+                        title="Save", filetypes=[("Phi File", "*.phi"), ("All Files", "*.*")])
 
         if editor := self.current_tab:
             text = editor.get("0.0", "end")
@@ -1298,11 +1348,11 @@ class App(ctk.CTk):
                 f.write(text)
             name = self.center_tabview.get()
             self.title(name)
-        self.saved = True
 
     def new_file(self, e=None) -> None:
         path = ctk.filedialog.asksaveasfilename(
-            title="Select a file", filetypes=[("Phi File", "*.phi"), ("All Files", "*.*")])
+            title="Save As", filetypes=[("Phi File", "*.phi"), ("All Files", "*.*")])
+        
         if os.path.exists(path):
             self.current_path = path
             with open(self.current_path, "w") as f:
@@ -1333,3 +1383,4 @@ class App(ctk.CTk):
 
 if __name__ == "__main__":
     app = App()
+    app.run()

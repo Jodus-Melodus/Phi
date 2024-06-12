@@ -46,5 +46,11 @@
     "y-padding":5,
     "x-padding":5,
     "theme": "phi-theme",
-    "auto-clear-console-on-close": true
+    "auto-clear-console-on-close": true,
+    "help_window-font-family": "Fira Code",
+    "help_window-font-size": 10,
+    "help_window-font-weight": "bold",
+    "help_window-font-slant": "roman",
+    "help_window-font-overstrike": false,
+    "help_window-font-underline": false
 }

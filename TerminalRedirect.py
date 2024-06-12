@@ -1,8 +1,8 @@
 import customtkinter as ctk
 
 class TerminalRedirect:
-    def __init__(self, text_widget: ctk.CTkBaseClass) -> None:
-        self.widget = text_widget
+    def __init__(self, text_widget: ctk.CTkTextbox) -> None:
+        self.widget: ctk.CTkTextbox = text_widget
 
     def write(self, message) -> None:
         self.widget.configure(state="normal")

@@ -2,30 +2,20 @@
     "kind": "program",
     "body": [
         {
-            "kind": "variableDeclarationExpression",
-            "datatype": "array",
-            "identifier": "words",
-            "value": {
-                "kind": "callExpression",
-                "arguments": [
-                    {
-                        "kind": "stringLiteral",
-                        "value": "ast.json"
-                    }
-                ],
-                "caller": {
-                    "kind": "identifier",
-                    "symbol": "readFile"
-                }
-            },
-            "constant": "False"
-        },
-        {
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "identifier",
-                    "symbol": "words"
+                    "kind": "callExpression",
+                    "arguments": [
+                        {
+                            "kind": "stringLiteral",
+                            "value": ""
+                        }
+                    ],
+                    "caller": {
+                        "kind": "identifier",
+                        "symbol": "input"
+                    }
                 }
             ],
             "caller": {
