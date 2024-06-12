@@ -90,7 +90,7 @@ class ArrayValue(RuntimeValue):
         self.type = 'arrayValue'
         self.items = items
         self.methods = {
-            'append': NativeFunction(lambda args, scope: bim.append(self, args[0])),
+            'append': NativeFunction(lambda args, scope: bim.array_append(self, args[0])),
             'length': NativeFunction(lambda args, scope: bim.array_length(self)),
             'join': NativeFunction(lambda args, scope: bim.array_join(self, args[0]))
         }

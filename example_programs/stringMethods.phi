@@ -1,6 +1,6 @@
 # String methods in phi
 
-str string = "~ world ~ ~"
+str string = "$ world $ $"
 
 int len = string.length()
 
@@ -10,6 +10,11 @@ str fmt = string.format("hi", 3, 2.3)
 output(len)
 
 output(fmt)
+
+
+
+
+
 
 
 

@@ -277,72 +277,47 @@ class Interpreter:
         return NullValue()
 
     def evaluate_member_expression(self, member: MemberExpressionNode, env: Environment) -> None:
-        if isinstance(member.object, (MemberExpressionNode, StringLiteralNode)):
-            x = self.evaluate(member.object, env)
-        else:
-            x = member.object
+        x = self.evaluate(member.object, env) if isinstance(member.object, (MemberExpressionNode, StringLiteralNode)) else member.object
 
         if isinstance(x, Error):
             return x
 
-        if not isinstance(x, (ObjectValue, ArrayValue, StringValue)):
-            obj: ObjectValue = env.lookup(x)
-        else:
-            obj = x
+        obj = x if isinstance(x, (ObjectValue, ArrayValue, StringValue)) else env.lookup(x)
 
         if isinstance(obj, ObjectValue):
             if isinstance(member.property, IdentifierNode):
                 if isinstance(list(obj.properties.keys())[0], StringValue):
-                    old = obj.properties.copy()
-                    new = {key.value: old[key] for key in old if isinstance(key, StringValue)}
-                    obj.properties = new
+                    obj.properties = {key.value: value for key, value in obj.properties.items() if isinstance(key, StringValue)}
 
-                if member.property.symbol in obj.methods:
-                    return obj.methods[member.property.symbol]
-                elif member.property.symbol in obj.properties:
-                    return obj.properties[member.property.symbol]
-                else:
-                    v = self.evaluate(member.property, env)
-                    if isinstance(v, Error):
-                        return v
-                    elif v.value in obj.properties:
-                        return obj.properties[v.value]
-                    else:
-                        return KeyError(self.file_path, self, v, obj, v.column, v.line)
+                if method_or_property := obj.methods.get(
+                    member.property.symbol
+                ) or obj.properties.get(member.property.symbol):
+                    return method_or_property
 
-            elif isinstance(member.property, StringLiteralNode):
-                return obj.properties[member.property.value]
-            else:
-                return TypeError(self.file_path, self, f"Expected an identifier or a string value got {member.property}", self.column, self.line)
-        elif isinstance(obj, (ArrayValue, StringValue)):
+                v = self.evaluate(member.property, env)
+                if isinstance(v, Error):
+                    return v
+                return obj.properties.get(v.value, KeyError(self.file_path, self, v, obj, v.column, v.line))
+
+            if isinstance(member.property, StringLiteralNode):
+                return obj.properties.get(member.property.value, TypeError(self.file_path, self, f"Expected an identifier or a string value got {member.property}", self.column, self.line))
+
+        if isinstance(obj, (ArrayValue, StringValue)):
             if isinstance(member.property, IntegerLiteralNode):
-                if member.property.value not in obj.items:
-                    return KeyError(self.file_path, self, member.property.value, member.object.symbol, member.property.column, member.property.line)
+                return obj.items.get(member.property.value, KeyError(self.file_path, self, member.property.value, member.object.symbol, member.property.column, member.property.line))
 
-                else:
-                    return obj.items[member.property.value]
-            elif isinstance(member.property, IdentifierNode):
-                if member.property.symbol in obj.methods:
-                    return obj.methods[member.property.symbol]
+            if isinstance(member.property, IdentifierNode):
+                if method := obj.methods.get(member.property.symbol):
+                    return method
+
                 value = self.evaluate(member.property, env)
                 if isinstance(value, Error):
                     return value
-                value = value.value
-                return (
-                    obj.items[value]
-                    if value in obj.items
-                    else SyntaxError(
-                        self.file_path,
-                        self,
-                        f"'{member.property.symbol}' is not a valid method or property.",
-                        member.column,
-                        member.line,
-                    )
-                )
-            else:
-                return SyntaxError(self.file_path, self, f"'{member.property.symbol}' is not valid.", member.column, member.line)
-        else:
-            return KeyError(self.file_path, self, member.property.symbol, member.object.symbol, member.property.column, member.property.line)
+
+                return obj.items.get(value.value, SyntaxError(self.file_path, self, f"'{member.property.symbol}' is not a valid method or property.", member.column, member.line))
+
+        return KeyError(self.file_path, self, member.property.symbol, member.object.symbol, member.property.column, member.property.line)
+
 
     def evaluate_if_statement(self, if_statement: IfStatementNode, env: Environment) -> None:
         left: RuntimeValue = self.evaluate(if_statement.left_condition, env)
@@ -561,25 +536,7 @@ class Interpreter:
             module = ObjectValue({})
 
             if os.path.exists(path):
-                filenames = [f for f in os.listdir(path) if os.path.isfile(
-                    os.path.join(path, f))]
-
-                for file in filenames:
-                    if file.endswith('.phi'):
-                        n = file.split('.')[0]
-                        file = f'{path}/{file}'
-
-                        with open(file, 'r') as f:
-                            code = '\n'.join(f.readlines())
-
-                        code = run(code, file)
-                        if isinstance(code, ExportValue):
-                            module.properties.update({n: code.value})
-
-                if name.isupper():
-                    result = env.declare_variable(name, module, True)
-                else:
-                    result = env.declare_variable(name, module, False)
+                self.proccess_successful_import(env, path, name, module)
             else:
                 path = import_expression.values[i]
 
@@ -607,6 +564,28 @@ class Interpreter:
                         else env.declare_variable(name, code.value, False)
                     )
         return result
+
+    def proccess_successful_import(self, env, path, name, module):
+        from shell import run
+        filenames = [f for f in os.listdir(path) if os.path.isfile(
+                    os.path.join(path, f))]
+
+        for file in filenames:
+            if file.endswith('.phi'):
+                n = file.split('.')[0]
+                file = f'{path}/{file}'
+
+                with open(file, 'r') as f:
+                    code = '\n'.join(f.readlines())
+
+                code = run(code, file)
+                if isinstance(code, ExportValue):
+                    module.properties.update({n: code.value})
+
+        if name.isupper():
+            result = env.declare_variable(name, module, True)
+        else:
+            result = env.declare_variable(name, module, False)
 
     def evaluate_try_statement(self, try_statement: TryNode, env: Environment) -> None:
         result = NullValue()

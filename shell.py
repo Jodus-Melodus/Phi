@@ -10,8 +10,8 @@ ran = False
 
 # Parsing for the IDE to allow error checking while typing
 def incremental_parsing(source_code: str, file_path: str = '', x: bool = False):
-    global ran, Environment
-    Environment = create_global_environment(file_path)
+    global ran, environment
+    environment = create_global_environment(None, file_path)
     lexer = Lexer(source_code, file_path)
     tokens = lexer.tokenize()
     if isinstance(tokens, Error):
@@ -26,13 +26,13 @@ def incremental_parsing(source_code: str, file_path: str = '', x: bool = False):
             f.write(json.dumps(json.loads(str(ast).replace("'", '"')), indent=4))
         ran = True
 
-    return ast if x else ''
+    return ast
 
 # Run code
 def run(source_code: str, file_path: str = '') -> None | Error:
     ast = incremental_parsing(source_code, file_path, True)
     interpreter = Interpreter(file_path)
-    res = interpreter.evaluate(ast, Environment)
+    res = interpreter.evaluate(ast, environment)
     if isinstance(res, (Error, ExportValue)):
         return res
 

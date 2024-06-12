@@ -12,6 +12,9 @@ class Error:
         self.column = column
         self.line = line
 
+    def warning_message(self) -> str:
+        return ""
+
 class SyntaxError(Error):
     def __init__(self, file:str, stage: str, msg: str, column: int, line: int) -> None:
         super().__init__(file, column, line)

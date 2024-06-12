@@ -25,7 +25,7 @@ def output(value, file_path:str='') -> str:
     else:
         return value
 
-def input(file_path, arg:StringValue) -> StringValue:
+def phi_input(file_path, arg:StringValue) -> StringValue:
     sys.stdout.write(arg.value)
     return StringValue(sys.stdin.readline().strip(), arg.line, arg.column)
 

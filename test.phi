@@ -1,9 +1,6 @@
-
-
-array words = readFile("ast.json")
-
-output(words)
+import math as m
 
 
 
+output(5 / 3 % 2 * 23 + 234 - 4 ^ 2 // 3)
 
