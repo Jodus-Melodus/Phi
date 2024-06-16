@@ -718,16 +718,15 @@ Esc                 Hide intelliSense
         if editor := self.current_tab:
             self.line, self.column = editor.index("insert").split(".")
             self.status_bar.configure(text=f"Ln {self.line}, Col {self.column}")
-
             current_code = editor.get("0.0", "end")
             self.get_warnings(editor, current_code)
 
-        self.update_multi_cursors(e)
+            self.update_multi_cursors(e)
 
-        if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
-            self.intelli_sense_trigger()
-        if hasattr(self, "snippetMenu") and self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
-            self.show_snippets()
+            if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
+                self.intelli_sense_trigger()
+            if hasattr(self, "snippetMenu") and self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
+                self.show_snippets()
 
     def get_warnings(self, editor, current_code):
         if self.current_language != ".phi":
