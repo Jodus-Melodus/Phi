@@ -12,7 +12,7 @@ additionalFiles = [
     "modules",
     "frontend",
     "backend",
-    "example_programs",
+    "ExamplePrograms",
     "phi.ico"
 ]
 
