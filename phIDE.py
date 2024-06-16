@@ -621,9 +621,9 @@ Esc                 Hide intelliSense
                 tabs="1c"
             )
             
-            t = threading.Thread(target=self.update_syntax)
-            t.daemon = True
-            t.start()
+            update_syntax_thread = threading.Thread(target=self.update_syntax)
+            update_syntax_thread.daemon = True
+            update_syntax_thread.start()
 
             if self.current_language in self.language_syntax_patterns:
                 for tag in self.language_syntax_patterns[self.current_language]:
@@ -722,19 +722,19 @@ Esc                 Hide intelliSense
             current_code = editor.get("0.0", "end")
 
             if self.current_language == ".phi":
-                warning = shell.incremental_parsing(
-                    current_code, self.current_path)
                 self.warnings.configure(state="normal")
                 self.warnings.delete("0.0", "end")
                 self.warnings.configure(state="disabled")
 
-                if warning is Error:
-                    line = warning.line
-                    editor.tag_add("warning", f"{line}.0", f"{line}.end")
+                parser_warnings = shell.incremental_parsing(current_code, self.current_path)
 
-                    if warning.warning_message() not in self.warnings.get("0.0", "end"):
+                if isinstance(parser_warnings, list) and len(parser_warnings) > 0 and isinstance(parser_warnings[0], Error):
+                    for warning in parser_warnings:
+                        warning: Error = warning
+                        line = warning.line
+                        editor.tag_add("warning", f"{line}.0", f"{line}.end")
                         self.warnings.configure(state="normal")
-                        self.warnings.insert("end", warning.warning_message())
+                        self.warnings.insert("end", warning.warning_message() + '\n')
                         self.warnings.configure(state="disabled")
 
                 # Update warning tab's name to match total warnings
@@ -772,17 +772,19 @@ Esc                 Hide intelliSense
             if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
                 self.intelli_sense_trigger()
 
-            warning = shell.incremental_parsing(current_code, self.current_path)
             self.warnings.configure(state="normal")
             self.warnings.delete("0.0", "end")
             self.warnings.configure(state="disabled")
-            if warning is Error:
-                line = warning.line
-                editor.tag_add("warning", f"{line}.0", f"{line}.end")
 
-                if warning.warning_message() not in self.warnings.get("0.0", "end"):
+            parser_warnings = shell.incremental_parsing(current_code, self.current_path)
+
+            if isinstance(parser_warnings, list) and len(parser_warnings) > 0 and isinstance(parser_warnings[0], Error):
+                for warning in parser_warnings:
+                    warning: Error = warning
+                    line = warning.line
+                    editor.tag_add("warning", f"{line}.0", f"{line}.end")
                     self.warnings.configure(state="normal")
-                    self.warnings.insert("end", warning.warning_message())
+                    self.warnings.insert("end", warning.warning_message() + '\n')
                     self.warnings.configure(state="disabled")
 
             warnings = self.warnings.get("0.0", "end").strip().split("\n")
