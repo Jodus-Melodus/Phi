@@ -779,7 +779,6 @@ Esc                 Hide intelliSense
             if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
                 self.intelli_sense_trigger()
 
-            current_code = editor.get("0.0", "end")
             self.get_warnings(editor, current_code)
 
     def mouse_click_update(self, e=None) -> None:
