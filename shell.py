@@ -14,11 +14,14 @@ def incremental_parsing(source_code: str, file_path: str = '', x: bool = False):
     environment = create_global_environment(None, file_path)
     lexer = Lexer(source_code, file_path)
     tokens = lexer.tokenize()
-    if isinstance(tokens, Error):
+
+    if len(tokens) > 0 and isinstance(tokens[0], Error):
         return tokens
+    
     parser = Parser(tokens, file_path)
     ast = parser.generate_AST()
-    if isinstance(ast, Error):
+
+    if not isinstance(ast, ProgramNode):
         return ast
 
     if not ran:
@@ -29,7 +32,7 @@ def incremental_parsing(source_code: str, file_path: str = '', x: bool = False):
     return ast
 
 # Run code
-def run(source_code: str, file_path: str = '') -> None | Error:
+def run(source_code: str, file_path: str = '') -> None | Error | ExportValue:
     ast = incremental_parsing(source_code, file_path, True)
     interpreter = Interpreter(file_path)
     res = interpreter.evaluate(ast, environment)

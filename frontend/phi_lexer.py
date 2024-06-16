@@ -133,8 +133,9 @@ class Lexer:
     def get(self) -> str:
         return self.source_code[0]
 
-    def tokenize(self) -> list[Token]:
+    def tokenize(self) -> list[Token] | list[Error]:
         tokens = []
+        errors = []
 
         while len(self.source_code) > 0:
             char = self.get()
@@ -237,13 +238,13 @@ class Lexer:
                         string += self.get()
                         self.eat()
                         if self.source_code == '':
-                            return SyntaxError(
+                            errors.append(SyntaxError(
                                 self.file_path,
                                 self,
                                 "Expected a '\"'",
                                 self.column,
                                 self.line,
-                            )
+                            ))
                     self.eat()
                     tokens.append(
                         Token(TT.string_value, string, self.column, self.line)
@@ -255,13 +256,13 @@ class Lexer:
                         string += self.get()
                         self.eat()
                         if self.source_code == '':
-                            return SyntaxError(
+                            errors.append(SyntaxError(
                                 self.file_path,
                                 self,
                                 "Expected a '''",
                                 self.column,
                                 self.line,
-                            )
+                            ))
                     self.eat()
                     tokens.append(
                         Token(TT.string_value, string, self.column, self.line)
@@ -275,9 +276,9 @@ class Lexer:
                 case '!':
                     self.eat()
                     if self.get() != '=':
-                        return InvalidCharacterError(
+                        errors.append(InvalidCharacterError(
                             self.file_path, self, char, self.column, self.line
-                        )
+                        ))
                     tokens.append(
                         Token(TT.not_equal, f'{char}=', self.column, self.line)
                     )
@@ -336,13 +337,13 @@ class Lexer:
                                 number += char
                             elif char == '.':
                                 if decimal != 0:
-                                    return SyntaxError(
+                                    errors.append(SyntaxError(
                                         self.file_path,
                                         self,
                                         "Found two '.' ",
                                         self.column,
                                         self.line,
-                                    )
+                                    ))
                                 number += char
                                 decimal += 1
                             else:
@@ -388,12 +389,14 @@ class Lexer:
                                 Token(TT.identifier, name, self.column, self.line)
                             )
                     else:
-                        return InvalidCharacterError(
+                        errors.append(InvalidCharacterError(
                             self.file_path, self, char, self.column, self.line
-                        )
+                        ))
+                        self.eat()
 
         tokens.append(Token(TT.eof, 'eof', self.column + 1, self.line))
-        return tokens
+
+        return errors or tokens
 
 
 if __name__ == '__main__':

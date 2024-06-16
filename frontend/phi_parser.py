@@ -32,17 +32,19 @@ class Parser:
             return Token(TT.eof, '', self.column, self.line)
         return self.tokens[0]
 
-    def generate_AST(self) -> ProgramNode:
+    def generate_AST(self) -> ProgramNode | list[Error]:
+        errors = []
+
         while len(self.tokens) > 0 and self.get().type != TT.eof:
             if self.get().type == TT.lineend:
                 self.eat()
             else:
                 statement = self.parse_statement()
                 if isinstance(statement, Error):
-                    return statement
+                    errors.append(statement)
                 if statement:
                     self.program.body.append(statement)
-        return self.program
+        return errors or self.program
 
     def parse_statement(self) -> None:
         match self.get().type:

@@ -1,13 +1,13 @@
 from backend.values import *
 from frontend.phi_lexer import *
 
-class Node:
+class ASTNode:
     def __init__(self, line: int, column: int) -> None:
         self.line = line
         self.column = column
 
 # datatypes
-class IdentifierNode(Node):
+class IdentifierNode(ASTNode):
     def __init__(self, symbol: str, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'identifier'
@@ -19,7 +19,7 @@ class IdentifierNode(Node):
             'symbol': self.symbol
         })
 
-class RealLiteralNode(Node):
+class RealLiteralNode(ASTNode):
     def __init__(self, value, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'realLiteral'
@@ -31,7 +31,7 @@ class RealLiteralNode(Node):
             'value': self.value
         })
     
-class UnknownLiteralNode(Node):
+class UnknownLiteralNode(ASTNode):
     def __init__(self, value, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'unknownLiteral'
@@ -43,7 +43,7 @@ class UnknownLiteralNode(Node):
             'value': self.value
         })
 
-class IntegerLiteralNode(Node):
+class IntegerLiteralNode(ASTNode):
     def __init__(self, value, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'integerLiteral'
@@ -55,7 +55,7 @@ class IntegerLiteralNode(Node):
             'value': self.value
         })
 
-class StringLiteralNode(Node):
+class StringLiteralNode(ASTNode):
     def __init__(self, value, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'stringLiteral'
@@ -67,7 +67,7 @@ class StringLiteralNode(Node):
             'value': self.value
         })
 
-class NullLiteralNode(Node):
+class NullLiteralNode(ASTNode):
     def __init__(self, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'nullLiteral'
@@ -79,7 +79,7 @@ class NullLiteralNode(Node):
             'value': self.value
         })
 
-class ObjectLiteralNode(Node):
+class ObjectLiteralNode(ASTNode):
     def __init__(self, properties: list, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.kind = 'objectLiteral'
@@ -91,7 +91,7 @@ class ObjectLiteralNode(Node):
             'properties': self.properties
         })
 
-class PropertyLiteralNode(Node):
+class PropertyLiteralNode(ASTNode):
     def __init__(self, key, value, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.kind = 'propertyLiteral'
@@ -105,7 +105,7 @@ class PropertyLiteralNode(Node):
             'value': self.value
         })
 
-class ArrayLiteralNode(Node):
+class ArrayLiteralNode(ASTNode):
     def __init__(self, items: list, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.kind = 'arrayLiteral'
@@ -117,7 +117,7 @@ class ArrayLiteralNode(Node):
             'items': self.items
         })
 
-class ItemLiteralNode(Node):
+class ItemLiteralNode(ASTNode):
     def __init__(self, index, value, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.kind = 'itemLiteral'
@@ -131,7 +131,7 @@ class ItemLiteralNode(Node):
             'value': self.value
         })
 
-class ProgramNode(Node):
+class ProgramNode(ASTNode):
     def __init__(self, body: list = None, line: int = -1, column: int = -1) -> None:
         if body is None:
             body = []
@@ -145,7 +145,7 @@ class ProgramNode(Node):
             'body': self.body
         })
 
-class ExpressionNode(Node):
+class ExpressionNode(ASTNode):
     def __init__(self, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.kind = 'expression'
@@ -155,7 +155,7 @@ class ExpressionNode(Node):
             'kind': self.kind
         })
 
-class BinaryExpressionNode(Node):
+class BinaryExpressionNode(ASTNode):
     def __init__(self, left, operand: str, right, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.kind = 'binaryExpression'
@@ -172,7 +172,7 @@ class BinaryExpressionNode(Node):
         })
 
 # statements
-class IfStatementNode(Node):
+class IfStatementNode(ASTNode):
     def __init__(self, left_condition, operand, right_condition, body, else_body=None, line: int = -1, column: int = -1) -> None:
         if else_body is None:
             else_body = []
@@ -195,7 +195,7 @@ class IfStatementNode(Node):
         })
 
 
-class WhileStatementNode(Node):
+class WhileStatementNode(ASTNode):
     def __init__(self, left_condition, operand, right_condition, body, else_body=None, line: int = -1, column: int = -1) -> None:
         if else_body is None:
             else_body = []
@@ -217,7 +217,7 @@ class WhileStatementNode(Node):
             'else_body': self.else_body
         })
 
-class ForStatementNode(Node):
+class ForStatementNode(ASTNode):
     def __init__(self, declaration, left_condition, operand, right_condition, step, body, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.kind = 'forStatement'
@@ -239,7 +239,7 @@ class ForStatementNode(Node):
             'step': self.step
         })
 
-class ForEachStatementNode(Node):
+class ForEachStatementNode(ASTNode):
     def __init__(self, declaration, iterable, body, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.kind = 'forEachStatement'
@@ -255,7 +255,7 @@ class ForEachStatementNode(Node):
             'body': self.body
         })
 
-class DoWhileStatementNode(Node):
+class DoWhileStatementNode(ASTNode):
     def __init__(self, body, left_condition, operand, right_condition, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.kind = 'doWhileStatement'
@@ -273,7 +273,7 @@ class DoWhileStatementNode(Node):
             'right_condition': self.right_condition
         })
 
-class AssignmentExpressionNode(Node):
+class AssignmentExpressionNode(ASTNode):
     def __init__(self, assigne, value, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.kind = 'assignmentExpression'
@@ -287,7 +287,7 @@ class AssignmentExpressionNode(Node):
             'value': self.value
         })
 
-class AssignmentBinaryExpressionNode(Node):
+class AssignmentBinaryExpressionNode(ASTNode):
     def __init__(self, assigne, operand, value, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.kind = 'assignmentBinaryExpression'
@@ -303,7 +303,7 @@ class AssignmentBinaryExpressionNode(Node):
             'value': self.value
         })
 
-class VariableDeclarationExpressionNode(Node):
+class VariableDeclarationExpressionNode(ASTNode):
     def __init__(self, datatype: str, identifier: IdentifierNode, value, constant: bool = False, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.kind = 'variableDeclarationExpression'
@@ -321,7 +321,7 @@ class VariableDeclarationExpressionNode(Node):
             'constant': str(self.constant)
         })
 
-class FunctionDeclarationExpressionNode(Node):
+class FunctionDeclarationExpressionNode(ASTNode):
     def __init__(self, name: str, parameters: list = None, body: list = None, line: int = -1, column: int = -1) -> None:
         if parameters is None:
             parameters = []
@@ -341,7 +341,7 @@ class FunctionDeclarationExpressionNode(Node):
             'body': self.body
         })
 
-class MemberExpressionNode(Node):
+class MemberExpressionNode(ASTNode):
     def __init__(self, object, property, computed: bool, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.kind = 'memberExpression'
@@ -357,7 +357,7 @@ class MemberExpressionNode(Node):
             'computed':str(self.computed)
         })
 
-class CallExpression(Node):
+class CallExpression(ASTNode):
     def __init__(self, caller, arguments: list, line: int = -1, column: int = -1) -> None:
         super().__init__(line, column)
         self.kind = 'callExpression'
@@ -371,7 +371,7 @@ class CallExpression(Node):
             'caller': self.caller
         })
 
-class ReturnNode(Node):
+class ReturnNode(ASTNode):
     def __init__(self, value, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'returnExpression'
@@ -383,7 +383,7 @@ class ReturnNode(Node):
             'value': self.value
         })
 
-class ExportNode(Node):
+class ExportNode(ASTNode):
     def __init__(self, value, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'exportExpression'
@@ -395,7 +395,7 @@ class ExportNode(Node):
             'value': self.value
         })
 
-class ImportNode(Node):
+class ImportNode(ASTNode):
     def __init__(self, names, values:list, line: int, column: int) -> None:
         super().__init__(line, column)
         self.names = names
@@ -409,7 +409,7 @@ class ImportNode(Node):
             'values': self.values
         })
 
-class BreakNode(Node):
+class BreakNode(ASTNode):
     def __init__(self, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'breakExpression'
@@ -419,7 +419,7 @@ class BreakNode(Node):
             'kind': self.kind
         })
 
-class ContinueNode(Node):
+class ContinueNode(ASTNode):
     def __init__(self, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'continueExpression'
@@ -429,7 +429,7 @@ class ContinueNode(Node):
             'kind': self.kind
         })
 
-class TryNode(Node):
+class TryNode(ASTNode):
     def __init__(self, try_body, exception, except_body, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'tryStatement'
@@ -445,7 +445,7 @@ class TryNode(Node):
             'except_body': self.except_body
         })
 
-class ThrowNode(Node):
+class ThrowNode(ASTNode):
     def __init__(self, error, message:str, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'throwStatement'
@@ -459,7 +459,7 @@ class ThrowNode(Node):
             'msg':self.msg
         })
 
-class MatchNode(Node):
+class MatchNode(ASTNode):
     def __init__(self, value, matches, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'matchStatement'
@@ -473,7 +473,7 @@ class MatchNode(Node):
             'matches': self.matches
         })
 
-class CaseNode(Node):
+class CaseNode(ASTNode):
     def __init__(self, value, body, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'case'
@@ -487,7 +487,7 @@ class CaseNode(Node):
             'body': self.body
         })
     
-class DeleteNode(Node):
+class DeleteNode(ASTNode):
     def __init__(self, variable, line: int, column: int) -> None:
         super().__init__(line, column)
         self.kind = 'delete'
