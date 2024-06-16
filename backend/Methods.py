@@ -1,5 +1,5 @@
-from backend.values import *
-from frontend.errors import *
+from backend.RuntimeValue import *
+from frontend.Error import *
 
 def array_append(array: ArrayValue, value: RuntimeValue) -> ArrayValue:
     new_index = len(array.items)

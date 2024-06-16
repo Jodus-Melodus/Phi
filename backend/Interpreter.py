@@ -1,7 +1,7 @@
-from backend.values import *
-from frontend.ast_nodes import *
-from frontend.errors import *
-from backend.phi_environment import Environment, create_global_environment
+from frontend.ASTNodes import *
+from frontend.Error import *
+from backend.RuntimeValue import *
+from backend.Environment import Environment, create_global_environment
 import os
 
 boolean_table = {

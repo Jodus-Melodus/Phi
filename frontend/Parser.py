@@ -1,6 +1,6 @@
-from frontend.phi_lexer import Token, TT
-from frontend.ast_nodes import *
-from frontend.errors import *
+from frontend.Lexer import Token, TT
+from frontend.ASTNodes import *
+from frontend.Error import *
 
 class Parser:
     def __init__(self, tokens: list, filePath:str='') -> None:
@@ -42,7 +42,7 @@ class Parser:
                 statement = self.parse_statement()
                 if isinstance(statement, Error):
                     errors.append(statement)
-                if statement:
+                elif isinstance(statement, ASTNode):
                     self.program.body.append(statement)
         return errors or self.program
 
@@ -762,10 +762,11 @@ class Parser:
                 return ImportNode(names, values, self.line, self.column)
 
             case _:
+
                 return SyntaxError(
                     self.file_path,
                     self,
-                    f"Invalid token '{self.get().type}' found",
+                    f"Invalid token '{self.eat().type}' found",
                     self.column,
                     self.line,
                 )

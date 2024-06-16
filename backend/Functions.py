@@ -1,6 +1,5 @@
-from backend.values import *
-from frontend.errors import *
-
+from backend.RuntimeValue import *
+from frontend.Error import *
 from time import time, sleep
 from hashlib import *
 import sys

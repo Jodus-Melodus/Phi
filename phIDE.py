@@ -1,15 +1,15 @@
+from frontend.Error import Error
+from TerminalRedirect import TerminalRedirect
+from Dropdown import Dropdown
+from Dialog import Dialog
+import shell
+
 import json
 import sys, os
 import re
 import time
 import customtkinter as ctk
 import threading
-
-import shell
-from frontend.errors import Error
-from Dropdown import Dropdown
-from Dialog import Dialog
-from TerminalRedirect import TerminalRedirect
 
 # Checks if the settings file exists
 if os.path.exists("settings.json"):
@@ -720,34 +720,7 @@ Esc                 Hide intelliSense
             self.status_bar.configure(text=f"Ln {self.line}, Col {self.column}")
 
             current_code = editor.get("0.0", "end")
-
-            if self.current_language == ".phi":
-                self.warnings.configure(state="normal")
-                self.warnings.delete("0.0", "end")
-                self.warnings.configure(state="disabled")
-
-                parser_warnings = shell.incremental_parsing(current_code, self.current_path)
-
-                if isinstance(parser_warnings, list) and len(parser_warnings) > 0 and isinstance(parser_warnings[0], Error):
-                    for warning in parser_warnings:
-                        warning: Error = warning
-                        line = warning.line
-                        editor.tag_add("warning", f"{line}.0", f"{line}.end")
-                        self.warnings.configure(state="normal")
-                        self.warnings.insert("end", warning.warning_message() + '\n')
-                        self.warnings.configure(state="disabled")
-
-                # Update warning tab's name to match total warnings
-                warnings = self.warnings.get("0.0", "end").strip().split("\n")
-                tabs = list(self.bottom_tabview._tab_dict.keys())
-                current_name = tabs[1]
-
-                if (len(warnings) > 0) and (warnings[0] != ""):
-                    new_name = f"Warnings({len(warnings)})"
-                else:
-                    new_name = "Warnings"
-                if new_name not in self.bottom_tabview._tab_dict.keys():
-                    self.bottom_tabview.rename(current_name, new_name)
+            self.get_warnings(editor, current_code)
 
         self.update_multi_cursors(e)
 
@@ -756,11 +729,44 @@ Esc                 Hide intelliSense
         if hasattr(self, "snippetMenu") and self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
             self.show_snippets()
 
+    def get_warnings(self, editor, current_code):
+        if self.current_language != ".phi":
+            return
+        
+        self.warnings.configure(state="normal")
+        self.warnings.delete("0.0", "end")
+        self.warnings.configure(state="disabled")
+
+        parser_warnings = shell.incremental_parsing(current_code, self.current_path)
+
+        if isinstance(parser_warnings, list) and len(parser_warnings) > 0 and isinstance(parser_warnings[0], Error):
+            for warning in parser_warnings:
+                warning: Error = warning
+                line = warning.line
+                editor.tag_add("warning", f"{line}.0", f"{line}.end")
+                self.warnings.configure(state="normal")
+                self.warnings.insert("end", warning.warning_message() + '\n')
+                self.warnings.configure(state="disabled")
+
+        # Update warning tab's name to match total warnings
+        warnings = self.warnings.get("0.0", "end").strip().split("\n")
+        tabs = list(self.bottom_tabview._tab_dict.keys())
+
+        if (len(warnings) > 0) and (warnings[0] != ""):
+            new_name = f"Warnings({len(warnings)})"
+        else:
+            new_name = "Warnings"
+
+        current_name = tabs[1]
+
+        if new_name not in self.bottom_tabview._tab_dict.keys():
+            self.bottom_tabview.rename(current_name, new_name)
+
     def editor_press(self, e=None) -> None:
         if editor := self.current_tab:
             editor.tag_remove("warning", "0.0", "end")
-            current_code = editor.get("0.0", "end")
             name = self.center_tabview.get()
+
             if current_code != self.code:
                 self.code = current_code
                 self.title(f"{name}*")
@@ -772,30 +778,8 @@ Esc                 Hide intelliSense
             if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
                 self.intelli_sense_trigger()
 
-            self.warnings.configure(state="normal")
-            self.warnings.delete("0.0", "end")
-            self.warnings.configure(state="disabled")
-
-            parser_warnings = shell.incremental_parsing(current_code, self.current_path)
-
-            if isinstance(parser_warnings, list) and len(parser_warnings) > 0 and isinstance(parser_warnings[0], Error):
-                for warning in parser_warnings:
-                    warning: Error = warning
-                    line = warning.line
-                    editor.tag_add("warning", f"{line}.0", f"{line}.end")
-                    self.warnings.configure(state="normal")
-                    self.warnings.insert("end", warning.warning_message() + '\n')
-                    self.warnings.configure(state="disabled")
-
-            warnings = self.warnings.get("0.0", "end").strip().split("\n")
-            tabs = list(self.bottom_tabview._tab_dict.keys())
-            current_name = tabs[1]
-            if (len(warnings) > 0) and (warnings[0] != ""):
-                new_name = f"Warnings({len(warnings)})"
-            else:
-                new_name = "Warnings"
-            if new_name not in self.bottom_tabview._tab_dict.keys():
-                self.bottom_tabview.rename(current_name, new_name)
+            current_code = editor.get("0.0", "end")
+            self.get_warnings(editor, current_code)
 
     def mouse_click_update(self, e=None) -> None:
         if editor := self.current_tab:

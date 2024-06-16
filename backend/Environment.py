@@ -1,8 +1,8 @@
-from frontend.errors import *
-from backend.values import *
-from backend.built_in_functions import *
+from frontend.Error import *
+from frontend.ASTNodes import *
+from backend.RuntimeValue import *
+from backend.Functions import *
 import sys
-from frontend.ast_nodes import *
 
 class Environment:
     def __init__(self, parent=None, file_path:str='') -> None:

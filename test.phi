@@ -1,6 +1,4 @@
-import math as m
+int a = 5
 
 
-
-output(5 / 3 % 2 * 23 + 234 - 4 ^ 2 // 3)
-
+output("Hello world")

@@ -24,6 +24,6 @@ The documentation for the IDE can be found [here](phIDE.md)
 
 ## Style Guide
 
-The style guide can be found [here](style_guide.md)
+The style guide can be found [here](StyleGuide.md)
 
 [back to top](readme.md)

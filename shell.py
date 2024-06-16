@@ -1,8 +1,8 @@
-from frontend.errors import Error
-from frontend.phi_lexer import *
-from frontend.phi_parser import *
-from backend.phi_interpreter import *
-from backend.phi_environment import *
+from frontend.Error import Error
+from frontend.Lexer import *
+from frontend.Parser import *
+from backend.Interpreter import *
+from backend.Environment import *
 import json
 import os
 
