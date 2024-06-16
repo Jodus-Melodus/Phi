@@ -2,20 +2,21 @@
     "kind": "program",
     "body": [
         {
+            "kind": "variableDeclarationExpression",
+            "datatype": "int",
+            "identifier": "a",
+            "value": {
+                "kind": "integerLiteral",
+                "value": 5
+            },
+            "constant": "False"
+        },
+        {
             "kind": "callExpression",
             "arguments": [
                 {
-                    "kind": "callExpression",
-                    "arguments": [
-                        {
-                            "kind": "stringLiteral",
-                            "value": ""
-                        }
-                    ],
-                    "caller": {
-                        "kind": "identifier",
-                        "symbol": "input"
-                    }
+                    "kind": "stringLiteral",
+                    "value": "Hello world"
                 }
             ],
             "caller": {

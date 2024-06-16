@@ -766,6 +766,7 @@ Esc                 Hide intelliSense
         if editor := self.current_tab:
             editor.tag_remove("warning", "0.0", "end")
             name = self.center_tabview.get()
+            current_code = editor.get("0.0", "end")
 
             if current_code != self.code:
                 self.code = current_code
