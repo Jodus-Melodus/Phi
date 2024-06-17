@@ -19,4 +19,5 @@ class TerminalRedirect:
         line = self.widget.get("input_start", "input_end")
         self.widget.delete("input_start", "input_end")
         self.widget.configure(state="disabled")
+        
         return line

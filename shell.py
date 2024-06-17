@@ -64,12 +64,12 @@ def debug(file_path: str) -> None:
     with open("ast.json", 'w') as f:
         f.write(json.dumps(json.loads(str(ast)), indent=4))
     
-    # env = create_global_environment(None, file_path)
+    env = create_global_environment(None, file_path)
     
-    # interpreter = Interpreter(file_path)
-    # result = interpreter.evaluate(ast, env)
+    interpreter = Interpreter(file_path)
+    result = interpreter.evaluate(ast, env)
 
-    # print(result)
+    print(result)
 
 if __name__ == "__main__":
     while True:

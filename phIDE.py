@@ -278,6 +278,56 @@ class App(ctk.CTk):
         sys.stdout = TerminalRedirect(self.console)
         sys.stderr = TerminalRedirect(self.console)
 
+        self.pack()
+        self.bind_keys()
+
+        if len(sys.argv) > 1 and os.path.exists(sys.argv[1]):
+            self.add_tab(os.path.basename(sys.argv[1]))
+
+    def bind_keys(self) -> None:
+        # Bindings
+# Single Character Sequence
+        self.bind("<F1>", self.show_help)
+        self.bind("<F5>", self.run_file)
+        self.bind("<Return>", self.enter_commands)
+        self.bind("<Escape>", self.escape_key_press)
+        self.bind("<(>", self.auto_parenthesis)
+        self.bind("<[>", self.auto_bracket)
+        self.bind("<{>", self.auto_brace)
+        self.bind("<\">", self.auto_double_quote)
+        self.bind("<'>", self.auto_single_quote)
+        self.bind("<KeyPress>", self.key_press_update)
+        self.bind("<Down>", self.intelli_sense_down_key_press)
+        self.bind("<Up>", self.intelli_sense_up_key_press)
+
+# Double Character Sequence
+        self.bind("<Control-F4>", self.close_file)
+        self.bind("<Control-BackSpace>", self.backspace_entire_word)
+        self.bind("<Control-space>", self.intelli_sense_trigger)
+        self.bind("<Control-Tab>", self.next_tab)
+        self.bind("<Control-/>", self.comment_line)
+        self.bind("<Control-;>", self.show_snippets)
+        self.bind("<Control-]>", self.indent)
+        self.bind("<Control-[>", self.dedent)
+        self.bind("<Control-k>", self.open_folder)
+        self.bind("<Control-o>", self.open_files)
+        self.bind("<Control-s>", self.save_file)
+        self.bind("<Control-n>", self.new_file)
+        self.bind("<Control-z>", self.undo)
+        self.bind("<Control-h>", self.toggle_find_and_replace)
+        self.bind("<Control-g>", self.toggle_goto_menu)
+        self.bind("<Control-m>", self.toggle_available_modules)
+        self.bind("<Control-Home>", self.page_top)
+        self.bind("<Control-End>", self.page_bottom)
+# Triple Character Sequence
+        self.bind("<Control-Shift-z>", self.redo)
+        self.bind("<Control-Shift-Tab>", self.previous_tab)
+# Mouse Click
+        self.bind("<Button-1>", self.mouse_click_update)
+        self.bind("<ButtonRelease-1>", self.highlight_selected)
+        self.bind("<Button-3>", self.right_click_menu_click)
+
+    def pack(self) -> None:
         # Pack all the components
         self.available_modules_label.pack(
             padx=self.pad_x,
@@ -443,51 +493,6 @@ class App(ctk.CTk):
             expand=True,
             fill="both"
         )
-
-# Bindings
-# Single Character Sequence
-        self.bind("<F1>", self.show_help)
-        self.bind("<F5>", self.run_file)
-        self.bind("<Return>", self.enter_commands)
-        self.bind("<Escape>", self.escape_key_press)
-        self.bind("<(>", self.auto_parenthesis)
-        self.bind("<[>", self.auto_bracket)
-        self.bind("<{>", self.auto_brace)
-        self.bind("<\">", self.auto_double_quote)
-        self.bind("<'>", self.auto_single_quote)
-        self.bind("<KeyPress>", self.key_press_update)
-        self.bind("<Down>", self.intelli_sense_down_key_press)
-        self.bind("<Up>", self.intelli_sense_up_key_press)
-
-# Double Character Sequence
-        self.bind("<Control-F4>", self.close_file)
-        self.bind("<Control-BackSpace>", self.backspace_entire_word)
-        self.bind("<Control-space>", self.intelli_sense_trigger)
-        self.bind("<Control-Tab>", self.next_tab)
-        self.bind("<Control-/>", self.comment_line)
-        self.bind("<Control-;>", self.show_snippets)
-        self.bind("<Control-]>", self.indent)
-        self.bind("<Control-[>", self.dedent)
-        self.bind("<Control-k>", self.open_folder)
-        self.bind("<Control-o>", self.open_files)
-        self.bind("<Control-s>", self.save_file)
-        self.bind("<Control-n>", self.new_file)
-        self.bind("<Control-z>", self.undo)
-        self.bind("<Control-h>", self.toggle_find_and_replace)
-        self.bind("<Control-g>", self.toggle_goto_menu)
-        self.bind("<Control-m>", self.toggle_available_modules)
-        self.bind("<Control-Home>", self.page_top)
-        self.bind("<Control-End>", self.page_bottom)
-# Triple Character Sequence
-        self.bind("<Control-Shift-z>", self.redo)
-        self.bind("<Control-Shift-Tab>", self.previous_tab)
-# Mouse Click
-        self.bind("<Button-1>", self.mouse_click_update)
-        self.bind("<ButtonRelease-1>", self.highlight_selected)
-        self.bind("<Button-3>", self.right_click_menu_click)
-
-        if len(sys.argv) > 1 and os.path.exists(sys.argv[1]):
-            self.add_tab(os.path.basename(sys.argv[1]))
 
     def run(self) -> None:
         self.mainloop()

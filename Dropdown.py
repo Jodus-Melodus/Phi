@@ -11,7 +11,6 @@ class Dropdown:
         self.item_pad_y = item_pad_y
         self.item_font = item_font
         self.bg_color = bg_color
-
         self.ismapped = False
         self.current_selected_index = 0
 
