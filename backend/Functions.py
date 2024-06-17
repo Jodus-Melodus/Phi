@@ -28,6 +28,10 @@ def phi_input(file_path, arg:StringValue) -> StringValue:
     sys.stdout.write(arg.value)
     return StringValue(sys.stdin.readline().strip(), arg.line, arg.column)
 
+def phi_evaluate(file_path: str, arg:StringValue) -> NullValue:
+    from shell import run
+    return run(arg.value, file_path)
+
 def now(file_path) -> IntegerValue:
     return IntegerValue(time())
 

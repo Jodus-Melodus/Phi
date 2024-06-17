@@ -5,66 +5,66 @@ from backend.Environment import Environment, create_global_environment
 import os
 
 boolean_table = {
-    'T': True,
-    'F': False
+    "T": True,
+    "F": False
 }
 
 value_type_table = {
-    'integerValue': ['integerValue', 'realValue', 'unknownValue'],
-    'realValue': ['realValue', 'integerValue', 'unknownValue'],
-    'stringValue': ['stringValue', 'unknownValue'],
-    'arrayValue': ['arrayValue', 'unknownValue'],
-    'nullValue': ['nullValue', 'unknownValue'],
-    'booleanValue': ['booleanValue', 'unknownValue'],
-    'objectValue': ['objectValue', 'unknownValue'],
-    'functionValue': ['functionValue', 'unknownValue'],
-    'unknownValue': ['integerValue', 'realValue', 'booleanValue', 'objectValue', 'function', 'stringValue', 'nullValue', 'arrayValue', 'unknownValue']
+    "integerValue": ["integerValue", "realValue", "unknownValue"],
+    "realValue": ["realValue", "integerValue", "unknownValue"],
+    "stringValue": ["stringValue", "unknownValue"],
+    "arrayValue": ["arrayValue", "unknownValue"],
+    "nullValue": ["nullValue", "unknownValue"],
+    "booleanValue": ["booleanValue", "unknownValue"],
+    "objectValue": ["objectValue", "unknownValue"],
+    "functionValue": ["functionValue", "unknownValue"],
+    "unknownValue": ["integerValue", "realValue", "booleanValue", "objectValue", "function", "stringValue", "nullValue", "arrayValue", "unknownValue"]
 }
 
 
 class Interpreter:
-    def __init__(self, file_path: str = '') -> None:
+    def __init__(self, file_path: str = "") -> None:
         self.file_path = file_path
 
     def __str__(self) -> str:
-        return 'Interpreter'
+        return "Interpreter"
 
     def check_condition(self, left: RuntimeValue, operand: str, right: RuntimeValue) -> bool:
         res = False
         if isinstance(right, NullValue):
             if isinstance(left, (RealValue, IntegerValue)):
-                res = BooleanValue('T') if left.value != 0 else BooleanValue('F')
+                res = BooleanValue("T") if left.value != 0 else BooleanValue("F")
             elif isinstance(left, BooleanValue):
-                res = left.value == 'T'
+                res = left.value == "T"
             elif isinstance(left, StringValue):
-                res = left.value != ''
+                res = left.value != ""
         elif isinstance(left, (RealValue, IntegerValue)) and isinstance(right, (RealValue, IntegerValue)):
             match operand:
-                case '==':
+                case "==":
                     res = left.value == right.value
-                case '>':
+                case ">":
                     res = left.value > right.value
-                case '<':
+                case "<":
                     res = left.value < right.value
-                case '>=':
+                case ">=":
                     res = left.value >= right.value
-                case '<=':
+                case "<=":
                     res = left.value <= right.value
-                case '!=':
+                case "!=":
                     res = left.value != right.value
         elif isinstance(left, BooleanValue) and isinstance(right, BooleanValue):
             match operand:
-                case '&':
+                case "&":
                     res = boolean_table[left.value] and boolean_table[right.value]
-                case '|':
+                case "|":
                     res = boolean_table[left.value] or boolean_table[right.value]
-                case '!=':
+                case "!=":
                     res = boolean_table[left.value] != boolean_table[right.value]
         elif isinstance(left, StringValue) and isinstance(right, StringValue):
             match operand:
-                case '==':
+                case "==":
                     res = left.value == right.value
-                case '!=':
+                case "!=":
                     res = left.value != right.value
         else:
             return SyntaxError(self.file_path, self, "Invalid contidion", right.column, right.line)
@@ -100,7 +100,7 @@ class Interpreter:
 
     def evaluate_array_append_binary_expression(self, left: ArrayValue, right, operand: str) -> ArrayValue:
         match operand:
-            case '+':
+            case "+":
                 index = len(left.items)
                 left.items[index] = right
                 return ArrayValue(left.items)
@@ -109,58 +109,58 @@ class Interpreter:
 
     def evaluate_object_binary_expression(self, left: ObjectValue, right: ObjectValue, operand: str) -> ObjectValue:
         match operand:
-            case '+':
+            case "+":
                 return ObjectValue(left.properties.update(right.properties))
             case _:
                 return SyntaxError(self.file_path, self, "Cannot preform this operation on objects.", right.column, right.line)
 
     def evaluate_array_binary_expression(self, left: ArrayValue, right: ArrayValue, operand: str) -> ArrayValue:
         match operand:
-            case '+':
+            case "+":
                 return ArrayValue(left.items + right.items)
             case _:
                 return SyntaxError(self.file_path, self, "Cannot preform this operation on arrays.", right.column, right.line)
 
     def evaluate_string_binary_expression(self, left: StringValue, right: StringValue | IntegerValue | RealValue, operand: str) -> StringValue:
         match operand:
-            case '+':
+            case "+":
                 return StringValue(left.value + str(right.value))
             case _:
                 return SyntaxError(self.file_path, self, "Cannot preform this operation on strings.", right.column, right.line)
 
     def evaluate_numeric_binary_expression(self, left: IntegerValue | RealValue, right: IntegerValue | RealValue, operand: str) -> RealValue:
         match operand:
-            case '+':
+            case "+":
                 if isinstance(left, RealValue) or isinstance(right, RealValue):
                     return RealValue(left.value + right.value)
                 else:
                     return IntegerValue(left.value + right.value)
-            case '-':
+            case "-":
                 if isinstance(left, RealValue) or isinstance(right, RealValue):
                     return RealValue(left.value - right.value)
                 else:
                     return IntegerValue(left.value - right.value)
-            case '*':
+            case "*":
                 if isinstance(left, RealValue) or isinstance(right, RealValue):
                     return RealValue(left.value * right.value)
                 else:
                     return IntegerValue(left.value * right.value)
-            case '/':
+            case "/":
                 if right.value != 0:
                     return RealValue(left.value / right.value)
                 else:
                     return ZeroDivisionError(self.file_path, self, right.column, right.line)
-            case '^':
+            case "^":
                 if isinstance(left, RealValue) or isinstance(right, RealValue):
                     return RealValue(left.value ** right.value)
                 else:
                     return IntegerValue(left.value ** right.value)
-            case '%':
+            case "%":
                 if right.value != 0:
                     return IntegerValue(left.value % right.value)
                 else:
                     return ZeroDivisionError(self.file_path, self, right.column, right.line)
-            case '//':
+            case "//":
                 if right.value != 0:
                     return IntegerValue(left.value // right.value)
                 else:
@@ -192,9 +192,9 @@ class Interpreter:
                 assignment_expression.value, env)
             return env.assign_variable(varName.symbol, current_value)
         else:
-            return SyntaxError(self.file_path, self, 'Expected an identifier.', assignment_expression.assigne.column, assignment_expression.assigne.line)
+            return SyntaxError(self.file_path, self, "Expected an identifier.", assignment_expression.assigne.column, assignment_expression.assigne.line)
 
-    def process_variable_assignment(self, assignment_expression, env):
+    def process_variable_assignment(self, assignment_expression: AssignmentExpressionNode, env: Environment):
         varName = assignment_expression.assigne.symbol
         current_value = env.lookup(assignment_expression.assigne)
         if isinstance(current_value, Error):
@@ -205,7 +205,7 @@ class Interpreter:
             return value
 
         if value.type in value_type_table[value.type]:
-            return env.assignVariable(varName, value)
+            return env.assign_variable(varName, value)
         return TypeError(self.file_path, self, f"'{value.type}' is incompatible with '{current_value.type}'", value.column, value.line)
 
     def evaluate_variable_declaration_expression(self, declaration: VariableDeclarationExpressionNode, env: Environment) -> None:
@@ -531,7 +531,7 @@ class Interpreter:
 
             name = import_expression.names[i].symbol
             path = path.lower()
-            path = f'Modules/{path}'
+            path = f"Modules/{path}"
 
             module = ObjectValue({})
 
@@ -548,13 +548,13 @@ class Interpreter:
                     return SyntaxError(self.file_path, self, "Expected an identifier or a stringValue", import_expression.column, import_expression.line)
 
                 name = import_expression.names[i].symbol
-                directory = '/'.join(self.file_path.split('/')[:-1])
-                file = f'{directory}/{path.lower()}.phi'
+                directory = "/".join(self.file_path.split("/")[:-1])
+                file = f"{directory}/{path.lower()}.phi"
 
                 if not os.path.exists(file):
-                    return FileNotFoundError(self.file_path, self, f'{path}', import_expression.column, import_expression.line)
-                with open(file, 'r') as f:
-                    code = '\n'.join(f.readlines())
+                    return FileNotFoundError(self.file_path, self, f"{path}", import_expression.column, import_expression.line)
+                with open(file, "r") as f:
+                    code = "\n".join(f.readlines())
 
                 code = run(code, file)
                 if isinstance(code, ExportValue):
@@ -571,12 +571,12 @@ class Interpreter:
                     os.path.join(path, f))]
 
         for file in filenames:
-            if file.endswith('.phi'):
-                n = file.split('.')[0]
-                file = f'{path}/{file}'
+            if file.endswith(".phi"):
+                n = file.split(".")[0]
+                file = f"{path}/{file}"
 
-                with open(file, 'r') as f:
-                    code = '\n'.join(f.readlines())
+                with open(file, "r") as f:
+                    code = "\n".join(f.readlines())
 
                 code = run(code, file)
                 if isinstance(code, ExportValue):
@@ -618,19 +618,19 @@ class Interpreter:
 
     def evaluate_throw_statement(self, throw_statement: ThrowNode, env: Environment) -> None:
         match throw_statement.error.symbol:
-            case 'syntaxError':
+            case "syntaxError":
                 return SyntaxError(self.file_path, "", throw_statement.msg.value, throw_statement.column, throw_statement.line)
-            case 'zeroDivisionError':
+            case "zeroDivisionError":
                 return ZeroDivisionError(self.file_path, "", throw_statement.column, throw_statement.line)
-            case 'typeError':
+            case "typeError":
                 return TypeError(self.file_path, "", throw_statement.msg.value, throw_statement.column, throw_statement.line)
-            case 'keyError':
+            case "keyError":
                 return KeyError(self.file_path, "", "", "", throw_statement.column, throw_statement.line)
-            case 'notImplementedError':
+            case "notImplementedError":
                 return NotImplementedError(self.file_path, "", throw_statement.msg.value, throw_statement.column, throw_statement.line)
-            case 'invalidCharacterError':
+            case "invalidCharacterError":
                 return InvalidCharacterError(self.file_path, "", throw_statement.msg.value, throw_statement.column, throw_statement.line)
-            case 'nameError':
+            case "nameError":
                 return NameError(self.file_path, "", throw_statement.msg.value, throw_statement.column, throw_statement.line)
 
     def evaluate_match_statement(self, match_statement: MatchNode, env: Environment) -> None:
@@ -661,62 +661,62 @@ class Interpreter:
         if isinstance(astNode, (str, float, int, Error)):
             return astNode
         match astNode.kind:
-            case 'program':
+            case "program":
                 return self.evaluate_program(astNode, env)
-            case 'binaryExpression':
+            case "binaryExpression":
                 return self.evaluate_binary_expression(astNode, env)
-            case 'identifier':
+            case "identifier":
                 return self.evaluate_identifier_expression(astNode, env)
-            case 'assignmentExpression':
+            case "assignmentExpression":
                 return self.evaluate_assignment_expression(astNode, env)
-            case 'variableDeclarationExpression':
+            case "variableDeclarationExpression":
                 return self.evaluate_variable_declaration_expression(astNode, env)
-            case 'functionDeclaration':
+            case "functionDeclaration":
                 return self.evaluate_function_declaration(astNode, env)
-            case 'objectLiteral':
+            case "objectLiteral":
                 return self.evaluate_object_expression(astNode, env)
-            case 'callExpression':
+            case "callExpression":
                 return self.evaluate_call_expression(astNode, env)
-            case 'memberExpression':
+            case "memberExpression":
                 return self.evaluate_member_expression(astNode, env)
-            case 'ifStatement':
+            case "ifStatement":
                 return self.evaluate_if_statement(astNode, env)
-            case 'whileStatement':
+            case "whileStatement":
                 return self.evaluate_while_statement(astNode, env)
-            case 'forStatement':
+            case "forStatement":
                 return self.evaluate_for_statement(astNode, env)
-            case 'forEachStatement':
+            case "forEachStatement":
                 return self.evaluate_for_each_statement(astNode, env)
-            case 'doWhileStatement':
+            case "doWhileStatement":
                 return self.evaluate_do_while_statement(astNode, env)
-            case 'arrayLiteral':
+            case "arrayLiteral":
                 return self.evaluate_array_expression(astNode, env)
-            case 'returnExpression':
+            case "returnExpression":
                 return self.evaluate_return_expression(astNode, env)
-            case 'assignmentBinaryExpression':
+            case "assignmentBinaryExpression":
                 return self.evaluate_assignment_binary_expression(astNode, env)
-            case 'exportExpression':
+            case "exportExpression":
                 return self.evaluate_export_expression(astNode, env)
-            case 'importExpression':
+            case "importExpression":
                 return self.evaluate_import_expression(astNode, env)
-            case 'tryStatement':
+            case "tryStatement":
                 return self.evaluate_try_statement(astNode, env)
-            case 'throwStatement':
+            case "throwStatement":
                 return self.evaluate_throw_statement(astNode, env)
-            case 'matchStatement':
+            case "matchStatement":
                 return self.evaluate_match_statement(astNode, env)
-            case 'delete':
+            case "delete":
                 return self.evaluate_delete_statement(astNode, env)
 
-            case 'integerLiteral':
+            case "integerLiteral":
                 return IntegerValue(astNode.value, astNode.line, astNode.column)
-            case 'realLiteral':
+            case "realLiteral":
                 return RealValue(astNode.value, astNode.line, astNode.column)
-            case 'stringLiteral':
+            case "stringLiteral":
                 return StringValue(astNode.value, astNode.line, astNode.column)
-            case 'unknownLiteral':
+            case "unknownLiteral":
                 return UnknownValue(astNode.value, astNode.line, astNode.column)
-            case 'nullLiteral':
+            case "nullLiteral":
                 return NullValue()
             case _:
                 return NotImplementedError(self.file_path, self, astNode.kind, astNode.column, astNode.line)

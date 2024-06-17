@@ -337,9 +337,3 @@ class Lexer:
                                     self.line,
                                 )
                             )
-
-
-
-if __name__ == '__main__':
-    l = Lexer(input('> '))
-    print(l.tokenize())

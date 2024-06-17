@@ -3,7 +3,7 @@ from frontend.ASTNodes import *
 from frontend.Error import *
 
 class Parser:
-    def __init__(self, tokens: list, filePath:str='') -> None:
+    def __init__(self, tokens: list, filePath:str="") -> None:
         self.file_path = filePath
         self.tokens = tokens
         self.program = ProgramNode([])
@@ -12,14 +12,14 @@ class Parser:
         self.line = 0
 
         self.datatypeMap = {
-            'int':IntegerLiteralNode(0, self.line, self.column),
-            'real':RealLiteralNode(0.0, self.line, self.column),
-            'string':StringLiteralNode('', self.line, self.column),
-            'array':ArrayLiteralNode([], self.line, self.column),
-            'object':ObjectLiteralNode([], self.line, self.column),
-            'bool':IdentifierNode('F', self.line, self.column),
-            'lambda':NullLiteralNode(self.line, self.column),
-            'unknown':NullLiteralNode(self.line, self.column)
+            "int":IntegerLiteralNode(0, self.line, self.column),
+            "real":RealLiteralNode(0.0, self.line, self.column),
+            "string":StringLiteralNode("", self.line, self.column),
+            "array":ArrayLiteralNode([], self.line, self.column),
+            "object":ObjectLiteralNode([], self.line, self.column),
+            "bool":IdentifierNode('F', self.line, self.column),
+            "lambda":NullLiteralNode(self.line, self.column),
+            "unknown":NullLiteralNode(self.line, self.column)
         }
 
     def eat(self) -> Token:
@@ -29,7 +29,8 @@ class Parser:
 
     def get(self) -> Token:
         if len(self.tokens) == 0:
-            return Token(TT.eof, '', self.column, self.line)
+            return Token(TT.eof, "", self.column, self.line)
+        
         return self.tokens[0]
 
     def generate_AST(self) -> ProgramNode | list[Error]:
@@ -44,6 +45,7 @@ class Parser:
                     errors.append(statement)
                 elif isinstance(statement, ASTNode):
                     self.program.body.append(statement)
+
         return errors or self.program
 
     def parse_statement(self) -> None:
@@ -353,7 +355,7 @@ class Parser:
             return SyntaxError(self.file_path, self, "Expected a '('", self.column, self.line)
 
         self.eat()
-        if self.get().type not in ('int', 'real', 'string'):
+        if self.get().type not in ("int", "real", "string"):
             return SyntaxError(self.file_path, self, "Expected variable declaration", self.column, self.line)
         declaration = self.parse_variable_declaration()
         if isinstance(declaration, Error):
@@ -438,14 +440,14 @@ class Parser:
         if self.get().type in (TT.identifier, TT.anonymous):
             name = self.eat().value
         else:
-            return SyntaxError(self.file_path, self, 'Expected a name', self.column, self.line)
+            return SyntaxError(self.file_path, self, "Expected a name", self.column, self.line)
 
         args = self.parse_arguments()
         if isinstance(args, Error):
             return args
         parameters = []
         for parameter in args:
-            if parameter.kind == 'identifier':
+            if parameter.kind == "identifier":
                 parameters.append(parameter)
             else:
                 return SyntaxError(self.file_path, self, "Expected parameters to be of string type.", self.column, self.line)
@@ -478,7 +480,7 @@ class Parser:
         if self.get().type != TT.assignment_operator:
             if self.get().type in (TT.eof, TT.lineend):
                 self.eat()
-            if datatype in ('int', 'string', 'real', 'array', 'object', 'bool', 'lambda', 'unknown'):
+            if datatype in ("int", "string", "real", "array", "object", "bool", "lambda", "unknown"):
                 return VariableDeclarationExpressionNode(datatype, identifier, self.datatypeMap[datatype], constant, self.line, self.column)
             else:
                 return SyntaxError(self.file_path, self, "Expected a variable declaration", self.column, self.line)
@@ -539,7 +541,7 @@ class Parser:
                 else:
                     return SyntaxError(self.file_path, self, "Expected a ',' or a '}'", self.column, self.line)
             else:
-                return SyntaxError(self.file_path, self, 'Something went wrong', self.column, self.line)
+                return SyntaxError(self.file_path, self, "Something went wrong", self.column, self.line)
         self.eat()
         return ObjectLiteralNode(properties, self.line, self.column)
 
@@ -671,7 +673,7 @@ class Parser:
                 if prop != None:
                     if isinstance(prop, Error):
                         return prop
-                    if prop.kind != ('identifier'):
+                    if prop.kind != ("identifier"):
                         return SyntaxError(self.file_path, self, "Invalid syntax", self.column, self.line)
             else:
                 computed = False
