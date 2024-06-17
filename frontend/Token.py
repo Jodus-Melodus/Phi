@@ -6,4 +6,4 @@ class Token:
         self.line = line
 
     def __repr__(self) -> str:
-        return f'{self.type}:{self.value}'
+        return f"{self.type}:{self.value}"

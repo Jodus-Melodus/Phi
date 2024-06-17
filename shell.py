@@ -9,7 +9,7 @@ import os
 ran = False
 
 # Parsing for the IDE to allow error checking while typing
-def incremental_parsing(source_code: str, file_path: str = '', x: bool = False):
+def incremental_parsing(source_code: str, file_path: str = "", x: bool = False):
     global ran, environment
     environment = create_global_environment(None, file_path)
     lexer = Lexer(source_code, file_path)
@@ -25,39 +25,41 @@ def incremental_parsing(source_code: str, file_path: str = '', x: bool = False):
         return ast
 
     if not ran:
-        with open('ast.json', 'w') as f:
-            f.write(json.dumps(json.loads(str(ast).replace("'", '"')), indent=4))
+        with open("ast.json", 'w') as f:
+
+            f.write(json.dumps(json.loads(str(ast)), indent=4))
         ran = True
 
     return ast
 
 # Run code
-def run(source_code: str, file_path: str = '') -> None | Error | ExportValue:
+def run(source_code: str, file_path: str = "") -> None | Error | ExportValue:
     ast = incremental_parsing(source_code, file_path, True)
     interpreter = Interpreter(file_path)
     res = interpreter.evaluate(ast, environment)
+    
     if isinstance(res, (Error, ExportValue)):
         return res
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     while True:
-        command = input('phi > ')
-        cmd, *parameters = command.split(' ')
+        command = input("phi > ")
+        cmd, *parameters = command.split(" ")
 
         match cmd:
-            case 'phi':
+            case "phi":
                 while True:
-                    code = input('run > ')
+                    code = input("run > ")
                     if not code:
                         break
                     res = run(code)
                     if isinstance(res, Error):
                         print(res)
-            case 'exit':
+            case "exit":
                 exit()
-            case 'run':
+            case "run":
                 if len(parameters) == 0:
-                    print('Expected a filepath')
+                    print("Expected a filepath")
                 elif len(parameters) == 1:
                     file_path = parameters[0]
                     if os.path.isfile(file_path):
@@ -67,18 +69,18 @@ if __name__ == '__main__':
                             if isinstance(res, Error):
                                 print(res)
                     else:
-                        print('File not found')
+                        print("File not found")
                 else:
-                    print('Too many arguments')
-            case 'help':
-                helpMessage = '''\
+                    print("Too many arguments")
+            case "help":
+                helpMessage = """\
 Commands:
 ---------
 exit                    Exits the program
 help                    Prints this message
 phi [code]              Executes the given Phi-code
 run [filepath]          Runs the code in the given file
-                '''
+                """
                 print(helpMessage)
             case _:
                 print(f"'{cmd}' is not a valid command")

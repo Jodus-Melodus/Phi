@@ -5,14 +5,14 @@ from backend.Functions import *
 import sys
 
 class Environment:
-    def __init__(self, parent=None, file_path:str='') -> None:
+    def __init__(self, parent=None, file_path:str="") -> None:
         self.file_path = file_path
         self.parent = parent
         self.variables = {}
         self.constants = {}
 
     def __str__(self) -> str:
-        return 'Environment'
+        return "Environment"
 
     def __repr__(self) -> str:
         return str({
@@ -31,7 +31,7 @@ class Environment:
         return var_value
 
     def declare_variable(self, variable_name: str, var_value, constant:bool=False) -> None:
-        if ((variable_name in self.variables) or (variable_name in self.constants)) and (variable_name != '~'):
+        if ((variable_name in self.variables) or (variable_name in self.constants)) and (variable_name != "~"):
             return SyntaxError(self.file_path, self, f"Variable '{variable_name}' already defined.", 0, 0)
         if constant:
             self.constants[variable_name] = var_value
@@ -64,26 +64,25 @@ class Environment:
         env = self.resolve(variable_name)
         del env.variables[variable_name]
 
-def create_global_environment(parent:Environment|None=None, file_path:str='') -> Environment:
+def create_global_environment(parent:Environment|None=None, file_path:str="") -> Environment:
     env = Environment(parent, file_path)
     # functions
-    env.declare_variable('output', NativeFunction(lambda args, scope : sys.stdout.write(str(output(args[0], file_path)) + '\n')), True)
-    env.declare_variable('input', NativeFunction(lambda args, scope : phi_input(file_path, args[0])), True)
-    env.declare_variable('type', NativeFunction(lambda args, scope : type_(file_path, args[0])), True)
-    env.declare_variable('hash', NativeFunction(lambda args, scope : hash(file_path, args[0])), True)
-    env.declare_variable('Str', NativeFunction(lambda args, scope: hard_cast_string(file_path, args[0])), True)
-    env.declare_variable('Int', NativeFunction(lambda args, scope: hard_cast_integer(file_path, args[0])), True)
-    env.declare_variable('Real', NativeFunction(lambda args, scope: hard_cast_real(file_path, args[0])), True)
-    env.declare_variable('readFile', NativeFunction(lambda args, scope: read_file(file_path, args[0])), True)
-
-    # Move to modules
-    env.declare_variable('now', NativeFunction(lambda args, scope : now(file_path, )), True)
-    env.declare_variable('wait', NativeFunction(lambda args, scope : wait(file_path, args[0])), True)
+    env.declare_variable("output", NativeFunction(lambda args, scope : sys.stdout.write(str(output(args[0], file_path)) + "\n")), True)
+    env.declare_variable("input", NativeFunction(lambda args, scope : phi_input(file_path, args[0])), True)
+    env.declare_variable("type", NativeFunction(lambda args, scope : type_(file_path, args[0])), True)
+    env.declare_variable("hash", NativeFunction(lambda args, scope : hash(file_path, args[0])), True)
+    env.declare_variable("Str", NativeFunction(lambda args, scope: hard_cast_string(file_path, args[0])), True)
+    env.declare_variable("Int", NativeFunction(lambda args, scope: hard_cast_integer(file_path, args[0])), True)
+    env.declare_variable("Real", NativeFunction(lambda args, scope: hard_cast_real(file_path, args[0])), True)
+    env.declare_variable("readFile", NativeFunction(lambda args, scope: read_file(file_path, args[0])), True)
+    env.declare_variable("now", NativeFunction(lambda args, scope : now(file_path, )), True)
+    env.declare_variable("wait", NativeFunction(lambda args, scope : wait(file_path, args[0])), True)
+    env.declare_variable("eval", NativeFunction(lambda args, scope : phi_evaluate(file_path, args[0])), True)
 
     # variables
-    env.declare_variable('_', NullValue(), True)
-    env.declare_variable('?', UnknownValue(NullValue()))
-    env.declare_variable('T', BooleanValue("T"), True)
-    env.declare_variable('F', BooleanValue("F"), True)
+    env.declare_variable("_", NullValue(), True)
+    env.declare_variable("?", UnknownValue(NullValue()))
+    env.declare_variable("T", BooleanValue("T"), True)
+    env.declare_variable("F", BooleanValue("F"), True)
     
     return env
