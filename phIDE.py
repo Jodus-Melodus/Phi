@@ -743,9 +743,12 @@ Esc                 Hide intelliSense
             for warning in parser_warnings:
                 warning: Error = warning
                 line = warning.line
+
+                program_line = editor.get(f"{warning.line}.0", f"{warning.line}.end")
+
                 editor.tag_add("warning", f"{line}.0", f"{line}.end")
                 self.warnings.configure(state="normal")
-                self.warnings.insert("end", warning.warning_message() + '\n')
+                self.warnings.insert("end", f"{program_line}\n{repr(warning)}\n")
                 self.warnings.configure(state="disabled")
 
         # Update warning tab's name to match total warnings
@@ -753,7 +756,7 @@ Esc                 Hide intelliSense
         tabs = list(self.bottom_tabview._tab_dict.keys())
 
         if (len(warnings) > 0) and (warnings[0] != ""):
-            new_name = f"Warnings({len(warnings)})"
+            new_name = f"Warnings({len(parser_warnings)})"
         else:
             new_name = "Warnings"
 

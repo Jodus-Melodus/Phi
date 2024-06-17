@@ -60,13 +60,16 @@ def debug(file_path: str) -> None:
 
     if not isinstance(ast, ProgramNode):
         return
-    
-    env = create_global_environment(None, file_path)
-    
-    interpreter = Interpreter(file_path)
-    result = interpreter.evaluate(ast, env)
 
-    print(result)
+    with open("ast.json", 'w') as f:
+        f.write(json.dumps(json.loads(str(ast)), indent=4))
+    
+    # env = create_global_environment(None, file_path)
+    
+    # interpreter = Interpreter(file_path)
+    # result = interpreter.evaluate(ast, env)
+
+    # print(result)
 
 if __name__ == "__main__":
     while True:
