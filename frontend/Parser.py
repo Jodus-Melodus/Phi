@@ -473,10 +473,13 @@ class Parser:
 
     def parse_variable_declaration(self) -> None:
         datatype = self.eat().type
+        
         if self.get().type == TT.eof:
             return SyntaxError(self.file_path, self, "Expected an identifier", self.column, self.line)
+        
         identifier = self.eat().value
         constant = bool(identifier.isupper())
+
         if self.get().type != TT.assignment_operator:
             if self.get().type in (TT.eof, TT.lineend):
                 self.eat()
@@ -486,10 +489,14 @@ class Parser:
                 return SyntaxError(self.file_path, self, "Expected a variable declaration", self.column, self.line)
         else:
             self.eat()
-            statement = self.parse_statement()
-            if isinstance(statement, Error):
-                return statement
-            return VariableDeclarationExpressionNode(datatype, identifier, statement, constant, self.line, self.column)
+
+            if self.get().type in [TT.int_value, TT.string_value, TT.real_value, TT.identifier]:
+                statement = self.parse_statement()
+                if isinstance(statement, Error):
+                    return statement
+                return VariableDeclarationExpressionNode(datatype, identifier, statement, constant, self.line, self.column)
+            else:
+                return SyntaxError(self.file_path, self, "Expected a value", self.column, self.line)
 
     def parse_assignment_expression(self) -> None:
         left = self.parse_object_expression()

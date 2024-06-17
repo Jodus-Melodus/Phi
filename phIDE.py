@@ -719,6 +719,7 @@ Esc                 Hide intelliSense
         if editor := self.current_tab:
             self.line, self.column = editor.index("insert").split(".")
             self.status_bar.configure(text=f"Ln {self.line}, Col {self.column}")
+
             current_code = editor.get("0.0", "end")
             self.get_warnings(editor, current_code)
 
@@ -735,7 +736,6 @@ Esc                 Hide intelliSense
         
         self.warnings.configure(state="normal")
         self.warnings.delete("0.0", "end")
-        self.warnings.configure(state="disabled")
 
         parser_warnings = shell.incremental_parsing(current_code, self.current_path)
 
@@ -744,22 +744,19 @@ Esc                 Hide intelliSense
                 warning: Error = warning
                 line = warning.line
 
-                program_line = editor.get(f"{warning.line}.0", f"{warning.line}.end")
+                program_line = editor.get(f"{line}.0", f"{line}.end")
 
                 editor.tag_add("warning", f"{line}.0", f"{line}.end")
-                self.warnings.configure(state="normal")
                 self.warnings.insert("end", f"{program_line}\n{repr(warning)}\n")
-                self.warnings.configure(state="disabled")
 
-        # Update warning tab's name to match total warnings
-        warnings = self.warnings.get("0.0", "end").strip().split("\n")
-        tabs = list(self.bottom_tabview._tab_dict.keys())
-
-        if (len(warnings) > 0) and (warnings[0] != ""):
+            # Update warning tab's name to match total warnings
             new_name = f"Warnings({len(parser_warnings)})"
         else:
+            editor.tag_remove("warning", "0.0", "end")
             new_name = "Warnings"
 
+        self.warnings.configure(state="disabled")
+        tabs = list(self.bottom_tabview._tab_dict.keys())
         current_name = tabs[1]
 
         if new_name not in self.bottom_tabview._tab_dict.keys():
@@ -767,7 +764,6 @@ Esc                 Hide intelliSense
 
     def editor_press(self, _=None) -> None:
         if editor := self.current_tab:
-            editor.tag_remove("warning", "0.0", "end")
             name = self.center_tabview.get()
             current_code = editor.get("0.0", "end")
 
@@ -791,11 +787,12 @@ Esc                 Hide intelliSense
     def highlight_selected(self, _=None) -> None:
         if not (editor := self.current_tab):
             return
-        text = editor.get("0.0", "end").split("\n")
+        
         if editor.tag_ranges("sel"):
-            w = editor.get(ctk.SEL_FIRST, ctk.SEL_LAST)
-            word = re.escape(w)
-            pattern = f"({word})"
+            word = editor.get(ctk.SEL_FIRST, ctk.SEL_LAST)
+            pattern = f"({re.escape(word)})"
+            text = editor.get("0.0", "end").split("\n")
+
             for ln, line in enumerate(text):
                 matches = [(match.start(), match.end())
                            for match in re.finditer(pattern, line)]
