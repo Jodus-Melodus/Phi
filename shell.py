@@ -40,6 +40,33 @@ def run(source_code: str, file_path: str = "") -> None | Error | ExportValue:
     
     if isinstance(res, (Error, ExportValue)):
         return res
+    
+def debug(file_path: str) -> None:
+    with open(file_path, 'r') as f:
+        source_code = '\n'.join(f.readlines())
+
+    lexer = Lexer(source_code, file_path)
+    tokens = lexer.tokenize()
+
+    print(tokens)
+
+    if len(tokens) > 0 and isinstance(tokens[0], Error):
+        return
+    
+    parser = Parser(tokens, file_path)
+    ast = parser.generate_AST()
+
+    print(ast)
+
+    if not isinstance(ast, ProgramNode):
+        return
+    
+    env = create_global_environment(None, file_path)
+    
+    interpreter = Interpreter(file_path)
+    result = interpreter.evaluate(ast, env)
+
+    print(result)
 
 if __name__ == "__main__":
     while True:
@@ -72,6 +99,13 @@ if __name__ == "__main__":
                         print("File not found")
                 else:
                     print("Too many arguments")
+            case "debug":
+                if len(parameters) > 0:
+                    debug(parameters[0])
+                else:
+                    print("Please provide a file path")
+            case "clear" | "cls":
+                os.system("cls" if os.name == "nt" else "clear")
             case "help":
                 helpMessage = """\
 Commands:

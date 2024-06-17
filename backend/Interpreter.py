@@ -657,7 +657,7 @@ class Interpreter:
         env.delete_variable(delete_statement.variable)
         return NullValue()
 
-    def evaluate(self, astNode, env: Environment) -> NullValue | IntegerValue | ObjectValue | ArrayValue | StringValue | None:
+    def evaluate(self, astNode: ASTNode, env: Environment) -> RuntimeValue | None:
         if isinstance(astNode, (str, float, int, Error)):
             return astNode
         match astNode.kind:

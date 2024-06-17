@@ -3,8 +3,8 @@ from frontend.ASTNodes import *
 from frontend.Error import *
 
 class Parser:
-    def __init__(self, tokens: list, filePath:str="") -> None:
-        self.file_path = filePath
+    def __init__(self, tokens: list, file_path:str="") -> None:
+        self.file_path = file_path
         self.tokens = tokens
         self.program = ProgramNode([])
         self.conditional_operators = (TT.equal, TT.not_equal, TT.greater_than, TT.less_than, TT.greater_than_equal, TT.less_than_equal, TT._and, TT._or)

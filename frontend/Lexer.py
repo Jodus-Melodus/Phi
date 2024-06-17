@@ -46,7 +46,7 @@ class Lexer:
         self.column = 1
 
     def __str__(self) -> str:
-        return 'Lexer'
+        return "Lexer"
 
     def eat(self) -> None:
         self.column += 1
