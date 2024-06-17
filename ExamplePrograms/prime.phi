@@ -12,6 +12,7 @@ fn factors(number){
 }
 
 fn checkPrime(number){
+
 	array facs = factors(number)
 
 	<- if (facs.length() == 2){
@@ -37,5 +38,6 @@ fn calcNPrimes(n){
 
 
 output(calcNPrimes(50))
+
 
 

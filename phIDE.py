@@ -105,7 +105,6 @@ class App(ctk.CTk):
         self.center_panel = ctk.CTkFrame(self)
         self.goto_panel = ctk.CTkFrame(self.right_panel)
         self.find_and_replace_panel = ctk.CTkFrame(self.right_panel)
-        self.multi_cursor_panel = ctk.CTkFrame(self.right_panel)
         self.menu_bar = ctk.CTkFrame(self, height=20)
         self.available_modules_panel = ctk.CTkFrame(self.right_panel)
         # Tabviews
@@ -132,10 +131,6 @@ class App(ctk.CTk):
             self.warning_tab,
             font=self.editor_font,
             state="disabled"
-        )
-        self.multi_cursor_textbox = ctk.CTkTextbox(
-            self.multi_cursor_panel,
-            font=self.editor_font
         )
         self.available_modules_textbox = ctk.CTkTextbox(
             self.available_modules_panel,
@@ -234,12 +229,6 @@ class App(ctk.CTk):
             height=20,
             font=self.label_font
         )
-        self.multi_cursor_abel = ctk.CTkLabel(
-            self.multi_cursor_panel,
-            text="Multi-Cursor",
-            font=self.label_font,
-            anchor="nw"
-        )
         self.goto_label = ctk.CTkLabel(
             self.goto_panel,
             text="Go To",
@@ -302,20 +291,6 @@ class App(ctk.CTk):
             expand=True
         )
         self.available_modules_textbox.configure(
-            state="disabled"
-        )
-        self.multi_cursor_abel.pack(
-            padx=self.pad_x,
-            pady=self.pad_y,
-            side="top",
-            anchor="nw"
-        )
-        self.multi_cursor_textbox.pack(
-            padx=self.pad_x,
-            pady=self.pad_y,
-            expand=True
-        )
-        self.multi_cursor_textbox.configure(
             state="disabled"
         )
 
@@ -500,18 +475,15 @@ class App(ctk.CTk):
         self.bind("<Control-z>", self.undo)
         self.bind("<Control-h>", self.toggle_find_and_replace)
         self.bind("<Control-g>", self.toggle_goto_menu)
-        self.bind("<Control-m>", self.toggle_multi_cursor_menu)
+        self.bind("<Control-m>", self.toggle_available_modules)
         self.bind("<Control-Home>", self.page_top)
         self.bind("<Control-End>", self.page_bottom)
 # Triple Character Sequence
         self.bind("<Control-Shift-z>", self.redo)
         self.bind("<Control-Shift-Tab>", self.previous_tab)
-        self.bind("<Control-Alt-m>", self.toggle_available_modules)
 # Mouse Click
         self.bind("<Button-1>", self.mouse_click_update)
         self.bind("<ButtonRelease-1>", self.highlight_selected)
-        self.bind("<Button-2>", self.multi_cursor)
-        self.bind("<Control-Button-1>", self.multi_cursor)
         self.bind("<Button-3>", self.right_click_menu_click)
 
         if len(sys.argv) > 1 and os.path.exists(sys.argv[1]):
@@ -567,8 +539,7 @@ Ctrl + Z            Undo
 Ctrl + Shift + Z    Redo
 Ctrl + H            Rind and replace menu
 Ctrl + G            Go to menu
-Ctrl + M            Multi-cursor menu
-Ctrl + Alt + M      Available module menu
+Ctrl + M            Available module menu
 Ctrl + [            Dedent line
 Ctrl + ]            Indent line
 Ctrl + Tab          Next tab
@@ -665,7 +636,6 @@ Esc                 Hide intelliSense
             error = Dialog(self, "Error", "File extention not supported.",
                        self.center_x, self.center_y, self.editor_font)
             error.show()
-            
 
 # Updates
     def increment_index(self, cursor: str) -> str:
@@ -681,38 +651,6 @@ Esc                 Hide intelliSense
 
         return f"{line}.{str(int(char) - 1)}"
 
-    def update_multi_cursors(self, event) -> None:
-        if not (editor := self.current_tab):
-            return
-        for cursor in self.cursors:
-            editor.delete(cursor)
-            editor.insert(cursor, "|")
-
-        new = []
-        for index in self.cursors:
-            if index != editor.index("insert"):
-                key = event.keysym.lower()
-                if key not in ["control_l", "control_r", "shift_L", "shift_r", "alt_L", "alt_r"]:
-                    if key == "left":
-                        new.append(self.decrement_index(index))
-                    elif key == "right":
-                        new.append(self.increment_index(index))
-                    elif key == "backspace":
-                        editor.delete(f"{index}-1c", index)
-                        new.append(self.decrement_index(index))
-                    elif key == "space":
-                        editor.insert(index, " ")
-                        new.append(self.increment_index(index))
-                    else:
-                        editor.insert(index, key)
-                        new.append(self.increment_index(index))
-
-        self.cursors = new
-        self.multi_cursor_textbox.configure(state="normal")
-        self.multi_cursor_textbox.delete("0.0", "end")
-        self.multi_cursor_textbox.insert("0.0", "\n".join(self.cursors))
-        self.multi_cursor_textbox.configure(state="disabled")
-
     def key_press_update(self, event) -> None:
         self.current_language = self.current_language_combo.get()
 
@@ -722,8 +660,6 @@ Esc                 Hide intelliSense
 
             current_code = editor.get("0.0", "end")
             self.get_warnings(editor, current_code)
-
-            self.update_multi_cursors(event)
 
             if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
                 self.intelli_sense_trigger()
@@ -1104,12 +1040,6 @@ Esc                 Hide intelliSense
                 self.run_file()
 
 # Side Menus
-    def toggle_multi_cursor_menu(self, _=None) -> None:
-        if self.multi_cursor_panel.winfo_ismapped():
-            self.multi_cursor_panel.pack_forget()
-        else:
-            self.multi_cursor_panel.pack(padx=self.pad_x, pady=self.pad_y*5)
-
     def toggle_goto_menu(self, _=None) -> None:
         if self.goto_panel.winfo_ismapped():
             self.goto_panel.pack_forget()
@@ -1123,8 +1053,7 @@ Esc                 Hide intelliSense
     def goto_click(self) -> None:
         if editor := self.current_tab:
             line_number = int(self.goto_entry.get())
-            index = f"{line_number}.0"
-            editor.see(index)
+            editor.see(f"{line_number}.0")
 
     def toggle_find_and_replace(self, _=None) -> None:
         if self.find_and_replace_panel.winfo_ismapped():
@@ -1142,21 +1071,11 @@ Esc                 Hide intelliSense
 
         if editor := self.current_tab:
             editor_text = editor.get("1.0", "end")
-            updated_text = editor_text.replace(find, replace)
-
             editor.delete("1.0", "end")
+            updated_text = editor_text.replace(find, replace)
             editor.insert("1.0", updated_text)
 
 # Shortcuts
-    def multi_cursor(self, _=None) -> None:
-        if editor := self.current_tab:
-            index = editor.index("current")
-
-            if index in self.cursors:
-                self.cursors.remove(index)
-            else:
-                self.cursors.append(editor.index("current"))
-
     def indent(self, _=None) -> None:
         if editor := self.current_tab:
 
@@ -1183,6 +1102,7 @@ Esc                 Hide intelliSense
 
             while start_line != end_line:
                 curr = editor.get(f"{start_line}.0", f"{start_line}.1")
+
                 if curr == "\t":
                     editor.delete(f"{start_line}.0", f"{start_line}.1")
                 start_line += 1
@@ -1203,28 +1123,16 @@ Esc                 Hide intelliSense
     def previous_tab(self, _=None) -> None:
         tabs = list(self.center_tabview._tab_dict.keys())
         if tabs:
-            new_tab_index = self.center_tabview.index(self.center_tabview.get()) - 1
-
-            # If the new tab index is within the range of tabs it is decremented otherwise set back to the max to create a loop
-            if new_tab_index >= 0:
-                new_tab_name = tabs[new_tab_index]
-                self.center_tabview.set(new_tab_name)
-            else:
-                new_tab_name = tabs[len(tabs) - 1]
-                self.center_tabview.set(new_tab_name)
+            new_tab_index = (self.center_tabview.index(self.center_tabview.get()) - 1) % len(self.center_tabview._tab_dict)         # loop the tab index
+            new_tab_name = tabs[new_tab_index]
+            self.center_tabview.set(new_tab_name)
 
     def next_tab(self, _=None) -> None:
         tabs = list(self.center_tabview._tab_dict.keys())
         if tabs:
-            new_tab_index = self.center_tabview.index(self.center_tabview.get()) + 1
-
-            # If the new tab index is within the range of tabs it is incremented otherwise set back to 0 to create a loop
-            if new_tab_index < len(tabs):
-                new_tab_name = tabs[new_tab_index]
-                self.center_tabview.set(new_tab_name)
-            else:
-                new_tab_name = tabs[0]
-                self.center_tabview.set(new_tab_name)
+            new_tab_index = (self.center_tabview.index(self.center_tabview.get()) + 1) % len(self.center_tabview._tab_dict)         # loop the tab index
+            new_tab_name = tabs[new_tab_index]
+            self.center_tabview.set(new_tab_name)
 
     def auto_single_quote(self, _=None) -> None:
         if editor := self.current_tab:
@@ -1292,7 +1200,7 @@ Esc                 Hide intelliSense
             if self.current_path != "":
 
                 with open(self.current_path, "r") as f:
-                    source_code = "".join(f.readlines())
+                    source_code = ''.join(f.readlines())
 
                 self.console["state"] = "normal"
                 error = shell.run(source_code, self.current_path)
@@ -1333,8 +1241,10 @@ Esc                 Hide intelliSense
 
         if editor := self.current_tab:
             text = editor.get("0.0", "end")
+
             with open(self.current_path, "w") as f:
                 f.write(text)
+
             name = self.center_tabview.get()
             self.title(name)
 
@@ -1344,8 +1254,10 @@ Esc                 Hide intelliSense
         
         if os.path.exists(path):
             self.current_path = path
+
             with open(self.current_path, "w") as f:
                 f.write("")
+
             self.add_tab(self.current_path)
 
     def copy(self, _=None) -> None:
