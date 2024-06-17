@@ -1,9 +1,4 @@
 int a = 5
 
 
-output("Hello world")
-
-
-
-
-unknown x = 3
+int = 3

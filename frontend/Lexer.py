@@ -46,7 +46,7 @@ class Lexer:
         self.column = 1
 
     def __str__(self) -> str:
-        return 'Lexer'
+        return "Lexer"
 
     def eat(self) -> None:
         self.column += 1
@@ -281,7 +281,7 @@ class Lexer:
 
         while len(self.source_code) > 0:
             char = self.get()
-            if char in f'{ALPHABET}1234567890':
+            if char in f'{ALPHABET}{DIGITS}':
                 name += char
             else:
                 break
