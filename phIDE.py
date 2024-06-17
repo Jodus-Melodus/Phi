@@ -520,17 +520,17 @@ class App(ctk.CTk):
     def run(self) -> None:
         self.mainloop()
 
-    def page_top(self, e=None) -> None:
+    def page_top(self, _=None) -> None:
         """Scroll to the top of the text widget."""
         if editor := self.current_tab:
             editor.see("1.0")
 
-    def page_bottom(self, e=None) -> None:
+    def page_bottom(self, _=None) -> None:
         """Scroll to the bottom of the text widget."""
         if editor := self.current_tab:
             editor.see("end")
 
-    def toggle_available_modules(self, e=None) -> None:
+    def toggle_available_modules(self, _=None) -> None:
         """Toggle the visibility of available modules."""
 
         available_modules = os.listdir("Modules")
@@ -547,7 +547,7 @@ class App(ctk.CTk):
             self.available_modules_panel.pack(padx=self.pad_x, pady=self.pad_y*5)
             self.find_entry.focus_set()
 
-    def show_help(self, e=None) -> None:
+    def show_help(self, _=None) -> None:
         text = """\
 F1                  Show this menu
 F5                  Run file
@@ -600,11 +600,9 @@ Esc                 Hide intelliSense
     def add_tab(self, path: str) -> None:
         self.current_path = path
         self.load_language_syntax()
-        # self.current_language = "." + path.split("/")[-1].split(".")[-1]
         _, self.current_language = os.path.splitext(path)
         self.current_language_combo.set(self.current_language)
 
-        # tab_name = path.split("/")[-1]
         tab_name = os.path.basename(path)
 
         if tab_name not in self.center_tabview._tab_dict:
@@ -615,7 +613,7 @@ Esc                 Hide intelliSense
                    self.center_x, self.center_y, self.editor_font)
             error.show()
 
-    def add_new_tab(self, path, tab_name):
+    def add_new_tab(self, path: str, tab_name: str):
         tab = self.center_tabview.add(tab_name)
 
         editor = ctk.CTkTextbox(
@@ -683,7 +681,7 @@ Esc                 Hide intelliSense
 
         return f"{line}.{str(int(char) - 1)}"
 
-    def update_multi_cursors(self, e) -> None:
+    def update_multi_cursors(self, event) -> None:
         if not (editor := self.current_tab):
             return
         for cursor in self.cursors:
@@ -693,7 +691,7 @@ Esc                 Hide intelliSense
         new = []
         for index in self.cursors:
             if index != editor.index("insert"):
-                key = e.keysym.lower()
+                key = event.keysym.lower()
                 if key not in ["control_l", "control_r", "shift_L", "shift_r", "alt_L", "alt_r"]:
                     if key == "left":
                         new.append(self.decrement_index(index))
@@ -715,7 +713,7 @@ Esc                 Hide intelliSense
         self.multi_cursor_textbox.insert("0.0", "\n".join(self.cursors))
         self.multi_cursor_textbox.configure(state="disabled")
 
-    def key_press_update(self, e=None) -> None:
+    def key_press_update(self, event) -> None:
         self.current_language = self.current_language_combo.get()
 
         if editor := self.current_tab:
@@ -724,14 +722,14 @@ Esc                 Hide intelliSense
             current_code = editor.get("0.0", "end")
             self.get_warnings(editor, current_code)
 
-            self.update_multi_cursors(e)
+            self.update_multi_cursors(event)
 
             if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
                 self.intelli_sense_trigger()
             if hasattr(self, "snippetMenu") and self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
                 self.show_snippets()
 
-    def get_warnings(self, editor, current_code):
+    def get_warnings(self, editor : ctk.CTkTextbox, current_code: str):
         if self.current_language != ".phi":
             return
         
@@ -764,7 +762,7 @@ Esc                 Hide intelliSense
         if new_name not in self.bottom_tabview._tab_dict.keys():
             self.bottom_tabview.rename(current_name, new_name)
 
-    def editor_press(self, e=None) -> None:
+    def editor_press(self, _=None) -> None:
         if editor := self.current_tab:
             editor.tag_remove("warning", "0.0", "end")
             name = self.center_tabview.get()
@@ -783,11 +781,11 @@ Esc                 Hide intelliSense
 
             self.get_warnings(editor, current_code)
 
-    def mouse_click_update(self, e=None) -> None:
+    def mouse_click_update(self, _=None) -> None:
         if editor := self.current_tab:
             editor.tag_remove("similar", "0.0", "end")
 
-    def highlight_selected(self, e=None) -> None:
+    def highlight_selected(self, _=None) -> None:
         if not (editor := self.current_tab):
             return
         text = editor.get("0.0", "end").split("\n")
@@ -803,7 +801,7 @@ Esc                 Hide intelliSense
                         "similar", f"{ln+1}.{start}", f"{ln+1}.{end}")
                     editor.tag_remove("error", f"{ln}.0", f"{ln}.end")
 
-    def enter_commands(self, e=None) -> None:
+    def enter_commands(self, _=None) -> None:
         self.intelli_sense_enter_insert()
         self.enter_snippets()
 
@@ -837,7 +835,7 @@ Esc                 Hide intelliSense
             editor.focus_set()
             self.snippet_menus[self.center_tabview.get()].place_forget()
 
-    def show_snippets(self, e=None) -> None:
+    def show_snippets(self, _=None) -> None:
         if not (editor := self.current_tab):
             return
         self.snippet_menus[self.center_tabview.get()].place_forget()
@@ -917,7 +915,7 @@ Esc                 Hide intelliSense
         self.update_syntax()
 
 # IntelliSense
-    def intelli_sense_up_key_press(self, e=None) -> None:
+    def intelli_sense_up_key_press(self, _=None) -> None:
         if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped() and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
             if editor := self.current_tab:
                 editor.mark_set(
@@ -940,7 +938,7 @@ Esc                 Hide intelliSense
                     self.snippets) - 1
             self.show_snippets()
 
-    def intelli_sense_down_key_press(self, e=None) -> None:
+    def intelli_sense_down_key_press(self, _=None) -> None:
         if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped() and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
             if editor := self.current_tab:
                 editor.mark_set(
@@ -963,7 +961,7 @@ Esc                 Hide intelliSense
                                   ].current_selected_index = 0
             self.show_snippets()
 
-    def intelli_sense_trigger(self, e=None) -> None:
+    def intelli_sense_trigger(self, _=None) -> None:
         if not (editor := self.current_tab):
             return
         
@@ -980,6 +978,8 @@ Esc                 Hide intelliSense
         i = self.intelli_sense_boxes[self.center_tabview.get(
         )].current_selected_index
         start_index = max(0, i)
+        end_index = start_index
+
         if word:
             words = [w for w in self.intelli_sense_words if w.startswith(word)]
             self.intelli_sense_words = words
@@ -994,12 +994,11 @@ Esc                 Hide intelliSense
             if self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
                 self.snippet_menus[self.center_tabview.get()].place_forget()
             end_index = min(len(self.intelli_sense_words), i + size + 1)
-
         self.intelli_sense_boxes[self.center_tabview.get(
         )].items = self.intelli_sense_words[start_index:end_index]
         self.intelli_sense_boxes[self.center_tabview.get()].place(x=x, y=y+30)
 
-    def intelli_sense_enter_insert(self, e=None) -> None:
+    def intelli_sense_enter_insert(self, _=None) -> None:
         if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped() and len(self.intelli_sense_boxes[self.center_tabview.get()].items) > 0:
             if editor := self.current_tab:
                 selected_word = self.intelli_sense_words[self.intelli_sense_boxes[self.center_tabview.get(
@@ -1029,12 +1028,12 @@ Esc                 Hide intelliSense
             self.intelli_sense_boxes[self.center_tabview.get()].place_forget()
 
 # Menu Bar
-    def right_click_menu_click(self, e) -> None:
+    def right_click_menu_click(self, event) -> None:
         if self.right_menu_open:
             self.right_click_popup.place_forget()
             self.right_menu_open = False
         else:
-            self.right_click_popup.place(x=e.x, y=e.y)
+            self.right_click_popup.place(x=event.x, y=event.y)
             self.right_menu_open = True
 
     def file_menu_click(self) -> None:
@@ -1105,13 +1104,13 @@ Esc                 Hide intelliSense
                 self.run_file()
 
 # Side Menus
-    def toggle_multi_cursor_menu(self, e=None) -> None:
+    def toggle_multi_cursor_menu(self, _=None) -> None:
         if self.multi_cursor_panel.winfo_ismapped():
             self.multi_cursor_panel.pack_forget()
         else:
             self.multi_cursor_panel.pack(padx=self.pad_x, pady=self.pad_y*5)
 
-    def toggle_goto_menu(self, e=None) -> None:
+    def toggle_goto_menu(self, _=None) -> None:
         if self.goto_panel.winfo_ismapped():
             self.goto_panel.pack_forget()
 
@@ -1127,7 +1126,7 @@ Esc                 Hide intelliSense
             index = f"{line_number}.0"
             editor.see(index)
 
-    def toggle_find_and_replace(self, e=None) -> None:
+    def toggle_find_and_replace(self, _=None) -> None:
         if self.find_and_replace_panel.winfo_ismapped():
             self.find_and_replace_panel.pack_forget()
 
@@ -1137,7 +1136,7 @@ Esc                 Hide intelliSense
             self.find_and_replace_panel.pack(padx=self.pad_x, pady=self.pad_y*5)
             self.find_entry.focus_set()
 
-    def find_and_replace(self, e=None) -> None:
+    def find_and_replace(self, _=None) -> None:
         find = self.find_entry.get()
         replace = self.replace_entry.get()
 
@@ -1149,7 +1148,7 @@ Esc                 Hide intelliSense
             editor.insert("1.0", updated_text)
 
 # Shortcuts
-    def multi_cursor(self, e=None) -> None:
+    def multi_cursor(self, _=None) -> None:
         if editor := self.current_tab:
             index = editor.index("current")
 
@@ -1158,7 +1157,7 @@ Esc                 Hide intelliSense
             else:
                 self.cursors.append(editor.index("current"))
 
-    def indent(self, e=None) -> None:
+    def indent(self, _=None) -> None:
         if editor := self.current_tab:
 
             if selected := editor.tag_ranges("sel"):
@@ -1173,7 +1172,7 @@ Esc                 Hide intelliSense
                 line = editor.index("insert").split(".")[0]
                 editor.insert(f"{line}.0", "\t")
 
-    def dedent(self, e=None) -> None:
+    def dedent(self, _=None) -> None:
         if not (editor := self.current_tab):
             return
         
@@ -1194,63 +1193,65 @@ Esc                 Hide intelliSense
             if curr == "\t":
                 editor.delete(f"{line}.0", f"{line}.1")
 
-    def escape_key_press(self, e=None) -> None:
+    def escape_key_press(self, _=None) -> None:
         if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
             self.intelli_sense_boxes[self.center_tabview.get()].place_forget()
 
         if hasattr(self, "snippetMenu") and self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
             self.snippet_menus[self.center_tabview.get()].place_forget()
 
-    def previous_tab(self, e=None) -> None:
+    def previous_tab(self, _=None) -> None:
         tabs = list(self.center_tabview._tab_dict.keys())
-        new_tab_index = self.center_tabview.index(self.center_tabview.get()) - 1
+        if tabs:
+            new_tab_index = self.center_tabview.index(self.center_tabview.get()) - 1
 
-        # If the new tab index is within the range of tabs it is decremented otherwise set back to the max to create a loop
-        if new_tab_index >= 0:
-            new_tab_name = tabs[new_tab_index]
-            self.center_tabview.set(new_tab_name)
-        else:
-            new_tab_name = tabs[len(tabs) - 1]
-            self.center_tabview.set(new_tab_name)
+            # If the new tab index is within the range of tabs it is decremented otherwise set back to the max to create a loop
+            if new_tab_index >= 0:
+                new_tab_name = tabs[new_tab_index]
+                self.center_tabview.set(new_tab_name)
+            else:
+                new_tab_name = tabs[len(tabs) - 1]
+                self.center_tabview.set(new_tab_name)
 
-    def next_tab(self, e=None) -> None:
+    def next_tab(self, _=None) -> None:
         tabs = list(self.center_tabview._tab_dict.keys())
-        new_tab_index = self.center_tabview.index(self.center_tabview.get()) + 1
+        if tabs:
+            new_tab_index = self.center_tabview.index(self.center_tabview.get()) + 1
 
-        # If the new tab index is within the range of tabs it is incremented otherwise set back to 0 to create a loop
-        if new_tab_index < len(tabs):
-            new_tab_name = tabs[new_tab_index]
-            self.center_tabview.set(new_tab_name)
-        else:
-            new_tab_name = tabs[0]
-            self.center_tabview.set(new_tab_name)
+            # If the new tab index is within the range of tabs it is incremented otherwise set back to 0 to create a loop
+            if new_tab_index < len(tabs):
+                new_tab_name = tabs[new_tab_index]
+                self.center_tabview.set(new_tab_name)
+            else:
+                new_tab_name = tabs[0]
+                self.center_tabview.set(new_tab_name)
 
-    def auto_single_quote(self, e=None) -> None:
+    def auto_single_quote(self, _=None) -> None:
         if editor := self.current_tab:
             editor.insert("insert", "'")
             editor.mark_set("insert", "insert -1c")
 
-    def auto_double_quote(self, e=None) -> None:
+    def auto_double_quote(self, _=None) -> None:
         if editor := self.current_tab:
             editor.insert("insert", "\"")
             editor.mark_set("insert", "insert -1c")
 
-    def auto_parenthesis(self, e=None) -> None:
+    def auto_parenthesis(self, _=None) -> None:
         if editor := self.current_tab:
             editor.insert("insert", ")")
             editor.mark_set("insert", "insert -1c")
 
-    def auto_bracket(self, e=None) -> None:
+    def auto_bracket(self, _=None) -> None:
         if editor := self.current_tab:
             editor.insert("insert", "]")
             editor.mark_set("insert", "insert -1c")
 
-    def auto_brace(self, e=None) -> None:
+    def auto_brace(self, _=None) -> None:
         if editor := self.current_tab:
             editor.insert("insert", "}")
             editor.mark_set("insert", "insert -1c")
 
-    def close_file(self, e=None) -> None:
+    def close_file(self, _=None) -> None:
         self.save_file()
         tab_name = self.center_tabview.get()
         self.center_tabview.delete(tab_name)
@@ -1259,17 +1260,17 @@ Esc                 Hide intelliSense
         if settings["auto-clear-console-on-close"]:
             self.clear_console()
 
-    def open_folder(self, e=None) -> None:
+    def open_folder(self, _=None) -> None:
         directory_path = ctk.filedialog.askdirectory(title="Select a folder")
         if files := [
             os.path.join(root, file)
-            for root, dirs, files in os.walk(directory_path)
+            for root, _, files in os.walk(directory_path)
             for file in files
         ]:
             for file in files:
                 self.add_tab(file)
 
-    def open_files(self, e=None) -> None:
+    def open_files(self, _=None) -> None:
         if file_paths := ctk.filedialog.askopenfilenames(
             title="Select a file",
             filetypes=[("Phi File", "*.phi"), ("All Files", "*.*")],
@@ -1277,14 +1278,14 @@ Esc                 Hide intelliSense
             for file in file_paths:
                 self.add_tab(file)
 
-    def backspace_entire_word(self, e=None) -> None:
+    def backspace_entire_word(self, _=None) -> None:
         if editor := self.current_tab:
             current_index = editor.index("insert")
             word_start = editor.search(
                 r"\s", current_index, backwards=True, regexp=True)
             editor.delete(word_start, current_index)
 
-    def run_file(self, e=None) -> None:
+    def run_file(self, _=None) -> None:
         self.save_file()
 
         if self.current_language == ".phi":
@@ -1311,7 +1312,7 @@ Esc                 Hide intelliSense
                    self.center_x, self.center_y, self.editor_font)
             error.show()
 
-    def comment_line(self, e=None) -> None:
+    def comment_line(self, _=None) -> None:
         if editor := self.current_tab:
             cursor_position = editor.index("insert")
             line_number = cursor_position.split(".")[0]
@@ -1326,7 +1327,7 @@ Esc                 Hide intelliSense
 
             editor.tag_remove("sel", "0.0", "end")
 
-    def save_file(self, e=None) -> None:
+    def save_file(self, _=None) -> None:
         self.current_path = self.tab_names_paths[self.center_tabview.get()] or ctk.filedialog.asksaveasfilename(
                         title="Save", filetypes=[("Phi File", "*.phi"), ("All Files", "*.*")])
 
@@ -1337,7 +1338,7 @@ Esc                 Hide intelliSense
             name = self.center_tabview.get()
             self.title(name)
 
-    def new_file(self, e=None) -> None:
+    def new_file(self, _=None) -> None:
         path = ctk.filedialog.asksaveasfilename(
             title="Save As", filetypes=[("Phi File", "*.phi"), ("All Files", "*.*")])
         
@@ -1347,22 +1348,22 @@ Esc                 Hide intelliSense
                 f.write("")
             self.add_tab(self.current_path)
 
-    def copy(self, e=None) -> None:
+    def copy(self, _=None) -> None:
         if editor := self.current_tab:
             self.clipboard = editor.selection_get()
 
-    def paste(self, e=None) -> None:
+    def paste(self, _=None) -> None:
         if editor := self.current_tab:
             editor.insert("insert", self.clipboard)
 
-    def undo(self, e=None) -> None:
+    def undo(self, _=None) -> None:
         if editor := self.current_tab:
             try:
                 editor.edit_undo()
             except:
                 pass
 
-    def redo(self, e=None) -> None:
+    def redo(self, _=None) -> None:
         if editor := self.current_tab:
             try:
                 editor.edit_redo()
