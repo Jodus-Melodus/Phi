@@ -1,2 +1,5 @@
 
 
+int s = 34
+
+output(s)

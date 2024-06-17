@@ -127,10 +127,8 @@ class Lexer:
                         Token(TT.anonymous, self.eat(), self.column, self.line)
                     )
                 case _:
-
                     if char in DIGITS:
                         self.process_numbers()
-
                     elif char in ALPHABET:
                         self.process_variables_and_identifiers()
                     else:
@@ -147,12 +145,7 @@ class Lexer:
         if self.get() == '=':
             self.eat()
             self.tokens.append(
-                            Token(
-                                TT.greater_than_equal,
-                                f'{char}=',
-                                self.column,
-                                self.line,
-                            )
+                            Token(TT.greater_than_equal, f'{char}=', self.column, self.line)
                         )
         else:
             self.tokens.append(
@@ -169,12 +162,7 @@ class Lexer:
         elif self.get() == '=':
             self.eat()
             self.tokens.append(
-                            Token(
-                                TT.less_than_equal,
-                                f'{char}=',
-                                self.column,
-                                self.line,
-                            )
+                            Token(TT.less_than_equal, f'{char}=', self.column, self.line)
                         )
         else:
             self.tokens.append(
@@ -201,41 +189,24 @@ class Lexer:
             self.eat()
         else:
             self.tokens.append(
-                            Token(
-                                TT.assignment_operator,
-                                char,
-                                self.column,
-                                self.line,
-                            )
+                            Token(TT.assignment_operator, char, self.column, self.line)
                         )
 
     def process_binary_operators(self, char):
         self.eat()
         if self.get() == '=':
             self.tokens.append(
-                            Token(
-                                TT.assignment_binary_operation,
-                                f'{char}=',
-                                self.column,
-                                self.line,
-                            )
+                            Token(TT.assignment_binary_operation, f'{char}=', self.column, self.line)
                         )
             self.eat()
         elif (char == '/') and (self.get() == '/'):
             self.tokens.append(
-                            Token(
-                                TT.binary_operation,
-                                f'{char}/',
-                                self.column,
-                                self.line,
-                            )
+                            Token(TT.binary_operation, f'{char}/', self.column, self.line)
                         )
             self.eat()
         else:
             self.tokens.append(
-                            Token(
-                                TT.binary_operation, char, self.column, self.line
-                            )
+                            Token(TT.binary_operation, char, self.column, self.line)
                         )
 
     def process_string(self, single_or_double: str):
@@ -247,34 +218,16 @@ class Lexer:
                 string += self.get()
                 self.eat()
                 if self.source_code == '':
-                    self.errors.append(SyntaxError(
-                                    self.file_path,
-                                    self,
-                                    f"Expected a '{single_or_double}'",
-                                    self.column,
-                                    self.line,
-                                ))
+                    self.errors.append(SyntaxError(self.file_path, self, f"Expected a '{single_or_double}'", self.column, self.line))
             if len(self.source_code) > 0:
                 self.eat()
                 self.tokens.append(
                                 Token(TT.string_value, string, self.column, self.line)
                             )
             else:
-                self.errors.append(SyntaxError(
-                                    self.file_path,
-                                    self,
-                                    f"Expected a '{single_or_double}'",
-                                    self.column,
-                                    self.line,
-                                ))
+                self.errors.append(SyntaxError(self.file_path, self, f"Expected a '{single_or_double}'", self.column, self.line))
         else:
-            self.errors.append(SyntaxError(
-                                    self.file_path,
-                                    self,
-                                    f"Expected a '{single_or_double}'",
-                                    self.column,
-                                    self.line,
-                                ))
+            self.errors.append(SyntaxError(self.file_path, self, f"Expected a '{single_or_double}'", self.column, self.line))
 
     def process_variables_and_identifiers(self):
         name = ''
@@ -306,13 +259,7 @@ class Lexer:
                 number += char
             elif char == '.':
                 if decimal != 0:
-                    self.errors.append(SyntaxError(
-                                        self.file_path,
-                                        self,
-                                        "Found two '.' ",
-                                        self.column,
-                                        self.line,
-                                    ))
+                    self.errors.append(SyntaxError(self.file_path, self, "Found two '.' ", self.column, self.line))
                 number += char
                 decimal += 1
             else:
@@ -321,19 +268,9 @@ class Lexer:
 
         if decimal == 0:
             self.tokens.append(
-                                Token(
-                                    TT.int_value,
-                                    int(number),
-                                    self.column,
-                                    self.line,
-                                )
+                                Token(TT.int_value, int(number), self.column, self.line)
                             )
         else:
             self.tokens.append(
-                                Token(
-                                    TT.real_value,
-                                    float(number),
-                                    self.column,
-                                    self.line,
-                                )
+                                Token(TT.real_value, float(number), self.column, self.line)
                             )

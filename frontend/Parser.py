@@ -94,6 +94,7 @@ class Parser:
 
     def parse_delete_statement(self) -> None:
         self.eat()
+        
         if self.get().type != TT.identifier:
             return SyntaxError(self.file_path, self, "Expected an identifier", self.column, self.line)
         v = self.eat().value
@@ -105,12 +106,15 @@ class Parser:
         if self.get().type != TT.identifier:
             return SyntaxError(self.file_path, self, "Expected an identifier", self.column, self.line)
         value = self.parse_primary_expression()
+        
         if isinstance(value, Error):
             return value
+        
         if self.get().type != TT.open_brace:
             return SyntaxError(self.file_path, self, "Expected a '{'", self.column, self.line)
         self.eat()
         matches = []
+        
         while self.get().type != TT.close_brace:
             if self.get().type == TT._case:
                 statement = self.parse_case_statement()
@@ -133,10 +137,12 @@ class Parser:
         if self.get().type not in (TT.int_value, TT.real_value, TT.string_value):
             return SyntaxError(self.file_path, self, "Expected a literal value", self.column, self.line)
         value = self.parse_primary_expression()
+        
         if self.get().type != TT.open_brace:
             return SyntaxError(self.file_path, self, "Expected a '{' after the match value.", self.column, self.line)
         self.eat()
         body = []
+        
         while self.get().type != TT.close_brace:
             statement = self.parse_statement()
             if isinstance(statement, Error):
@@ -154,11 +160,14 @@ class Parser:
         if self.get().type != TT.identifier:
             return SyntaxError(self.file_path, self, "Expected an identifier", self.column, self.line)
         err = self.parse_primary_expression()
+        
         if isinstance(err, Error):
             return err
+        
         if self.get().type != TT.string_value:
             return SyntaxError(self.file_path, self, "Expected a message", self.column, self.line)
         msg = self.parse_primary_expression()
+        
         if isinstance(msg, Error):
             return msg
         return ThrowNode(err, msg, self.line, self.column)
@@ -170,6 +179,7 @@ class Parser:
             return SyntaxError(self.file_path, self, "Expected a '{'", self.column, self.line)
         self.eat()
         tryBody = []
+        
         while self.get().type != TT.close_brace:
             statement = self.parse_statement()
             if isinstance(statement, Error):
@@ -179,24 +189,31 @@ class Parser:
             if self.get().type == TT.eof:
                 return SyntaxError(self.file_path, self, "Expected a '}'", self.column, self.line)
         self.eat()
+        
         if self.get().type != TT.catch:
             return SyntaxError(self.file_path, self, "'catch' expected after 'try'", self.column, self.line)
         self.eat()
+        
         if self.get().type != TT.open_parenthesis:
             return SyntaxError(self.file_path, self, "'(' expected after catch", self.column, self.line)
         self.eat()
+        
         if self.get().type != TT.identifier:
             return SyntaxError(self.file_path, self, "Expected an identifier after 'catch'", self.column, self.line)
         catch = self.parse_primary_expression()
+        
         if isinstance(catch, Error):
             return catch
+        
         if self.get().type != TT.close_parenthesis:
             return SyntaxError(self.file_path, self, "Expected a ')'", self.column, self.line)
         self.eat()
+        
         if self.get().type != TT.open_brace:
             return SyntaxError(self.file_path, self, "Expected a '{' after the exception name.", self.column, self.line)
         self.eat()
         exceptBody = []
+        
         while self.get().type != TT.close_brace:
             statement = self.parse_statement()
             if isinstance(statement, Error):
@@ -212,11 +229,13 @@ class Parser:
         self.eat()
 
         operand = ''
+        
         if self.get().type != TT.open_brace:
             return SyntaxError(self.file_path, self, "Expected a '{'", self.column, self.line)
 
         self.eat()
         body = []
+        
         while self.get().type != TT.close_brace:
             statement = self.parse_statement()
             if isinstance(statement, Error):
@@ -226,15 +245,19 @@ class Parser:
             if self.get().type == TT.eof:
                 return SyntaxError(self.file_path, self, "Expected a '}'", self.column, self.line)
         self.eat()
+        
         if self.get().type != TT._while:
             return SyntaxError(self.file_path, self, "Expected a 'while'", self.column, self.line)
         self.eat()
+        
         if self.get().type != TT.open_parenthesis:
             return SyntaxError(self.file_path, self, "Expected a '('", self.column, self.line)
         self.eat()
         left_condition = self.parse_expression()
+        
         if isinstance(left_condition, Error):
             return left_condition
+        
         if self.get().type in self.conditional_operators:
             operand = self.eat().value
             right_condition = self.parse_expression()
@@ -242,6 +265,7 @@ class Parser:
                 return right_condition
         else:
             right_condition = NullValue()
+        
         if self.get().type == TT.close_parenthesis:
             self.eat()
         else:
@@ -252,12 +276,15 @@ class Parser:
         self.eat()
 
         operand = ''
+        
         if self.get().type != TT.open_parenthesis:
             return SyntaxError(self.file_path, self, "Expected a '('", self.column, self.line)
         self.eat()
         left_condition = self.parse_expression()
+        
         if isinstance(left_condition, Error):
             return left_condition
+        
         if self.get().type in self.conditional_operators:
             operand = self.eat().value
             right_condition = self.parse_expression()
@@ -269,10 +296,12 @@ class Parser:
         if self.get().type != TT.close_parenthesis:
             return SyntaxError(self.file_path, self, "Expected a ')'", self.column, self.line)
         self.eat()
+        
         if self.get().type != TT.open_brace:
             return SyntaxError(self.file_path, self, "Expected a '{'", self.column, self.line)
         self.eat()
         body = []
+        
         while self.get().type != TT.close_brace:
             statement = self.parse_statement()
             if isinstance(statement, Error):
@@ -282,13 +311,16 @@ class Parser:
             if self.get().type == TT.eof:
                 return SyntaxError(self.file_path, self, "Expected a '}'", self.column, self.line)
         self.eat()
+        
         if self.get().type != TT._else:
             return WhileStatementNode(left_condition, operand, right_condition, body)
         self.eat()
+        
         if self.get().type != TT.open_brace:
             return SyntaxError(self.file_path, self, "Expected a '{'", self.column, self.line)
         self.eat()
         elseBody = []
+        
         while self.get().type != TT.close_brace:
             statement = self.parse_statement()
             if isinstance(statement, Error):
@@ -306,33 +338,43 @@ class Parser:
         if self.get().type == TT.open_parenthesis:
             self.eat()
             declaration = self.parse_variable_declaration()
+            
             if isinstance(declaration, Error):
                 return declaration
+            
             if self.get().type != TT.comma:
                 return SyntaxError(self.file_path, self, "Expected a comma", self.column, self.line)
             self.eat()
             left_condition = self.parse_expression()
+            
             if isinstance(left_condition, Error):
                 return left_condition
+            
             if self.get().type not in self.conditional_operators:
                 return SyntaxError(self.file_path, self, f"Expected one of the following operators: {self.conditional_operators}", self.column, self.line)
             operand = self.eat().value
             right_condition = self.parse_expression()
+            
             if isinstance(right_condition, Error):
                 return right_condition
+            
             if self.get().type != TT.comma:
                 return SyntaxError(self.file_path, self, "Expected a comma after the condition", self.column, self.line)
             self.eat()
             step = self.parse_expression()
+            
             if isinstance(step, Error):
                 return step
+            
             if self.get().type != TT.close_parenthesis:
                 return SyntaxError(self.file_path, self, "Expected a ')'", self.column, self.line)
             self.eat()
+            
             if self.get().type != TT.open_brace:
                 return SyntaxError(self.file_path, self, "Expected a '{'", self.column, self.line)
             self.eat()
             body = []
+
             while self.get().type != TT.close_brace:
                 statement = self.parse_statement()
                 if isinstance(statement, Error):
@@ -355,24 +397,31 @@ class Parser:
             return SyntaxError(self.file_path, self, "Expected a '('", self.column, self.line)
 
         self.eat()
+
         if self.get().type not in ("int", "real", "string"):
             return SyntaxError(self.file_path, self, "Expected variable declaration", self.column, self.line)
         declaration = self.parse_variable_declaration()
+
         if isinstance(declaration, Error):
             return declaration
+        
         if self.get().type != TT._in:
             return SyntaxError(self.file_path, self, "'in' expected after the variable in for-each loop", self.column, self.line)
         self.eat()
         iterable = self.parse_expression()
+
         if isinstance(iterable, Error):
             return iterable
+        
         if self.get().type != TT.close_parenthesis:
             return SyntaxError(self.file_path, self, "Expected a ')'", self.column, self.line)
         self.eat()
+
         if self.get().type != TT.open_brace:
             return SyntaxError(self.file_path, self, "Expected a '{'", self.column, self.line)
         self.eat()
         body = []
+
         while self.get().type != TT.close_brace:
             statement = self.parse_statement()
             if isinstance(statement, Error):
@@ -392,11 +441,14 @@ class Parser:
             return SyntaxError(self.file_path, self, "Expected a '('", self.column, self.line)
         self.eat()
         left_condition = self.parse_expression()
+
         if isinstance(left_condition, Error):
             return left_condition
+        
         if self.get().type in self.conditional_operators:
             operand = self.eat().value
             right_condition = self.parse_expression()
+
             if isinstance(right_condition, Error):
                 return right_condition
         else:
@@ -404,10 +456,12 @@ class Parser:
 
         if self.get().type == TT.close_parenthesis:
             self.eat()
+
             if self.get().type != TT.open_brace:
                 return SyntaxError(self.file_path, self, "Expected a '{'", self.column, self.line)
             self.eat()
             body = []
+
             while self.get().type != TT.close_brace:
                 statement = self.parse_statement()
                 if isinstance(statement, Error):
@@ -417,13 +471,16 @@ class Parser:
                 if self.get().type == TT.eof:
                     return SyntaxError(self.file_path, self, "Expected a '}'", self.column, self.line)
             self.eat()
+
             if self.get().type != TT._else:
                 return IfStatementNode(left_condition, operand, right_condition, body)
             self.eat()
+
             if self.get().type != TT.open_brace:
                 return SyntaxError(self.file_path, self, "Expected a '{'", self.column, self.line)
             self.eat()
             else_body = []
+
             while self.get().type != TT.close_brace:
                 statement = self.parse_statement()
                 if isinstance(statement, Error):
@@ -443,9 +500,12 @@ class Parser:
             return SyntaxError(self.file_path, self, "Expected a name", self.column, self.line)
 
         args = self.parse_arguments()
+        
         if isinstance(args, Error):
             return args
+        
         parameters = []
+
         for parameter in args:
             if parameter.kind == "identifier":
                 parameters.append(parameter)
@@ -458,6 +518,7 @@ class Parser:
             return SyntaxError(self.file_path, self, "Expected a '{'", self.column, self.line)
 
         body = []
+
         while self.get().type != TT.close_brace:
             statement = self.parse_statement()
             if isinstance(statement, Error):
@@ -506,12 +567,14 @@ class Parser:
         if self.get().type == TT.assignment_operator:
             self.eat()
             value = self.parse_statement()
+
             if isinstance(value, Error):
                 return value
             return AssignmentExpressionNode(left, value)
         elif self.get().type == TT.assignment_binary_operation:
             operand = self.eat().value
             value = self.parse_expression()
+
             if isinstance(value, Error):
                 return value
             return AssignmentBinaryExpressionNode(left, operand, value, self.line, self.column)
@@ -519,6 +582,7 @@ class Parser:
             return left
 
     def parse_object_expression(self) -> None:
+
         if self.get().type != TT.open_brace:
             return self.parse_array_expression()
         else:
@@ -534,13 +598,16 @@ class Parser:
                 continue
             elif self.get().type == TT.identifier:
                 key = self.eat().value
+                
                 if self.get().type != TT.colon:
                     return SyntaxError(self.file_path, self, "Expected a value", self.column, self.line)
                 self.eat()
                 value = self.parse_statement()
+                
                 if isinstance(value, Error):
                     return value
                 properties.append(PropertyLiteralNode(key, value))
+
                 if self.get().type in (TT.comma, TT.lineend):
                     self.eat()
                 elif self.get().type == TT.close_brace:
@@ -570,9 +637,11 @@ class Parser:
             else:
                 index += 1
                 value = self.parse_expression()
+
                 if isinstance(value, Error):
                     return value
                 items.append(ItemLiteralNode(index, value))
+
                 if self.get().type in (TT.comma, TT.lineend):
                     self.eat()
                 elif self.get().type == TT.close_bracket:
@@ -584,14 +653,17 @@ class Parser:
 
     def parse_additive_expression(self) -> None:
         left = self.parse_multiplicative_expression()
+
         if isinstance(left, Error):
             return left
 
         while self.get().value in ['+', '-',]:
             operand = self.eat().value
             right = self.parse_multiplicative_expression()
+
             if isinstance(right, Error):
                 return right
+            
             left = BinaryExpressionNode(
                 left, str(operand), right, self.line, self.column)
 
@@ -605,6 +677,7 @@ class Parser:
         while self.get().value in ['*', '/', '^', '%', '//']:
             operand = self.eat().value
             right = self.parse_call_member_expression()
+
             if isinstance(right, Error):
                 return right
             left = BinaryExpressionNode(
@@ -625,6 +698,7 @@ class Parser:
         value = self.parse_arguments()
         if isinstance(value, Error):
             return value
+        
         call_expression = CallExpression(caller, value, self.line, self.column)
 
         if self.get().type == TT.open_parenthesis:
@@ -638,6 +712,7 @@ class Parser:
         if self.get().type == TT.open_parenthesis:
             self.eat()
             args = []
+
             if self.get().type == TT.close_parenthesis:
                 self.eat()
                 return []
@@ -645,6 +720,7 @@ class Parser:
                 args = self.parse_arguments_list()
                 if isinstance(args, Error):
                     return args
+                
         if self.get().type == TT.close_parenthesis:
             self.eat()
         else:
@@ -654,12 +730,14 @@ class Parser:
 
     def parse_arguments_list(self) -> None:
         args = [self.parse_assignment_expression()]
+
         if isinstance(args[0], Error):
             return args[0]
 
         while (self.get().type == TT.comma):
             self.eat()
             value = self.parse_assignment_expression()
+
             if isinstance(value, Error):
                 return value
             args.append(value)
@@ -721,6 +799,7 @@ class Parser:
             case TT.open_parenthesis:
                 self.eat()
                 value = self.parse_expression()
+
                 if isinstance(value, Error):
                     return value
                 self.eat()
@@ -730,19 +809,23 @@ class Parser:
             case TT._return:
                 self.eat()
                 value = self.parse_statement()
+
                 if isinstance(value, Error):
                     return value
                 return ReturnNode(value, self.line, self.column)
             case TT.export:
                 self.eat()
                 value = self.parse_statement()
+
                 if isinstance(value, Error):
                     return value
+                
                 return ExportNode(value, self.line, self.column)
             case TT._import:
                 self.eat()
                 names = []
                 values = []
+
                 while self.get().type != TT.lineend:
                     if self.get().type not in (TT.identifier, TT.string_value):
                         return SyntaxError(
@@ -752,12 +835,13 @@ class Parser:
                             self.column,
                             self.line,
                         )
+                    name = self.parse_primary_expression()
 
-                    value = self.parse_primary_expression()
-                    name = value
                     if isinstance(name, Error):
                         return name
+                    
                     values.append(name)
+
                     if self.get().type == TT._as:
                         self.eat()
                         name = self.parse_primary_expression()
@@ -769,9 +853,7 @@ class Parser:
                         names.append(name)
                         break
                 return ImportNode(names, values, self.line, self.column)
-
             case _:
-
                 return SyntaxError(
                     self.file_path,
                     self,

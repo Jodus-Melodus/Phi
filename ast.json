@@ -4,12 +4,25 @@
         {
             "kind": "variableDeclarationExpression",
             "datatype": "int",
-            "identifier": "a",
+            "identifier": "s",
             "value": {
                 "kind": "integerLiteral",
-                "value": 5
+                "value": 34
             },
             "constant": "False"
+        },
+        {
+            "kind": "callExpression",
+            "arguments": [
+                {
+                    "kind": "identifier",
+                    "symbol": "s"
+                }
+            ],
+            "caller": {
+                "kind": "identifier",
+                "symbol": "output"
+            }
         }
     ]
 }
