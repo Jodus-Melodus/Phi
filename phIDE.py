@@ -608,9 +608,17 @@ Esc                 Hide intelliSense
         tab_name = os.path.basename(path)
 
         if tab_name not in self.center_tabview._tab_dict:
-            tab = self.center_tabview.add(tab_name)
+            self.add_new_tab(path, tab_name)
+                
+        else:
+            error = Dialog(self, "Error", "Cannot open two files with the same name.",
+                   self.center_x, self.center_y, self.editor_font)
+            error.show()
 
-            editor = ctk.CTkTextbox(
+    def add_new_tab(self, path, tab_name):
+        tab = self.center_tabview.add(tab_name)
+
+        editor = ctk.CTkTextbox(
                 tab,
                 font=self.editor_font,
                 undo=True,
@@ -621,48 +629,43 @@ Esc                 Hide intelliSense
                 tabs="1c"
             )
             
-            update_syntax_thread = threading.Thread(target=self.update_syntax)
-            update_syntax_thread.daemon = True
-            update_syntax_thread.start()
+        update_syntax_thread = threading.Thread(target=self.update_syntax)
+        update_syntax_thread.daemon = True
+        update_syntax_thread.start()
 
-            if self.current_language in self.language_syntax_patterns:
-                for tag in self.language_syntax_patterns[self.current_language]:
-                    editor.tag_config(
+        if self.current_language in self.language_syntax_patterns:
+            for tag in self.language_syntax_patterns[self.current_language]:
+                editor.tag_config(
                         tag, foreground=self.language_syntax_patterns[self.current_language][tag][0])
-                editor.tag_config("error", foreground=settings["error-tag-foreground-color"],
+            editor.tag_config("error", foreground=settings["error-tag-foreground-color"],
                                   background=settings["error-tag-background-color"], underline=settings["error-tag-underline"])
-                editor.tag_config("similar", foreground=settings["similar-tag-foreground-color"],
+            editor.tag_config("similar", foreground=settings["similar-tag-foreground-color"],
                                   background=settings["similar-tag-background-color"], underline=settings["similar-tag-underline"])
-                editor.tag_config("sel", foreground=settings["selected-tag-foreground-color"],
+            editor.tag_config("sel", foreground=settings["selected-tag-foreground-color"],
                                   background=settings["selected-tag-background-color"], underline=settings["selected-tag-underline"])
-                editor.tag_config("warning", foreground=settings["warning-tag-foreground-color"],
+            editor.tag_config("warning", foreground=settings["warning-tag-foreground-color"],
                                   background=settings["warning-tag-background-color"], underline=settings["warning-tag-underline"])
 
-                editor.pack(expand=True, fill="both")
+            editor.pack(expand=True, fill="both")
 
-                self.intelli_sense_boxes[tab_name] = Dropdown(editor, 300, 100, [
+            self.intelli_sense_boxes[tab_name] = Dropdown(editor, 300, 100, [
                 ], self.intelli_sense_click_insert, 2, 2, settings["intelli-sense-menu-color"], self.editor_font)
-                self.snippet_menus[tab_name] = Dropdown(
+            self.snippet_menus[tab_name] = Dropdown(
                     editor, 300, 100, [], self.insert_snippet, 2, 2, settings["snippet-menu-color"], self.editor_font)
-                editor.bind("<KeyPress>", self.editor_press)
+            editor.bind("<KeyPress>", self.editor_press)
 
-                self.open_editors[tab_name] = editor
-                self.tab_names_paths[tab_name] = path
+            self.open_editors[tab_name] = editor
+            self.tab_names_paths[tab_name] = path
 
-                with open(path, "r") as f:
-                    for line in f.readlines():
-                        editor.insert("end", line)
+            with open(path, "r") as f:
+                for line in f.readlines():
+                    editor.insert("end", line)
 
-                self.code = editor.get("0.0", "end")
-                self.load_snippets()
-            else:
-                error = Dialog(self, "Error", "File extention not supported.",
-                       self.center_x, self.center_y, self.editor_font)
-                error.show()
-                
+            self.code = editor.get("0.0", "end")
+            self.load_snippets()
         else:
-            error = Dialog(self, "Error", "Cannot open two files with the same name.",
-                   self.center_x, self.center_y, self.editor_font)
+            error = Dialog(self, "Error", "File extention not supported.",
+                       self.center_x, self.center_y, self.editor_font)
             error.show()
             
 
