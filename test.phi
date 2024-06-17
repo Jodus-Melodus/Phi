@@ -6,3 +6,4 @@ output("Hello world")
 
 
 
+unknown x = 3

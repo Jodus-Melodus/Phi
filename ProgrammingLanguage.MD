@@ -105,6 +105,11 @@ The following constants are built into the system:
 
 - `_`: Represents an empty value or nothingness.
 - `T` / `F`: Boolean values representing true/false conditions.
+- `?`: Used when you don't know the return type of a function etc.
+
+```phi
+_ = funtionWithUnknownReturnType()
+```
 
 ### Integer/Real
 
@@ -513,6 +518,14 @@ Generate hash code for data(sha256)
 
 ```phi
 str hsh = hash("Hello World!")
+```
+
+#### `eval`(phi_code)
+
+Evaluates the passed in code.
+
+```phi
+unknown result = eval("'Hello world'")
 ```
 
 ### User Defined Functions
