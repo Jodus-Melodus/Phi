@@ -1063,9 +1063,6 @@ Esc                 Hide intelliSense
     def toggle_find_and_replace(self, _=None) -> None:
         if self.find_and_replace_panel.winfo_ismapped():
             self.find_and_replace_panel.pack_forget()
-
-            if editor := self.current_tab:
-                editor.focus_set()
         else:
             self.find_and_replace_panel.pack(padx=self.pad_x, pady=self.pad_y*5)
             self.find_entry.focus_set()
