@@ -1,5 +1,5 @@
 
 
-int s = 34
+array arr = [2, 5, 6, 8, 9, 12]
 
-output(s)
+output(arr)
