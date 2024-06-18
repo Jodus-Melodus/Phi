@@ -3,11 +3,60 @@
     "body": [
         {
             "kind": "variableDeclarationExpression",
-            "datatype": "int",
-            "identifier": "s",
+            "datatype": "array",
+            "identifier": "arr",
             "value": {
-                "kind": "integerLiteral",
-                "value": 34
+                "kind": "arrayLiteral",
+                "items": [
+                    {
+                        "kind": "itemLiteral",
+                        "index": 0,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 2
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 1,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 5
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 2,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 6
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 3,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 8
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 4,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 9
+                        }
+                    },
+                    {
+                        "kind": "itemLiteral",
+                        "index": 5,
+                        "value": {
+                            "kind": "integerLiteral",
+                            "value": 12
+                        }
+                    }
+                ]
             },
             "constant": "False"
         },
@@ -16,7 +65,7 @@
             "arguments": [
                 {
                     "kind": "identifier",
-                    "symbol": "s"
+                    "symbol": "arr"
                 }
             ],
             "caller": {
