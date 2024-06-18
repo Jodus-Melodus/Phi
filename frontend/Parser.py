@@ -551,7 +551,7 @@ class Parser:
         else:
             self.eat()
 
-            if self.get().type in [TT.int_value, TT.string_value, TT.real_value, TT.identifier]:
+            if self.get().type in [TT.int_value, TT.string_value, TT.real_value, TT.identifier, TT.open_bracket, TT.open_parenthesis]:
                 statement = self.parse_statement()
                 if isinstance(statement, Error):
                     return statement
