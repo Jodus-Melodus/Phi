@@ -518,8 +518,6 @@ class App(ctk.CTk):
 
         if self.available_modules_panel.winfo_ismapped():
             self.available_modules_panel.pack_forget()
-            if editor := self.current_tab:
-                editor.focus_set()
         else:
             self.available_modules_panel.pack(padx=self.pad_x, pady=self.pad_y*5)
             self.find_entry.focus_set()
@@ -588,6 +586,7 @@ Esc                 Hide intelliSense
             error = Dialog(self, "Error", "Cannot open two files with the same name.",
                    self.center_x, self.center_y, self.editor_font)
             error.show()
+            self.bell()
 
     def add_new_tab(self, path: str, tab_name: str):
         tab = self.center_tabview.add(tab_name)
@@ -641,6 +640,7 @@ Esc                 Hide intelliSense
             error = Dialog(self, "Error", "File extention not supported.",
                        self.center_x, self.center_y, self.editor_font)
             error.show()
+            self.bell()
 
 # Updates
     def increment_index(self, cursor: str) -> str:
@@ -760,7 +760,6 @@ Esc                 Hide intelliSense
                 startPos = f"{currentIndex.split('.')[0]}.{int(currentIndex.split('.')[1]) - len(word)}"
                 editor.delete(startPos, "insert")
                 editor.insert(startPos, snippet)
-                editor.focus_set()
                 self.snippet_menus[self.center_tabview.get()].place_forget()
 
     def insert_snippet(self, snippet_name: str) -> None:
@@ -773,7 +772,6 @@ Esc                 Hide intelliSense
             start_position = f"{current_index.split('.')[0]}.{int(current_index.split('.')[1]) - len(word)}"
             editor.delete(start_position, "insert")
             editor.insert(start_position, snippet)
-            editor.focus_set()
             self.snippet_menus[self.center_tabview.get()].place_forget()
 
     def show_snippets(self, _=None) -> None:
@@ -819,6 +817,7 @@ Esc                 Hide intelliSense
             error = Dialog(self, "Error", "Failed to load snippets.",
                    self.center_x, self.center_y, self.editor_font)
             error.show()
+            self.bell()
 
 # Syntax
     def load_language_syntax(self) -> None:
@@ -833,6 +832,7 @@ Esc                 Hide intelliSense
             error = Dialog(self, "Error", "Failed to open syntax file.",
                    self.center_x, self.center_y, self.editor_font)
             error.show()
+            self.bell()
 
     def update_syntax(self) -> None:
         if editor := self.current_tab:
@@ -952,7 +952,6 @@ Esc                 Hide intelliSense
                 start_position = f"{current_index.split('.')[0]}.{int(current_index.split('.')[1]) - len(word)}"
                 editor.delete(start_position, "insert")
                 editor.insert(start_position, selected_word)
-                editor.focus_set()
                 self.intelli_sense_boxes[self.center_tabview.get(
                 )].place_forget()
 
@@ -965,7 +964,6 @@ Esc                 Hide intelliSense
             start_position = f"{current_index.split('.')[0]}.{int(current_index.split('.')[1]) - len(word)}"
             editor.delete(start_position, "insert")
             editor.insert(start_position, selected)
-            editor.focus_set()
             self.intelli_sense_boxes[self.center_tabview.get()].place_forget()
 
 # Menu Bar
@@ -1048,9 +1046,6 @@ Esc                 Hide intelliSense
     def toggle_goto_menu(self, _=None) -> None:
         if self.goto_panel.winfo_ismapped():
             self.goto_panel.pack_forget()
-
-            if editor := self.current_tab:
-                editor.focus_set()
         else:
             self.goto_panel.pack(padx=self.pad_x, pady=self.pad_y*5)
             self.goto_entry.focus_set()
@@ -1068,19 +1063,18 @@ Esc                 Hide intelliSense
             self.find_entry.focus_set()
 
     def find_and_replace(self, _=None) -> None:
-        find = self.find_entry.get()
-        replace = self.replace_entry.get()
+        find_text = self.find_entry.get()
+        replace_with_text = self.replace_entry.get()
 
         if editor := self.current_tab:
             editor_text = editor.get("1.0", "end")
             editor.delete("1.0", "end")
-            updated_text = editor_text.replace(find, replace)
+            updated_text = editor_text.replace(find_text, replace_with_text)
             editor.insert("1.0", updated_text)
 
 # Shortcuts
     def indent(self, _=None) -> None:
         if editor := self.current_tab:
-
             if selected := editor.tag_ranges("sel"):
                 start_position, end_position = selected[0].string, selected[1].string
                 start_line = int(start_position.split(".")[0])
@@ -1196,19 +1190,19 @@ Esc                 Hide intelliSense
             editor.delete(word_start, current_index)
 
     def run_file(self, _=None) -> None:
-        self.save_file()
+        if editor := self.current_tab:
+            self.save_file()
 
-        if self.current_language == ".phi":
-            if self.current_path != "":
+            if self.current_language == ".phi":
+                if self.current_path != "":
 
-                with open(self.current_path, "r") as f:
-                    source_code = ''.join(f.readlines())
+                    with open(self.current_path, "r") as f:
+                        source_code = ''.join(f.readlines())
 
-                self.console["state"] = "normal"
-                error = shell.run(source_code, self.current_path)
+                    self.console["state"] = "normal"
+                    error = shell.run(source_code, self.current_path)
 
-                if error:
-                    if editor := self.current_tab:
+                    if error:
                         line = error.line
                         editor.tag_add("error", f"{line}.0", f"{line}.end")
                         text = editor.get(f"{line}.0", f"{line}.end")
@@ -1216,11 +1210,12 @@ Esc                 Hide intelliSense
                         print(error)
                         self.error = str(error)
 
-                self.console["state"] = "disabled"
-        else:
-            error = Dialog(self, "Error", "Run only supports .phi files",
-                   self.center_x, self.center_y, self.editor_font)
-            error.show()
+                    self.console["state"] = "disabled"
+            else:
+                error = Dialog(self, "Error", "Run only supports .phi files",
+                    self.center_x, self.center_y, self.editor_font)
+                error.show()
+                self.bell()
 
     def comment_line(self, _=None) -> None:
         if editor := self.current_tab:
@@ -1275,6 +1270,7 @@ Esc                 Hide intelliSense
             try:
                 editor.edit_undo()
             except:
+                self.bell()
                 pass
 
     def redo(self, _=None) -> None:
@@ -1282,6 +1278,7 @@ Esc                 Hide intelliSense
             try:
                 editor.edit_redo()
             except:
+                self.bell()
                 pass
 
 if __name__ == "__main__":
