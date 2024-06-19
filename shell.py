@@ -32,7 +32,6 @@ def incremental_parsing(source_code: str, file_path: str = "", x: bool = False):
 
     return ast
 
-# Run code
 def run(source_code: str, file_path: str = "") -> None | Error | ExportValue:
     ast = incremental_parsing(source_code, file_path, True)
     interpreter = Interpreter(file_path)
