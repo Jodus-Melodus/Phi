@@ -78,8 +78,8 @@ class App(ctk.CTk):
         self.width = self.winfo_width()
         self.height = self.winfo_height()
         self.center_x = self.width // 2
-        self.screen_ratio = 0.65
         self.center_y = self.height // 2
+        self.screen_ratio = 0.65
         self.pad_x = settings["x-padding"]
         self.pad_y = settings["y-padding"]
         self.line = 1
@@ -93,10 +93,10 @@ class App(ctk.CTk):
         self.intelli_sense_boxes = {}
         self.snippet_menus = {}
         self.tab_names_paths = {}
-        self.menu_open = False
-        self.right_menu_open = False
         self.cursors = []
         self.variables = []
+        self.menu_open = False
+        self.right_menu_open = False
 
         # Frames
         self.left_panel = ctk.CTkFrame(self, width=200)
@@ -497,64 +497,6 @@ class App(ctk.CTk):
     def run(self) -> None:
         self.mainloop()
 
-    def page_top(self, _=None) -> None:
-        """Scroll to the top of the text widget."""
-        if editor := self.current_tab:
-            editor.see("1.0")
-
-    def page_bottom(self, _=None) -> None:
-        """Scroll to the bottom of the text widget."""
-        if editor := self.current_tab:
-            editor.see("end")
-
-    def toggle_available_modules(self, _=None) -> None:
-        """Toggle the visibility of available modules."""
-
-        available_modules = os.listdir("Modules")
-        self.available_modules_textbox.configure(state="normal")
-        self.available_modules_textbox.delete("1.0", "end")
-        self.available_modules_textbox.insert("end", "\n".join(available_modules))
-        self.available_modules_textbox.configure(state="disabled")
-
-        if self.available_modules_panel.winfo_ismapped():
-            self.available_modules_panel.pack_forget()
-        else:
-            self.available_modules_panel.pack(padx=self.pad_x, pady=self.pad_y*5)
-            self.find_entry.focus_set()
-
-    def show_help(self, _=None) -> None:
-        text = """\
-F1                  Show this menu
-F5                  Run file
-Enter               Select first intellisense word
-Ctrl + Backspace    Deletes entire word
-Ctrl + Space        Open intellisense
-Ctrl + ;            Snippet menu
-Ctrl + /            Comment  line
-Ctrl + K            Open folder
-Ctrl + O            Open file
-Ctrl + S            Save file
-Ctrl + N            Creates a new file
-Ctrl + F4           Close file
-Ctrl + C            Copy
-Ctrl + V            Paste
-Ctrl + Z            Undo
-Ctrl + Shift + Z    Redo
-Ctrl + H            Rind and replace menu
-Ctrl + G            Go to menu
-Ctrl + M            Available module menu
-Ctrl + [            Dedent line
-Ctrl + ]            Indent line
-Ctrl + Tab          Next tab
-Ctrl + Shift + Tab  Previous Tab
-Ctrl + Left Click   Add/remove cursor
-Middle Click        Add/remove cursor
-Esc                 Hide intelliSense
-        """
-        
-        help_dialog = Dialog(self, "Help", text, self.center_x, self.center_y, self.help_window_font)
-        help_dialog.show()
-
     @property
     def current_tab(self) -> ctk.CTkTextbox|None:
         tab_name = self.center_tabview.get()
@@ -643,19 +585,6 @@ Esc                 Hide intelliSense
             self.bell()
 
 # Updates
-    def increment_index(self, cursor: str) -> str:
-        line, char = cursor.split(".")
-
-        return f"{line}.{str(int(char) + 1)}"
-
-    def decrement_index(self, cursor: str) -> str:
-        line, char = cursor.split(".")
-
-        if char == "0":
-            return f"{str(int(line) - 1)}.lineend"
-
-        return f"{line}.{str(int(char) - 1)}"
-
     def key_press_update(self, event) -> None:
         self.current_language = self.current_language_combo.get()
 
@@ -1042,79 +971,9 @@ Esc                 Hide intelliSense
             case "Run":
                 self.run_file()
 
-# Side Menus
-    def toggle_goto_menu(self, _=None) -> None:
-        if self.goto_panel.winfo_ismapped():
-            self.goto_panel.pack_forget()
-        else:
-            self.goto_panel.pack(padx=self.pad_x, pady=self.pad_y*5)
-            self.goto_entry.focus_set()
+    # Indent and dedent
 
-    def goto_click(self) -> None:
-        if editor := self.current_tab:
-            line_number = int(self.goto_entry.get())
-            editor.see(f"{line_number}.0")
-
-    def toggle_find_and_replace(self, _=None) -> None:
-        if self.find_and_replace_panel.winfo_ismapped():
-            self.find_and_replace_panel.pack_forget()
-        else:
-            self.find_and_replace_panel.pack(padx=self.pad_x, pady=self.pad_y*5)
-            self.find_entry.focus_set()
-
-    def find_and_replace(self, _=None) -> None:
-        find_text = self.find_entry.get()
-        replace_with_text = self.replace_entry.get()
-
-        if editor := self.current_tab:
-            editor_text = editor.get("1.0", "end")
-            editor.delete("1.0", "end")
-            updated_text = editor_text.replace(find_text, replace_with_text)
-            editor.insert("1.0", updated_text)
-
-# Shortcuts
-    def indent(self, _=None) -> None:
-        if editor := self.current_tab:
-            if selected := editor.tag_ranges("sel"):
-                start_position, end_position = selected[0].string, selected[1].string
-                start_line = int(start_position.split(".")[0])
-                endLine = int(end_position.split(".")[0])
-
-                while start_line != endLine:
-                    editor.insert(f"{start_line}.0", "\t")
-                    start_line += 1
-            else:
-                line = editor.index("insert").split(".")[0]
-                editor.insert(f"{line}.0", "\t")
-
-    def dedent(self, _=None) -> None:
-        if not (editor := self.current_tab):
-            return
-        
-        if selected := editor.tag_ranges("sel"):
-            start_position, end_position = selected[0].string, selected[1].string
-            start_line = int(start_position.split(".")[0])
-            end_line = int(end_position.split(".")[0])
-
-            while start_line != end_line:
-                curr = editor.get(f"{start_line}.0", f"{start_line}.1")
-
-                if curr == "\t":
-                    editor.delete(f"{start_line}.0", f"{start_line}.1")
-                start_line += 1
-        else:
-            line = editor.index("insert").split(".")[0]
-            curr = editor.get(f"{line}.0", f"{line}.1")
-
-            if curr == "\t":
-                editor.delete(f"{line}.0", f"{line}.1")
-
-    def escape_key_press(self, _=None) -> None:
-        if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
-            self.intelli_sense_boxes[self.center_tabview.get()].place_forget()
-
-        if hasattr(self, "snippetMenu") and self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
-            self.snippet_menus[self.center_tabview.get()].place_forget()
+    # Tab switching
 
     def previous_tab(self, _=None) -> None:
         tabs = list(self.center_tabview._tab_dict.keys())
@@ -1155,14 +1014,79 @@ Esc                 Hide intelliSense
             editor.insert("insert", "}")
             editor.mark_set("insert", "insert -1c")
 
-    def close_file(self, _=None) -> None:
-        self.save_file()
-        tab_name = self.center_tabview.get()
-        self.center_tabview.delete(tab_name)
-        self.title("phIDE")
+    # Shortcuts
 
-        if settings["auto-clear-console-on-close"]:
-            self.clear_console()
+    def toggle_goto_menu(self, _=None) -> None:
+        if self.goto_panel.winfo_ismapped():
+            self.goto_panel.pack_forget()
+        else:
+            self.goto_panel.pack(padx=self.pad_x, pady=self.pad_y*5)
+            self.goto_entry.focus_set()
+
+    def goto_click(self) -> None:
+        if editor := self.current_tab:
+            line_number = int(self.goto_entry.get())
+            editor.see(f"{line_number}.0")
+
+    def toggle_find_and_replace(self, _=None) -> None:
+        if self.find_and_replace_panel.winfo_ismapped():
+            self.find_and_replace_panel.pack_forget()
+        else:
+            self.find_and_replace_panel.pack(padx=self.pad_x, pady=self.pad_y*5)
+            self.find_entry.focus_set()
+
+    def find_and_replace(self, _=None) -> None:
+        find_text = self.find_entry.get()
+        replace_with_text = self.replace_entry.get()
+
+        if editor := self.current_tab:
+            editor_text = editor.get("1.0", "end")
+            editor.delete("1.0", "end")
+            updated_text = editor_text.replace(find_text, replace_with_text)
+            editor.insert("1.0", updated_text)
+
+    def escape_key_press(self, _=None) -> None:
+        if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
+            self.intelli_sense_boxes[self.center_tabview.get()].place_forget()
+
+        if hasattr(self, "snippetMenu") and self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
+            self.snippet_menus[self.center_tabview.get()].place_forget()
+
+    def indent(self, _=None) -> None:
+        if editor := self.current_tab:
+            if selected := editor.tag_ranges("sel"):
+                start_position, end_position = selected[0].string, selected[1].string
+                start_line = int(start_position.split(".")[0])
+                endLine = int(end_position.split(".")[0])
+
+                while start_line != endLine:
+                    editor.insert(f"{start_line}.0", "\t")
+                    start_line += 1
+            else:
+                line = editor.index("insert").split(".")[0]
+                editor.insert(f"{line}.0", "\t")
+
+    def dedent(self, _=None) -> None:
+        if not (editor := self.current_tab):
+            return
+        
+        if selected := editor.tag_ranges("sel"):
+            start_position, end_position = selected[0].string, selected[1].string
+            start_line = int(start_position.split(".")[0])
+            end_line = int(end_position.split(".")[0])
+
+            while start_line != end_line:
+                curr = editor.get(f"{start_line}.0", f"{start_line}.1")
+
+                if curr == "\t":
+                    editor.delete(f"{start_line}.0", f"{start_line}.1")
+                start_line += 1
+        else:
+            line = editor.index("insert").split(".")[0]
+            curr = editor.get(f"{line}.0", f"{line}.1")
+
+            if curr == "\t":
+                editor.delete(f"{line}.0", f"{line}.1")
 
     def open_folder(self, _=None) -> None:
         directory_path = ctk.filedialog.askdirectory(title="Select a folder")
@@ -1182,12 +1106,116 @@ Esc                 Hide intelliSense
             for file in file_paths:
                 self.add_tab(file)
 
+    def page_top(self, _=None) -> None:
+        """Scroll to the top of the text widget."""
+        if editor := self.current_tab:
+            editor.see("1.0")
+
+    def page_bottom(self, _=None) -> None:
+        """Scroll to the bottom of the text widget."""
+        if editor := self.current_tab:
+            editor.see("end")
+
+    def toggle_available_modules(self, _=None) -> None:
+        """Toggle the visibility of available modules."""
+
+        available_modules = os.listdir("Modules")
+        self.available_modules_textbox.configure(state="normal")
+        self.available_modules_textbox.delete("1.0", "end")
+        self.available_modules_textbox.insert("end", "\n".join(available_modules))
+        self.available_modules_textbox.configure(state="disabled")
+
+        if self.available_modules_panel.winfo_ismapped():
+            self.available_modules_panel.pack_forget()
+        else:
+            self.available_modules_panel.pack(padx=self.pad_x, pady=self.pad_y*5)
+            self.find_entry.focus_set()
+
+    def show_help(self, _=None) -> None:
+        text = """\
+F1                  Show this menu
+F5                  Run file
+Enter               Select first intellisense word
+Ctrl + Backspace    Deletes entire word
+Ctrl + Space        Open intellisense
+Ctrl + ;            Snippet menu
+Ctrl + /            Comment  line
+Ctrl + K            Open folder
+Ctrl + O            Open file
+Ctrl + S            Save file
+Ctrl + N            Creates a new file
+Ctrl + F4           Close file
+Ctrl + C            Copy
+Ctrl + V            Paste
+Ctrl + Z            Undo
+Ctrl + Shift + Z    Redo
+Ctrl + H            Rind and replace menu
+Ctrl + G            Go to menu
+Ctrl + M            Available module menu
+Ctrl + [            Dedent line
+Ctrl + ]            Indent line
+Ctrl + Tab          Next tab
+Ctrl + Shift + Tab  Previous Tab
+Ctrl + Left Click   Add/remove cursor
+Middle Click        Add/remove cursor
+Esc                 Hide intelliSense
+        """
+        
+        help_dialog = Dialog(self, "Help", text, self.center_x, self.center_y, self.help_window_font)
+        help_dialog.show()
+
+    def copy(self, _=None) -> None:
+        if editor := self.current_tab:
+            self.clipboard = editor.selection_get()
+
+    def paste(self, _=None) -> None:
+        if editor := self.current_tab:
+            editor.insert("insert", self.clipboard)
+
+    def undo(self, _=None) -> None:
+        if editor := self.current_tab:
+            try:
+                editor.edit_undo()
+            except:
+                self.bell()
+
+    def redo(self, _=None) -> None:
+        if editor := self.current_tab:
+            try:
+                editor.edit_redo()
+            except:
+                self.bell()
+
+    def comment_line(self, _=None) -> None:
+        if editor := self.current_tab:
+            cursor_position = editor.index("insert")
+            line_number = cursor_position.split(".")[0]
+            start_position = f"{line_number}.0"
+            end_position = f"{line_number}.2"
+            commented = editor.get(start_position, end_position)
+
+            if commented == "# ":
+                editor.delete(start_position, end_position)
+            else:
+                editor.insert(start_position, "# ")
+
+            editor.tag_remove("sel", "0.0", "end")
+
     def backspace_entire_word(self, _=None) -> None:
         if editor := self.current_tab:
             current_index = editor.index("insert")
             word_start = editor.search(
                 r"\s", current_index, backwards=True, regexp=True)
             editor.delete(word_start, current_index)
+
+    def close_file(self, _=None) -> None:
+        self.save_file()
+        tab_name = self.center_tabview.get()
+        self.center_tabview.delete(tab_name)
+        self.title("phIDE")
+
+        if settings["auto-clear-console-on-close"]:
+            self.clear_console()
 
     def run_file(self, _=None) -> None:
         if editor := self.current_tab:
@@ -1217,21 +1245,6 @@ Esc                 Hide intelliSense
                 error.show()
                 self.bell()
 
-    def comment_line(self, _=None) -> None:
-        if editor := self.current_tab:
-            cursor_position = editor.index("insert")
-            line_number = cursor_position.split(".")[0]
-            start_position = f"{line_number}.0"
-            end_position = f"{line_number}.2"
-            commented = editor.get(start_position, end_position)
-
-            if commented == "# ":
-                editor.delete(start_position, end_position)
-            else:
-                editor.insert(start_position, "# ")
-
-            editor.tag_remove("sel", "0.0", "end")
-
     def save_file(self, _=None) -> None:
         self.current_path = self.tab_names_paths[self.center_tabview.get()] or ctk.filedialog.asksaveasfilename(
                         title="Save", filetypes=[("Phi File", "*.phi"), ("All Files", "*.*")])
@@ -1257,29 +1270,6 @@ Esc                 Hide intelliSense
 
             self.add_tab(self.current_path)
 
-    def copy(self, _=None) -> None:
-        if editor := self.current_tab:
-            self.clipboard = editor.selection_get()
-
-    def paste(self, _=None) -> None:
-        if editor := self.current_tab:
-            editor.insert("insert", self.clipboard)
-
-    def undo(self, _=None) -> None:
-        if editor := self.current_tab:
-            try:
-                editor.edit_undo()
-            except:
-                self.bell()
-                pass
-
-    def redo(self, _=None) -> None:
-        if editor := self.current_tab:
-            try:
-                editor.edit_redo()
-            except:
-                self.bell()
-                pass
 
 if __name__ == "__main__":
     app = App()

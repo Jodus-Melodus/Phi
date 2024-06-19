@@ -3,60 +3,27 @@
     "body": [
         {
             "kind": "variableDeclarationExpression",
-            "datatype": "array",
-            "identifier": "arr",
+            "datatype": "real",
+            "identifier": "x",
             "value": {
-                "kind": "arrayLiteral",
-                "items": [
-                    {
-                        "kind": "itemLiteral",
-                        "index": 0,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 2
-                        }
+                "kind": "binaryExpression",
+                "left": {
+                    "kind": "binaryExpression",
+                    "left": {
+                        "kind": "integerLiteral",
+                        "value": 4
                     },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 1,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 5
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 2,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 6
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 3,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 8
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 4,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 9
-                        }
-                    },
-                    {
-                        "kind": "itemLiteral",
-                        "index": 5,
-                        "value": {
-                            "kind": "integerLiteral",
-                            "value": 12
-                        }
+                    "operand": "/",
+                    "right": {
+                        "kind": "integerLiteral",
+                        "value": 0
                     }
-                ]
+                },
+                "operand": "-",
+                "right": {
+                    "kind": "integerLiteral",
+                    "value": 1
+                }
             },
             "constant": "False"
         },
@@ -65,7 +32,7 @@
             "arguments": [
                 {
                     "kind": "identifier",
-                    "symbol": "arr"
+                    "symbol": "x"
                 }
             ],
             "caller": {
