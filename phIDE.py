@@ -709,7 +709,6 @@ class App(ctk.CTk):
             return
         self.snippet_menus[self.center_tabview.get()].place_forget()
         self.snippets = list(self.snippets_dictionary.keys())
-        x, y, _, _ = editor.bbox(editor.index("insert"))
         current_index = editor.index("insert")
         word_start = editor.search(
             r"(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)", current_index, backwards=True, regexp=True)
@@ -735,6 +734,7 @@ class App(ctk.CTk):
 
         self.snippet_menus[self.center_tabview.get(
         )].items = self.snippets[start_index:end_index]
+        x, y, _, _ = editor.bbox(editor.index("insert"))
         self.snippet_menus[self.center_tabview.get()].place(x=x, y=y+30)
 
     def load_snippets(self) -> None:
@@ -770,17 +770,17 @@ class App(ctk.CTk):
                 pattern = self.language_syntax_patterns[self.current_language][tag][1]
                 editor.tag_remove(tag, "0.0", "end")
 
-                first_visible_index = editor.index("@0,0")
-                last_visible_index = editor.index(f"@0,{str(editor.winfo_height())}")
+                first_visible_index = editor.index("@0, 0")
+                last_visible_index = editor.index(f"@0, {str(editor.winfo_height())}")
 
-                for ln in range(int(first_visible_index.split(".")[0]), int(last_visible_index.split(".")[0]) + 1):
-                    text = editor.get(f"{ln}.0", f"{ln}.end")
+                for line_number in range(int(first_visible_index.split(".")[0]), int(last_visible_index.split(".")[0]) + 1):
+                    text = editor.get(f"{line_number}.0", f"{line_number}.end")
                     matches = [(match.start(), match.end())
                                for match in re.finditer(pattern, text, re.MULTILINE)]
 
                     for start, end in matches:
                         editor.tag_add(
-                            tag, f"{ln}.{start}", f"{ln}.{end}")
+                            tag, f"{line_number}.{start}", f"{line_number}.{end}")
 
         time.sleep(0.1)
         self.update_syntax()
@@ -839,7 +839,6 @@ class App(ctk.CTk):
         self.intelli_sense_boxes[self.center_tabview.get()].place_forget()
         self.intelli_sense_words = list(sorted(list(set(
             self.language_syntax_patterns[self.current_language]["keywords"][2] + self.variables + self.language_syntax_patterns[self.current_language]["errors"][2]))))
-        x, y, _, _ = editor.bbox(editor.index("insert"))
         current_index = editor.index("insert")
         word_start = editor.search(
             r"(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)", current_index, backwards=True, regexp=True)
@@ -848,12 +847,10 @@ class App(ctk.CTk):
         size = 4
         i = self.intelli_sense_boxes[self.center_tabview.get(
         )].current_selected_index
-        start_index = max(0, i)
-        end_index = start_index
+        end_index = start_index = max(0, i)
 
         if word:
-            words = [w for w in self.intelli_sense_words if w.startswith(word)]
-            self.intelli_sense_words = words
+            self.intelli_sense_words = [w for w in self.intelli_sense_words if w.startswith(word)]
             if self.intelli_sense_words:
                 # Hide snippetMenu if present
                 if self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
@@ -865,8 +862,10 @@ class App(ctk.CTk):
             if self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
                 self.snippet_menus[self.center_tabview.get()].place_forget()
             end_index = min(len(self.intelli_sense_words), i + size + 1)
+
         self.intelli_sense_boxes[self.center_tabview.get(
         )].items = self.intelli_sense_words[start_index:end_index]
+        x, y, _, _ = editor.bbox(editor.index("insert"))
         self.intelli_sense_boxes[self.center_tabview.get()].place(x=x, y=y+30)
 
     def intelli_sense_enter_insert(self, _=None) -> None:
