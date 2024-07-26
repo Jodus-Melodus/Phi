@@ -648,6 +648,7 @@ class App(ctk.CTk):
             if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
                 self.intelli_sense_trigger()
 
+            editor.tag_remove("error", "0.0", "end")
             self.get_warnings(editor, current_code)
 
     def mouse_click_update(self, _=None) -> None:

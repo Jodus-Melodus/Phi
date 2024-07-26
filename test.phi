@@ -1,6 +1,9 @@
 
-real x = 4 / 0-1
 
 
-output(x)
+output(4 / 0)
+
+output("output hello world")
+
+output(eval("output('hello world')"))
 
