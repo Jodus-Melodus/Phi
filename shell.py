@@ -1,3 +1,4 @@
+import contextlib
 from frontend.Error import Error
 from frontend.Lexer import *
 from frontend.Parser import *
@@ -17,7 +18,7 @@ def incremental_parsing(source_code: str, file_path: str = "", x: bool = False):
 
     if len(tokens) > 0 and isinstance(tokens[0], Error):
         return tokens
-    
+
     parser = Parser(tokens, file_path)
     ast = parser.generate_AST()
 
@@ -25,11 +26,10 @@ def incremental_parsing(source_code: str, file_path: str = "", x: bool = False):
         return ast
 
     if not ran:
-        with open("ast.json", 'w') as f:
-
-            f.write(json.dumps(json.loads(str(ast)), indent=4))
-        ran = True
-
+        with contextlib.suppress(json.decoder.JSONDecodeError):
+            with open("ast.json", 'w') as f:
+                f.write(json.dumps(json.loads(str(ast)), indent=4))
+            ran = True
     return ast
 
 def run(source_code: str, file_path: str = "") -> None | Error | ExportValue:
