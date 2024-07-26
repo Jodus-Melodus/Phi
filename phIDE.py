@@ -1262,13 +1262,11 @@ Esc                 Hide intelliSense
         path = ctk.filedialog.asksaveasfilename(
             title="Save As", filetypes=[("Phi File", "*.phi"), ("All Files", "*.*")])
         
-        if os.path.exists(path):
-            self.current_path = path
+        self.current_path = path
+        with open(self.current_path, "w") as f:
+            f.write("")
 
-            with open(self.current_path, "w") as f:
-                f.write("")
-
-            self.add_tab(self.current_path)
+        self.add_tab(self.current_path)
 
 
 if __name__ == "__main__":
