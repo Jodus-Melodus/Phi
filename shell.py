@@ -44,18 +44,15 @@ def debug(file_path: str) -> None:
     lexer = Lexer(source_code, file_path)
     tokens = lexer.tokenize()
 
-    print(tokens)
+    print(f"Tokens:\n{tokens}\n")
 
     if len(tokens) > 0 and isinstance(tokens[0], Error):
         return
     
     parser = Parser(tokens, file_path)
     ast = parser.generate_AST()
-
-    print(ast)
-
-    if not isinstance(ast, ProgramNode):
-        return
+    
+    print(f"AST/Errors:\n{ast}\n")
 
     with open("ast.json", 'w') as f:
         f.write(str(ast))
@@ -65,7 +62,7 @@ def debug(file_path: str) -> None:
     interpreter = Interpreter(file_path)
     result = interpreter.evaluate(ast, env)
 
-    print(result)
+    print(f"Result:\n{result}")
 
 if __name__ == "__main__":
     while True:
@@ -112,8 +109,9 @@ Commands:
 exit                    Exits the program
 help                    Prints this message
 phi [code]              Executes the given Phi-code
-run [filepath]          Runs the code in the given file
-                """
+run [file path]         Runs the code in the given file
+debug [file path]       Debugs the code in the given file
+"""
                 print(helpMessage)
             case _:
                 print(f"'{cmd}' is not a valid command")
