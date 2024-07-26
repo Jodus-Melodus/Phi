@@ -1,10 +1,8 @@
-import contextlib
 from frontend.Error import Error
 from frontend.Lexer import *
 from frontend.Parser import *
 from backend.Interpreter import *
 from backend.Environment import *
-import json
 import os
 
 ran = False
@@ -26,10 +24,9 @@ def incremental_parsing(source_code: str, file_path: str = "", x: bool = False):
         return ast
 
     if not ran:
-        with contextlib.suppress(json.decoder.JSONDecodeError):
-            with open("ast.json", 'w') as f:
-                f.write(json.dumps(json.loads(str(ast)), indent=4))
-            ran = True
+        with open("ast.json", 'w') as f:
+            f.write(str(ast))
+        ran = True
     return ast
 
 def run(source_code: str, file_path: str = "") -> None | Error | ExportValue:
@@ -61,7 +58,7 @@ def debug(file_path: str) -> None:
         return
 
     with open("ast.json", 'w') as f:
-        f.write(json.dumps(json.loads(str(ast)), indent=4))
+        f.write(str(ast))
     
     env = create_global_environment(None, file_path)
     
