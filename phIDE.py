@@ -648,7 +648,7 @@ class App(ctk.CTk):
 
             self.variables = re.findall(r"\b[^\d\W]+\b", current_code)
 
-            if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
+            if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
                 self.show_intelli_sense()
 
             editor.tag_remove("error", "0.0", "end")
@@ -676,10 +676,10 @@ class App(ctk.CTk):
 
     def enter_commands(self, _=None) -> None:
         self.intelli_sense_enter_insert()
-        self.enter_snippets_insert()
+        self.snippets_enter_insert()
 
 # Snippets
-    def enter_snippets_insert(self) -> None:
+    def snippets_enter_insert(self) -> None:
         if self.snippet_menus[self.center_tabview.get()].winfo_ismapped() and len(self.snippet_menus[self.center_tabview.get()].items) > 0:
             if editor := self.current_tab:
                 snippet = self.snippets_dictionary[self.snippets[self.snippet_menus[self.center_tabview.get(
@@ -694,7 +694,7 @@ class App(ctk.CTk):
                 editor.insert(startPos, snippet)
                 self.snippet_menus[self.center_tabview.get()].place_forget()
 
-    def insert_snippet(self, snippet_name: str) -> None:
+    def snippet_click_insert(self, snippet_name: str) -> None:
         if not (editor := self.current_tab):
             return
         
@@ -974,14 +974,14 @@ class App(ctk.CTk):
     def previous_tab(self, _=None) -> None:
         tabs = list(self.center_tabview._tab_dict.keys())
         if tabs:
-            new_tab_index = (self.center_tabview.index(self.center_tabview.get()) - 1) % len(self.center_tabview._tab_dict)         # loop the tab index
+            new_tab_index = (self.center_tabview.index(self.center_tabview.get()) - 1) % len(self.center_tabview._tab_dict)         # wrap the tab index
             new_tab_name = tabs[new_tab_index]
             self.center_tabview.set(new_tab_name)
 
     def next_tab(self, _=None) -> None:
         tabs = list(self.center_tabview._tab_dict.keys())
         if tabs:
-            new_tab_index = (self.center_tabview.index(self.center_tabview.get()) + 1) % len(self.center_tabview._tab_dict)         # loop the tab index
+            new_tab_index = (self.center_tabview.index(self.center_tabview.get()) + 1) % len(self.center_tabview._tab_dict)         # wrap the tab index
             new_tab_name = tabs[new_tab_index]
             self.center_tabview.set(new_tab_name)
 
@@ -1043,7 +1043,7 @@ class App(ctk.CTk):
         editor.insert("1.0", updated_text)
 
     def escape_key_press(self, _=None) -> None:
-        if editor := self.current_tab:
+        if self.current_tab:
             if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
                 self.intelli_sense_boxes[self.center_tabview.get()].place_forget()
 
