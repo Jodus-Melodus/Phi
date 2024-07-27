@@ -532,7 +532,18 @@ class App(ctk.CTk):
             self.bell()
 
     def add_new_tab(self, path: str, tab_name: str):
+        if self.current_language not in self.language_syntax_patterns:
+            error = Dialog(self, "Error", "File extention not supported.",
+                       self.center_x, self.center_y, self.editor_font)
+            error.show()
+            self.bell()
+            return
+        
         tab = self.center_tabview.add(tab_name)
+
+        update_syntax_thread = threading.Thread(target=self.update_syntax)
+        update_syntax_thread.daemon = True
+        update_syntax_thread.start()
 
         editor = ctk.CTkTextbox(
                 tab,
@@ -544,62 +555,54 @@ class App(ctk.CTk):
                 wrap="none",
                 tabs="1c"
             )
-            
-        update_syntax_thread = threading.Thread(target=self.update_syntax)
-        update_syntax_thread.daemon = True
-        update_syntax_thread.start()
 
-        if self.current_language in self.language_syntax_patterns:
-            for tag in self.language_syntax_patterns[self.current_language]:
-                editor.tag_config(
-                        tag, foreground=self.language_syntax_patterns[self.current_language][tag][0])
-            editor.tag_config("error", foreground=settings["error-tag-foreground-color"],
-                                  background=settings["error-tag-background-color"], underline=settings["error-tag-underline"])
-            editor.tag_config("similar", foreground=settings["similar-tag-foreground-color"],
-                                  background=settings["similar-tag-background-color"], underline=settings["similar-tag-underline"])
-            editor.tag_config("sel", foreground=settings["selected-tag-foreground-color"],
-                                  background=settings["selected-tag-background-color"], underline=settings["selected-tag-underline"])
-            editor.tag_config("warning", foreground=settings["warning-tag-foreground-color"],
-                                  background=settings["warning-tag-background-color"], underline=settings["warning-tag-underline"])
+        for tag in self.language_syntax_patterns[self.current_language]:
+            editor.tag_config(
+                    tag, foreground=self.language_syntax_patterns[self.current_language][tag][0])
+        editor.tag_config("error", foreground=settings["error-tag-foreground-color"],
+                                background=settings["error-tag-background-color"], underline=settings["error-tag-underline"])
+        editor.tag_config("similar", foreground=settings["similar-tag-foreground-color"],
+                                background=settings["similar-tag-background-color"], underline=settings["similar-tag-underline"])
+        editor.tag_config("sel", foreground=settings["selected-tag-foreground-color"],
+                                background=settings["selected-tag-background-color"], underline=settings["selected-tag-underline"])
+        editor.tag_config("warning", foreground=settings["warning-tag-foreground-color"],
+                                background=settings["warning-tag-background-color"], underline=settings["warning-tag-underline"])
 
-            editor.pack(expand=True, fill="both")
+        editor.pack(expand=True, fill="both")
 
-            self.intelli_sense_boxes[tab_name] = Dropdown(editor, 300, 100, [
-                ], self.intelli_sense_click_insert, 2, 2, settings["intelli-sense-menu-color"], self.editor_font)
-            self.snippet_menus[tab_name] = Dropdown(
-                    editor, 300, 100, [], self.insert_snippet, 2, 2, settings["snippet-menu-color"], self.editor_font)
-            editor.bind("<KeyPress>", self.editor_press)
+        self.intelli_sense_boxes[tab_name] = Dropdown(editor, 300, 100, [
+            ], self.intelli_sense_click_insert, 2, 2, settings["intelli-sense-menu-color"], self.editor_font)
+        self.snippet_menus[tab_name] = Dropdown(
+                editor, 300, 100, [], self.insert_snippet, 2, 2, settings["snippet-menu-color"], self.editor_font)
+        editor.bind("<KeyPress>", self.editor_press)
 
-            self.open_editors[tab_name] = editor
-            self.tab_names_paths[tab_name] = path
+        self.open_editors[tab_name] = editor
+        self.tab_names_paths[tab_name] = path
 
-            with open(path, "r") as f:
-                for line in f.readlines():
-                    editor.insert("end", line)
+        with open(path, "r") as f:
+            for line in f.readlines():
+                editor.insert("end", line)
 
-            self.code = editor.get("0.0", "end")
-            self.load_snippets()
-        else:
-            error = Dialog(self, "Error", "File extention not supported.",
-                       self.center_x, self.center_y, self.editor_font)
-            error.show()
-            self.bell()
+        self.code = editor.get("0.0", "end")
+        self.load_snippets()
 
 # Updates
-    def key_press_update(self, event) -> None:
+    def key_press_update(self, event=None) -> None:
         self.current_language = self.current_language_combo.get()
 
-        if editor := self.current_tab:
-            self.line, self.column = editor.index("insert").split(".")
-            self.status_bar.configure(text=f"Ln {self.line}, Col {self.column}")
+        if not (editor := self.current_tab):
+            return
+        
+        self.line, self.column = editor.index("insert").split(".")
+        self.status_bar.configure(text=f"Ln {self.line}, Col {self.column}")
 
-            current_code = editor.get("0.0", "end")
-            self.get_warnings(editor, current_code)
+        current_code = editor.get("0.0", "end")
+        self.get_warnings(editor, current_code)
 
-            if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
-                self.intelli_sense_trigger()
-            if hasattr(self, "snippetMenu") and self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
-                self.show_snippets()
+        if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
+            self.intelli_sense_trigger()
+        if hasattr(self, "snippetMenu") and self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
+            self.show_snippets()
 
     def get_warnings(self, editor : ctk.CTkTextbox, current_code: str):
         if self.current_language != ".phi":
@@ -610,14 +613,13 @@ class App(ctk.CTk):
 
         parser_warnings = shell.incremental_parsing(current_code, self.current_path)
 
-        if isinstance(parser_warnings, list) and len(parser_warnings) > 0 and isinstance(parser_warnings[0], Error):
+        if isinstance(parser_warnings, list) and len(parser_warnings) > 0:
             for warning in parser_warnings:
                 warning: Error = warning
                 line = warning.line
 
-                program_line = editor.get(f"{line}.0", f"{line}.end")
-
                 editor.tag_add("warning", f"{line}.0", f"{line}.end")
+                program_line = editor.get(f"{line}.0", f"{line}.end")
                 self.warnings.insert("end", f"{program_line}\n{repr(warning)}\n")
 
             # Update warning tab's name to match total warnings
@@ -662,16 +664,15 @@ class App(ctk.CTk):
         
         if editor.tag_ranges("sel"):
             word = editor.get(ctk.SEL_FIRST, ctk.SEL_LAST)
-            pattern = f"({re.escape(word)})"
             text = editor.get("0.0", "end").split("\n")
+            pattern = f"({re.escape(word)})"
 
-            for ln, line in enumerate(text):
+            for line_number, line in enumerate(text):
                 matches = [(match.start(), match.end())
                            for match in re.finditer(pattern, line)]
                 for start, end in matches:
                     editor.tag_add(
-                        "similar", f"{ln+1}.{start}", f"{ln+1}.{end}")
-                    editor.tag_remove("error", f"{ln}.0", f"{ln}.end")
+                        "similar", f"{line_number+1}.{start}", f"{line_number+1}.{end}")
 
     def enter_commands(self, _=None) -> None:
         self.intelli_sense_enter_insert()
@@ -694,16 +695,18 @@ class App(ctk.CTk):
                 self.snippet_menus[self.center_tabview.get()].place_forget()
 
     def insert_snippet(self, snippet_name: str) -> None:
-        if editor := self.current_tab:
-            current_index = editor.index("insert -1l lineend")
-            word_start = editor.search(
-                r"(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)", current_index, backwards=True, regexp=True)
-            word = editor.get(word_start, current_index).strip(" \n\t\r({[]})")
-            start_position = f"{current_index.split('.')[0]}.{int(current_index.split('.')[1]) - len(word)}"
-            snippet = self.snippets_dictionary[snippet_name]
-            editor.delete(start_position, "insert")
-            editor.insert(start_position, snippet)
-            self.snippet_menus[self.center_tabview.get()].place_forget()
+        if not (editor := self.current_tab):
+            return
+        
+        current_index = editor.index("insert -1l lineend")
+        word_start = editor.search(
+            r"(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)", current_index, backwards=True, regexp=True)
+        word = editor.get(word_start, current_index).strip(" \n\t\r({[]})")
+        start_position = f"{current_index.split('.')[0]}.{int(current_index.split('.')[1]) - len(word)}"
+        snippet = self.snippets_dictionary[snippet_name]
+        editor.delete(start_position, "insert")
+        editor.insert(start_position, snippet)
+        self.snippet_menus[self.center_tabview.get()].place_forget()
 
     def show_snippets(self, _=None) -> None:
         if not (editor := self.current_tab) or not self.snippets:
