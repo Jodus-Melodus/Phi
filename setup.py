@@ -24,7 +24,7 @@ exe = Executable(
 
 setup(
     name="phIDE",
-    version="1.7.6",
+    version="1.7.7",
     description="phi IDE",
     executables=[exe],
     options={

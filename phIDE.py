@@ -942,9 +942,7 @@ class App(ctk.CTk):
             self.menu_open = True
 
     def process_menu_shortcuts(self, name: str) -> None:
-        self.file_menu_click()
-        self.edit_menu_click()
-        self.run_menu_click()
+        self.menu_open = False
         self.right_click_popup.place_forget()
 
         match name:
