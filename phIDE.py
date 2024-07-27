@@ -298,13 +298,13 @@ class App(ctk.CTk):
         self.bind("<\">", self.auto_double_quote)
         self.bind("<'>", self.auto_single_quote)
         self.bind("<KeyPress>", self.key_press_update)
-        self.bind("<Down>", self.intelli_sense_down_key_press)
-        self.bind("<Up>", self.intelli_sense_up_key_press)
+        self.bind("<Down>", self.down_key_press)
+        self.bind("<Up>", self.up_key_press)
 
 # Double Character Sequence
         self.bind("<Control-F4>", self.close_file)
         self.bind("<Control-BackSpace>", self.backspace_entire_word)
-        self.bind("<Control-space>", self.intelli_sense_trigger)
+        self.bind("<Control-space>", self.show_intelli_sense)
         self.bind("<Control-Tab>", self.next_tab)
         self.bind("<Control-/>", self.comment_line)
         self.bind("<Control-;>", self.show_snippets)
@@ -599,9 +599,9 @@ class App(ctk.CTk):
         current_code = editor.get("0.0", "end")
         self.get_warnings(editor, current_code)
 
-        if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
-            self.intelli_sense_trigger()
-        if hasattr(self, "snippetMenu") and self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
+        if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
+            self.show_intelli_sense()
+        elif self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
             self.show_snippets()
 
     def get_warnings(self, editor : ctk.CTkTextbox, current_code: str):
@@ -649,7 +649,7 @@ class App(ctk.CTk):
             self.variables = re.findall(r"\b[^\d\W]+\b", current_code)
 
             if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
-                self.intelli_sense_trigger()
+                self.show_intelli_sense()
 
             editor.tag_remove("error", "0.0", "end")
             self.get_warnings(editor, current_code)
@@ -676,10 +676,10 @@ class App(ctk.CTk):
 
     def enter_commands(self, _=None) -> None:
         self.intelli_sense_enter_insert()
-        self.enter_snippets()
+        self.enter_snippets_insert()
 
 # Snippets
-    def enter_snippets(self) -> None:
+    def enter_snippets_insert(self) -> None:
         if self.snippet_menus[self.center_tabview.get()].winfo_ismapped() and len(self.snippet_menus[self.center_tabview.get()].items) > 0:
             if editor := self.current_tab:
                 snippet = self.snippets_dictionary[self.snippets[self.snippet_menus[self.center_tabview.get(
@@ -786,53 +786,51 @@ class App(ctk.CTk):
         self.update_syntax()
 
 # IntelliSense
-    def intelli_sense_up_key_press(self, _=None) -> None:
-        if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped() and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
-            if editor := self.current_tab:
-                editor.mark_set(
-                    "insert", editor.index("insert +1l lineend"))
-            self.intelli_sense_boxes[self.center_tabview.get(
-            )].current_selected_index -= 1
-            if self.intelli_sense_boxes[self.center_tabview.get()].current_selected_index < 0:
-                self.intelli_sense_boxes[self.center_tabview.get()].current_selected_index = len(
-                    self.intelli_sense_words) - 1
-            self.intelli_sense_trigger()
+    def up_key_press(self, _=None) -> None:
+        if not (editor := self.current_tab):
+            return
 
-        if self.snippet_menus[self.center_tabview.get()].winfo_ismapped() and self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
-            if editor := self.current_tab:
-                editor.mark_set(
-                    "insert", editor.index("insert +1l lineend"))
-            self.snippet_menus[self.center_tabview.get()
-                              ].current_selected_index -= 1
-            if self.snippet_menus[self.center_tabview.get()].current_selected_index < 0:
-                self.snippet_menus[self.center_tabview.get()].current_selected_index = len(
-                    self.snippets) - 1
+        if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
+            # move the cursor back to previous position to reverse key press
+            if int(editor.index("insert").split('.')[0]) != 1:
+                editor.mark_set("insert", editor.index("insert +1l lineend"))
+
+            selected_index = self.intelli_sense_boxes[self.center_tabview.get()].current_selected_index
+            self.intelli_sense_boxes[self.center_tabview.get()].current_selected_index = (selected_index - 1) % len(self.intelli_sense_words)
+            self.show_intelli_sense()
+
+        elif self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
+            # move the cursor back to previous position to reverse key press
+            if int(editor.index("insert").split('.')[0]) != 1:
+                editor.mark_set("insert", editor.index("insert +1l lineend"))
+
+            selected_index = self.snippet_menus[self.center_tabview.get()].current_selected_index
+            self.snippet_menus[self.center_tabview.get()].current_selected_index = (selected_index - 1) % len(self.snippets)
             self.show_snippets()
 
-    def intelli_sense_down_key_press(self, _=None) -> None:
-        if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped() and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
-            if editor := self.current_tab:
-                editor.mark_set(
-                    "insert", editor.index("insert -1l lineend"))
-            self.intelli_sense_boxes[self.center_tabview.get(
-            )].current_selected_index += 1
-            if self.intelli_sense_boxes[self.center_tabview.get()].current_selected_index >= len(self.intelli_sense_words):
-                self.intelli_sense_boxes[self.center_tabview.get(
-                )].current_selected_index = 0
-            self.intelli_sense_trigger()
+    def down_key_press(self, _=None) -> None:
+        if not (editor := self.current_tab):
+            return
 
-        if self.snippet_menus[self.center_tabview.get()].winfo_ismapped() and self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
-            if editor := self.current_tab:
-                editor.mark_set(
-                    "insert", editor.index("insert -1l lineend"))
-            self.snippet_menus[self.center_tabview.get()
-                              ].current_selected_index += 1
-            if self.intelli_sense_boxes[self.center_tabview.get()].current_selected_index >= len(self.snippets):
-                self.snippet_menus[self.center_tabview.get()
-                                  ].current_selected_index = 0
+        if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
+            # move the cursor back to previous position to reverse key press
+            if int(editor.index("insert").split('.')[0]) != len(self.code.split('\n')) - 1:
+                editor.mark_set("insert", editor.index("insert -1l lineend"))
+
+            selected_index = self.intelli_sense_boxes[self.center_tabview.get()].current_selected_index
+            self.intelli_sense_boxes[self.center_tabview.get()].current_selected_index = (selected_index + 1) % len(self.intelli_sense_words)
+            self.show_intelli_sense()
+
+        elif self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
+            # move the cursor back to previous position to reverse key press
+            if int(editor.index("insert").split('.')[0]) != len(self.code.split('\n')) - 1:
+                editor.mark_set("insert", editor.index("insert -1l lineend"))
+
+            selected_index = self.snippet_menus[self.center_tabview.get()].current_selected_index
+            self.snippet_menus[self.center_tabview.get()].current_selected_index = (selected_index + 1) % len(self.snippets)
             self.show_snippets()
 
-    def intelli_sense_trigger(self, _=None) -> None:
+    def show_intelli_sense(self, _=None) -> None:
         if not (editor := self.current_tab):
             return
         
@@ -971,8 +969,6 @@ class App(ctk.CTk):
             case "Run":
                 self.run_file()
 
-    # Indent and dedent
-
     # Tab switching
 
     def previous_tab(self, _=None) -> None:
@@ -989,6 +985,7 @@ class App(ctk.CTk):
             new_tab_name = tabs[new_tab_index]
             self.center_tabview.set(new_tab_name)
 
+    # automation
     def auto_single_quote(self, _=None) -> None:
         if editor := self.current_tab:
             editor.insert("insert", "'")
@@ -1015,7 +1012,6 @@ class App(ctk.CTk):
             editor.mark_set("insert", "insert -1c")
 
     # Shortcuts
-
     def toggle_goto_menu(self, _=None) -> None:
         if self.goto_panel.winfo_ismapped():
             self.goto_panel.pack_forget()
@@ -1036,40 +1032,47 @@ class App(ctk.CTk):
             self.find_entry.focus_set()
 
     def find_and_replace(self, _=None) -> None:
+        if not (editor := self.current_tab):
+            return
+        
+        editor.delete("1.0", "end")
+        editor_text = editor.get("1.0", "end")
         find_text = self.find_entry.get()
         replace_with_text = self.replace_entry.get()
-
-        if editor := self.current_tab:
-            editor_text = editor.get("1.0", "end")
-            editor.delete("1.0", "end")
-            updated_text = editor_text.replace(find_text, replace_with_text)
-            editor.insert("1.0", updated_text)
+        updated_text = editor_text.replace(find_text, replace_with_text)
+        editor.insert("1.0", updated_text)
 
     def escape_key_press(self, _=None) -> None:
-        if hasattr(self, "intelliSenseBox") and self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
-            self.intelli_sense_boxes[self.center_tabview.get()].place_forget()
+        if editor := self.current_tab:
+            if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
+                self.intelli_sense_boxes[self.center_tabview.get()].place_forget()
 
-        if hasattr(self, "snippetMenu") and self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
-            self.snippet_menus[self.center_tabview.get()].place_forget()
+            elif self.snippet_menus[self.center_tabview.get()].winfo_ismapped():
+                self.snippet_menus[self.center_tabview.get()].place_forget()
 
     def indent(self, _=None) -> None:
-        if editor := self.current_tab:
-            if selected := editor.tag_ranges("sel"):
-                start_position, end_position = selected[0].string, selected[1].string
-                start_line = int(start_position.split(".")[0])
-                endLine = int(end_position.split(".")[0])
+        if not (editor := self.current_tab):
+            return
+        
+        # indent selected text
+        if selected := editor.tag_ranges("sel"):
+            start_position, end_position = selected[0].string, selected[1].string
+            start_line = int(start_position.split(".")[0])
+            endLine = int(end_position.split(".")[0])
 
-                while start_line != endLine:
-                    editor.insert(f"{start_line}.0", "\t")
-                    start_line += 1
-            else:
-                line = editor.index("insert").split(".")[0]
-                editor.insert(f"{line}.0", "\t")
+            while start_line != endLine:
+                editor.insert(f"{start_line}.0", "\t")
+                start_line += 1
+        # indent current line
+        else:
+            line = editor.index("insert").split(".")[0]
+            editor.insert(f"{line}.0", "\t")
 
     def dedent(self, _=None) -> None:
         if not (editor := self.current_tab):
             return
         
+        # dedent selected text
         if selected := editor.tag_ranges("sel"):
             start_position, end_position = selected[0].string, selected[1].string
             start_line = int(start_position.split(".")[0])
@@ -1081,6 +1084,7 @@ class App(ctk.CTk):
                 if curr == "\t":
                     editor.delete(f"{start_line}.0", f"{start_line}.1")
                 start_line += 1
+        # dedent current line
         else:
             line = editor.index("insert").split(".")[0]
             curr = editor.get(f"{line}.0", f"{line}.1")
