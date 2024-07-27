@@ -1,11 +1,8 @@
 
 
+array test = [53, 34, 64, 31]
+output(test)
 
-output(4 / 0)
-
-output("output hello world")
-
-output(eval("output('hello world')"))
 
 
 

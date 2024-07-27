@@ -92,6 +92,7 @@ class App(ctk.CTk):
         self.open_editors = {}
         self.intelli_sense_boxes = {}
         self.snippet_menus = {}
+        self.snippets = []
         self.tab_names_paths = {}
         self.cursors = []
         self.variables = []
@@ -694,44 +695,39 @@ class App(ctk.CTk):
 
     def insert_snippet(self, snippet_name: str) -> None:
         if editor := self.current_tab:
-            snippet = self.snippets_dictionary[snippet_name]
             current_index = editor.index("insert -1l lineend")
             word_start = editor.search(
                 r"(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)", current_index, backwards=True, regexp=True)
             word = editor.get(word_start, current_index).strip(" \n\t\r({[]})")
             start_position = f"{current_index.split('.')[0]}.{int(current_index.split('.')[1]) - len(word)}"
+            snippet = self.snippets_dictionary[snippet_name]
             editor.delete(start_position, "insert")
             editor.insert(start_position, snippet)
             self.snippet_menus[self.center_tabview.get()].place_forget()
 
     def show_snippets(self, _=None) -> None:
-        if not (editor := self.current_tab):
+        if not (editor := self.current_tab) or not self.snippets:
             return
+
         self.snippet_menus[self.center_tabview.get()].place_forget()
         self.snippets = list(self.snippets_dictionary.keys())
         current_index = editor.index("insert")
         word_start = editor.search(
             r"(\s|\.|,|\)|\(|\[|\]|\{|\}|\t)", current_index, backwards=True, regexp=True)
-        word = editor.get(word_start, current_index).strip(" \n\t\r{[()]}")
+
+        if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
+            self.intelli_sense_boxes[self.center_tabview.get(
+            )].place_forget()
 
         size = 4
-        i = self.snippet_menus[self.center_tabview.get()
-                              ].current_selected_index
-        start_index = max(0, i)
-        if word:
-            words = [w for w in self.snippets if w.startswith(word)]
-            self.snippets = words
-            if self.snippets:
-                if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
-                    self.intelli_sense_boxes[self.center_tabview.get(
-                    )].place_forget()
-                end_index = min(len(self.snippets), i + size + 1)
-        else:
-            if self.intelli_sense_boxes[self.center_tabview.get()].winfo_ismapped():
-                self.intelli_sense_boxes[self.center_tabview.get(
-                )].place_forget()
-            end_index = min(len(self.snippets), i + size + 1)
+        selected_snippet_index = self.snippet_menus[self.center_tabview.get()].current_selected_index
+        word = editor.get(word_start, current_index).strip(" \n\t\r{[()]}")
 
+        if word:
+            self.snippets = [w for w in self.snippets if w.startswith(word)]
+
+        start_index = max(0, selected_snippet_index)
+        end_index = min(len(self.snippets), selected_snippet_index + size + 1)
         self.snippet_menus[self.center_tabview.get(
         )].items = self.snippets[start_index:end_index]
         x, y, _, _ = editor.bbox(editor.index("insert"))
@@ -739,6 +735,7 @@ class App(ctk.CTk):
 
     def load_snippets(self) -> None:
         path = f"snippets/{self.current_language[1:]}.json"
+
         if os.path.exists(path):
             with open(path, "r") as f:
                 self.snippets_dictionary = json.load(f)
