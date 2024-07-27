@@ -573,7 +573,7 @@ class App(ctk.CTk):
         self.intelli_sense_boxes[tab_name] = Dropdown(editor, 300, 100, [
             ], self.intelli_sense_click_insert, 2, 2, settings["intelli-sense-menu-color"], self.editor_font)
         self.snippet_menus[tab_name] = Dropdown(
-                editor, 300, 100, [], self.insert_snippet, 2, 2, settings["snippet-menu-color"], self.editor_font)
+                editor, 300, 100, [], self.snippet_click_insert, 2, 2, settings["snippet-menu-color"], self.editor_font)
         editor.bind("<KeyPress>", self.editor_press)
 
         self.open_editors[tab_name] = editor
@@ -942,9 +942,9 @@ class App(ctk.CTk):
             self.menu_open = True
 
     def process_menu_shortcuts(self, name: str) -> None:
-        self.file_menu_popup.place_forget()
-        self.edit_menu_popup.place_forget()
-        self.run_menu_popup.place_forget()
+        self.file_menu_click()
+        self.edit_menu_click()
+        self.run_menu_click()
         self.right_click_popup.place_forget()
 
         match name:

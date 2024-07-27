@@ -5,3 +5,4 @@ array test = [53, 34, 64, 31]
 for each (int i in test){
 	output(i)
 }
+
