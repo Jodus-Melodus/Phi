@@ -1,13 +1,13 @@
 {
-    "fn":"fn name(parameters) {\n\tbody\n}",
-    "if":"if (condition) {\n\tbody\n}",
-    "ifElse":"if (condition) {\n\tbody\n} else {\n\tbody\n}",
-    "while":"while (condition) {\n\tbody\n}",
-    "whileElse":"while (condition) {\n\tbody\n} else {\n\tbody\n}",
-    "do":"do {\n\tbody\n} while (condition)",
-    "for":"for (int i = 0, i < value, i += 1){\n\tbody\n}",
-    "for-each":"for each (int i in value){\n\tbody\n}",
-    "try":"try {\n\tbody\n} catch (error) {\n\tbody\n}",
-    "match":"match value {\n\tcase value {body}\n}",
-    "module":"export obj moduleName = {\n\tbody\n}"
+    "fn": "fn name(parameters) {\n\tbody\n}",
+    "if": "if (condition) {\n\tbody\n}",
+    "ifElse": "if (condition) {\n\tbody\n} else {\n\tbody\n}",
+    "while": "while (condition) {\n\tbody\n}",
+    "whileElse": "while (condition) {\n\tbody\n} else {\n\tbody\n}",
+    "do": "do {\n\tbody\n} while (condition)",
+    "for": "for (int i = 0, i < value, i += 1) {\n\tbody\n}",
+    "for-each": "for each (int i in value) {\n\tbody\n}",
+    "try": "try {\n\tbody\n} catch (error) {\n\tbody\n}",
+    "match": "match value {\n\tcase value {body}\n}",
+    "module": "export obj moduleName = {\n\tbody\n}"
 }

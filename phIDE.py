@@ -304,7 +304,7 @@ class App(ctk.CTk):
 # Double Character Sequence
         self.bind("<Control-F4>", self.close_file)
         self.bind("<Control-BackSpace>", self.backspace_entire_word)
-        self.bind("<Control-Space>", self.show_intelli_sense)
+        self.bind("<Control-space>", self.show_intelli_sense)
         self.bind("<Control-Tab>", self.next_tab)
         self.bind("<Control-/>", self.comment_line)
         self.bind("<Control-;>", self.show_snippets)
