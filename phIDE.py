@@ -304,7 +304,7 @@ class App(ctk.CTk):
 # Double Character Sequence
         self.bind("<Control-F4>", self.close_file)
         self.bind("<Control-BackSpace>", self.backspace_entire_word)
-        self.bind("<Control-space>", self.show_intelli_sense)
+        self.bind("<Control-Space>", self.show_intelli_sense)
         self.bind("<Control-Tab>", self.next_tab)
         self.bind("<Control-/>", self.comment_line)
         self.bind("<Control-;>", self.show_snippets)
@@ -765,7 +765,18 @@ class App(ctk.CTk):
             self.bell()
 
     def update_syntax(self) -> None:
-        if editor := self.current_tab:
+        while True:
+            if not (editor := self.current_tab):
+                continue
+            
+            current_code = editor.get("0.0", "end")
+            
+            if self.code == current_code:
+                continue
+
+            self.code = current_code
+            self.get_warnings(editor, current_code)
+
             for tag in self.language_syntax_patterns[self.current_language]:
                 pattern = self.language_syntax_patterns[self.current_language][tag][1]
                 editor.tag_remove(tag, "0.0", "end")
@@ -776,14 +787,12 @@ class App(ctk.CTk):
                 for line_number in range(int(first_visible_index.split(".")[0]), int(last_visible_index.split(".")[0]) + 1):
                     text = editor.get(f"{line_number}.0", f"{line_number}.end")
                     matches = [(match.start(), match.end())
-                               for match in re.finditer(pattern, text, re.MULTILINE)]
+                            for match in re.finditer(pattern, text, re.MULTILINE)]
 
                     for start, end in matches:
                         editor.tag_add(
                             tag, f"{line_number}.{start}", f"{line_number}.{end}")
-
-        time.sleep(0.1)
-        self.update_syntax()
+            time.sleep(0.1)
 
 # IntelliSense
     def up_key_press(self, _=None) -> None:
